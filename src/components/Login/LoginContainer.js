@@ -5,28 +5,48 @@ import { useNavigate } from "react-router-dom";
 import OtpVerify from "./OtpVerify";
 import LogInByOtp from "./LogInByOtp";
 import LogInByPassword from "./LogInByPassword";
+import ntsplLogo from "../../assets/images/ntspl_logo.png";
+import SetPassword from "./SetPassword";
 
 const LogInContainer = () => {
   console.log(configData.baseUrl);
   const [isOtpSend, setIsOtpSend] = useState(false);
   const [isSignInWithPassword, setIsSignInWithPassword] = useState(false);
+  const [isSetPassword, setIsSetPassword] = useState(false);
   const navigate = useNavigate();
 
-  // const submitOtp = (e) => {
-  //   e.preventDefault();
-  //   console.log("inputData------------", e.target.value);
-  //   // navigate("/otpVerify");
-  //   setIsOtpSend(true);
-  // };
-  console.log("isSignInWithPassword---------------------------",isSignInWithPassword);
+  const submitOtp = (e) => {
+    e.preventDefault();
+    console.log("inputData------------", e.target.value);
+    // navigate("/otpVerify");
+    setIsOtpSend(true);
+  };
+
+  const setIsBackToSignIn = (value) => {
+    console.log('setIsBackToSignIn-------------',setIsBackToSignIn,value)
+    setIsOtpSend(false);
+    setIsSignInWithPassword(false);
+    setIsSetPassword(false);
+  };
+
+  console.log(
+    "isSignInWithPassword---------------------------",
+    isSignInWithPassword
+  );
   return (
     <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
       {isOtpSend ? (
         <OtpVerify setIsOtpSend={setIsOtpSend} />
       ) : isSignInWithPassword ? (
         <LogInByPassword setIsSignInWithPassword={setIsSignInWithPassword} />
+      ) : isSetPassword ? (
+        <SetPassword setIsBackToSignIn={setIsBackToSignIn} />
       ) : (
-        <LogInByOtp setIsOtpSend={setIsOtpSend} setIsSignInWithPassword={setIsSignInWithPassword} />
+        <LogInByOtp
+          setIsOtpSend={setIsOtpSend}
+          setIsSignInWithPassword={setIsSignInWithPassword}
+          setIsSetPassword={setIsSetPassword}
+        />
       )}
     </div>
 

@@ -12,7 +12,7 @@ const logInByPassword = (props) => {
   };
 
   return (
-    <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+   
       <div className="loginform-container">
         <img src={ntsplLogo} className="ntspl-logo" />
 
@@ -107,7 +107,7 @@ const logInByPassword = (props) => {
           </a>
         </form>
       </div>
-    </div>
+ 
   );
 };
 

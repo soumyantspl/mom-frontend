@@ -18,9 +18,12 @@ const LoginByOtp = (props) => {
     props.setIsOtpSend(true)
   };
   console.log(isOtpSend);
-
+  const setIsSetPassword = (e) => {
+    e.preventDefault();
+    props.setIsSetPassword(true)
+}
   return (
-    <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+  
       <div className="loginform-container">
         <img
           className="img-fluid"
@@ -67,11 +70,11 @@ const LoginByOtp = (props) => {
           </a>
 
           <div className="set-pwd">
-            <a href="reset-password">Set Password</a>
+            <a href="reset-password"  onClick={setIsSetPassword}>Set Password</a>
           </div>
         </form>
       </div>
-    </div>
+   
   );
 };
 
