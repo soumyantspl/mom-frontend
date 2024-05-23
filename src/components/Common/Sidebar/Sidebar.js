@@ -28,11 +28,11 @@ const Sidebar = () => {
     <div>
       <div className="sidebar">
         <div className="mt-4 top-logo">
-          <a href="/meeting/meeting-list">
+          <Link to="/meeting/meeting-list">
             <div className="ntspl-logo">
               <img src={ntsplWhiteLogo} />
             </div>
-          </a>
+          </Link>
           <div className="sidebar-close" />
           {/* <svg
     xmlns="http://www.w3.org/2000/svg"
