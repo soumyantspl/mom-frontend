@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React,{useEffect,useState} from "react";
 import ntsplWhiteLogo from "../../../assets/images/Ntspl-Logo-white.png";
 import meetingLogo from "../../../assets/images/meeting_logo.png";
 import meeting2Logo from "../../../assets/images/meeting2.svg";
@@ -6,11 +6,13 @@ import actionLogo from "../../../assets/images/clipboard_839860.png";
 import settingLogo from "../../../assets/images/setting.png";
 import { useNavigate,Navigate, Link } from "react-router-dom";
 console.log("-------------------",window.location.pathname );
-let currentPath=window.location.pathname  
+
 const Sidebar = () => {
-//      useEffect(() => {
-       
-//   }, []);
+    const [currentPath, setCurrentPath] = useState("");
+     useEffect(() => {
+        setCurrentPath(window.location.pathname)
+  }, []);
+  console.log("5555555555555555555",currentPath)
   return (
     <div>
       <div className="sidebar">
