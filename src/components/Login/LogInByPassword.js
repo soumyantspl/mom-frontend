@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import "./style/LogInByPassword.css";
 import configData from "../../config/config";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,Link} from "react-router-dom";
+import LoginImage from "./LoginImage";
 
-const logInByPassword = (props) => {
+const LogInByPassword = (props) => {
   const onSubmit = (e) => {
     e.preventDefault();
     console.log("inputData------------", e.target.value);
@@ -12,7 +13,10 @@ const logInByPassword = (props) => {
   };
 
   return (
-   
+    <section className="sign-in">
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
       <div className="loginform-container">
         <img src={ntsplLogo} className="ntspl-logo" />
 
@@ -73,7 +77,7 @@ const logInByPassword = (props) => {
               Remember
             </div>
             <div className="forgot-pwd">
-              <a href="/forgot-password"> Forgot Password ?</a>
+              <Link to="/setPassword"> Forgot Password ?</Link>
             </div>
           </div>
 
@@ -83,11 +87,11 @@ const logInByPassword = (props) => {
 
           <div className="account">Don't have an account ?</div>
 
-          <a href="/signup">
+          <Link to="/signUp">
             <button className="signup-btn">Sign Up</button>
-          </a>
+            </Link>
 
-          <a href="">
+          <Link to="/login">
             <div className="back">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -104,11 +108,17 @@ const logInByPassword = (props) => {
               </svg>
               <span>Back to Sign In</span>
             </div>
-          </a>
+            </Link>
         </form>
       </div>
+        </div>
+
+        <LoginImage />
+      </div>
+    </div>
+  </section>
  
   );
 };
 
-export default logInByPassword;
+export default LogInByPassword;

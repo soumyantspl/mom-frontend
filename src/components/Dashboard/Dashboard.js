@@ -13,9 +13,10 @@ import {
   Redirect,
   useNavigate,
 } from "react-router-dom";
+import Navbar from "../Common/Navbar/Navbar";
 
 const Dashboard = () => {
-  const isLogIn = false;
+  const isLogIn = true;
   const navigate = useNavigate();
   useEffect(() => {
     if (!isLogIn) {
@@ -27,7 +28,11 @@ const Dashboard = () => {
   console.log("inside--------------");
 
   console.log(configData.baseUrl);
-  return <p>Dashboard</p>;
+  return (
+    <div>
+      <Navbar />
+    </div>
+  )
 };
 
 export default Dashboard;
