@@ -151,6 +151,7 @@ label {
   box-shadow: 3px 47px 22px -55px rgba(0, 0, 0, 0.74);
   z-index: 99;
 }
+
 .sidebar-open-btn {
   display: none;
   border: none;

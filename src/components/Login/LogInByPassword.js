@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "./style/LogInByPassword.css";
 import configData from "../../config/config";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
-import { useNavigate ,Link} from "react-router-dom";
+import { useNavigate ,Navigate,Link} from "react-router-dom";
 import LoginImage from "./LoginImage";
 
 const LogInByPassword = (props) => {
@@ -12,8 +12,21 @@ const LogInByPassword = (props) => {
     props.setIsSignInWithPassword(true);
   };
 
+  let isLogIn =true
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   if (!isLogIn) {
+  //     navigate("/login");
+  //   } else {
+  //     navigate("/dashboard");
+  //   }
+  // }, []);
+  // console.log("inside--------------")
+
   return (
+    
     <section className="sign-in">
+  
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">

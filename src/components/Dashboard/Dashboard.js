@@ -13,26 +13,34 @@ import {
   Redirect,
   useNavigate,
 } from "react-router-dom";
-import Navbar from "../Common/Navbar/Navbar";
+import Navbar from "../Common/Header/Header";
+import Sidebar from "../Common/Sidebar/Sidebar";
+import Header from "../Common/Header/Header";
+import LoginByOtp from "../Login/LogInByOtp";
+import MeetingList from "../Meeting/MeetingList";
 
 const Dashboard = () => {
-  const isLogIn = true;
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!isLogIn) {
-      navigate("/login");
-    } else {
-      navigate("/dashboard");
-    }
-  }, []);
-  console.log("inside--------------");
+   const isLogIn = true
+//  const navigate = useNavigate();
+//   useEffect(() => {
+//     if (!isLogIn) {
+//       navigate("/login");
+//     } else {
+//       navigate("/dashboard");
+//     }
+//   }, []);
+//   console.log("inside--------------");
 
-  console.log(configData.baseUrl);
+//   console.log(configData.baseUrl);
   return (
     <div>
-      <Navbar />
+       {!isLogIn?<Navigate to="/" />:null}
+      <Header />
+      <Sidebar />
+      
+      {/* <MeetingList /> */}
     </div>
-  )
+  );
 };
 
 export default Dashboard;

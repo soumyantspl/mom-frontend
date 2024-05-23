@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "./style/OtpVerify.css";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
 import { useNavigate,Link } from "react-router-dom";
@@ -8,7 +8,14 @@ const SetPassword = (props) => {
   const [isOtpSend, setIsOtpSend] = useState(false);
   const [isSignInWithPassword, setIsSignInWithPassword] = useState(false);
   const navigate = useNavigate();
-
+  const isLogIn = process.env.REACT_APP_ISUSER_LOGIN;
+  useEffect(() => {
+    if (!isLogIn) {
+      navigate("/login");
+    } else {
+      navigate("/dashboard");
+    }
+  }, []);
   const submitOtp = (e) => {
     e.preventDefault();
     console.log("inputData------------", e.target.value);

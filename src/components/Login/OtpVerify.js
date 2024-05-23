@@ -1,13 +1,23 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "./style/OtpVerify.css";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
 import meetingImage from "../../assets/images/meeting.png";
 import { useNavigate, Link } from "react-router-dom";
 import LoginImage from "./LoginImage";
+const isLogIn = process.env.REACT_APP_ISUSER_LOGIN;
+
+console.log("inside--------------");
 const OtpVerify = (props) => {
   const [isOtpVerified, setIsOtpVerified] = useState(false);
+ 
   const navigate = useNavigate();
-
+  useEffect(() => {
+    if (!isLogIn) {
+      navigate("/login");
+    } else {
+      navigate("/dashboard");
+    }
+  }, []);
   const submitOtp = (e) => {
     e.preventDefault();
     console.log("inputData---------33333---", e.target);
@@ -17,6 +27,7 @@ const OtpVerify = (props) => {
     navigate("/dashboard");
   };
   console.log(isOtpVerified);
+ 
   return (
     <section className="otp-varify">
       <div className="container-fluid">

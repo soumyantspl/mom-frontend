@@ -1,0 +1,14 @@
+.bell  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    width: auto;
+    padding: 8px;
+    background-color: transparent;
+    border-radius: 50px;
+  }
+  .bell:hover {
+    background-color: #80808045;
+  }
+  

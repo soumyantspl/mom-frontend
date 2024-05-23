@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "./style/Login.css";
 import configData from "../../config/config";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate,Navigate, Link } from "react-router-dom";
 import LoginImage from "./LoginImage";
 
 const LoginByOtp = (props) => {
   console.log(configData.baseUrl);
   const [isOtpSend, setIsOtpSend] = useState(false);
   const [isSignInWithPassword, setIsSignInWithPassword] = useState(false);
-  const navigate = useNavigate();
+
 
   const submitOtp = (e) => {
     e.preventDefault();
@@ -23,8 +23,21 @@ const LoginByOtp = (props) => {
     e.preventDefault();
     props.setIsSetPassword(true);
   };
+
+  const isLogIn =true
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   console.log("isLogIn-----------------",process.env)
+  //   if (!isLogIn) {
+  //     navigate("/login");
+  //   } else {
+  //     navigate("/dashboard");
+  //   }
+  // }, []);
+  console.log("inside--------------");
   return (
     <section className="sign-in">
+       {isLogIn?<Navigate to="/dashboard" />:null}
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
