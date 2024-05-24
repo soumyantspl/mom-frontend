@@ -1,18 +1,29 @@
-import React,{useEffect,useState} from "react";
+import React, { useEffect, useState } from "react";
 import ntsplWhiteLogo from "../../../assets/images/Ntspl-Logo-white.png";
 import meetingLogo from "../../../assets/images/meeting_logo.png";
 import meeting2Logo from "../../../assets/images/meeting2.svg";
 import actionLogo from "../../../assets/images/clipboard_839860.png";
 import settingLogo from "../../../assets/images/setting.png";
-import { useNavigate,Navigate, Link } from "react-router-dom";
-console.log("-------------------",window.location.pathname );
+import { useNavigate, Navigate, Link } from "react-router-dom";
+import "./Sidebar.css"
+console.log("-------------------", window.location.pathname);
 
 const Sidebar = () => {
-    const [currentPath, setCurrentPath] = useState("");
-     useEffect(() => {
-        setCurrentPath(window.location.pathname)
-  }, []);
-  console.log("5555555555555555555",currentPath)
+  const [currentPath, setCurrentPath] = useState("");
+  const [hover, setHover] = useState(false);
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState(true);
+  const [isNewPage, setIsNewPage] = useState(true);
+  const paths=["/alerts","/meetingRoom","/unit","/designation","/department","/organization","/configuration","/employee"]
+
+  useEffect(() => {
+   
+    setCurrentPath(window.location.pathname);
+  //  setIsNewPage(false);
+    paths.includes(currentPath)?setIsSubMenuOpen(true):setIsSubMenuOpen(false)
+   // paths.includes(currentPath)?setIsNewPage(false):setIsSubMenuOpen(true)
+  }, [currentPath]);
+  console.log("isSubMenuOpen-------------------", isSubMenuOpen);
+
   return (
     <div>
       <div className="sidebar">
@@ -23,7 +34,7 @@ const Sidebar = () => {
             </div>
           </a>
           <div className="sidebar-close" />
-           {/* <svg
+          {/* <svg
     xmlns="http://www.w3.org/2000/svg"
     width="30"
     height="30"
@@ -54,22 +65,27 @@ const Sidebar = () => {
             </li>
           </a>
 
-          <Link to="/meetingList">
-            <li className={currentPath=="/meetingList"?"active-menu":""}>
+          <Link to="/meetingList" className="link" >
+            <li className={currentPath == "/meetingList" ? "active-menu" : ""}>
               <img className="meeting-logo" src={meetingLogo} />
               Meetings
             </li>
           </Link>
 
-          <a href="actions">
-          <li className={currentPath=="meetings"?"active-menu":""}>
+          <Link to="/actionList" className="link">
+            <li className={currentPath == "/actionList" ? "active-menu" : ""}>
               <img className="clipboard" src={actionLogo} />
               Actions
             </li>
-          </a>
+          </Link>
 
-          <a href="">
-          <li className={currentPath=="meetings"?"active-menu":""}>
+          <Link to="" className="link">
+            <li
+              className={currentPath == "manage" ? "active-menu" : ""}
+              onClick={() => {
+                setIsSubMenuOpen(!isSubMenuOpen);
+              }}
+            >
               <img className="clipboard" src={settingLogo} />
               <div className="manage-dropdown">
                 <div>Manage</div>
@@ -87,7 +103,72 @@ const Sidebar = () => {
                 </div>
               </div>
             </li>
-          </a>
+            {isSubMenuOpen  ? (
+              <ul className="sub-setting">
+                <Link to="/alerts" className="link">
+                  <li
+                    className={currentPath == "/alerts" ? "active-menu" : ""}
+                    // onClick={() => {
+                    //   setIsSubMenuOpen(true);
+                    // }}
+                  >
+                    - Alerts
+                  </li>
+                </Link>
+                <Link to="/meetingRoom" className="link">
+                  <li
+                     className={currentPath == "/meetingRoom" ? "active-menu" : ""}
+         
+                  >
+                    - Meeting Rooms
+                  </li>
+                </Link>
+                <Link to="/employee" className="link">
+                  <li
+                     className={currentPath == "/employee" ? "active-menu" : ""}
+         
+                  >
+                    - Employees
+                  </li>
+                </Link>
+
+                <Link to="/configuration" className="link">
+                  <li className={currentPath == "/configuration" ? "active-menu" : ""}>
+                    - Configuration
+                  </li>
+                </Link>
+
+                <Link to="/unit" className="link">
+                  <li
+                    className={currentPath == "/unit" ? "active-menu" : ""}
+                  >
+                    - Units
+                  </li>
+                </Link>
+                <Link to="/organization" className="link">
+                  <li
+                     className={currentPath == "/organization" ? "active-menu" : ""}
+                  >
+                    - Organisations
+                  </li>
+                </Link>
+                <Link to="/department" className="link">
+                  <li
+                    className={currentPath == "/department" ? "active-menu" : ""}
+                  >
+                    - Departments
+                  </li>
+                </Link>
+                <Link to="/designation" className="link">
+                  <li
+                    className={currentPath == "/designation" ? "active-menu" : ""}
+                  >
+                    - Designations
+                  </li>
+                </Link>
+              </ul>
+            ) : null}
+          </Link>
         </ul>
 
         <img className="meeting-img" src={meeting2Logo} alt="" />

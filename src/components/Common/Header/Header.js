@@ -8,7 +8,7 @@ const Header = () => {
         <div className="topbar-1">
           <div className="topbar1-content">
             <div className="d-flex align-items-center">
-              <button className="ps-0 sidebar-open-btn">
+              <button className="ps-0 sidebar-open-btn ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="28"

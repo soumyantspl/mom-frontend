@@ -15,7 +15,6 @@ const checkClass = isUserLoggedin ? "main-content" : "login-no-padding";
 const App = () => {
   return (
     <div>
-
       <MainRoute />
     </div>
   );
