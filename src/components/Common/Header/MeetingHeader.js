@@ -3,8 +3,8 @@ import { useNavigate, Navigate, Link } from "react-router-dom";
 const MeetingHeader = () => {
   return (
    
-<section className="topbar">
-    <div className="topbar-2 shadow-sm bg-white">
+<section className="topbar" >
+    <div className="topbar-2 shadow-sm bg-white" >
         <div className="topbar2-content">
             <ul>
                 <li>
