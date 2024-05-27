@@ -1,6 +1,11 @@
 import React from "react";
 // @ts-ignore
-import { Route, BrowserRouter as Router, Routes, Navigate } from "react-router-dom";
+import {
+  Route,
+  BrowserRouter as Router,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Dashboard from "../components/Dashboard/Dashboard";
 import OtpVerify from "../components/Login/OtpVerify";
 import LoginByOtp from "../components/Login/LogInByOtp";
@@ -19,7 +24,8 @@ import Organization from "../components/Setting/Organization/Organization";
 import Unit from "../components/Setting/Unit/Unit";
 import Department from "../components/Setting/Department/Department";
 import Designation from "../components/Setting/Designation/Designation";
-
+import CreateMeeting from "../components/Meeting/CreateMeeting";
+import MeetingPage from "../components/Meeting/MeetingPage";
 
 const MainRoute = () => {
   return (
@@ -36,19 +42,18 @@ const MainRoute = () => {
         <Route exact path="/signUp" element={<SignUp />} />
         <Route exact path="/meetingList" element={<MeetingList />} />
         <Route exact path="/actionList" element={<ActionList />} />
-       <Route exact path="/alerts" element={<Alert />} /> 
-       <Route exact path="/meetingRoom" element={<MeetingRoom />} /> 
-       <Route exact path="/employee" element={<Employee />} /> 
-       <Route exact path="/configuration" element={<Configuration />} /> 
-       <Route exact path="/organization" element={<Organization />} /> 
-       <Route exact path="/unit" element={<Unit />} /> 
-       <Route exact path="/department" element={<Department />} /> 
-       <Route exact path="/designation" element={<Designation />} /> 
-        
-        
+        <Route exact path="/alerts" element={<Alert />} />
+        <Route exact path="/meetingRoom" element={<MeetingRoom />} />
+        <Route exact path="/employee" element={<Employee />} />
+        <Route exact path="/configuration" element={<Configuration />} />
+        <Route exact path="/organization" element={<Organization />} />
+        <Route exact path="/unit" element={<Unit />} />
+        <Route exact path="/department" element={<Department />} />
+        <Route exact path="/designation" element={<Designation />} />
+        <Route exact path="/createMeeting" element={<MeetingPage />} />
       </Routes>
     </Router>
-  )
-}
+  );
+};
 
-export default MainRoute
+export default MainRoute;

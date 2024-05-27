@@ -1,0 +1,17 @@
+select {
+    font-size: 15px !important;
+    color: #75758b;
+  }
+  .hideField {
+    display: none;
+  }
+  .agenda-box-border .form-group,
+  .agenda-box-border .form-group label,
+  .agenda-box-border .form-group p {
+    margin: 0 !important;
+  }
+  .form-check label{
+    color: #000 !important;
+  }
+  
+  

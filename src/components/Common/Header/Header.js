@@ -32,7 +32,7 @@ const Header = () => {
 
           <div className="top-right-svg" >
             <div className="create-meeting-button">
-              <Link to="meeting/agenda" style={{ textDecoration: "none" }}>
+              <Link to="/createMeeting" style={{ textDecoration: "none" }}>
                 <button className="Mom-btn">
                   <p>Create Meeting</p>
                 </button>
