@@ -2,6 +2,7 @@ import React from "react";
 import Header from "../Common/Header/Header";
 import MeetingHeader from "../Common/Header/MeetingHeader";
 import Sidebar from "../Common/Sidebar/Sidebar";
+import "./style/CreateMeeting.css"
 
 const CreateMeeting = () => {
   return (
@@ -179,12 +180,13 @@ const CreateMeeting = () => {
                         </div>
                       </div>
                     </div>
-
+                    <p>sssssssssssssssssssssssssssssssss</p>
                     <div className="form-group">
                       <label className="mb-1 people">Attendee(s)</label>
                       <div className="d-flex people ">
                         <div className="people-circle">PK</div>
                         <div className="people-circle-add Mom-btn pointer">
+                        <p>sssssssssssssssssssssssssssssssss</p>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="20"
@@ -198,11 +200,14 @@ const CreateMeeting = () => {
                               d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
                             />
                           </svg>
+                          <p>sssssssssssssssssssssssssssssssss</p>
                         </div>
+                        <p>sssssssssssssssssssssssssssssssss</p>
                       </div>
+                      <p>sssssssssssssssssssssssssssssssss</p>  
                     </div>
 
-                    <div className="add-people-box">
+                    <div className="">
                       <div className="form-group pb-3 border-bottom">
                         <label className="mb-2">Select People</label>
 
