@@ -6,7 +6,7 @@ import { Margin } from "../../../node_modules/@mui/icons-material/index";
 const AddMeeting = (props) => {
   const [numAgenda, setNumAgenda] = useState(0);
   const [attendees, setAttendees] = useState([  ]);
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   const [selectedOption, setSelectedOption] = useState("prevMeetingRadio");
   
   const submitMeetingDetails = (e) => {
