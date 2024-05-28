@@ -6,17 +6,20 @@ import { useNavigate, Navigate, Link } from "react-router-dom";
 import LoginImage from "./LoginImage";
 import { useSelector, useDispatch } from "react-redux";
 import { sendOtp } from "../../redux/actions/authActions/authAction";
-import { toast } from "react-toastify";
+
 import ToastBar from "../Common/toast";
+import { ToastContainer, toast } from 'react-toastify';
 
 const LoginByOtp = (props) => {
   console.log(configData.baseUrl);
+  const navigate=useNavigate()
   const dispatch = useDispatch();
   const authData = useSelector((state) => state.auth);
-  console.log('auth data--------------------1234',authData)
+  console.log("auth data--------------------1234", authData);
   const [formData, setFormData] = useState({
     email: "",
   });
+  const [status, setStatus] = useState(false);
 
   const [errors, setErrors] = useState({});
 
@@ -38,7 +41,6 @@ const LoginByOtp = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    toast.success("iiiiiiiiiiiiiii");
     const newErrors = validateForm(formData);
     setErrors(newErrors);
 
@@ -51,7 +53,11 @@ const LoginByOtp = (props) => {
     }
 
     dispatch(sendOtp(formData.email));
+    setStatus(true);
+  
+   
   };
+console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
 
   const validateForm = (data) => {
     const errors = {};
@@ -68,18 +74,7 @@ const LoginByOtp = (props) => {
   const [isOtpSend, setIsOtpSend] = useState(false);
   const [isSignInWithPassword, setIsSignInWithPassword] = useState(false);
 
-  const submitOtp = (e) => {
-    e.preventDefault();
-    console.log("inputData------------", e.target.value);
-    // navigate("/otpVerify");
-    setIsOtpSend(true);
-    props.setIsOtpSend(true);
-  };
   console.log(isOtpSend);
-  const setIsSetPassword = (e) => {
-    e.preventDefault();
-    props.setIsSetPassword(true);
-  };
 
   const isLogIn = false;
   // const navigate = useNavigate();
@@ -93,8 +88,10 @@ const LoginByOtp = (props) => {
   // }, []);
   console.log("inside--------------");
   return (
+   
     <section className="sign-in login-page">
       {isLogIn ? <Navigate to="/dashboard" /> : null}
+      {authData.isSuccess ? <Navigate to="/otpVerify" /> : null}
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -162,10 +159,13 @@ const LoginByOtp = (props) => {
                 </div>
               </form>
             </div>
+            {status ? (
+              <ToastBar message={authData.message} variant={authData.variant}  />
+            ) : null}
           </div>
 
           <LoginImage />
-          <ToastBar message={authData.message} variant={authData.variant}/>
+          <ToastContainer />
         </div>
       </div>
     </section>

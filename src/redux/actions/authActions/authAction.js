@@ -31,22 +31,20 @@ export const sendOtp = (email) => {
         const resData = res.data;
         let data;
         if (resData.success) {
-          data={
-            variant:"success",
-            message:resData.message
-          }
-         
+          data = {
+            variant: "success",
+            message: resData.message,
+          };
         } else {
-           data={
-            variant:"danger",
-            message:resData.message
-          }
+          data = {
+            variant: "danger",
+            message: resData.message,
+          };
         }
         dispatch(isOtpSend(data));
       })
       .catch((err) => {
         console.log("err-----------------------------------", err);
-        toast.error(err.message);
         dispatch(failRequest(err.message));
       });
   };

@@ -4,7 +4,7 @@ import ntsplLogo from "../../assets/images/ntspl_logo.png";
 import meetingImage from "../../assets/images/meeting.png";
 import { useNavigate, Link } from "react-router-dom";
 import LoginImage from "./LoginImage";
-const isLogIn = process.env.REACT_APP_ISUSER_LOGIN;
+const isLogIn = false
 
 console.log("inside--------------");
 const OtpVerify = (props) => {
@@ -12,9 +12,8 @@ const OtpVerify = (props) => {
  
   const navigate = useNavigate();
   useEffect(() => {
-    if (!isLogIn) {
-      navigate("/login");
-    } else {
+    if (isLogIn) {
+     
       navigate("/dashboard");
     }
   }, []);
