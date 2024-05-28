@@ -5,6 +5,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Navigate,
+  // @ts-ignore
 } from "react-router-dom";
 import Dashboard from "../components/Dashboard/Dashboard";
 import OtpVerify from "../components/Login/OtpVerify";
@@ -26,6 +27,7 @@ import Department from "../components/Setting/Department/Department";
 import Designation from "../components/Setting/Designation/Designation";
 import CreateMeeting from "../components/Meeting/CreateMeeting";
 import MeetingPage from "../components/Meeting/MeetingPage";
+import ActionDetails from "../components/Action/ActionDetails";
 
 const MainRoute = () => {
   return (
@@ -42,6 +44,7 @@ const MainRoute = () => {
         <Route exact path="/signUp" element={<SignUp />} />
         <Route exact path="/meetingList" element={<MeetingList />} />
         <Route exact path="/actionList" element={<ActionList />} />
+        <Route exact path="/actionDetails" element={<ActionDetails />} />
         <Route exact path="/alerts" element={<Alert />} />
         <Route exact path="/meetingRoom" element={<MeetingRoom />} />
         <Route exact path="/employee" element={<Employee />} />
