@@ -7,6 +7,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import { useNavigate, Navigate, Link } from "react-router-dom";
 import MeetingHeader from "../Common/Header/MeetingHeader";
 //import ButtonToolbar from 'react-bootstrap/ButtonGroup';
+import Button from "react-bootstrap/Button";
 
 const MeetingList = () => {
   const [filter, setfilter] = useState(false);
@@ -125,6 +126,7 @@ const MeetingList = () => {
                 <span className="badge bg-success bg-opacity-10 text-success">
                   Scheduled
                 </span>
+                {/* <Button variant="success"  size="sm" style={{fontWeight:"bold"}} >Scheduled</Button> */}
               </td>
               <td data-label="Action Due">0/0</td>
               <td data-label="Action">
@@ -148,7 +150,7 @@ const MeetingList = () => {
                     <Dropdown.Menu>
                       <Dropdown.Item href="#/action-2">
                         <Link
-                          to="/meeting/meeting-detail"
+                          to="/viewMeetingDetails"
                           style={{textDecoration: "none",color:"black"}}
                         >
                           <svg

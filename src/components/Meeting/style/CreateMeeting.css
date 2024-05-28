@@ -13,5 +13,8 @@ select {
   .form-check label{
     color: #000 !important;
   }
+  .text-success{
+    color: #fff !important;
+  }
   
   

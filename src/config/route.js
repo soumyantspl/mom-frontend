@@ -26,10 +26,13 @@ import Department from "../components/Setting/Department/Department";
 import Designation from "../components/Setting/Designation/Designation";
 import CreateMeeting from "../components/Meeting/CreateMeeting";
 import MeetingPage from "../components/Meeting/MeetingPage";
+import ViewMeeting from "../components/Meeting/ViewMeeting";
+import { ToastContainer, toast } from 'react-toastify';
 
 const MainRoute = () => {
   return (
-    <Router>
+    <div>
+ <Router>
       <Routes>
         <Route exact path="/" element={<LoginByOtp />} />
         <Route exact path="/dashboard" element={<Dashboard />} />
@@ -51,8 +54,12 @@ const MainRoute = () => {
         <Route exact path="/department" element={<Department />} />
         <Route exact path="/designation" element={<Designation />} />
         <Route exact path="/createMeeting" element={<MeetingPage />} />
+        <Route exact path="/viewMeetingDetails" element={<ViewMeeting />} />
       </Routes>
     </Router>
+      <ToastContainer className="toast-position" position="bottom-right" />
+    </div>
+   
   );
 };
 

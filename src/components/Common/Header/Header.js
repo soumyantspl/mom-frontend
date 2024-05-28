@@ -8,9 +8,9 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 
 const Header = () => {
   return (
-    <section className="topbar" >
-      <div className="topbar-1" >
-        <div className="topbar1-content" >
+    <section className="topbar">
+      <div className="topbar-1">
+        <div className="topbar1-content">
           <div className="d-flex align-items-center">
             <button className="ps-0 sidebar-open-btn ">
               <svg
@@ -30,7 +30,7 @@ const Header = () => {
             <div className="meeting">Meeting Plus</div>
           </div>
 
-          <div className="top-right-svg" >
+          <div className="top-right-svg">
             <div className="create-meeting-button">
               <Link to="/createMeeting" style={{ textDecoration: "none" }}>
                 <button className="Mom-btn">
@@ -40,13 +40,13 @@ const Header = () => {
             </div>
 
             <div className="line"></div>
-            <Link to="notification" >
+            <Link to="notification">
               <div className="bell">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="22"
                   height="22"
-                  fill="currentColor"
+                  fill="#000"
                   className="bi bi-bell "
                   viewBox="0 0 16 16"
                 >
@@ -106,7 +106,7 @@ const Header = () => {
                 </div> */}
 
             <Dropdown>
-              <Dropdown.Toggle >
+              <Dropdown.Toggle>
                 <div className="d-flex admin-box">
                   <img src={profileImage} className="user" />
                   <span>Priyanka</span>

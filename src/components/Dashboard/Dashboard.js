@@ -1,5 +1,5 @@
 import React from "react";
-import "./Dashboard.css";
+// import "./Dashboard.css";
 import configData from "../../config/config";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
 import { useEffect, useState } from "react";

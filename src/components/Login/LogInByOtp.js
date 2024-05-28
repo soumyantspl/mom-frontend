@@ -1,15 +1,72 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./style/Login.css";
 import configData from "../../config/config";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
-import { useNavigate,Navigate, Link } from "react-router-dom";
+import { useNavigate, Navigate, Link } from "react-router-dom";
 import LoginImage from "./LoginImage";
+import { useSelector, useDispatch } from "react-redux";
+import { sendOtp } from "../../redux/actions/authActions/authAction";
+import { toast } from "react-toastify";
+import ToastBar from "../Common/toast";
 
 const LoginByOtp = (props) => {
   console.log(configData.baseUrl);
+  const dispatch = useDispatch();
+  const authData = useSelector((state) => state.auth);
+  console.log('auth data--------------------1234',authData)
+  const [formData, setFormData] = useState({
+    email: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const userObject = {  };
+  //   console.log(userObject)
+  //   dispatch(sendOtp(email))
+  //   navigate('/user')
+  // };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    toast.success("iiiiiiiiiiiiiii");
+    const newErrors = validateForm(formData);
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      // Form submission logic here
+      console.log("Form submitted successfully!");
+    } else {
+      console.log(`Form submission failed
+       due to validation errors.`);
+    }
+
+    dispatch(sendOtp(formData.email));
+  };
+
+  const validateForm = (data) => {
+    const errors = {};
+
+    if (!data.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+      errors.email = "Email is invalid";
+    }
+
+    return errors;
+  };
+
   const [isOtpSend, setIsOtpSend] = useState(false);
   const [isSignInWithPassword, setIsSignInWithPassword] = useState(false);
-
 
   const submitOtp = (e) => {
     e.preventDefault();
@@ -24,7 +81,7 @@ const LoginByOtp = (props) => {
     props.setIsSetPassword(true);
   };
 
-  const isLogIn =true
+  const isLogIn = false;
   // const navigate = useNavigate();
   // useEffect(() => {
   //   console.log("isLogIn-----------------",process.env)
@@ -36,8 +93,8 @@ const LoginByOtp = (props) => {
   // }, []);
   console.log("inside--------------");
   return (
-    <section className="sign-in">
-       {isLogIn?<Navigate to="/dashboard" />:null}
+    <section className="sign-in login-page">
+      {isLogIn ? <Navigate to="/dashboard" /> : null}
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -48,7 +105,7 @@ const LoginByOtp = (props) => {
                 src={ntsplLogo}
                 alt="logo"
               />
-              <form onSubmit={(e) => submitOtp(e)}>
+              <form onSubmit={handleSubmit}>
                 <div className="text">
                   <h4>Welcome to Meeting Plus</h4>
                   <p>Enter your email id to logging in to your account</p>
@@ -71,14 +128,23 @@ const LoginByOtp = (props) => {
                         <path d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2zm3.708 6.208L1 11.105V5.383zM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2z" />
                         <path d="M14.247 14.269c1.01 0 1.587-.857 1.587-2.025v-.21C15.834 10.43 14.64 9 12.52 9h-.035C10.42 9 9 10.36 9 12.432v.214C9 14.82 10.438 16 12.358 16h.044c.594 0 1.018-.074 1.237-.175v-.73c-.245.11-.673.18-1.18.18h-.044c-1.334 0-2.571-.788-2.571-2.655v-.157c0-1.657 1.058-2.724 2.64-2.724h.04c1.535 0 2.484 1.05 2.484 2.326v.118c0 .975-.324 1.39-.639 1.39-.232 0-.41-.148-.41-.42v-2.19h-.906v.569h-.03c-.084-.298-.368-.63-.954-.63-.778 0-1.259.555-1.259 1.4v.528c0 .892.49 1.434 1.26 1.434.471 0 .896-.227 1.014-.643h.043c.118.42.617.648 1.12.648m-2.453-1.588v-.227c0-.546.227-.791.573-.791.297 0 .572.192.572.708v.367c0 .573-.253.744-.564.744-.354 0-.581-.215-.581-.8Z" />
                       </svg>
-                      <input type="email" placeholder="Type Your Email" />
+                      <input
+                        type="text"
+                        placeholder="Type Your Email"
+                        name="email"
+                        onChange={handleChange}
+                        value={formData.email}
+                      />
                     </div>
+                    {errors.email && (
+                      <span className="error-message">{errors.email}</span>
+                    )}
                   </div>
                 </div>
 
-                <Link to="/otpVerify">
-                  <button className="signin-btn1">Send OTP</button>
-                </Link>
+                <button className="signin-btn1" type="submit">
+                  Send OTP
+                </button>
 
                 <div className="or">or</div>
 
@@ -99,6 +165,7 @@ const LoginByOtp = (props) => {
           </div>
 
           <LoginImage />
+          <ToastBar message={authData.message} variant={authData.variant}/>
         </div>
       </div>
     </section>

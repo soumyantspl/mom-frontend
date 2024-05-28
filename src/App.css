@@ -17,7 +17,10 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
-
+ul{
+  padding: 0;
+  margin: 0;
+}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -78,7 +81,8 @@ label {
 p {
   font-family: "Roboto", sans-serif;
   font-size: 16px;
-  margin: 0;
+  margin: 0 !important;
+  padding: 0;
 }
 p:last-child {
   margin-bottom: 0;
@@ -262,7 +266,7 @@ svg.bi.bi-person-fill {
   -webkit-box-shadow: 3px 47px 22px -55px rgba(0, 0, 0, 0.74);
   -moz-box-shadow: 3px 47px 22px -55px rgba(0, 0, 0, 0.74);
   box-shadow: 3px 47px 22px -55px rgba(0, 0, 0, 0.74);
-  z-index:99;
+  z-index:9;
 }
 .topbar2-content ul {
   display: flex;
@@ -740,6 +744,8 @@ margin-left: 10px !important;
   align-items: center;
   list-style: none;
   gap: 5px;
+  padding: 0;
+  margin: 0;
 }
 
 .left-tbl-bottom ul li {
@@ -1808,3 +1814,24 @@ th.action-col {
 } 
 }
 
+
+
+/* ------------------------------------------ */
+.add-btn p{
+  margin: 0;
+}
+.btn-primary{
+  background-color: transparent !important;
+  border: none !important;
+  color: #000 !important;
+}
+.btn-primary:hover {
+  background-color: #e3dfda88 !important;
+  border-radius: 50px !important;
+}
+.dropdown-toggle::after{
+  display: none !important;
+}
+.dropdown button{
+  border-radius: 50px !important;
+}
