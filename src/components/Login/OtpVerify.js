@@ -12,6 +12,7 @@ import {
   verifyOtp,
 } from "../../redux/actions/authActions/authAction";
 import LoaderButton from "../Common/LoaderButton";
+import * as constantMessages from "../../constants/constatntMessages";
 const isLogIn = false;
 
 console.log("inside--------------");
@@ -35,6 +36,16 @@ const OtpVerify = (props) => {
       navigate("/dashboard");
     }
   }, []);
+
+  const resendOtpAction = (e) => {
+    if (authData.email) {
+      dispatch(reSendOtp(authData.email));
+    } else {
+      errors.message = constantMessages.emailRequired;
+      setErrors(errors);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = validateForm(formData);
@@ -67,8 +78,12 @@ const OtpVerify = (props) => {
   };
   const otp = [];
   const validateForm = (data) => {
+    dispatch(updateOtpProcessed(false));
     console.log("data-------------------", data);
     const errors = {};
+    if (!authData.email) {
+      errors.message = constantMessages.emailRequired;
+    }
     if (!data.input1) {
       errors.message = "OTP is required";
     } else if (isNaN(data.input1)) {
@@ -125,7 +140,7 @@ const OtpVerify = (props) => {
 
   return (
     <section className="otp-varify">
-        {authData.isOtpVerifiedSuccess ? <Navigate to="/meetingList" /> : null}
+      {authData.isOtpVerifiedSuccess ? <Navigate to="/meetingList" /> : null}
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -208,19 +223,21 @@ const OtpVerify = (props) => {
                     <span className="error-message">{errors.message}</span>
                   )}
                   {authData.isOtpProcessed && authData.isSuccess ? (
-                    <span className="error-message" style={{ color: "green" }}>{authData.message}</span>
-                  ) : authData.isOtpProcessed && !authData.isSuccess ? (
-                    <span className="error-message" >
+                    <span className="error-message" style={{ color: "green" }}>
                       {authData.message}
                     </span>
+                  ) : authData.isOtpProcessed && !authData.isSuccess ? (
+                    <span className="error-message">{authData.message}</span>
                   ) : null}
                 </div>
                 {!authData.loading ? (
-                   <button className="btn1" type="submit"> Verify</button>
+                  <button className="btn1" type="submit">
+                    {" "}
+                    Verify
+                  </button>
                 ) : (
                   <LoaderButton />
                 )}
-              
 
                 <div className="back-resend back-arrow">
                   <Link to="/login">
@@ -249,13 +266,10 @@ const OtpVerify = (props) => {
                   </Link>
 
                   <div className="resend">
-                    <Link to="" onClick={()=>{dispatch(reSendOtp(authData.email))}}>Resend OTP</Link>
+                    <Link to="" onClick={resendOtpAction}>
+                      Resend OTP
+                    </Link>
                   </div>
-                
-
-
-
-
                 </div>
               </form>
             </div>
