@@ -4,6 +4,9 @@ import {
   MAKE_REQUEST,
   UPDATE_ISSUCCESS,
   OTP_VERIFIED,
+  UPDATE_OTP_PROCESSED,
+  PROCESSS_LOGOUT,
+  OTP_RESENT,
 } from "./actionTypes";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -78,9 +81,10 @@ export const isOtpVerified = (data) => {
   };
 };
 export const verifyOtp = (payload) => {
+  console.log('payload in action----------------',payload)
   return (dispatch) => {
     dispatch(makeRequest());
-    const url = `${process.env.REACT_APP_API_URL}/api/auth/verifyOtp`;
+    const url = `${process.env.REACT_APP_API_URL}/api/V1/auth/verifyOtp`;
     axios
       .post(url, payload)
       .then((res) => {
@@ -108,3 +112,67 @@ export const verifyOtp = (payload) => {
       });
   };
 };
+
+
+export const updateOtpProcessed = (status) => {
+  console.log("status--------------------------------", status);
+  return {
+    type: UPDATE_OTP_PROCESSED,
+    payload:status
+  };
+};
+
+export const logOut = () => {
+  
+  return {
+    type: PROCESSS_LOGOUT
+  };
+};
+
+
+
+
+
+
+export const reSendOtp = (email) => {
+  return (dispatch) => {
+    dispatch(makeRequest());
+    const url = `${process.env.REACT_APP_API_URL}/api/V1/auth/reSendOtp`;
+    const payload = { email };
+    axios
+      .post(url, payload)
+      .then((res) => {
+        console.log("resendOtp action ----------------------------", res.data);
+        const resData = res.data;
+        let data;
+        if (resData.success) {
+          data = {
+            ...resData,
+            variant: "success",
+            message: resData.message,
+            email
+          };
+        } else {
+          data = {
+            ...resData,
+            variant: "danger",
+            message: resData.message,
+            email
+          };
+        }
+        dispatch(isOtpReSend(data));
+      })
+      .catch((err) => {
+        console.log("err-----------------------------------", err);
+        dispatch(failRequest(err.message));
+      });
+  };
+};
+
+export const isOtpReSend = (data) => {
+  return {
+    type: OTP_RESENT,
+    payload: data,
+  };
+};
+

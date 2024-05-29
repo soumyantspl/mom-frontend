@@ -5,8 +5,11 @@ import { useNavigate, Navigate, Link } from "react-router-dom";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import { logOut } from "../../../redux/actions/authActions/authAction";
+import { useSelector, useDispatch } from "react-redux";
 
 const Header = () => {
+  const dispatch = useDispatch();
   return (
     <section className="topbar">
       <div className="topbar-1">
@@ -135,8 +138,9 @@ const Header = () => {
                 <Dropdown.Divider />
                 <Dropdown.Item eventKey="4">
                   <Link
-                    to="/meeting/meeting-detail"
+                    to="/logIn"
                     style={{ textDecoration: "none", color: "black" }}
+                    onClick={()=>{dispatch(logOut())}}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

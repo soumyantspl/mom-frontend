@@ -5,7 +5,7 @@ import ntsplLogo from "../../assets/images/ntspl_logo.png";
 import { useNavigate, Navigate, Link } from "react-router-dom";
 import LoginImage from "./LoginImage";
 import { useSelector, useDispatch } from "react-redux";
-import { sendOtp } from "../../redux/actions/authActions/authAction";
+import { sendOtp, updateOtpProcessed } from "../../redux/actions/authActions/authAction";
 import * as constantMessages from "../../constants/constatntMessages"
 
 import ToastBar from "../Common/toast";
@@ -14,7 +14,6 @@ import LoaderButton from "../Common/LoaderButton";
 
 const LoginByOtp = (props) => {
   console.log(configData.baseUrl);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const authData = useSelector((state) => state.auth);
   console.log("auth data--------------------1234", authData);
@@ -37,6 +36,9 @@ const LoginByOtp = (props) => {
         document.title = "Log In";
     }, []);
   const handleChange = (e) => {
+    console.log('9999999999999999999999999999999999999',authData)
+    
+    dispatch(updateOtpProcessed(false));
     const { name, value } = e.target;
     setFormData({
       ...formData,

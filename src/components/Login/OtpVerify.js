@@ -2,16 +2,21 @@ import React, { useState, useEffect } from "react";
 import "./style/OtpVerify.css";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
 import meetingImage from "../../assets/images/meeting.png";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Navigate, Link } from "react-router-dom";
 import LoginImage from "./LoginImage";
 import { useSelector, useDispatch } from "react-redux";
-import { updateIsSuccess } from "../../redux/actions/authActions/authAction";
+import {
+  reSendOtp,
+  updateIsSuccess,
+  updateOtpProcessed,
+  verifyOtp,
+} from "../../redux/actions/authActions/authAction";
+import LoaderButton from "../Common/LoaderButton";
 const isLogIn = false;
 
 console.log("inside--------------");
 const OtpVerify = (props) => {
   const [isOtpVerified, setIsOtpVerified] = useState(false);
-  const [otp1, setOtp1] = useState(0);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     input1: null,
@@ -33,25 +38,27 @@ const OtpVerify = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = validateForm(formData);
-    setErrors(newErrors);
-console.log('FINAL OTP--------------------------------',otp1)
-    if (Object.keys(newErrors).length === 0) {
+    setErrors(newErrors?.errors);
+    console.log(
+      "FINAL OTP--------------------------------",
+      newErrors.otpData,
+      authData
+    );
+    if (Object.keys(newErrors.errors).length === 0) {
       // Form submission logic here
+      const otp = newErrors.otpData;
 
-
-
-
-    //  setIsOtpProcessed(true);
-    //  dispatch(verifyOtp(authData.email,otp));
+      // setIsOtpProcessed(true);
+      dispatch(verifyOtp({ email: authData.email, otp }));
       console.log("Form submitted successfully!");
     } else {
       console.log(`Form submission failed
        due to validation errors.`);
     }
-    
   };
   console.log(isOtpVerified);
   const handleChange = (e) => {
+    dispatch(updateOtpProcessed(false));
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -60,12 +67,12 @@ console.log('FINAL OTP--------------------------------',otp1)
   };
   const otp = [];
   const validateForm = (data) => {
-    console.log("data-------------------",data)
+    console.log("data-------------------", data);
     const errors = {};
     if (!data.input1) {
       errors.message = "OTP is required";
     } else if (isNaN(data.input1)) {
-      console.log('in -------------1')
+      console.log("in -------------1");
       errors.message = "OTP must be a number";
     }
 
@@ -74,7 +81,7 @@ console.log('FINAL OTP--------------------------------',otp1)
     if (!data.input2) {
       errors.message = "OTP is required";
     } else if (isNaN(data.input2)) {
-      console.log('in -------------1')
+      console.log("in -------------1");
       errors.message = "OTP must be a number";
     }
     otp.push(data.input2);
@@ -96,27 +103,29 @@ console.log('FINAL OTP--------------------------------',otp1)
       errors.message = "OTP must be a number";
     }
     otp.push(data.input5);
-    
+
     if (!data.input6) {
       errors.message = "OTP is required";
     } else if (isNaN(data.input6)) {
       errors.message = "OTP must be a number";
     }
     otp.push(data.input6);
-    console.log('otp--------------------------------11111',otp)
+    console.log("otp--------------------------------11111", otp);
     if (otp.length !== 6) {
       errors.message = "OTP must be of 6 digits";
     }
-    const otpData=otp.join("")
-    console.log("test--------------------",otpData)
-   
-    setOtp1(otpData)
-    console.log(otp1)
-    return errors;
+    const otpData = otp.join("");
+    console.log("test--------------------", otpData);
+
+    return {
+      errors,
+      otpData,
+    };
   };
 
   return (
     <section className="otp-varify">
+        {authData.isOtpVerifiedSuccess ? <Navigate to="/meetingList" /> : null}
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -148,7 +157,7 @@ console.log('FINAL OTP--------------------------------',otp1)
                         value={formData.input1}
                       />
                     </div>
-                   
+
                     <div className="digit">
                       <input
                         type="text"
@@ -196,11 +205,22 @@ console.log('FINAL OTP--------------------------------',otp1)
                     </div>
                   </div>
                   {errors.message && (
-                      <span className="error-message">{errors.message}</span>
-                    )}
+                    <span className="error-message">{errors.message}</span>
+                  )}
+                  {authData.isOtpProcessed && authData.isSuccess ? (
+                    <span className="error-message" style={{ color: "green" }}>{authData.message}</span>
+                  ) : authData.isOtpProcessed && !authData.isSuccess ? (
+                    <span className="error-message" >
+                      {authData.message}
+                    </span>
+                  ) : null}
                 </div>
-
-                <button className="btn1"> Verify</button>
+                {!authData.loading ? (
+                   <button className="btn1" type="submit"> Verify</button>
+                ) : (
+                  <LoaderButton />
+                )}
+              
 
                 <div className="back-resend back-arrow">
                   <Link to="/login">
@@ -229,8 +249,13 @@ console.log('FINAL OTP--------------------------------',otp1)
                   </Link>
 
                   <div className="resend">
-                    <Link to="">Resend OTP</Link>
+                    <Link to="" onClick={()=>{dispatch(reSendOtp(authData.email))}}>Resend OTP</Link>
                   </div>
+                
+
+
+
+
                 </div>
               </form>
             </div>
