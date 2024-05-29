@@ -28,9 +28,9 @@
 .text h4{
     font-weight: 700;
 }
-.form-group {
+/* .form-group {
     margin: 0 !important;
-}
+} */
 .form-group span{
     color: red;
 }

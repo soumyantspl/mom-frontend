@@ -2,17 +2,21 @@ import {
     OTP_SENT,
   FAIL_REQUEST,
   MAKE_REQUEST,
+  UPDATE_ISSUCCESS
 } from "../actions/authActions/actionTypes";
 
 const initialObject = {
-  loading: true,
+  loading: false,
   isOtpSend:false,
   userList: [],
   userObject: {},
   errorMessage: "",
   isSuccess:false,
-  variant:"success",
-  message:""
+  isOtpProcessed:false,
+  variant:"",
+  message:"",
+  email:"",
+  otp:null
 };
 
 export const authReducer = (state = initialObject, action) => {
@@ -22,6 +26,7 @@ export const authReducer = (state = initialObject, action) => {
       return {
         ...state,
         loading: true,
+        isOtpProcessed:false
       };
     case FAIL_REQUEST:
       return {
@@ -44,9 +49,24 @@ export const authReducer = (state = initialObject, action) => {
         errorMessage: action.payload.message,
         isSuccess: action.payload.success,
         message:action.payload.message,
-        variant:action.payload.variant
+        variant:action.payload.variant,
+        isOtpProcessed:true,
+        loading: false,
+        email:action.payload.email
       };
- 
+      
+      case UPDATE_ISSUCCESS:
+        return {
+          ...state,
+          isSuccess: action.payload,
+          isOtpProcessed:false
+        };
+
+          // case SET_OTP:
+          //   return {
+          //     ...state,
+          //     otp: action.payload,
+          //   };
 
     default:
       return state;

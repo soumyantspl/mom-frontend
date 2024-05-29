@@ -6,23 +6,25 @@ import { useNavigate, Navigate, Link } from "react-router-dom";
 import LoginImage from "./LoginImage";
 import { useSelector, useDispatch } from "react-redux";
 import { sendOtp } from "../../redux/actions/authActions/authAction";
+import * as constantMessages from "../../constants/constatntMessages"
 
 import ToastBar from "../Common/toast";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
+import LoaderButton from "../Common/LoaderButton";
 
 const LoginByOtp = (props) => {
   console.log(configData.baseUrl);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const authData = useSelector((state) => state.auth);
   console.log("auth data--------------------1234", authData);
   const [formData, setFormData] = useState({
     email: "",
   });
-  const [status, setStatus] = useState(false);
-
+  const [otpStatus, setOtpStatus] = useState(false);
+  const [isOtpProcessed, setIsOtpProcessed] = useState(false);
   const [errors, setErrors] = useState({});
-
+  
   // const handleSubmit = (e) => {
   //   e.preventDefault();
   //   const userObject = {  };
@@ -30,7 +32,10 @@ const LoginByOtp = (props) => {
   //   dispatch(sendOtp(email))
   //   navigate('/user')
   // };
-
+  useEffect(() =>
+    {
+        document.title = "Log In";
+    }, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -46,26 +51,25 @@ const LoginByOtp = (props) => {
 
     if (Object.keys(newErrors).length === 0) {
       // Form submission logic here
+      setIsOtpProcessed(true);
+      dispatch(sendOtp(formData.email));
       console.log("Form submitted successfully!");
     } else {
       console.log(`Form submission failed
        due to validation errors.`);
     }
-
-    dispatch(sendOtp(formData.email));
-    setStatus(true);
-  
+   
    
   };
-console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
+  console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", authData);
 
   const validateForm = (data) => {
     const errors = {};
 
     if (!data.email.trim()) {
-      errors.email = "Email is required";
+      errors.email = constantMessages.emailRequired;
     } else if (!/\S+@\S+\.\S+/.test(data.email)) {
-      errors.email = "Email is invalid";
+      errors.email = constantMessages.invalidEmail;
     }
 
     return errors;
@@ -88,10 +92,10 @@ console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
   // }, []);
   console.log("inside--------------");
   return (
-   
     <section className="sign-in login-page">
       {isLogIn ? <Navigate to="/dashboard" /> : null}
       {authData.isSuccess ? <Navigate to="/otpVerify" /> : null}
+
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -136,12 +140,19 @@ console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
                     {errors.email && (
                       <span className="error-message">{errors.email}</span>
                     )}
+                     {authData.isOtpProcessed ? (
+                   <span className="error-message">{authData.message}</span>
+              // <ToastBar message={authData.message} variant={authData.variant} />
+            ) : null}
                   </div>
                 </div>
-
-                <button className="signin-btn1" type="submit">
-                  Send OTP
-                </button>
+                {!authData.loading ? (
+                  <button className="signin-btn1" type="submit">
+                    Send OTP
+                  </button>
+                ) : (
+                  <LoaderButton />
+                )}
 
                 <div className="or">or</div>
 
@@ -157,11 +168,11 @@ console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
                 <div className="set-pwd">
                   <Link to="/setPassword">Set Password</Link>
                 </div>
+               
               </form>
+             
             </div>
-            {status ? (
-              <ToastBar message={authData.message} variant={authData.variant}  />
-            ) : null}
+      
           </div>
 
           <LoginImage />
