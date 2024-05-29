@@ -22,8 +22,16 @@ const ActionList = () => {
   const showFilterAction = () => {
     setFilterAction(true);
   };
+
+
+
   const [modal, setModal] = useState(false);
   const [remark, setRemark] = useState("");
+
+  const setModalAction = () => {
+    setModal(true);
+  }
+
 
   const hideFilterAction = () => {
     setFilterAction(false);
@@ -71,7 +79,7 @@ const ActionList = () => {
             </div>
           </div>
           <div
-            className={`filter ${filterAction ? "show" : ""}`}
+            className={`${filterAction ? "filter show" : "filter"}`}
             id="form-container"
           >
             <div className="filter-container">
@@ -236,7 +244,7 @@ const ActionList = () => {
                             View Action Details
                           </Link>
                         </DropdownItem>
-                        <DropdownItem>
+                        <DropdownItem onClick={setModalAction}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             height="16"

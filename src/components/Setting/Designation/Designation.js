@@ -5,8 +5,8 @@ import Sidebar from '../../Common/Sidebar/Sidebar'
 const Designation = () => {
   return (
     <div>
-    <Header />
-    <Sidebar />
+      <Header />
+      <Sidebar />
     </div>
   )
 }
