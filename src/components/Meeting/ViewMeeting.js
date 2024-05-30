@@ -6,9 +6,9 @@ import Sidebar from "../Common/Sidebar/Sidebar";
     const ViewMeeting = () => {
       return (
         <div >
-        <Header />
+        {/* <Header />
         <MeetingHeader />
-        <Sidebar />
+        <Sidebar /> */}
         <div className="main-content">
 
 

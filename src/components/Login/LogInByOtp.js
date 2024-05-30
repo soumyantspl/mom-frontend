@@ -5,12 +5,16 @@ import ntsplLogo from "../../assets/images/ntspl_logo.png";
 import { useNavigate, Navigate, Link } from "react-router-dom";
 import LoginImage from "./LoginImage";
 import { useSelector, useDispatch } from "react-redux";
-import { sendOtp, updateOtpProcessed } from "../../redux/actions/authActions/authAction";
-import * as constantMessages from "../../constants/constatntMessages"
+import {
+  sendOtp,
+  updateOtpProcessed,
+} from "../../redux/actions/authActions/authAction";
+import * as constantMessages from "../../constants/constatntMessages";
 
 import ToastBar from "../Common/toast";
 import { ToastContainer, toast } from "react-toastify";
 import LoaderButton from "../Common/LoaderButton";
+import { Button } from "bootstrap";
 
 const LoginByOtp = (props) => {
   console.log(configData.baseUrl);
@@ -22,8 +26,11 @@ const LoginByOtp = (props) => {
   });
   const [otpStatus, setOtpStatus] = useState(false);
   const [isOtpProcessed, setIsOtpProcessed] = useState(false);
+  const [isSetPasswordSuccess, setIsSetPasswordSuccess] = useState(false);
+  const [isSetPassword, setIsSetPassword] = useState(false);
+
   const [errors, setErrors] = useState({});
-  
+
   // const handleSubmit = (e) => {
   //   e.preventDefault();
   //   const userObject = {  };
@@ -31,14 +38,13 @@ const LoginByOtp = (props) => {
   //   dispatch(sendOtp(email))
   //   navigate('/user')
   // };
-  useEffect(() =>
-    {
-        document.title = "Log In";
-    }, []);
+  useEffect(() => {
+    document.title = "Log In";
+  }, []);
   const handleChange = (e) => {
-    console.log('9999999999999999999999999999999999999',authData)
-    
+    setErrors({});
     dispatch(updateOtpProcessed(false));
+    console.log("9999999999999999999999999999999999999", authData);
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -47,21 +53,24 @@ const LoginByOtp = (props) => {
   };
 
   const handleSubmit = (e) => {
+    console.log(
+      "E---------isSetPassword------------------------->>>>>>>>>>",
+      isSetPassword
+    );
     e.preventDefault();
+
     const newErrors = validateForm(formData);
     setErrors(newErrors);
-
+    dispatch(updateOtpProcessed(false));
     if (Object.keys(newErrors).length === 0) {
       // Form submission logic here
       setIsOtpProcessed(true);
-      dispatch(sendOtp(formData.email));
+      dispatch(sendOtp(formData.email, isSetPassword));
       console.log("Form submitted successfully!");
     } else {
       console.log(`Form submission failed
        due to validation errors.`);
     }
-   
-   
   };
   console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", authData);
 
@@ -96,8 +105,12 @@ const LoginByOtp = (props) => {
   return (
     <section className="sign-in login-page">
       {isLogIn ? <Navigate to="/dashboard" /> : null}
-      {authData.isSuccess ? <Navigate to="/otpVerify" /> : null}
-
+      {authData.isSuccess && !authData.isSetPassword ? (
+        <Navigate to="/otpVerify" />
+      ) : null}
+      {authData.isSuccess && authData.isSetPassword ? (
+        <Navigate to="/setPassword" />
+      ) : null}
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -142,14 +155,14 @@ const LoginByOtp = (props) => {
                     {errors.email && (
                       <span className="error-message">{errors.email}</span>
                     )}
-                     {authData.isOtpProcessed ? (
-                   <span className="error-message">{authData.message}</span>
-              // <ToastBar message={authData.message} variant={authData.variant} />
-            ) : null}
+                    {authData.isOtpProcessed ? (
+                      <span className="error-message">{authData.message}</span>
+                    ) : // <ToastBar message={authData.message} variant={authData.variant} />
+                    null}
                   </div>
                 </div>
                 {!authData.loading ? (
-                  <button className="signin-btn1" type="submit">
+                  <button className="signin-btn1" type="submit"  onClick={() => setIsSetPassword(false)}>
                     Send OTP
                   </button>
                 ) : (
@@ -168,13 +181,16 @@ const LoginByOtp = (props) => {
                 </Link>
 
                 <div className="set-pwd">
-                  <Link to="/setPassword">Set Password</Link>
+                  <button
+                    type="submit"
+                    className="signin-btn2"
+                    onClick={() => setIsSetPassword(true)}
+                  >
+                    Set Password
+                  </button>
                 </div>
-               
               </form>
-             
             </div>
-      
           </div>
 
           <LoginImage />

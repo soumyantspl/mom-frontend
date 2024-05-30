@@ -21,7 +21,8 @@ const initialObject = {
   message: "",
   email: "",
   otp: null,
-  isOtpVerifiedSuccess:false
+  isOtpVerifiedSuccess:false,
+  isSetPassword:false
 };
 
 export const authReducer = (state = initialObject, action) => {
@@ -58,6 +59,7 @@ export const authReducer = (state = initialObject, action) => {
         isOtpProcessed: true,
         loading: false,
         email: action.payload.email,
+        isSetPassword:action.payload.isSetPassword
       };
 
     case UPDATE_ISSUCCESS:

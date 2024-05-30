@@ -144,7 +144,7 @@ const OtpVerify = (props) => {
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-            <div className="loginform-container">
+            <div className="loginform-container otp-page">
               <img
                 className="ntspl-logo"
                 // @ts-ignore

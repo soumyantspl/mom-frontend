@@ -1,41 +1,174 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./style/OtpVerify.css";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import LoginImage from "./LoginImage";
+import {
+  reSendOtp,
+  sendOtp,
+  updateIsSuccess,
+  updateOtpProcessed,
+  verifyOtp,
+} from "../../redux/actions/authActions/authAction";
+import { useSelector, useDispatch } from "react-redux";
+import * as constantMessages from "../../constants/constatntMessages";
+import LoaderButton from "../Common/LoaderButton";
 
 const SetPassword = (props) => {
   const [isOtpSend, setIsOtpSend] = useState(false);
   const [isSignInWithPassword, setIsSignInWithPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isOtpProcessed, setIsOtpProcessed] = useState(false);
+  const dispatch = useDispatch();
+  const authData = useSelector((state) => state.auth);
+  console.log("auth data--------------------1234", authData);
+  const [formData, setFormData] = useState({
+    input1: null,
+    input2: null,
+    input3: null,
+    input4: null,
+    input5: null,
+    input6: null,
+    password:null,
+    confirmPassword:null
+  });
   const navigate = useNavigate();
-  const isLogIn = process.env.REACT_APP_ISUSER_LOGIN;
+  const isLogIn = false;
   useEffect(() => {
-    if (!isLogIn) {
-      navigate("/login");
-    } else {
+    document.title = "Verify OTP";
+    if (isLogIn) {
       navigate("/dashboard");
     }
   }, []);
-  const submitOtp = (e) => {
-    e.preventDefault();
-    console.log("inputData------------", e.target.value);
-    // navigate("/otpVerify");
-    setIsOtpSend(true);
-    props.setIsOtpSend(true);
-  };
-  console.log(isOtpSend);
 
-  const setIsSetPassword = (e) => {
-    e.preventDefault();
-    console.log("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
-    props.setIsBackToSignIn();
+  const handleChange = (e) => {
+    dispatch(updateOtpProcessed(false));
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  const otp = [];
+  const validateForm = (data) => {
+    dispatch(updateOtpProcessed(false));
+    console.log("data-------------------", data);
+    const errors = {};
+    if (!authData.email) {
+      errors.message = constantMessages.emailRequired;
+    }
+    if (!data.input1) {
+      errors.message = "OTP is required";
+    } else if (isNaN(data.input1)) {
+      console.log("in -------------1");
+      errors.message = "OTP must be a number";
+    }
+
+    otp.push(data.input1);
+
+    if (!data.input2) {
+      errors.otp = "OTP is required";
+    } else if (isNaN(data.input2)) {
+      console.log("in -------------1");
+      errors.otp = "OTP must be a number";
+    }
+    otp.push(data.input2);
+    if (!data.input3) {
+      errors.otp = "OTP is required";
+    } else if (isNaN(data.input3)) {
+      errors.otp = "OTP must be a number";
+    }
+    otp.push(data.input3);
+    if (!data.input4) {
+      errors.otp = "OTP is required";
+    } else if (isNaN(data.input4)) {
+      errors.otp = "OTP must be a number";
+    }
+    otp.push(data.input4);
+    if (!data.input5) {
+      errors.otp = "OTP is required";
+    } else if (isNaN(data.input5)) {
+      errors.otp = "OTP must be a number";
+    }
+    otp.push(data.input5);
+
+    if (!data.input6) {
+      errors.otp = "OTP is required";
+    } else if (isNaN(data.input6)) {
+      errors.otp = "OTP must be a number";
+    }
+
+    if (!data.input6) {
+      errors.otp = "OTP is required";
+    } else if (isNaN(data.input6)) {
+      errors.otp = "OTP must be a number";
+    }
+
+    
+    otp.push(data.input6);
+    console.log("otp--------------------------------11111", otp);
+    if (otp.length !== 6) {
+      errors.message = "OTP must be of 6 digits";
+    }
+    const otpData = otp.join("");
+    console.log("test--------------------", otpData);
+
+    const regularExpression  = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+
+
+    if (!data.password.trim()) {
+      errors.password ="Password is required";
+    } else if (!regularExpression.test(data.password)) {
+      errors.password = "Password is required";
+    }
+
+    if (!data.confirmPassword.trim()) {
+      errors.confirmPassword = "Confirm password is required";
+    } else if (data.password===data.confirmPassword) {
+      errors.confirmPassword = "Password & Confirm Password is not matching!"
+    }
+
+
+
+
+    return {
+      errors,
+      otpData,
+    };
   };
 
-  const onSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("inputData------------", e.target.value);
-   
+    const newErrors = validateForm(formData);
+    setErrors(newErrors?.errors);
+    console.log(
+      "FINAL OTP--------------------------------",
+      newErrors.otpData,
+      authData
+    );
+    if (Object.keys(newErrors.errors).length === 0) {
+      // Form submission logic here
+      const otp = newErrors.otpData;
+
+      // setIsOtpProcessed(true);
+      dispatch(verifyOtp({ email: authData.email, otp }));
+      console.log("Form submitted successfully!");
+    } else {
+      console.log(`Form submission failed
+       due to validation errors.`);
+    }
   };
+
+  const resendOtpAction = (e) => {
+    if (authData.email) {
+      dispatch(reSendOtp(authData.email));
+    } else {
+      errors.message = constantMessages.emailRequired;
+      setErrors(errors);
+    }
+  };
+
+  console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", authData);
 
   return (
     //<section className="otp-varify">
@@ -45,40 +178,87 @@ const SetPassword = (props) => {
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
             <div className="loginform-container">
               <img src={ntsplLogo} className="ntspl-logo" />
-              <form onSubmit={(e) => onSubmit(e)}>
+              <form onSubmit={handleSubmit}>
                 <div className="text">
                   <h4>Welcome to Meeting Plus</h4>
                   <p>Set Password</p>
                 </div>
 
                 <div className="form-group">
-                  <div className="otp-check">
-                    <label className="mb-1">
-                      Enter Your 6 Digit OTP <span>*</span>
-                    </label>
-                    <div className="pincode">
-                      <div className="digit">
-                        <input type="text" />
-                      </div>
-                      <div className="digit">
-                        <input type="text" />
-                      </div>
-                      <div className="digit">
-                        <input type="text" />
-                      </div>
-                      <div className="digit">
-                        <input type="text" />
-                      </div>
-                      <div className="digit">
-                        <input type="text" />
-                      </div>
-                      <div className="digit">
-                        <input type="text" />
-                      </div>
+                <div class="otp-Check">
+
+                  <label className="mb-1">
+                    Enter Your 6 Digit OTP <span>*</span>
+                  </label>
+                  <div className="pincode">
+                    <div className="digit">
+                      <input
+                        type="text"
+                        name="input1"
+                        maxLength={1}
+                        onChange={handleChange}
+                        value={formData.input1}
+                      />
+                    </div>
+
+                    <div className="digit">
+                      <input
+                        type="text"
+                        name="input2"
+                        maxLength={1}
+                        onChange={handleChange}
+                        value={formData.input2}
+                      />
+                    </div>
+                    <div className="digit">
+                      <input
+                        type="text"
+                        name="input3"
+                        maxLength={1}
+                        onChange={handleChange}
+                        value={formData.input3}
+                      />
+                    </div>
+                    <div className="digit">
+                      <input
+                        type="text"
+                        name="input4"
+                        maxLength={1}
+                        onChange={handleChange}
+                        value={formData.input4}
+                      />
+                    </div>
+                    <div className="digit">
+                      <input
+                        type="text"
+                        name="input5"
+                        maxLength={1}
+                        onChange={handleChange}
+                        value={formData.input5}
+                      />
+                    </div>
+                    <div className="digit">
+                      <input
+                        type="text"
+                        name="input6"
+                        maxLength={1}
+                        onChange={handleChange}
+                        value={formData.input6}
+                      />
                     </div>
                   </div>
+                  </div>
+                  {errors.otp && (
+                    <span className="error-message">{errors.otp}</span>
+                  )}
                 </div>
-
+                {authData.isOtpProcessed && authData.isSuccess ? (
+                  <span className="error-message" style={{ color: "green" }}>
+                    {authData.message}
+                  </span>
+                ) : authData.isOtpProcessed && !authData.isSuccess ? (
+                  <span className="error-message">{authData.message}</span>
+                ) : null}
                 <div className="form-group">
                   <div className="pwd-group">
                     <label className="mb-1">
@@ -101,7 +281,9 @@ const SetPassword = (props) => {
                     </div>
                   </div>
                 </div>
-
+                {errors.password && (
+                  <span className="error-message">{errors.password}</span>
+                )}
                 <div className="form-group">
                   <div className="cpwd-group">
                     <label className="mb-1">
@@ -126,14 +308,35 @@ const SetPassword = (props) => {
                       />
                     </div>
                   </div>
+                  {errors.confirmPassword && (
+                    <span className="error-message">
+                      {errors.confirmPassword}
+                    </span>
+                  )}
+                 
+                  {authData.isOtpProcessed && authData.isSuccess ? (
+                    <span className="error-message" style={{ color: "green" }}>
+                      {authData.message}
+                    </span>
+                  ) : authData.isOtpProcessed && !authData.isSuccess ? (
+                    <span className="error-message">{authData.message}</span>
+                  ) : null}
                 </div>
 
-                <a href="/meeting/meeting-list">
+                {/* <a href="/meeting/meeting-list">
                   <button className="btn1">OTP Verify</button>
-                </a>
+                </a> */}
+                {!authData.loading ? (
+                  <button className="btn1" type="submit">
+                    {" "}
+                    OTP Verify
+                  </button>
+                ) : (
+                  <LoaderButton />
+                )}
 
                 <div className="back-resend back-arrow">
-                <Link to="/login">
+                  <Link to="/login">
                     <div className="back">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -148,12 +351,21 @@ const SetPassword = (props) => {
                           d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"
                         />
                       </svg>
-                      <span>Back to Sign In</span>
+                      <span
+                        onClick={() => {
+                          dispatch(updateIsSuccess(false));
+                        }}
+                      >
+                        Back to Sign In
+                      </span>
                     </div>
                   </Link>
 
                   <div className="resend">
-                    <a href="">Resend OTP</a>
+                    {/* <a href="">Resend OTP</a> */}
+                    <Link to="" onClick={resendOtpAction}>
+                      Resend OTP
+                    </Link>
                   </div>
                 </div>
               </form>

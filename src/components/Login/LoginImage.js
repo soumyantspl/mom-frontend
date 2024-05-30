@@ -5,7 +5,7 @@ const LoginImage = () => {
   return (
    
     <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-    <div className="loginform-container">
+    
         <div className="blue-box-cont">
           <div className="blue-box">
             <div className="slider-cont">
@@ -23,7 +23,7 @@ const LoginImage = () => {
           <p className="copyright">&copy; 2024 NTSPL All Rights Reserved</p>
         </div>
         </div>
-            </div>
+          
    
   );
 };

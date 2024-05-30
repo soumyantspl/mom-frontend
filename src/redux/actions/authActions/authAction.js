@@ -29,7 +29,7 @@ export const isOtpSend = (data) => {
   };
 };
 
-export const sendOtp = (email) => {
+export const sendOtp = (email,isSetPassword) => {
   return (dispatch) => {
     dispatch(makeRequest());
     const url = `${process.env.REACT_APP_API_URL}/api/V1/auth/sendOtp`;
@@ -45,14 +45,16 @@ export const sendOtp = (email) => {
             ...resData,
             variant: "success",
             message: resData.message,
-            email
+            email,
+            isSetPassword
           };
         } else {
           data = {
             ...resData,
             variant: "danger",
             message: resData.message,
-            email
+            email,
+            isSetPassword
           };
         }
         dispatch(isOtpSend(data));

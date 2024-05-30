@@ -16,6 +16,7 @@
     float: left;
     padding-left: 50px; 
     padding-top: 45px;
+ 
 }
 .login-page form{
     position: relative;
@@ -106,12 +107,18 @@
     left: 0;
     transform: translateY(-50%);
 }
-.set-pwd{
+.set-pwd button{
     text-align: center;
     font-size: 14px;
     margin: 20px 0;
     color: gray;
+    border: none;
+    padding: 0;
 }
 .set-pwd a{
     color: gray;
+}
+.img-fluid
+{
+    width: 170px;
 }

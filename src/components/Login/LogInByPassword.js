@@ -30,7 +30,7 @@ const LogInByPassword = (props) => {
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-      <div className="loginform-container">
+      <div className="loginform-container by-password">
         <img src={ntsplLogo} className="ntspl-logo" />
 
         <form onSubmit={(e) => onSubmit(e)}>

@@ -21,7 +21,7 @@
 .otp-varify form{
     position: relative;
     width: 400px;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 85px);
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -29,7 +29,7 @@
 .text h4{
     font-weight: 700;
 }
-.form-group {
+.otp-page .form-group {
     margin: 35px 0 !important;
 }
 .form-group span{
@@ -66,8 +66,9 @@
 }
 .back-resend{
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    margin: 35px 0;
+    margin: 25px 0;
     font-size: 14px;
 }
 .resend a{
@@ -80,4 +81,7 @@
 }
 .back span{
     color: rgb(11 119 232);
+}
+a{
+    text-decoration: none;
 }
