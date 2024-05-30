@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import Header from "../Common/Header/Header";
 import Sidebar from "../Common/Sidebar/Sidebar";
+// @ts-ignore
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { useNavigate, Navigate, Link } from "react-router-dom";
 import MeetingHeader from "../Common/Header/MeetingHeader";
 //import ButtonToolbar from 'react-bootstrap/ButtonGroup';
+
 
 const MeetingList = () => {
   const [filter, setfilter] = useState(false);
@@ -159,7 +161,7 @@ const MeetingList = () => {
                         </Dropdown.Item>
                         <Dropdown.Item href="#/action-1">
                           <Link
-                            to="/meeting/write-minutes"
+                            to="/createMinutes"
                             style={{ textDecoration: "none", color: "black" }}
                           >
                             <svg

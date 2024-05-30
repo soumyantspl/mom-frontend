@@ -28,7 +28,7 @@ import Designation from "../components/Setting/Designation/Designation";
 import CreateMeeting from "../components/Meeting/CreateMeeting";
 import MeetingPage from "../components/Meeting/MeetingPage";
 import ActionDetails from "../components/Action/ActionDetails";
-
+import CreateMinutes from "../components/minutes/createMinutes";
 const MainRoute = () => {
   return (
     <Router>
@@ -54,6 +54,7 @@ const MainRoute = () => {
         <Route exact path="/department" element={<Department />} />
         <Route exact path="/designation" element={<Designation />} />
         <Route exact path="/createMeeting" element={<MeetingPage />} />
+        <Route exact path="/createMinutes" element={<CreateMinutes />} />
       </Routes>
     </Router>
   );
