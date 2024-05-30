@@ -4,8 +4,11 @@ import configData from "../../config/config";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
 import { useNavigate ,Navigate,Link} from "react-router-dom";
 import LoginImage from "./LoginImage";
+import { updateIsSuccess } from "../../redux/actions/authActions/authAction";
+import { useSelector, useDispatch } from "react-redux";
 
 const LogInByPassword = (props) => {
+  const dispatch = useDispatch();
   const onSubmit = (e) => {
     e.preventDefault();
     console.log("inputData------------", e.target.value);
@@ -119,7 +122,13 @@ const LogInByPassword = (props) => {
                   d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"
                 />
               </svg>
-              <span>Back to Sign In</span>
+              <span
+                        onClick={() => {
+                          dispatch(updateIsSuccess(false));
+                        }}
+                      >
+                        Back to Sign In
+                      </span>
             </div>
             </Link>
         </form>

@@ -6,7 +6,8 @@ import {
   OTP_VERIFIED,
   UPDATE_OTP_PROCESSED,
   PROCESSS_LOGOUT,
-  OTP_RESENT
+  OTP_RESENT,
+  SET_PASSWORD
 } from "../actions/authActions/actionTypes";
 
 const initialObject = {
@@ -106,6 +107,16 @@ export const authReducer = (state = initialObject, action) => {
           loading:false,
           isOtpVerifiedSuccess:false
         };
+        
+        case SET_PASSWORD:
+          return {
+            ...state,
+            message:action.payload.message,
+            isSuccess: action.payload.success,
+            loading:false,
+            isOtpProcessed:true,
+            isOtpVerifiedSuccess:action.payload.success,
+          };
 
     default:
       return state;

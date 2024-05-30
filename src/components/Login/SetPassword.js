@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./style/OtpVerify.css";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
-import { useNavigate, Link } from "react-router-dom";
 import LoginImage from "./LoginImage";
 import {
   reSendOtp,
   sendOtp,
+  setPassword,
   updateIsSuccess,
   updateOtpProcessed,
   verifyOtp,
@@ -13,6 +13,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import * as constantMessages from "../../constants/constatntMessages";
 import LoaderButton from "../Common/LoaderButton";
+import { useNavigate, Navigate, Link } from "react-router-dom";
 
 const SetPassword = (props) => {
   const [isOtpSend, setIsOtpSend] = useState(false);
@@ -29,8 +30,8 @@ const SetPassword = (props) => {
     input4: null,
     input5: null,
     input6: null,
-    password:null,
-    confirmPassword:null
+    password: "",
+    confirmPassword: "",
   });
   const navigate = useNavigate();
   const isLogIn = false;
@@ -104,7 +105,6 @@ const SetPassword = (props) => {
       errors.otp = "OTP must be a number";
     }
 
-    
     otp.push(data.input6);
     console.log("otp--------------------------------11111", otp);
     if (otp.length !== 6) {
@@ -113,23 +113,23 @@ const SetPassword = (props) => {
     const otpData = otp.join("");
     console.log("test--------------------", otpData);
 
-    const regularExpression  = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-
-
-    if (!data.password.trim()) {
-      errors.password ="Password is required";
-    } else if (!regularExpression.test(data.password)) {
-      errors.password = "Password is required";
-    }
+    const regularExpression =
+      /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
     if (!data.confirmPassword.trim()) {
-      errors.confirmPassword = "Confirm password is required";
-    } else if (data.password===data.confirmPassword) {
-      errors.confirmPassword = "Password & Confirm Password is not matching!"
+      errors.message = "Confirm password is required";
+    } else if (data.password !== data.confirmPassword) {
+      errors.message = "Password & Confirm Password is not matching!";
     }
 
+    if (!data.password.trim()) {
+      errors.message = "Password is required";
+    } else if (!regularExpression.test(data.password)) {
+      errors.message =
+        "Password is must have Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character";
+    }
 
-
+    console.log("--------------------->>>>>>>>>>>>>>>>>>>>>>>>>123", errors);
 
     return {
       errors,
@@ -138,6 +138,10 @@ const SetPassword = (props) => {
   };
 
   const handleSubmit = (e) => {
+    console.log(
+      "------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",
+      formData
+    );
     e.preventDefault();
     const newErrors = validateForm(formData);
     setErrors(newErrors?.errors);
@@ -151,7 +155,9 @@ const SetPassword = (props) => {
       const otp = newErrors.otpData;
 
       // setIsOtpProcessed(true);
-      dispatch(verifyOtp({ email: authData.email, otp }));
+      dispatch(
+        setPassword({ email: authData.email, otp, password: formData.password })
+      );
       console.log("Form submitted successfully!");
     } else {
       console.log(`Form submission failed
@@ -168,11 +174,23 @@ const SetPassword = (props) => {
     }
   };
 
-  console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", authData);
+  console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", errors);
+
+  const showPassword = (id) => {
+    var x = document.getElementById(id);
+    if (x.type === "password") {
+      x.type = "text";
+    } else {
+      x.type = "password";
+    }
+  };
 
   return (
     //<section className="otp-varify">
     <section className="otp-varify">
+      {authData.isOtpVerifiedSuccess ? (
+        <Navigate to="/logInByPassword" />
+      ) : null}
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -185,80 +203,73 @@ const SetPassword = (props) => {
                 </div>
 
                 <div className="form-group">
-                <div class="otp-Check">
+                  <div class="otp-Check">
+                    <label className="mb-1">
+                      Enter Your 6 Digit OTP <span>*</span>
+                    </label>
+                    <div className="pincode">
+                      <div className="digit">
+                        <input
+                          type="text"
+                          name="input1"
+                          maxLength={1}
+                          onChange={handleChange}
+                          value={formData.input1}
+                        />
+                      </div>
 
-                  <label className="mb-1">
-                    Enter Your 6 Digit OTP <span>*</span>
-                  </label>
-                  <div className="pincode">
-                    <div className="digit">
-                      <input
-                        type="text"
-                        name="input1"
-                        maxLength={1}
-                        onChange={handleChange}
-                        value={formData.input1}
-                      />
+                      <div className="digit">
+                        <input
+                          type="text"
+                          name="input2"
+                          maxLength={1}
+                          onChange={handleChange}
+                          value={formData.input2}
+                        />
+                      </div>
+                      <div className="digit">
+                        <input
+                          type="text"
+                          name="input3"
+                          maxLength={1}
+                          onChange={handleChange}
+                          value={formData.input3}
+                        />
+                      </div>
+                      <div className="digit">
+                        <input
+                          type="text"
+                          name="input4"
+                          maxLength={1}
+                          onChange={handleChange}
+                          value={formData.input4}
+                        />
+                      </div>
+                      <div className="digit">
+                        <input
+                          type="text"
+                          name="input5"
+                          maxLength={1}
+                          onChange={handleChange}
+                          value={formData.input5}
+                        />
+                      </div>
+                      <div className="digit">
+                        <input
+                          type="text"
+                          name="input6"
+                          maxLength={1}
+                          onChange={handleChange}
+                          value={formData.input6}
+                        />
+                      </div>
                     </div>
-
-                    <div className="digit">
-                      <input
-                        type="text"
-                        name="input2"
-                        maxLength={1}
-                        onChange={handleChange}
-                        value={formData.input2}
-                      />
-                    </div>
-                    <div className="digit">
-                      <input
-                        type="text"
-                        name="input3"
-                        maxLength={1}
-                        onChange={handleChange}
-                        value={formData.input3}
-                      />
-                    </div>
-                    <div className="digit">
-                      <input
-                        type="text"
-                        name="input4"
-                        maxLength={1}
-                        onChange={handleChange}
-                        value={formData.input4}
-                      />
-                    </div>
-                    <div className="digit">
-                      <input
-                        type="text"
-                        name="input5"
-                        maxLength={1}
-                        onChange={handleChange}
-                        value={formData.input5}
-                      />
-                    </div>
-                    <div className="digit">
-                      <input
-                        type="text"
-                        name="input6"
-                        maxLength={1}
-                        onChange={handleChange}
-                        value={formData.input6}
-                      />
-                    </div>
-                  </div>
-                  </div>
-                  {errors.otp && (
+                    {/* {errors.otp && (
                     <span className="error-message">{errors.otp}</span>
-                  )}
+                  )} */}
+                  </div>
                 </div>
-                {authData.isOtpProcessed && authData.isSuccess ? (
-                  <span className="error-message" style={{ color: "green" }}>
-                    {authData.message}
-                  </span>
-                ) : authData.isOtpProcessed && !authData.isSuccess ? (
-                  <span className="error-message">{authData.message}</span>
-                ) : null}
+
                 <div className="form-group">
                   <div className="pwd-group">
                     <label className="mb-1">
@@ -272,18 +283,27 @@ const SetPassword = (props) => {
                         fill="currentColor"
                         className="bi bi-eye-slash"
                         viewBox="0 0 16 16"
+                        onClick={()=>showPassword("password")}
                       >
                         <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z" />
                         <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829" />
                         <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z" />
                       </svg>
-                      <input type="password" placeholder="Enter Password" />
+                      <input
+                        type="password"
+                        placeholder="Enter Password"
+                        name="password"
+                        id="password"
+                        onChange={handleChange}
+                        value={formData.password}
+                      />
                     </div>
                   </div>
-                </div>
-                {errors.password && (
+                  {/* {errors.password && (
                   <span className="error-message">{errors.password}</span>
-                )}
+                )} */}
+                </div>
+
                 <div className="form-group">
                   <div className="cpwd-group">
                     <label className="mb-1">
@@ -297,6 +317,7 @@ const SetPassword = (props) => {
                         fill="currentColor"
                         className="bi bi-eye-slash"
                         viewBox="0 0 16 16"
+                        onClick={()=>showPassword("confirmPassword")}
                       >
                         <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z" />
                         <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829" />
@@ -305,15 +326,22 @@ const SetPassword = (props) => {
                       <input
                         type="password"
                         placeholder="Enter Confirm Password"
+                        name="confirmPassword"
+                        id="confirmPassword"
+                        onChange={handleChange}
+                        value={formData.confirmPassword}
                       />
                     </div>
-                  </div>
-                  {errors.confirmPassword && (
+                    {/* {errors.confirmPassword && (
                     <span className="error-message">
                       {errors.confirmPassword}
                     </span>
+                  )} */}
+                  </div>
+                  {errors.message && (
+                    <span className="error-message">{errors.message}</span>
                   )}
-                 
+
                   {authData.isOtpProcessed && authData.isSuccess ? (
                     <span className="error-message" style={{ color: "green" }}>
                       {authData.message}

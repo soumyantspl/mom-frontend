@@ -7,6 +7,7 @@ import {
   UPDATE_OTP_PROCESSED,
   PROCESSS_LOGOUT,
   OTP_RESENT,
+  SET_PASSWORD,
 } from "./actionTypes";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -177,4 +178,47 @@ export const isOtpReSend = (data) => {
     payload: data,
   };
 };
+
+
+export const setPassword = (payload) => {
+  console.log('payload in setPassword action----------------',payload)
+  return (dispatch) => {
+    dispatch(makeRequest());
+    const url = `${process.env.REACT_APP_API_URL}/api/V1/auth/setPassword`;
+    axios
+      .post(url, payload)
+      .then((res) => {
+        console.log("verifyOtp action ----------------------------", res.data);
+        const resData = res.data;
+        let data;
+        if (resData.success) {
+          data = {
+            ...resData,
+            variant: "success",
+            message: resData.message,
+          };
+        } else {
+          data = {
+            ...resData,
+            variant: "danger",
+            message: resData.message,
+          };
+        }
+        dispatch(isPasswordSet(data));
+      })
+      .catch((err) => {
+        console.log("err-----------------------------------", err);
+        dispatch(failRequest(err.message));
+      });
+  };
+};
+
+
+export const isPasswordSet = (data) => {
+  return {
+    type: SET_PASSWORD,
+    payload: data,
+  };
+};
+
 
