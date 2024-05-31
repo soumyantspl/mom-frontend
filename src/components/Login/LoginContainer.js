@@ -2,7 +2,7 @@
 // import "./style/Login.css";
 // import configData from "../../config/config";
 // import { useNavigate } from "react-router-dom";
-// import OtpVerify from "./OtpVerify";
+// import otp-verify from "./otp-verify";
 // import LogInByOtp from "./LogInByOtp";
 // import LogInByPassword from "./LogInByPassword";
 // import ntsplLogo from "../../assets/images/ntspl_logo.png";
@@ -18,7 +18,7 @@
 //   const submitOtp = (e) => {
 //     e.preventDefault();
 //     console.log("inputData------------", e.target.value);
-//     // navigate("/otpVerify");
+//     // navigate("/otp-verify");
 //     setIsOtpSend(true);
 //   };
 
@@ -36,7 +36,7 @@
 //   return (
 //     <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
 //       {isOtpSend ? (
-//         <OtpVerify setIsOtpSend={setIsOtpSend} />
+//         <otp-verify setIsOtpSend={setIsOtpSend} />
 //       ) : isSignInWithPassword ? (
 //         <LogInByPassword setIsSignInWithPassword={setIsSignInWithPassword} />
 //       ) : isSetPassword ? (
@@ -52,7 +52,7 @@
 
 //     // <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
 //     //   {(isOtpSend) ? (
-//     //     <OtpVerify />
+//     //     <otp-verify />
 //     //   ) : (
 //     //     <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
 //     //       <div className="loginform-container">

@@ -19,7 +19,7 @@ const SetPassword = (props) => {
   const submitOtp = (e) => {
     e.preventDefault();
     console.log("inputData------------", e.target.value);
-    // navigate("/otpVerify");
+    // navigate("/otp-verify");
     setIsOtpSend(true);
     props.setIsOtpSend(true);
   };

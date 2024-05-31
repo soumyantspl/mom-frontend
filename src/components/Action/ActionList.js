@@ -14,7 +14,7 @@ import Header from "../Common/Header/Header";
 import Sidebar from "../Common/Sidebar/Sidebar";
 import MeetingHeader from "../Common/Header/MeetingHeader";
 import ActionDetails from "./ActionDetails";
-import "./ActionList.css";
+import "../Action/style/ActionDetails.css";
 
 const ActionList = () => {
   const [filterAction, setFilterAction] = useState(false);
@@ -23,17 +23,13 @@ const ActionList = () => {
     setFilterAction(true);
   };
 
-
-
   const [modal, setModal] = useState(false);
-  const [reassignDetailModal, setReassignDetailsModal] = useState(false)
+  const [reassignDetailModal, setReassignDetailsModal] = useState(false);
   const [remark, setRemark] = useState("");
 
   const setReAssignRequestModalAction = () => {
     setModal(!modal);
-  }
-
-
+  };
 
   const hideFilterAction = () => {
     setFilterAction(false);
@@ -48,9 +44,18 @@ const ActionList = () => {
     );
   };
 
-  const toggleModalT = () => setReassignDetailsModal(!reassignDetailModal)
+  const toggleModalT = () => setReassignDetailsModal(!reassignDetailModal);
 
+  const [locationType, setLocationType] = useState("");
+  const [addPersonType, setAddPersonType] = useState("email");
+  const onLocationTypeChange = (event) => {
+    setLocationType(event.target.value);
+  };
 
+  const [showAddNewPeople, setShowAddNewPeople] = useState(false);
+  const onToggleAddNewPeople = (event) => {
+    setShowAddNewPeople(!showAddNewPeople);
+  };
   return (
     <div>
       <Header />
@@ -271,20 +276,39 @@ const ActionList = () => {
                             <ModalBody>
                               <div className="modal-body delete-txt">
                                 <h6>Reassign Detail</h6>
-                                <textarea cols="40" rows="4" id="remark" name="remark" placeholder="" required></textarea>
+                                <textarea
+                                  cols="40"
+                                  rows="4"
+                                  id="remark"
+                                  name="remark"
+                                  placeholder=""
+                                  required
+                                ></textarea>
                               </div>
                             </ModalBody>
                             <ModalFooter>
-                              <Button color="secondary" className="reset btn btn-secondary bg-white border-primary text-primary" onClick={toggleModal}>
+                              <Button
+                                color="secondary"
+                                className="reset btn btn-secondary bg-white border-primary text-primary"
+                                onClick={toggleModal}
+                              >
                                 Close
                               </Button>
-                              <Button color="primary" className="Mom-btn btn btn-secondary bg-primary border-primary" onClick={toggleModal}>
+                              <Button
+                                color="primary"
+                                className="Mom-btn btn btn-secondary bg-primary border-primary"
+                                onClick={toggleModal}
+                              >
                                 Submit Request
                               </Button>
                             </ModalFooter>
                           </Modal>
                         </DropdownItem>
-                        <DropdownItem onClick={() => { setReassignDetailsModal(true) }}>
+                        <DropdownItem
+                          onClick={() => {
+                            setReassignDetailsModal(true);
+                          }}
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="16"
@@ -300,28 +324,43 @@ const ActionList = () => {
                             />
                           </svg>
                           Reassign
-                          <Modal isOpen={reassignDetailModal} toggle={toggleModalT}>
+                          <Modal
+                            isOpen={reassignDetailModal}
+                            toggle={toggleModalT}
+                          >
                             <ModalHeader toggle={toggleModalT}>
                               Reassign
                             </ModalHeader>
                             <div className="modal-body">
                               <form>
-
                                 <div className="minutes-box">
                                   <div className="form-group">
                                     <div className="position-relative">
-                                      <label className="pb-2 input-date">Reason</label>
+                                      <label className="pb-2 input-date">
+                                        Reason
+                                      </label>
                                       <div>
-                                        <textarea cols="40" rows="4" id="remark" name="remark" placeholder="" required></textarea>
+                                        <textarea
+                                          cols="40"
+                                          rows="4"
+                                          id="remark"
+                                          name="remark"
+                                          placeholder=""
+                                          required
+                                        ></textarea>
                                       </div>
                                     </div>
                                   </div>
                                   <div className="form-group">
                                     <div className="position-relative">
-                                      <label className="pb-2 input-date">Priority</label>
+                                      <label className="pb-2 input-date">
+                                        Priority
+                                      </label>
                                       <div>
                                         <select name="" id="priority">
-                                          <option value="">Select Priority</option>
+                                          <option value="">
+                                            Select Priority
+                                          </option>
                                           <option value="">High</option>
                                           <option value="">Normal</option>
                                           <option value="">Low</option>
@@ -330,63 +369,156 @@ const ActionList = () => {
                                     </div>
                                   </div>
                                   <div className="form-group pb-3 border-bottom">
-                                    <label className="pb-2">Select Responsible Person
+                                    <label className="pb-2">
+                                      Select Responsible Person
                                     </label>
 
                                     <div className="pb-2 d-flex w-100">
                                       <div className="form-check form-check-inline">
-                                        <input className="form-check-input" value="manually" type="radio" name="locationtype"
-                                          id="flexRadioDefault1" />
-                                        <label className="form-check-label"
-                                          // @ts-ignore
-                                          for="locationtype">
+                                        <input
+                                          className="form-check-input"
+                                          checked={locationType === "manually"}
+                                          onChange={onLocationTypeChange}
+                                          value="manually"
+                                          type="radio"
+                                          name="locationtype"
+                                          id="flexRadioDefault1"
+                                        />
+                                        <label
+                                          className="form-check-label"
+                                          htmlFor="flexRadioDefault1"
+                                        >
                                           Select From Attendees
                                         </label>
                                       </div>
                                       <div className="form-check form-check-inline">
                                         <div className="form-check">
-                                          <input className="form-check-input" value="meetingroom" type="radio"
-                                            name="locationtype" id="flexRadioDefault1" />
-
-                                          <label className="form-check-label" for="locationtype">
+                                          <input
+                                            className="form-check-input"
+                                            checked={
+                                              locationType === "meetingroom"
+                                            }
+                                            onChange={onLocationTypeChange}
+                                            value="meetingroom"
+                                            type="radio"
+                                            name="locationtype"
+                                            id="flexRadioDefault2"
+                                          />
+                                          <label
+                                            className="form-check-label"
+                                            htmlFor="flexRadioDefault2"
+                                          >
                                             Select From Employees
                                           </label>
                                         </div>
                                       </div>
-
+                                      <div className="form-check form-check-inline">
+                                        <div className="form-check">
+                                          <input
+                                            className="form-check-input"
+                                           
+                                            checked={showAddNewPeople}
+                                            onChange={onToggleAddNewPeople}
+                                            value="meetingroom"
+                                            type="radio"
+                                            name="locationtype"
+                                            id="flexRadioDefault2"
+                                          />
+                                          <label
+                                            className="form-check-label"
+                                            htmlFor="flexRadioDefault2"
+                                          >
+                                           Add New People
+                                          </label>
+                                        </div>
+                                      </div>
+                                      <div className="form-check form-check-inline"></div>
                                     </div>
 
-
-                                    <select className="mb-2">
-                                      <option value="" disabled selected> Name / Email Address
+                                    <select
+                                      className={`mb-2 ${
+                                        locationType !== "manually"
+                                          ? "hideField"
+                                          : ""
+                                      }`}
+                                    >
+                                      <option value="" disabled selected>
+                                        Name / Email Address
                                       </option>
-                                      <option value="prabhas@example.com">Prabhas Khamari</option>
-                                      <option value="debasis@example.com">Debasis Behera</option>
-                                      <option value="rakesh@example.com">Rakesh Baral</option>
+                                      <option value="prabhas@example.com">
+                                        Prabhas Khamari
+                                      </option>
+                                      <option value="debasis@example.com">
+                                        Debasis Behera
+                                      </option>
+                                      <option value="rakesh@example.com">
+                                        Rakesh Baral
+                                      </option>
                                     </select>
 
-                                    <select className="mb-2" >
-                                      <option value="" disabled selected> Name / Employee ID
+                                    <select
+                                      className={`mb-2 ${
+                                        locationType !== "meetingroom"
+                                          ? "hideField"
+                                          : ""
+                                      }`}
+                                    >
+                                      <option value="" disabled selected>
+                                        Name / Employee ID
                                       </option>
-                                      <option value="prabhas@example.com">Prabhas Khamari</option>
-                                      <option value="debasis@example.com">Debasis Behera</option>
-                                      <option value="rakesh@example.com">Rakesh Baral</option>
+                                      <option value="prabhas@example.com">
+                                        Prabhas Khamari
+                                      </option>
+                                      <option value="debasis@example.com">
+                                        Debasis Behera
+                                      </option>
+                                      <option value="rakesh@example.com">
+                                        Rakesh Baral
+                                      </option>
                                     </select>
-                                  </div>
 
-                                  <div className="form-group">
-                                    <label className="pb-2">Add New People</label>
-                                    <div className="row">
-                                      <div className="col-xl-6">
-                                        <input type="text" placeholder="Email" className="pb-2" />
-                                      </div>
-                                      <div className="col-xl-6">
-                                        <input type="text" placeholder="Name" />
-                                      </div>
+                                    <div className="form-group">
+                                      {/* <div className="pb-2 d-flex w-100">
+                                        <div className="form-check form-check-inline">
+                                          <input
+                                            className="form-check-input"
+                                            checked={showAddNewPeople}
+                                            onChange={onToggleAddNewPeople}
+                                            value="addNewPeople"
+                                            type="radio"
+                                            name="addNewPeopleToggle"
+                                            id="addNewPeopleToggle"
+                                          />
+                                          <label
+                                            className="form-check-label"
+                                            htmlFor="addNewPeopleToggle"
+                                          >
+                                            Add New People
+                                          </label>
+                                        </div>
+                                      </div> */}
+                                      {showAddNewPeople && (
+                                        <div className="form-group">
+                                          <div className="row">
+                                            <div className="col-xl-6">
+                                              <input
+                                                type="text"
+                                                placeholder="Email"
+                                                className="pb-2"
+                                              />
+                                            </div>
+                                            <div className="col-xl-6">
+                                              <input
+                                                type="text"
+                                                placeholder="Name"
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )}
                                     </div>
                                   </div>
                                 </div>
-
                               </form>
                             </div>
                             <ModalFooter>

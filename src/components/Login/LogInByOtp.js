@@ -14,7 +14,7 @@ const LoginByOtp = (props) => {
   const submitOtp = (e) => {
     e.preventDefault();
     console.log("inputData------------", e.target.value);
-    // navigate("/otpVerify");
+    // navigate("/otp-verify");
     setIsOtpSend(true);
     props.setIsOtpSend(true);
   };
@@ -76,7 +76,7 @@ const LoginByOtp = (props) => {
                   </div>
                 </div>
 
-                <Link to="/otpVerify">
+                <Link to="/otp-verify">
                   <button className="signin-btn1">Send OTP</button>
                 </Link>
 

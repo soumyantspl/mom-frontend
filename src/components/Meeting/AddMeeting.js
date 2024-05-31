@@ -41,7 +41,7 @@ const AddMeeting = (props) => {
   //   }
 
   //     {isOtpSend ? (
-  //     <OtpVerify setIsOtpSend={setIsOtpSend} />
+  //     <otp-verify setIsOtpSend={setIsOtpSend} />
   //   ) : isSignInWithPassword ? (
   //     <LogInByPassword setIsSignInWithPassword={setIsSignInWithPassword} />
   //   ) : isSetPassword ? (

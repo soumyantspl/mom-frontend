@@ -6,6 +6,7 @@ import { useNavigate, Navigate, Link } from "react-router-dom";
 import Header from "../Common/Header/Header";
 import Sidebar from "../Common/Sidebar/Sidebar";
 import MeetingHeader from "../Common/Header/MeetingHeader";
+import "../Action/style/ActionDetails.css";
 
 const ActionDetails = () => {
   const [modal, setModal] = useState(false);

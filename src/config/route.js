@@ -36,9 +36,9 @@ const MainRoute = () => {
         <Route exact path="/" element={<LoginByOtp />} />
         <Route exact path="/dashboard" element={<Dashboard />} />
         <Route exact path="/login" element={<LoginByOtp />} />
-        <Route exact path="/otpVerify" element={<OtpVerify />} />
+        <Route exact path="/otp-verify" element={<otpVerify />} />
         <Route exact path="/logInByOtp" element={<LoginByOtp />} />
-        <Route exact path="/otpVerify" element={<OtpVerify />} />
+        <Route exact path="/otp-verify" element={<otpVerify />} />
         <Route exact path="/logInByPassword" element={<LogInByPassword />} />
         <Route exact path="/setPassword" element={<SetPassword />} />
         <Route exact path="/signUp" element={<SignUp />} />
