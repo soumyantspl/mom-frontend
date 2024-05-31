@@ -38,6 +38,8 @@ const SetPassword = (props) => {
   const isLogIn = false;
   useEffect(() => {
     document.title = "Set Password : Meeting Plus";
+    const inputId=document.getElementById(parseInt(1));
+    inputId.focus()
     if (isLogIn) {
       navigate("/dashboard");
     }
@@ -45,11 +47,20 @@ const SetPassword = (props) => {
 
   const handleChange = (e) => {
     dispatch(updateOtpProcessed(false));
-    const { name, value } = e.target;
+    console.log("id------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",e.target.id)
+    dispatch(updateOtpProcessed(false));
+    const { value, name,id } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
+    console.log("id------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",id)
+    const inputId=document.getElementById(parseInt(id)+1);
+    const nextField=document.getElementById(parseInt(id)+1)
+    console.log("nextField-------------->>>>>>>>>>>>>>>>>>>>>",nextField)
+    if(nextField && value.length==1){
+      nextField.focus();
+    }
   };
   const otp = [];
   const validateForm = (data) => {
@@ -216,6 +227,7 @@ const SetPassword = (props) => {
                           onChange={handleChange}
                           value={formData.input1}
                           autocomplete="off"
+                          id={1}
                         />
                       </div>
 
@@ -227,6 +239,7 @@ const SetPassword = (props) => {
                           onChange={handleChange}
                           value={formData.input2}
                           autocomplete="off"
+                          id={2}
                         />
                       </div>
                       <div className="digit">
@@ -237,6 +250,7 @@ const SetPassword = (props) => {
                           onChange={handleChange}
                           value={formData.input3}
                           autocomplete="off"
+                          id={3}
                         />
                       </div>
                       <div className="digit">
@@ -247,6 +261,7 @@ const SetPassword = (props) => {
                           onChange={handleChange}
                           value={formData.input4}
                           autocomplete="off"
+                          id={4}
                         />
                       </div>
                       <div className="digit">
@@ -257,6 +272,7 @@ const SetPassword = (props) => {
                           onChange={handleChange}
                           value={formData.input5}
                           autocomplete="off"
+                          id={5}
                         />
                       </div>
                       <div className="digit">
@@ -267,6 +283,7 @@ const SetPassword = (props) => {
                           onChange={handleChange}
                           value={formData.input6}
                           autocomplete="off"
+                          id={6}
                         />
                       </div>
                     </div>

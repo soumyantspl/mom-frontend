@@ -68,6 +68,7 @@ export const authReducer = (state = initialObject, action) => {
         ...state,
         isSuccess: action.payload,
         isOtpProcessed: false,
+        isOtpVerifiedSuccess:false
       };
 
       case OTP_RESENT:
