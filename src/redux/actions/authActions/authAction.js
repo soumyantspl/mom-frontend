@@ -100,6 +100,11 @@ export const verifyOtp = (payload) => {
             variant: "success",
             message: resData.message,
           };
+          // const {token, userData} = resData;
+          // console.log('resData ------------------------------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>',resData)
+          // console.log('token ------------------------------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>',resData.token,token)
+          // localStorage.setItem("accessToken", token);
+          // localStorage.setItem("userData", userData);
         } else {
           data = {
             ...resData,

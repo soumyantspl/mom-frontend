@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import profileImage from "../../../assets/images/profile.png";
 import "./Header.css";
 import { useNavigate, Navigate, Link } from "react-router-dom";
@@ -9,7 +9,28 @@ import { logOut } from "../../../redux/actions/authActions/authAction";
 import { useSelector, useDispatch } from "react-redux";
 
 const Header = () => {
-  const dispatch = useDispatch();
+  // const [name, setName] = useState("");
+  // //const [password, setPassword] = useState("");
+  // const [navigate, setNavigate] = useState(false);
+
+   const dispatch = useDispatch();
+
+  // const userData = localStorage.getItem("userData");
+  // const accessToken=localStorage.getItem("accessToken");
+  // if(userData){
+  //   setName(userData?.name);
+  // }
+  
+
+  // const handleLogout = () => {
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("userData");
+  //   alert("Tokens have been removed");
+  // };
+
+  // if (!accessToken) {
+  //   return <Navigate to="/login" />;
+  // }
   return (
     <section className="topbar">
       <div className="topbar-1">
@@ -140,7 +161,9 @@ const Header = () => {
                   <Link
                     to="/logIn"
                     style={{ textDecoration: "none", color: "black" }}
-                    onClick={()=>{dispatch(logOut())}}
+                    onClick={() => {
+                      dispatch(logOut());
+                    }}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

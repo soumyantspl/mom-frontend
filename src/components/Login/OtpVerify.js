@@ -31,7 +31,7 @@ const OtpVerify = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
-    document.title = "Verify OTP";
+    document.title = "Verify OTP: Meeting Plus";
     if (isLogIn) {
       navigate("/dashboard");
     }

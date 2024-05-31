@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+  import React, { useState, useEffect } from "react";
 import "./style/Login.css";
 import configData from "../../config/config";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
@@ -39,7 +39,7 @@ const LoginByOtp = (props) => {
   //   navigate('/user')
   // };
   useEffect(() => {
-    document.title = "Log In";
+    document.title = "Log In: Meeting Plus";
   }, []);
   const handleChange = (e) => {
     setErrors({});
@@ -106,10 +106,10 @@ const LoginByOtp = (props) => {
     <section className="sign-in login-page">
       {isLogIn ? <Navigate to="/dashboard" /> : null}
       {authData.isSuccess && !authData.isSetPassword ? (
-        <Navigate to="/otpVerify" />
+        <Navigate to="/otp-verify" />
       ) : null}
       {authData.isSuccess && authData.isSetPassword ? (
-        <Navigate to="/setPassword" />
+        <Navigate to="/set-password" />
       ) : null}
       <div className="container-fluid">
         <div className="row">
@@ -171,7 +171,7 @@ const LoginByOtp = (props) => {
 
                 <div className="or">or</div>
 
-                <Link to="/logInByPassword">
+                <Link to="/login-by-password">
                   <button
                     className="signin-btn2"
                     // onClick={() => props.setIsSignInWithPassword(true)}

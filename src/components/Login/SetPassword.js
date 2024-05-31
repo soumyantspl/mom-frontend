@@ -36,7 +36,7 @@ const SetPassword = (props) => {
   const navigate = useNavigate();
   const isLogIn = false;
   useEffect(() => {
-    document.title = "Set Password";
+    document.title = "Set Password : Meeting Plus";
     if (isLogIn) {
       navigate("/dashboard");
     }
@@ -117,16 +117,15 @@ const SetPassword = (props) => {
       /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
     if (!data.confirmPassword.trim()) {
-      errors.message = "Confirm password is required";
+      errors.message = constantMessages.confirmPasswordRequired;
     } else if (data.password !== data.confirmPassword) {
-      errors.message = "Password & Confirm Password is not matching!";
+      errors.message = constantMessages.confirmAndMainPasswordMatch;
     }
 
     if (!data.password.trim()) {
-      errors.message = "Password is required";
+      errors.message = constantMessages.passwordRequired;
     } else if (!regularExpression.test(data.password)) {
-      errors.message =
-        "Password is must have Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character";
+      errors.message = constantMessages.passwordRegex;
     }
 
     console.log("--------------------->>>>>>>>>>>>>>>>>>>>>>>>>123", errors);
@@ -264,9 +263,9 @@ const SetPassword = (props) => {
                         />
                       </div>
                     </div>
-                    {/* {errors.otp && (
-                    <span className="error-message">{errors.otp}</span>
-                  )} */}
+                    {errors.otp && (
+                      <span className="error-message">{errors.otp}</span>
+                    )}
                   </div>
                 </div>
 
@@ -283,7 +282,7 @@ const SetPassword = (props) => {
                         fill="currentColor"
                         className="bi bi-eye-slash"
                         viewBox="0 0 16 16"
-                        onClick={()=>showPassword("password")}
+                        onClick={() => showPassword("password")}
                       >
                         <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z" />
                         <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829" />
@@ -299,9 +298,9 @@ const SetPassword = (props) => {
                       />
                     </div>
                   </div>
-                  {/* {errors.password && (
-                  <span className="error-message">{errors.password}</span>
-                )} */}
+                  {errors.password && (
+                    <span className="error-message">{errors.password}</span>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -317,7 +316,7 @@ const SetPassword = (props) => {
                         fill="currentColor"
                         className="bi bi-eye-slash"
                         viewBox="0 0 16 16"
-                        onClick={()=>showPassword("confirmPassword")}
+                        onClick={() => showPassword("confirmPassword")}
                       >
                         <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z" />
                         <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829" />
@@ -332,11 +331,11 @@ const SetPassword = (props) => {
                         value={formData.confirmPassword}
                       />
                     </div>
-                    {/* {errors.confirmPassword && (
-                    <span className="error-message">
-                      {errors.confirmPassword}
-                    </span>
-                  )} */}
+                    {errors.confirmPassword && (
+                      <span className="error-message">
+                        {errors.confirmPassword}
+                      </span>
+                    )}
                   </div>
                   {errors.message && (
                     <span className="error-message">{errors.message}</span>
