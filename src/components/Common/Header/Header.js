@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import profileImage from "../../../assets/images/profile.png";
 import "./Header.css";
 // @ts-ignore
@@ -9,12 +9,36 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 // @ts-ignore
 import DropdownButton from "react-bootstrap/DropdownButton";
+import { logOut } from "../../../redux/actions/authActions/authAction";
+import { useSelector, useDispatch } from "react-redux";
 
 const Header = () => {
+  // const [name, setName] = useState("");
+  // //const [password, setPassword] = useState("");
+  // const [navigate, setNavigate] = useState(false);
+
+   const dispatch = useDispatch();
+
+  // const userData = localStorage.getItem("userData");
+  // const accessToken=localStorage.getItem("accessToken");
+  // if(userData){
+  //   setName(userData?.name);
+  // }
+  
+
+  // const handleLogout = () => {
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("userData");
+  //   alert("Tokens have been removed");
+  // };
+
+  // if (!accessToken) {
+  //   return <Navigate to="/login" />;
+  // }
   return (
-    <section className="topbar" >
-      <div className="topbar-1" >
-        <div className="topbar1-content" >
+    <section className="topbar">
+      <div className="topbar-1">
+        <div className="topbar1-content">
           <div className="d-flex align-items-center">
             <button className="ps-0 sidebar-open-btn ">
               <svg
@@ -34,7 +58,7 @@ const Header = () => {
             <div className="meeting">Meeting Plus</div>
           </div>
 
-          <div className="top-right-svg" >
+          <div className="top-right-svg">
             <div className="create-meeting-button">
               <Link to="/createMeeting" style={{ textDecoration: "none" }}>
                 <button className="Mom-btn">
@@ -44,13 +68,13 @@ const Header = () => {
             </div>
 
             <div className="line"></div>
-            <Link to="notification" >
+            <Link to="notification">
               <div className="bell">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="22"
                   height="22"
-                  fill="currentColor"
+                  fill="#000"
                   className="bi bi-bell "
                   viewBox="0 0 16 16"
                 >
@@ -110,7 +134,7 @@ const Header = () => {
                 </div> */}
 
             <Dropdown>
-              <Dropdown.Toggle >
+              <Dropdown.Toggle>
                 <div className="d-flex admin-box">
                   <img src={profileImage} className="user" />
                   <span>Priyanka</span>
@@ -139,8 +163,11 @@ const Header = () => {
                 <Dropdown.Divider />
                 <Dropdown.Item eventKey="4">
                   <Link
-                    to="/meeting/meeting-detail"
+                    to="/logIn"
                     style={{ textDecoration: "none", color: "black" }}
+                    onClick={() => {
+                      dispatch(logOut());
+                    }}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

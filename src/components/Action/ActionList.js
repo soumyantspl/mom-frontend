@@ -56,6 +56,7 @@ const ActionList = () => {
   const onToggleAddNewPeople = (event) => {
     setShowAddNewPeople(!showAddNewPeople);
   };
+
   return (
     <div>
       <Header />
@@ -341,7 +342,9 @@ const ActionList = () => {
                                       </label>
                                       <div>
                                         <textarea
+                                          // @ts-ignore
                                           cols="40"
+                                          // @ts-ignore
                                           rows="4"
                                           id="remark"
                                           name="remark"
@@ -416,7 +419,6 @@ const ActionList = () => {
                                         <div className="form-check">
                                           <input
                                             className="form-check-input"
-                                           
                                             checked={showAddNewPeople}
                                             onChange={onToggleAddNewPeople}
                                             value="meetingroom"
@@ -428,7 +430,7 @@ const ActionList = () => {
                                             className="form-check-label"
                                             htmlFor="flexRadioDefault2"
                                           >
-                                           Add New People
+                                            Add New People
                                           </label>
                                         </div>
                                       </div>

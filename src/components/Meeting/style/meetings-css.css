@@ -1,0 +1,18 @@
+.form-group input{
+    border: 1px solid rgb(202, 183, 221) ;
+}
+.agenda-background{
+    width: 100%;
+    padding: 16px 5px;
+    border: 1px solid #dcdcdc;
+    margin-bottom: 15px;
+}
+#children-pane h2{
+    font-size: 17px;
+    margin:0;
+}
+.open-div .collapse{
+    padding: 20px 6px;
+    border-top: 1px solid #80808042;
+    margin-top: 16px;
+}

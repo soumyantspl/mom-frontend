@@ -27,36 +27,40 @@ import Department from "../components/Setting/Department/Department";
 import Designation from "../components/Setting/Designation/Designation";
 import CreateMeeting from "../components/Meeting/CreateMeeting";
 import MeetingPage from "../components/Meeting/MeetingPage";
-import ActionDetails from "../components/Action/ActionDetails";
-import CreateMinutes from "../components/minutes/createMinutes";
+import ViewMeeting from "../components/Meeting/ViewMeeting";
+import { ToastContainer, toast } from 'react-toastify';
+
 const MainRoute = () => {
   return (
-    <Router>
+    <div>
+ <Router>
       <Routes>
         <Route exact path="/" element={<LoginByOtp />} />
         <Route exact path="/dashboard" element={<Dashboard />} />
-        <Route exact path="/login" element={<LoginByOtp />} />
-        <Route exact path="/otp-verify" element={<otpVerify />} />
-        <Route exact path="/logInByOtp" element={<LoginByOtp />} />
-        <Route exact path="/otp-verify" element={<otpVerify />} />
-        <Route exact path="/logInByPassword" element={<LogInByPassword />} />
-        <Route exact path="/setPassword" element={<SetPassword />} />
-        <Route exact path="/signUp" element={<SignUp />} />
-        <Route exact path="/meetingList" element={<MeetingList />} />
-        <Route exact path="/actionList" element={<ActionList />} />
-        <Route exact path="/actionDetails" element={<ActionDetails />} />
+        <Route exact path="/login" element={<LoginByOtp />}  title="LoginByOtp"/>
+        <Route exact path="/otp-verify" element={<OtpVerify />} />
+        <Route exact path="/log-in-by-otp" element={<LoginByOtp />}  title="LoginByOtp"/>
+        <Route exact path="/otp-verify" element={<OtpVerify />} />
+        <Route exact path="/login-by-password" element={<LogInByPassword />} />
+        <Route exact path="/set-password" element={<SetPassword />} />
+        <Route exact path="/sign-up" element={<SignUp />} />
+        <Route exact path="/meeting-list" element={<MeetingList />} />
+        <Route exact path="/action-list" element={<ActionList />} />
         <Route exact path="/alerts" element={<Alert />} />
-        <Route exact path="/meetingRoom" element={<MeetingRoom />} />
+        <Route exact path="/meeting-room" element={<MeetingRoom />} />
         <Route exact path="/employee" element={<Employee />} />
         <Route exact path="/configuration" element={<Configuration />} />
         <Route exact path="/organization" element={<Organization />} />
         <Route exact path="/unit" element={<Unit />} />
         <Route exact path="/department" element={<Department />} />
         <Route exact path="/designation" element={<Designation />} />
-        <Route exact path="/createMeeting" element={<MeetingPage />} />
-        <Route exact path="/createMinutes" element={<CreateMinutes />} />
+        <Route exact path="/create-meeting" element={<MeetingPage />} />
+        <Route exact path="/view-meeting-details" element={<ViewMeeting />} />
       </Routes>
     </Router>
+      <ToastContainer className="toast-position" position="bottom-right" />
+    </div>
+   
   );
 };
 
