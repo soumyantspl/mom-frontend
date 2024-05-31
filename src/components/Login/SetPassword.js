@@ -36,7 +36,7 @@ const SetPassword = (props) => {
   const navigate = useNavigate();
   const isLogIn = false;
   useEffect(() => {
-    document.title = "Verify OTP";
+    document.title = "Set Password";
     if (isLogIn) {
       navigate("/dashboard");
     }
@@ -187,7 +187,7 @@ const SetPassword = (props) => {
 
   return (
     //<section className="otp-varify">
-    <section className="otp-varify">
+    <section className="otp-varify set-pswrd">
       {authData.isOtpVerifiedSuccess ? (
         <Navigate to="/logInByPassword" />
       ) : null}

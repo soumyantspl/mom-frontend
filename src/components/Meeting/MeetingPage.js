@@ -9,7 +9,7 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { useNavigate, Navigate, Link } from "react-router-dom";
-
+import "./style/meetings-css.css";
 const MeetingPage = () => {
   return (
     <div>

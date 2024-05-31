@@ -42,7 +42,7 @@
     padding: 0 14px;
     border-radius: 5px;
 }
-.form-group input{
+.login-page .form-group input{
     width: 100%;
     padding: 0;
     outline: none;

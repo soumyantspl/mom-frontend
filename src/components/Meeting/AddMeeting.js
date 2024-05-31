@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
 import "./style/CreateMeeting.css";
+import "./style/meetings-css.css";
 import { Margin } from "../../../node_modules/@mui/icons-material/index";
 const AddMeeting = (props) => {
   const [numAgenda, setNumAgenda] = useState(0);
-  const [attendees, setAttendees] = useState([  ]);
+  const [attendees, setAttendees] = useState([]);
   const [step, setStep] = useState(1);
   const [selectedOption, setSelectedOption] = useState("prevMeetingRadio");
-  
+
   const submitMeetingDetails = (e) => {
     console.log("submitMeetingDetails--------------------------");
     e.preventDefault();
@@ -35,18 +36,18 @@ const AddMeeting = (props) => {
   }
 
   return (
-    <div className="mt-2 details-form">
+    <div className="mt-2 details-form add-meetings">
       {step == 1 ? (
-        <form className="mt-0 details-form" onSubmit={submitMeetingDetails}>
+        <form className="mt-0 p-0 details-form" onSubmit={submitMeetingDetails}>
           <div className="inner-detail-form">
-            <div>
+            <div class="mb-3">
               <label className="mb-1" for="title">
                 Title
               </label>
               <input type="text" placeholder="Enter Meeting Title" />
             </div>
 
-            <div>
+            <div class="mb-3">
               <label className="mb-1">Meeting Mode</label>
 
               <div className="d-flex w-100">
@@ -77,7 +78,7 @@ const AddMeeting = (props) => {
               </div>
             </div>
 
-            <div className="form-group">
+            <div class="mb-3">
               <label className="mb-1" for="location">
                 Location
               </label>
@@ -128,12 +129,12 @@ const AddMeeting = (props) => {
               </select>
             </div>
 
-            <div className="form-group">
+            <div className="mb-3">
               <label className="mb-1">Meeting Link</label>
               <input type="text" placeholder="Enter Meeting Link" />
             </div>
 
-            <div className="form-group">
+            <div className="mb-3">
               <div className="row">
                 <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
                   <div className="position-relative">
@@ -188,31 +189,36 @@ const AddMeeting = (props) => {
                 </div>
               </div>
             </div>
-            <Button variant="primary" type="submit" style={{margin:20}}>
-              NEXT
+            <Button variant="primary" type="submit" class="add-btn Mom-btn">
+              Next
             </Button>
           </div>
         </form>
       ) : step === 2 ? (
-        <form className="mt-2 details-form" onSubmit={submitAttendeeDetails}>
+        <form
+          className="mt-0 p-0 details-form"
+          onSubmit={submitAttendeeDetails}
+        >
           <div className="inner-detail-form">
             <label className="mb-1 people">Attendee(s)</label>
             <div className="d-flex people ">
-                {attendees.length>0?   <div className="people-circle-add Mom-btn pointer">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  fill="#fff"
-                  className="bi bi-plus-lg"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
-                  />
-                </svg>
-              </div>:null}
+              {attendees.length > 0 ? (
+                <div className="people-circle-add Mom-btn pointer">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="#fff"
+                    className="bi bi-plus-lg"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
+                    />
+                  </svg>
+                </div>
+              ) : null}
               <div className="people-circle">PK</div>
               <div className="people-circle-add Mom-btn pointer">
                 <svg
@@ -232,7 +238,7 @@ const AddMeeting = (props) => {
             </div>
 
             <div className="add-people-box show">
-              <div className="form-group pb-3 border-bottom">
+              <div className="pt-3 pb-3 border-bottom">
                 <label className="mb-2">Select People</label>
 
                 <div className="d-flex w-100">
@@ -281,7 +287,7 @@ const AddMeeting = (props) => {
                         name="flexRadioDefault"
                         id="flexRadioDefault1"
                         value="fromEmployeegRadio"
-                       // checked={this.state.value === 1}
+                        // checked={this.state.value === 1}
                         onChange={() => setSelectedOption("addNewPeople")}
                       />
                       <label
@@ -293,76 +299,75 @@ const AddMeeting = (props) => {
                     </div>
                   </div>
                 </div>
-                </div>
-                {selectedOption == "prevMeetingRadio" ? (
-                  <select className="mb-2">
-                    <option value="" disabled selected>
-                      {" "}
-                      Name / Email Address
-                    </option>
-                    <option value="prabhas@example.com">Prabhas Khamari</option>
-                    <option value="debasis@example.com">Debasis Behera</option>
-                    <option value="rakesh@example.com">Rakesh Baral</option>
-                  </select>
-                ) : selectedOption == "fromEmployeegRadio" ? (
-                  <select className="mb-2">
-                    <option value="" disabled selected>
-                      {" "}
-                      Name / Employee ID
-                    </option>
-                    <option value="prabhas@example.com">Prabhas Khamari</option>
-                    <option value="debasis@example.com">Debasis Behera</option>
-                    <option value="rakesh@example.com">Rakesh Baral</option>
-                  </select>
-                ) : (
-                  <div className="form-group">
-                    <label className="mb-1">Add New People</label>
-                    <div className="row">
-                      <div className="col-xl-6">
-                        <input
-                          type="text"
-                          className="mb-2"
-                          placeholder="Email"
-                        />
-                      </div>
-                      <div className="col-xl-6">
-                        <input type="text" placeholder="Name" />
-                      </div>
+              </div>
+              {selectedOption == "prevMeetingRadio" ? (
+                <select className="mb-2">
+                  <option value="" disabled selected>
+                    {" "}
+                    Name / Email Address
+                  </option>
+                  <option value="prabhas@example.com">Prabhas Khamari</option>
+                  <option value="debasis@example.com">Debasis Behera</option>
+                  <option value="rakesh@example.com">Rakesh Baral</option>
+                </select>
+              ) : selectedOption == "fromEmployeegRadio" ? (
+                <select className="mb-2">
+                  <option value="" disabled selected>
+                    {" "}
+                    Name / Employee ID
+                  </option>
+                  <option value="prabhas@example.com">Prabhas Khamari</option>
+                  <option value="debasis@example.com">Debasis Behera</option>
+                  <option value="rakesh@example.com">Rakesh Baral</option>
+                </select>
+              ) : (
+                <div className="form-group">
+                  <label className="mb-1">Add New People</label>
+                  <div className="row">
+                    <div className="col-xl-6">
+                      <input type="text" className="mb-2" placeholder="Email" />
                     </div>
-                
-            
+                    <div className="col-xl-6">
+                      <input type="text" placeholder="Name" />
+                    </div>
+                  </div>
 
-              <div className="form-group d-flex ">
-                <button
-                  type="button"
-                  className="btn rounded-pill add-btn Mom-btn d-flex align-items-center justify-content-center"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    fill="#fff"
-                    className="bi bi-plus-circle pointer me-2"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                  </svg>
-                  <p> Add </p>
-                </button>
-              </div>
-              </div>
-                )}
+                  <div className="form-group d-flex ">
+                    <button
+                      type="button"
+                      className="btn rounded-pill add-btn Mom-btn d-flex align-items-center justify-content-center"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        fill="#fff"
+                        className="bi bi-plus-circle pointer me-2"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                      </svg>
+                      <p> Add </p>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
-            <div style={{marginTop:20, display: "flex"}}>
-            <Button variant="primary" onClick={(e) => setStep(1)} style={{margin:10}}>
-              BACK
-            </Button>
-            <Button variant="primary" type="submit" style={{margin:10}}>
-              NEXT
-            </Button>
+            <div
+              style={{ marginTop: 20, display: "flex", alignItems: "center" }}
+            >
+              <Button
+                variant="primary"
+                onClick={(e) => setStep(1)}
+                style={{ margin: 10 }}
+              >
+                Back
+              </Button>
+              <Button variant="primary" type="submit" class="btn-primary">
+                Next
+              </Button>
             </div>
-           
           </div>
         </form>
       ) : (
@@ -387,9 +392,21 @@ const AddMeeting = (props) => {
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
                   </svg>
                 </button>
+                <div>Create Agenda Item</div>
                 {agendas.length > 0 ? (
                   <button type="button" onClick={onRemoveAgenda}>
                     <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="23"
+                      height="23"
+                      fill="#0564f3"
+                      className="bi-minus-circle bi bi-dash-circle"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                      <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
+                    </svg>
+                    {/* <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="23"
                       height="23"
@@ -399,11 +416,10 @@ const AddMeeting = (props) => {
                     >
                       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
                       <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                    </svg>
+                    </svg> */}
                   </button>
                 ) : null}
-
-                <div>Create Agenda Item</div>
+                {/* <div>Remove Agenda Item</div> */}
               </div>
             </div>
 
@@ -411,18 +427,17 @@ const AddMeeting = (props) => {
               <div id="inputFields">
                 <div id="children-pane">{agendas}</div>
               </div>
-              <div style={{marginTop:20, }}>
-              <Button
-                type="button"
-                variant="primary"
-                onClick={() => setStep(2)}
-               
-              >
-                BACK
-              </Button>
-              <Button variant="primary" type="submit"  style={{margin:20}}>
-                SUBMIT
-              </Button>
+              <div className="d-flex align-items-center"style={{ marginTop: 20 }}>
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={() => setStep(2)}
+                >
+                  Back
+                </Button>
+                <Button variant="primary" type="submit" style={{ margin: 20 }}>
+                  Submit
+                </Button>
               </div>
             </div>
           </div>
@@ -436,9 +451,9 @@ const AgendaComponent = (props) => {
   const [open, setOpen] = useState(false);
   console.log("open---------------------------------", open);
   return (
-    <div>
+    <div className="agenda-background">
       <h2>
-        <button
+        <button className=""
           onClick={() => setOpen(!open)}
           aria-controls="example-collapse-text"
           aria-expanded={open}
@@ -447,9 +462,9 @@ const AgendaComponent = (props) => {
           Agenda {props.number + 1}
         </button>
       </h2>
-      <div>
+      <div className="open-div">
         <Collapse in={open}>
-          <div >
+          <div>
             <div className="form-group">
               <div className="row">
                 <div className="col-md-4">

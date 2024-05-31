@@ -74,9 +74,6 @@ h5 {
   margin: 0;
   padding: 0;
 }
-label {
-  display: block;
-}
 
 p {
   font-family: "Roboto", sans-serif;
@@ -131,8 +128,9 @@ form input[type="checkbox"] {
   position: relative;
 }
 label {
-  font-weight: 500;
+  font-weight: 600;
   font-size: 15px;
+  display: block;
 }
 /* -------------topbar----------------- */
 .meeting {
@@ -1204,6 +1202,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 /* ---------------------Add Agenda--------------- */
 .inner-detail-form label {
   color: rgb(38 40 149);
+  font-size: 16px;
 }
 
 .agenda {
@@ -1845,4 +1844,27 @@ th.action-col {
 }
 .otp-Check ,.cpwd-group{
   margin: 25px 0;
+}
+.add-meetings .form-group{
+  margin-bottom: 15px;
+}
+.btn-primary{
+    border-radius: 40px !important;
+    padding: 6px 17px !important;
+    background: linear-gradient(117deg, #0d37b4, #763cd1 59%) !important;
+    color: #fff !important;
+    border: none !important;
+    font-size: 15px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+button{
+  border: none;
+    background: transparent;
+}
+.set-pswrd .form-group input{
+  border: none;
 }
