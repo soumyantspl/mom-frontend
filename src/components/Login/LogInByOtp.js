@@ -11,10 +11,11 @@ import {
 } from "../../redux/actions/authActions/authAction";
 import * as constantMessages from "../../constants/constatntMessages";
 
-import ToastBar from "../Common/toast";
+import ToastBar from "../Common/ToastBar";
 import { ToastContainer, toast } from "react-toastify";
 import LoaderButton from "../Common/LoaderButton";
 import { Button } from "bootstrap";
+import Alert from "../Common/Alert";
 
 const LoginByOtp = (props) => {
   console.log(configData.baseUrl);
@@ -72,7 +73,7 @@ const LoginByOtp = (props) => {
        due to validation errors.`);
     }
   };
-  console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", authData);
+  console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", formData);
 
   const validateForm = (data) => {
     const errors = {};
@@ -149,16 +150,20 @@ const LoginByOtp = (props) => {
                         placeholder="Type Your Email"
                         name="email"
                         onChange={handleChange}
+                       // onBlur={validateForm}
                         value={formData.email}
+                        autocomplete="off"
                       />
                     </div>
                     {errors.email && (
                       <span className="error-message">{errors.email}</span>
                     )}
-                    {authData.isOtpProcessed ? (
+                    {/* {authData.isOtpProcessed ? (
                       <span className="error-message">{authData.message}</span>
                     ) : // <ToastBar message={authData.message} variant={authData.variant} />
-                    null}
+                    null} */}
+                    {authData.isOtpProcessed?
+                    <Alert status={authData.isSuccess} message={authData.message}  />:null}
                   </div>
                 </div>
                 {!authData.loading ? (

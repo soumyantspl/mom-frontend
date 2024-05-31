@@ -13,6 +13,7 @@ import {
 } from "../../redux/actions/authActions/authAction";
 import LoaderButton from "../Common/LoaderButton";
 import * as constantMessages from "../../constants/constatntMessages";
+import Alert from "../Common/Alert";
 const isLogIn = false;
 
 console.log("inside--------------");
@@ -70,11 +71,45 @@ const OtpVerify = (props) => {
   console.log(isOtpVerified);
   const handleChange = (e) => {
     dispatch(updateOtpProcessed(false));
-    const { name, value } = e.target;
+    const { maxLength, value, name } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
+
+
+
+   
+    const [fieldName, fieldIndex] = name.split("-");
+
+    let fieldIntIndex = parseInt(fieldIndex, 10);
+
+    // Check if no of char in field == maxlength
+    if (value.length == maxLength) {
+
+        // It should not be last input field
+     
+
+            // Get the next input field using it's name
+            const nextfield = document.querySelector(
+                `input[name=field-${fieldIntIndex + 1}]`
+            );
+
+            // If found, focus the next field
+            if (nextfield !== null) {
+                nextfield.focus();
+            }
+        
+    }
+
+
+
+
+
+
+
+
+
   };
   const otp = [];
   const validateForm = (data) => {
@@ -140,7 +175,7 @@ const OtpVerify = (props) => {
 
   return (
     <section className="otp-varify">
-      {authData.isOtpVerifiedSuccess ? <Navigate to="/meetingList" /> : null}
+      {authData.isOtpVerifiedSuccess ? <Navigate to="/meeting-list" /> : null}
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -170,6 +205,8 @@ const OtpVerify = (props) => {
                         maxLength={1}
                         onChange={handleChange}
                         value={formData.input1}
+                        autocomplete="off"
+                        autofocus
                       />
                     </div>
 
@@ -180,6 +217,7 @@ const OtpVerify = (props) => {
                         maxLength={1}
                         onChange={handleChange}
                         value={formData.input2}
+                        autocomplete="off"
                       />
                     </div>
                     <div className="digit">
@@ -189,6 +227,7 @@ const OtpVerify = (props) => {
                         maxLength={1}
                         onChange={handleChange}
                         value={formData.input3}
+                        autocomplete="off"
                       />
                     </div>
                     <div className="digit">
@@ -198,6 +237,7 @@ const OtpVerify = (props) => {
                         maxLength={1}
                         onChange={handleChange}
                         value={formData.input4}
+                        autocomplete="off"
                       />
                     </div>
                     <div className="digit">
@@ -207,6 +247,7 @@ const OtpVerify = (props) => {
                         maxLength={1}
                         onChange={handleChange}
                         value={formData.input5}
+                        autocomplete="off"
                       />
                     </div>
                     <div className="digit">
@@ -216,18 +257,32 @@ const OtpVerify = (props) => {
                         maxLength={1}
                         onChange={handleChange}
                         value={formData.input6}
+                        autocomplete="off"
                       />
                     </div>
                   </div>
                   {errors.message && (
                     <span className="error-message">{errors.message}</span>
                   )}
-                  {authData.isOtpProcessed && authData.isSuccess ? (
+                  {/* {authData.isOtpProcessed && authData.isSuccess ? (
                     <span className="error-message" style={{ color: "green" }}>
                       {authData.message}
                     </span>
                   ) : authData.isOtpProcessed && !authData.isSuccess ? (
                     <span className="error-message">{authData.message}</span>
+                  ) : null} */}
+
+
+                  {authData.isOtpProcessed && authData.isSuccess ? (
+                    <Alert
+                    status={authData.isSuccess}
+                    message={authData.message}
+                  />
+                  ) : authData.isOtpProcessed && !authData.isSuccess ? (
+                    <Alert
+                    status={authData.isSuccess}
+                    message={authData.message}
+                  />
                   ) : null}
                 </div>
                 {!authData.loading ? (

@@ -40,14 +40,14 @@ const AddMeeting = (props) => {
       {step == 1 ? (
         <form className="mt-0 p-0 details-form" onSubmit={submitMeetingDetails}>
           <div className="inner-detail-form">
-            <div class="mb-3">
+            <div className="mb-3">
               <label className="mb-1" for="title">
                 Title
               </label>
               <input type="text" placeholder="Enter Meeting Title" />
             </div>
 
-            <div class="mb-3">
+            <div className="mb-3">
               <label className="mb-1">Meeting Mode</label>
 
               <div className="d-flex w-100">
@@ -78,7 +78,7 @@ const AddMeeting = (props) => {
               </div>
             </div>
 
-            <div class="mb-3">
+            <div className="mb-3">
               <label className="mb-1" for="location">
                 Location
               </label>

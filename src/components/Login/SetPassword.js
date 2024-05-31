@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 import * as constantMessages from "../../constants/constatntMessages";
 import LoaderButton from "../Common/LoaderButton";
 import { useNavigate, Navigate, Link } from "react-router-dom";
+import Alert from "../Common/Alert";
 
 const SetPassword = (props) => {
   const [isOtpSend, setIsOtpSend] = useState(false);
@@ -117,15 +118,15 @@ const SetPassword = (props) => {
       /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
     if (!data.confirmPassword.trim()) {
-      errors.message = constantMessages.confirmPasswordRequired;
+      errors.confirmPassword = constantMessages.confirmPasswordRequired;
     } else if (data.password !== data.confirmPassword) {
-      errors.message = constantMessages.confirmAndMainPasswordMatch;
+      errors.confirmPassword = constantMessages.confirmAndMainPasswordMatch;
     }
 
     if (!data.password.trim()) {
-      errors.message = constantMessages.passwordRequired;
+      errors.password = constantMessages.passwordRequired;
     } else if (!regularExpression.test(data.password)) {
-      errors.message = constantMessages.passwordRegex;
+      errors.password = constantMessages.passwordRegex;
     }
 
     console.log("--------------------->>>>>>>>>>>>>>>>>>>>>>>>>123", errors);
@@ -188,7 +189,7 @@ const SetPassword = (props) => {
     //<section className="otp-varify">
     <section className="otp-varify set-pswrd">
       {authData.isOtpVerifiedSuccess ? (
-        <Navigate to="/logInByPassword" />
+        <Navigate to="/login-by-password" />
       ) : null}
       <div className="container-fluid">
         <div className="row">
@@ -202,7 +203,7 @@ const SetPassword = (props) => {
                 </div>
 
                 <div className="form-group">
-                  <div class="otp-Check">
+                  <div className="otp-Check">
                     <label className="mb-1">
                       Enter Your 6 Digit OTP <span>*</span>
                     </label>
@@ -214,6 +215,7 @@ const SetPassword = (props) => {
                           maxLength={1}
                           onChange={handleChange}
                           value={formData.input1}
+                          autocomplete="off"
                         />
                       </div>
 
@@ -224,6 +226,7 @@ const SetPassword = (props) => {
                           maxLength={1}
                           onChange={handleChange}
                           value={formData.input2}
+                          autocomplete="off"
                         />
                       </div>
                       <div className="digit">
@@ -233,6 +236,7 @@ const SetPassword = (props) => {
                           maxLength={1}
                           onChange={handleChange}
                           value={formData.input3}
+                          autocomplete="off"
                         />
                       </div>
                       <div className="digit">
@@ -242,6 +246,7 @@ const SetPassword = (props) => {
                           maxLength={1}
                           onChange={handleChange}
                           value={formData.input4}
+                          autocomplete="off"
                         />
                       </div>
                       <div className="digit">
@@ -251,6 +256,7 @@ const SetPassword = (props) => {
                           maxLength={1}
                           onChange={handleChange}
                           value={formData.input5}
+                          autocomplete="off"
                         />
                       </div>
                       <div className="digit">
@@ -260,6 +266,7 @@ const SetPassword = (props) => {
                           maxLength={1}
                           onChange={handleChange}
                           value={formData.input6}
+                          autocomplete="off"
                         />
                       </div>
                     </div>
@@ -337,16 +344,28 @@ const SetPassword = (props) => {
                       </span>
                     )}
                   </div>
-                  {errors.message && (
+                  {/* {errors.message && (
                     <span className="error-message">{errors.message}</span>
-                  )}
+                  )} */}
 
-                  {authData.isOtpProcessed && authData.isSuccess ? (
+                  {/* {authData.isOtpProcessed && authData.isSuccess ? (
                     <span className="error-message" style={{ color: "green" }}>
                       {authData.message}
                     </span>
                   ) : authData.isOtpProcessed && !authData.isSuccess ? (
                     <span className="error-message">{authData.message}</span>
+                  ) : null} */}
+
+                  {authData.isOtpProcessed && authData.isSuccess ? (
+                    <Alert
+                      status={authData.isSuccess}
+                      message={authData.message}
+                    />
+                  ) : authData.isOtpProcessed && !authData.isSuccess ? (
+                    <Alert
+                      status={authData.isSuccess}
+                      message={authData.message}
+                    />
                   ) : null}
                 </div>
 

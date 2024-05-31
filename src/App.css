@@ -1868,3 +1868,30 @@ button{
 .set-pswrd .form-group input{
   border: none;
 }
+
+.error-message{
+  font-size: 12px;
+}
+
+.alert {
+  font-size: 13px;
+  text-align: left;
+  padding: 10px 30px 10px 10px;
+  margin-top: 10px;
+}
+
+.form-group .alert::before{
+  display: none;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

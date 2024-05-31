@@ -13,7 +13,7 @@ function LoaderButton() {
           role="status"
           aria-hidden="true"
         />
-        Loading...
+        Processing...
       </Button>
     </>
   );
