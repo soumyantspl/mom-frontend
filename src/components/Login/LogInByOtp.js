@@ -7,6 +7,7 @@ import LoginImage from "./LoginImage";
 import { useSelector, useDispatch } from "react-redux";
 import {
   sendOtp,
+  updateIsSuccess,
   updateOtpProcessed,
 } from "../../redux/actions/authActions/authAction";
 import * as constantMessages from "../../constants/constatntMessages";
@@ -189,6 +190,9 @@ const LoginByOtp = (props) => {
                   <button
                     className="signin-btn2"
                     // onClick={() => props.setIsSignInWithPassword(true)}
+                    onClick={() => {
+                      dispatch(updateIsSuccess(true));
+                    }}
                   >
                     Sign In With Password
                   </button>

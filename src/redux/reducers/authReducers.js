@@ -8,7 +8,7 @@ import {
   PROCESSS_LOGOUT,
   OTP_RESENT,
   SET_PASSWORD,
-  LOGIN_SUCCESS,
+  LOGIN_PROCESS,
 } from "../actions/authActions/actionTypes";
 
 
@@ -26,7 +26,8 @@ const initialObject = {
   otp: null,
   isOtpVerifiedSuccess: false,
   isSetPassword: false,
-  isLogInSuccess:false
+  isLogInSuccess:false,
+  isTimerOn:true
 };
 
 export const authReducer = (state = initialObject, action) => {
@@ -64,6 +65,8 @@ export const authReducer = (state = initialObject, action) => {
         loading: false,
         email: action.payload.email,
         isSetPassword: action.payload.isSetPassword,
+        isLogInProcessed:true,
+        isTimerOn:true
       };
 
     case UPDATE_ISSUCCESS:
@@ -72,6 +75,7 @@ export const authReducer = (state = initialObject, action) => {
         isSuccess: action.payload,
         isOtpProcessed: false,
         isOtpVerifiedSuccess: false,
+  
       };
 
     case OTP_RESENT:
@@ -81,6 +85,7 @@ export const authReducer = (state = initialObject, action) => {
         message: action.payload.message,
         isSuccess: action.payload.success,
         isOtpProcessed: true,
+        isSetPassword: action.payload.isSetPassword
       };
 
     // case SET_OTP:
@@ -103,6 +108,8 @@ export const authReducer = (state = initialObject, action) => {
       return {
         ...state,
         isOtpProcessed: action.payload,
+        isOtpVerifiedSuccess:false,
+        isLogInProcessed:false
       };
     case PROCESSS_LOGOUT:
       return {
@@ -122,11 +129,13 @@ export const authReducer = (state = initialObject, action) => {
         message: action.payload.message,
         isSuccess: action.payload.success,
         loading: false,
-        isOtpProcessed: false,
+        isOtpProcessed: true,
         isOtpVerifiedSuccess: action.payload.success,
+        isSetPassword:false
+        
       };
 
-    case LOGIN_SUCCESS:
+    case LOGIN_PROCESS:
       return {
         ...state,
         isLogInSuccess:action.payload.success,
@@ -134,6 +143,8 @@ export const authReducer = (state = initialObject, action) => {
         isLogInProcessed:true,
         isSuccess: action.payload.success,
         message: action.payload.message,
+        isOtpProcessed: false,
+    
       };
 
     default:

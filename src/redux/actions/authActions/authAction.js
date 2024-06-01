@@ -8,7 +8,7 @@ import {
   PROCESSS_LOGOUT,
   OTP_RESENT,
   SET_PASSWORD,
-  LOGIN_SUCCESS,
+  LOGIN_PROCESS
 } from "./actionTypes";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -48,7 +48,7 @@ export const sendOtp = (email,isSetPassword) => {
             variant: "success",
             message: resData.message,
             email,
-            isSetPassword
+            isSetPassword:true
           };
         } else {
           data = {
@@ -56,7 +56,7 @@ export const sendOtp = (email,isSetPassword) => {
             variant: "danger",
             message: resData.message,
             email,
-            isSetPassword
+            isSetPassword:false
           };
         }
         dispatch(isOtpSend(data));
@@ -259,7 +259,7 @@ export const logInByPassword = (payload) => {
             message: resData.message,
           };
         }
-        dispatch(isLogInSuccess(data));
+        dispatch(isLogInProcess(data));
       })
       .catch((err) => {
         console.log("err-----------------------------------", err);
@@ -269,9 +269,9 @@ export const logInByPassword = (payload) => {
 };
 
 
-export const isLogInSuccess = (data) => {
+export const isLogInProcess = (data) => {
   return {
-    type: LOGIN_SUCCESS,
+    type: LOGIN_PROCESS,
     payload: data,
   };
 };

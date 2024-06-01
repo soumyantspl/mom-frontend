@@ -47,7 +47,7 @@ const SetPassword = (props) => {
   }, []);
 
   const handleChange = (e) => {
-    dispatch(updateOtpProcessed(false));
+    setErrors({});
     console.log("id------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",e.target.id)
     dispatch(updateOtpProcessed(false));
     const { value, name,id } = e.target;
@@ -200,9 +200,10 @@ const SetPassword = (props) => {
   return (
     //<section className="otp-varify">
     <section className="otp-varify set-pswrd">
-      {authData.isOtpVerifiedSuccess ? (
+      {authData.isOtpVerifiedSuccess && authData.isSuccess ? (
         <Navigate to="/login-by-password" />
       ) : null}
+      
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -400,7 +401,7 @@ const SetPassword = (props) => {
                 )}
 
                 <div className="back-resend back-arrow">
-                  <Link to="/login">
+                <Link to="/login-by-password">
                     <div className="back">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -417,14 +418,14 @@ const SetPassword = (props) => {
                       </svg>
                       <span
                         onClick={() => {
-                          dispatch(updateIsSuccess(false));
+                          dispatch(updateIsSuccess(true));
                         }}
                       >
                         Back to Sign In
                       </span>
                     </div>
                   </Link>
-                  {authData.isSuccess && authData.isOtpProcessed ? (
+                  {authData.isTimerOn ? (
                      <span>
                      {constantMessages.otpCountDownMessage}
                      <Timer minutes={process.env.CHECK_OTP_VALIDATION_TIME} />

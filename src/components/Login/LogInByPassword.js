@@ -123,7 +123,7 @@ const LogInByPassword = (props) => {
   return (
     <section className="sign-in">
       {authData.isLogInSuccess ? <Navigate to="/meeting-list" /> : null}
-      {authData.isSuccess && authData.isSetPassword ? (
+      { authData.isSetPassword && authData.isOtpProcessed ? (
         <Navigate to="/set-password" />
       ) : null}
       <div className="container-fluid">
@@ -137,7 +137,7 @@ const LogInByPassword = (props) => {
                   <h4>Welcome to Meeting Plus</h4>
                   <p>Enter email & password to logging in to your account</p>
                 </div>
-                {authData.isOtpVerifiedSuccess ? (
+                { authData.isOtpVerifiedSuccess  && authData.isOtpProcessed? (
                   <Alert
                     status={authData.isSuccess}
                     message={authData.message}
@@ -209,18 +209,13 @@ const LogInByPassword = (props) => {
                     )}
                   </div>
                 </div>
-                {authData.isOtpProcessed ? (
-                      <Alert
-                        status={authData.isSuccess}
-                        message={authData.message}
-                      />
-                    ) : null}
+               
                 <div className="remember-forgot-pwd">
                   <div className="remember">
                     <input type="checkbox" />
                     Remember
                   </div>
-                  <div className="forgot-pwd">
+                  <div className="set-pwd">
                     {/* <Link to="/set-password" > Forgot Password ?</Link> */}
                     <button
                     type="submit"
@@ -231,12 +226,18 @@ const LogInByPassword = (props) => {
                   </button>
                   </div>
                 </div>
-                {authData.isLogInProcessed ? (
+                {authData.isLogInProcessed && !authData.isSuccess ? (
                   <Alert
                     status={authData.isSuccess}
                     message={authData.message}
                   />
                 ) : null}
+                 {/* {authData.isOtpProcessed && !authData.isSuccess ? (
+                  <Alert
+                    status={authData.isSuccess}
+                    message={authData.message}
+                  />
+                ) : null} */}
                 {/* <a href="/meeting/meeting-list">
                   <button className="login-btn" >Sign In</button>
                 </a> */}
