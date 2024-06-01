@@ -8,7 +8,8 @@ import {
   PROCESSS_LOGOUT,
   OTP_RESENT,
   SET_PASSWORD,
-  LOGIN_PROCESS
+  LOGIN_PROCESS,
+  OTP_SENT_FOR_LOGIN_BY_OTP
 } from "./actionTypes";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -24,9 +25,9 @@ export const failRequest = (err) => {
     payload: err,
   };
 };
-export const isOtpSend = (data) => {
+export const isOtpSendForLogInByOtp = (data) => {
   return {
-    type: OTP_SENT,
+    type: OTP_SENT_FOR_LOGIN_BY_OTP,
     payload: data,
   };
 };
@@ -59,7 +60,13 @@ export const sendOtp = (email,isSetPassword) => {
             isSetPassword:false
           };
         }
-        dispatch(isOtpSend(data));
+        if(isSetPassword){
+          dispatch(isOtpSendForSetPassword(data));
+       
+        }
+        else{
+          dispatch(isOtpSendForLogInByOtp(data));
+        }
       })
       .catch((err) => {
         console.log("err-----------------------------------", err);
@@ -67,6 +74,14 @@ export const sendOtp = (email,isSetPassword) => {
       });
   };
 };
+
+export const isOtpSendForSetPassword = (data) => {
+  return {
+    type: OTP_SENT,
+    payload: data,
+  };
+};
+
 
 export const updateIsSuccess = (data) => {
   console.log("data--------------------------------", data);

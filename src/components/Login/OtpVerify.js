@@ -304,7 +304,7 @@ const OtpVerify = (props) => {
                   </Link>
 
                   <div className="resend">
-                  {authData.isSuccess && authData.isOtpProcessed ? (
+                  {authData.isTimerOn ? (
                      <span>
                      {constantMessages.otpCountDownMessage}
                      <Timer minutes={process.env.CHECK_OTP_VALIDATION_TIME} />

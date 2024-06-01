@@ -8,7 +8,7 @@ import {
   PROCESSS_LOGOUT,
   OTP_RESENT,
   SET_PASSWORD,
-  LOGIN_PROCESS,
+  LOGIN_PROCESS,OTP_SENT_FOR_LOGIN_BY_OTP
 } from "../actions/authActions/actionTypes";
 
 
@@ -66,7 +66,23 @@ export const authReducer = (state = initialObject, action) => {
         email: action.payload.email,
         isSetPassword: action.payload.isSetPassword,
         isLogInProcessed:true,
-        isTimerOn:true
+        isTimerOn:true,
+      };
+
+      
+    case OTP_SENT_FOR_LOGIN_BY_OTP:
+      return {
+        ...state,
+        errorMessage: action.payload.message,
+        isSuccess: action.payload.success,
+        message: action.payload.message,
+        variant: action.payload.variant,
+        isOtpProcessed: true,
+        loading: false,
+        email: action.payload.email,
+        isSetPassword:false,
+        isLogInProcessed:true,
+        isTimerOn:true,
       };
 
     case UPDATE_ISSUCCESS:
