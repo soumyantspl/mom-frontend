@@ -7,8 +7,10 @@ import {
   UPDATE_OTP_PROCESSED,
   PROCESSS_LOGOUT,
   OTP_RESENT,
-  SET_PASSWORD
+  SET_PASSWORD,
+  LOGIN_SUCCESS,
 } from "../actions/authActions/actionTypes";
+
 
 const initialObject = {
   loading: false,
@@ -22,8 +24,9 @@ const initialObject = {
   message: "",
   email: "",
   otp: null,
-  isOtpVerifiedSuccess:false,
-  isSetPassword:false
+  isOtpVerifiedSuccess: false,
+  isSetPassword: false,
+  isLogInSuccess:false
 };
 
 export const authReducer = (state = initialObject, action) => {
@@ -60,7 +63,7 @@ export const authReducer = (state = initialObject, action) => {
         isOtpProcessed: true,
         loading: false,
         email: action.payload.email,
-        isSetPassword:action.payload.isSetPassword
+        isSetPassword: action.payload.isSetPassword,
       };
 
     case UPDATE_ISSUCCESS:
@@ -68,17 +71,17 @@ export const authReducer = (state = initialObject, action) => {
         ...state,
         isSuccess: action.payload,
         isOtpProcessed: false,
-        isOtpVerifiedSuccess:false
+        isOtpVerifiedSuccess: false,
       };
 
-      case OTP_RESENT:
-        return {
-          ...state,
-          loading: false,
-          message: action.payload.message,
-          isSuccess: action.payload.success,
-          isOtpProcessed: true,
-        };
+    case OTP_RESENT:
+      return {
+        ...state,
+        loading: false,
+        message: action.payload.message,
+        isSuccess: action.payload.success,
+        isOtpProcessed: true,
+      };
 
     // case SET_OTP:
     //   return {
@@ -92,8 +95,8 @@ export const authReducer = (state = initialObject, action) => {
         isOtpVerifiedSuccess: action.payload.success,
         isSuccess: false,
         isOtpProcessed: true,
-        data:action.payload.data,
-        message:action.payload.message,
+        data: action.payload.data,
+        message: action.payload.message,
         loading: false,
       };
     case UPDATE_OTP_PROCESSED:
@@ -101,23 +104,37 @@ export const authReducer = (state = initialObject, action) => {
         ...state,
         isOtpProcessed: action.payload,
       };
-      case PROCESSS_LOGOUT:
-        return {
-          ...state,
-          isOtpProcessed:false,
-          loading:false,
-          isOtpVerifiedSuccess:false
-        };
-        
-        case SET_PASSWORD:
-          return {
-            ...state,
-            message:action.payload.message,
-            isSuccess: action.payload.success,
-            loading:false,
-            isOtpProcessed:true,
-            isOtpVerifiedSuccess:action.payload.success,
-          };
+    case PROCESSS_LOGOUT:
+      return {
+        ...state,
+        isOtpProcessed: false,
+        loading: false,
+        isOtpVerifiedSuccess: false,
+        isSetPassword: false,
+        isLogInSuccess:false,
+        isSuccess: false,
+        isLogInProcessed:false,
+      };
+
+    case SET_PASSWORD:
+      return {
+        ...state,
+        message: action.payload.message,
+        isSuccess: action.payload.success,
+        loading: false,
+        isOtpProcessed: false,
+        isOtpVerifiedSuccess: action.payload.success,
+      };
+
+    case LOGIN_SUCCESS:
+      return {
+        ...state,
+        isLogInSuccess:action.payload.success,
+        loading: false,
+        isLogInProcessed:true,
+        isSuccess: action.payload.success,
+        message: action.payload.message,
+      };
 
     default:
       return state;

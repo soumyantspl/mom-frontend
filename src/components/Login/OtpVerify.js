@@ -14,6 +14,7 @@ import {
 import LoaderButton from "../Common/LoaderButton";
 import * as constantMessages from "../../constants/constatntMessages";
 import Alert from "../Common/Alert";
+import Timer from "../Common/Timer";
 const isLogIn = false;
 
 console.log("inside--------------");
@@ -246,6 +247,7 @@ const OtpVerify = (props) => {
                   {errors.message && (
                     <span className="error-message">{errors.message}</span>
                   )}
+               
                   {/* {authData.isOtpProcessed && authData.isSuccess ? (
                     <span className="error-message" style={{ color: "green" }}>
                       {authData.message}
@@ -302,6 +304,12 @@ const OtpVerify = (props) => {
                   </Link>
 
                   <div className="resend">
+                  {authData.isSuccess && authData.isOtpProcessed ? (
+                     <span>
+                     {constantMessages.otpCountDownMessage}
+                     <Timer minutes={process.env.CHECK_OTP_VALIDATION_TIME} />
+                   </span>
+                   ):null}
                     <Link to="" onClick={resendOtpAction}>
                       Resend OTP
                     </Link>

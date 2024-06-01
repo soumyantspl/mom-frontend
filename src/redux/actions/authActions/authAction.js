@@ -8,6 +8,7 @@ import {
   PROCESSS_LOGOUT,
   OTP_RESENT,
   SET_PASSWORD,
+  LOGIN_SUCCESS,
 } from "./actionTypes";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -100,11 +101,11 @@ export const verifyOtp = (payload) => {
             variant: "success",
             message: resData.message,
           };
-          // const {token, userData} = resData;
-          // console.log('resData ------------------------------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>',resData)
-          // console.log('token ------------------------------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>',resData.token,token)
-          // localStorage.setItem("accessToken", token);
-          // localStorage.setItem("userData", userData);
+          const {token, userData} = resData.data;
+          console.error('resData ------------------------------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>',resData)
+          console.error('token ------------------------------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>',resData.data.token,token)
+          localStorage.setItem("accessToken", token);
+          localStorage.setItem("userData", JSON.stringify(userData));
         } else {
           data = {
             ...resData,
@@ -226,4 +227,52 @@ export const isPasswordSet = (data) => {
   };
 };
 
+
+
+
+export const logInByPassword = (payload) => {
+  console.log('payload in logInByPassword action----------------',payload)
+  return (dispatch) => {
+    dispatch(makeRequest());
+    const url = `${process.env.REACT_APP_API_URL}/api/V1/auth/signInByPassword`;
+    axios
+      .post(url, payload)
+      .then((res) => {
+        console.log("logInByPassword action ----------------------------", res.data);
+        const resData = res.data;
+        let data;
+        if (resData.success) {
+          const {token, userData} = resData.data;
+          console.error('resData ------------------------------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>',resData)
+          console.error('token ------------------------------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>',resData.data.token,token)
+          localStorage.setItem("accessToken", token);
+          localStorage.setItem("userData", JSON.stringify(userData));
+          data = {
+            ...resData,
+            variant: "success",
+            message: resData.message,
+          };
+        } else {
+          data = {
+            ...resData,
+            variant: "danger",
+            message: resData.message,
+          };
+        }
+        dispatch(isLogInSuccess(data));
+      })
+      .catch((err) => {
+        console.log("err-----------------------------------", err);
+        dispatch(failRequest(err.message));
+      });
+  };
+};
+
+
+export const isLogInSuccess = (data) => {
+  return {
+    type: LOGIN_SUCCESS,
+    payload: data,
+  };
+};
 

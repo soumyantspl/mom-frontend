@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import profileImage from "../../../assets/images/profile.png";
 import "./Header.css";
 import { useNavigate, Navigate, Link } from "react-router-dom";
@@ -9,30 +9,31 @@ import { logOut } from "../../../redux/actions/authActions/authAction";
 import { useSelector, useDispatch } from "react-redux";
 
 const Header = () => {
-  // const [name, setName] = useState("");
-  // //const [password, setPassword] = useState("");
-  // const [navigate, setNavigate] = useState(false);
+  const [name, setName] = useState("");
+  const [navigate, setNavigate] = useState(false);
 
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  // const userData = localStorage.getItem("userData");
-  // const accessToken=localStorage.getItem("accessToken");
-  // if(userData){
-  //   setName(userData?.name);
-  // }
-  
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const accessToken = localStorage.getItem("accessToken");
 
-  // const handleLogout = () => {
-  //   localStorage.removeItem("accessToken");
-  //   localStorage.removeItem("userData");
-  //   alert("Tokens have been removed");
-  // };
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    dispatch(logOut());
+    alert("You will be log out");
+  };
 
-  // if (!accessToken) {
-  //   return <Navigate to="/login" />;
-  // }
+  useEffect(() => {
+    console.log('userData',userData)
+    if (userData) {
+      setName(userData?.name);
+    }
+  }, []);
+
   return (
     <section className="topbar">
+   {!accessToken?<Navigate to="/login" />:null}
       <div className="topbar-1">
         <div className="topbar1-content">
           <div className="d-flex align-items-center">
@@ -133,7 +134,7 @@ const Header = () => {
               <Dropdown.Toggle>
                 <div className="d-flex admin-box">
                   <img src={profileImage} className="user" />
-                  <span>Priyanka</span>
+                  <span>{name}</span>
                 </div>
               </Dropdown.Toggle>
 
@@ -161,9 +162,7 @@ const Header = () => {
                   <Link
                     to="/logIn"
                     style={{ textDecoration: "none", color: "black" }}
-                    onClick={() => {
-                      dispatch(logOut());
-                    }}
+                    onClick={handleLogout}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

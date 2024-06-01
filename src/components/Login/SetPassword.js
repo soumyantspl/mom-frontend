@@ -15,6 +15,7 @@ import * as constantMessages from "../../constants/constatntMessages";
 import LoaderButton from "../Common/LoaderButton";
 import { useNavigate, Navigate, Link } from "react-router-dom";
 import Alert from "../Common/Alert";
+import Timer from "../Common/Timer";
 
 const SetPassword = (props) => {
   const [isOtpSend, setIsOtpSend] = useState(false);
@@ -423,7 +424,12 @@ const SetPassword = (props) => {
                       </span>
                     </div>
                   </Link>
-
+                  {authData.isSuccess && authData.isOtpProcessed ? (
+                     <span>
+                     {constantMessages.otpCountDownMessage}
+                     <Timer minutes={process.env.CHECK_OTP_VALIDATION_TIME} />
+                   </span>
+                   ):null}
                   <div className="resend">
                     {/* <a href="">Resend OTP</a> */}
                     <Link to="" onClick={resendOtpAction}>

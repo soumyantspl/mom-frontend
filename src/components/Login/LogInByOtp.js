@@ -1,4 +1,4 @@
-  import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./style/Login.css";
 import configData from "../../config/config";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
@@ -16,6 +16,7 @@ import { ToastContainer, toast } from "react-toastify";
 import LoaderButton from "../Common/LoaderButton";
 import { Button } from "bootstrap";
 import Alert from "../Common/Alert";
+import Timer from "../Common/Timer";
 
 const LoginByOtp = (props) => {
   console.log(configData.baseUrl);
@@ -150,7 +151,7 @@ const LoginByOtp = (props) => {
                         placeholder="Type Your Email"
                         name="email"
                         onChange={handleChange}
-                       // onBlur={validateForm}
+                        // onBlur={validateForm}
                         value={formData.email}
                         autocomplete="off"
                       />
@@ -162,12 +163,20 @@ const LoginByOtp = (props) => {
                       <span className="error-message">{authData.message}</span>
                     ) : // <ToastBar message={authData.message} variant={authData.variant} />
                     null} */}
-                    {authData.isOtpProcessed?
-                    <Alert status={authData.isSuccess} message={authData.message}  />:null}
+                    {authData.isOtpProcessed ? (
+                      <Alert
+                        status={authData.isSuccess}
+                        message={authData.message}
+                      />
+                    ) : null}
                   </div>
                 </div>
                 {!authData.loading ? (
-                  <button className="signin-btn1" type="submit"  onClick={() => setIsSetPassword(false)}>
+                  <button
+                    className="signin-btn1"
+                    type="submit"
+                    onClick={() => setIsSetPassword(false)}
+                  >
                     Send OTP
                   </button>
                 ) : (
@@ -189,12 +198,13 @@ const LoginByOtp = (props) => {
                   <button
                     type="submit"
                     className="signin-btn2"
-                    onClick={() => setIsSetPassword(true)}
+                     onClick={() => setIsSetPassword(true)}
                   >
                     Set Password
                   </button>
                 </div>
               </form>
+            
             </div>
           </div>
 
