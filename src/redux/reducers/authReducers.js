@@ -8,15 +8,15 @@ import {
   PROCESSS_LOGOUT,
   OTP_RESENT,
   SET_PASSWORD,
-  LOGIN_PROCESS,OTP_SENT_FOR_LOGIN_BY_OTP
+  LOGIN_PROCESS,
+  OTP_SENT_FOR_LOGIN_BY_OTP,
 } from "../actions/authActions/actionTypes";
-
 
 const initialObject = {
   loading: false,
   isOtpSend: false,
   userList: [],
-  userObject: {},
+  userData: null,
   errorMessage: "",
   isSuccess: false,
   isOtpProcessed: false,
@@ -26,8 +26,8 @@ const initialObject = {
   otp: null,
   isOtpVerifiedSuccess: false,
   isSetPassword: false,
-  isLogInSuccess:false,
-  isTimerOn:true
+  isLogInSuccess: false,
+  isTimerOn: true,
 };
 
 export const authReducer = (state = initialObject, action) => {
@@ -45,15 +45,6 @@ export const authReducer = (state = initialObject, action) => {
         loading: false,
         errorMessage: action.payload,
       };
-    // case GET_USER_LIST:
-    //   return {
-    //     ...state,
-    //     loading: false,
-    //     errorMessage: " ",
-    //     userList: action.payload,
-    //     userObject: {},
-    //   };
-
     case OTP_SENT:
       return {
         ...state,
@@ -65,11 +56,10 @@ export const authReducer = (state = initialObject, action) => {
         loading: false,
         email: action.payload.email,
         isSetPassword: action.payload.isSetPassword,
-        isLogInProcessed:true,
-        isTimerOn:true,
+        isLogInProcessed: true,
+        isTimerOn: true,
       };
 
-      
     case OTP_SENT_FOR_LOGIN_BY_OTP:
       return {
         ...state,
@@ -80,9 +70,9 @@ export const authReducer = (state = initialObject, action) => {
         isOtpProcessed: true,
         loading: false,
         email: action.payload.email,
-        isSetPassword:false,
-        isLogInProcessed:true,
-        isTimerOn:true,
+        isSetPassword: false,
+        isLogInProcessed: true,
+        isTimerOn: true,
       };
 
     case UPDATE_ISSUCCESS:
@@ -91,7 +81,6 @@ export const authReducer = (state = initialObject, action) => {
         isSuccess: action.payload,
         isOtpProcessed: false,
         isOtpVerifiedSuccess: false,
-  
       };
 
     case OTP_RESENT:
@@ -101,15 +90,8 @@ export const authReducer = (state = initialObject, action) => {
         message: action.payload.message,
         isSuccess: action.payload.success,
         isOtpProcessed: true,
-        isSetPassword: action.payload.isSetPassword
+        isSetPassword: action.payload.isSetPassword,
       };
-
-    // case SET_OTP:
-    //   return {
-    //     ...state,
-    //     otp: action.payload,
-    //   };
-
     case OTP_VERIFIED:
       return {
         ...state,
@@ -119,13 +101,14 @@ export const authReducer = (state = initialObject, action) => {
         data: action.payload.data,
         message: action.payload.message,
         loading: false,
+        userData:action.payload.userData
       };
     case UPDATE_OTP_PROCESSED:
       return {
         ...state,
         isOtpProcessed: action.payload,
-        isOtpVerifiedSuccess:false,
-        isLogInProcessed:false
+        isOtpVerifiedSuccess: false,
+        isLogInProcessed: false,
       };
     case PROCESSS_LOGOUT:
       return {
@@ -134,9 +117,9 @@ export const authReducer = (state = initialObject, action) => {
         loading: false,
         isOtpVerifiedSuccess: false,
         isSetPassword: false,
-        isLogInSuccess:false,
+        isLogInSuccess: false,
         isSuccess: false,
-        isLogInProcessed:false,
+        isLogInProcessed: false,
       };
 
     case SET_PASSWORD:
@@ -147,20 +130,19 @@ export const authReducer = (state = initialObject, action) => {
         loading: false,
         isOtpProcessed: true,
         isOtpVerifiedSuccess: action.payload.success,
-        isSetPassword:false
-        
+        isSetPassword: false,
       };
 
     case LOGIN_PROCESS:
       return {
         ...state,
-        isLogInSuccess:action.payload.success,
+        isLogInSuccess: action.payload.success,
         loading: false,
-        isLogInProcessed:true,
+        isLogInProcessed: true,
         isSuccess: action.payload.success,
         message: action.payload.message,
         isOtpProcessed: false,
-    
+        userData:action.payload.userData
       };
 
     default:

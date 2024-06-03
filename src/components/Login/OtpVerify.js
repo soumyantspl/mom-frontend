@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./style/OtpVerify.css";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
-import meetingImage from "../../assets/images/meeting.png";
 import { useNavigate, Navigate, Link } from "react-router-dom";
 import LoginImage from "./LoginImage";
 import { useSelector, useDispatch } from "react-redux";
@@ -17,9 +16,7 @@ import Alert from "../Common/Alert";
 import Timer from "../Common/Timer";
 const isLogIn = false;
 
-console.log("inside--------------");
-const OtpVerify = (props) => {
-  const [isOtpVerified, setIsOtpVerified] = useState(false);
+const OtpVerify = () => {
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     input1: null,
@@ -34,8 +31,8 @@ const OtpVerify = (props) => {
   const navigate = useNavigate();
   useEffect(() => {
     document.title = "Verify OTP: Meeting Plus";
-    const inputId=document.getElementById(parseInt(1));
-    inputId.focus()
+    const inputId = document.getElementById(parseInt(1));
+    inputId.focus();
     if (isLogIn) {
       navigate("/dashboard");
     }
@@ -54,15 +51,9 @@ const OtpVerify = (props) => {
     e.preventDefault();
     const newErrors = validateForm(formData);
     setErrors(newErrors?.errors);
-    console.log(
-      "FINAL OTP--------------------------------",
-      newErrors.otpData,
-      authData
-    );
     if (Object.keys(newErrors.errors).length === 0) {
       // Form submission logic here
       const otp = newErrors.otpData;
-
       // setIsOtpProcessed(true);
       dispatch(verifyOtp({ email: authData.email, otp }));
       console.log("Form submitted successfully!");
@@ -71,27 +62,24 @@ const OtpVerify = (props) => {
        due to validation errors.`);
     }
   };
-  console.log(isOtpVerified);
+
   const handleChange = (e) => {
-    console.log("id------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",e.target.id)
     dispatch(updateOtpProcessed(false));
-    const { value, name,id } = e.target;
+    const { value, name, id } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
-    console.log("id------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",id)
-    const inputId=document.getElementById(parseInt(id)+1);
-    const nextField=document.getElementById(parseInt(id)+1)
-    console.log("nextField-------------->>>>>>>>>>>>>>>>>>>>>",nextField)
-    if(nextField && value.length==1){
+
+    const nextField = document.getElementById(parseInt(id) + 1);
+
+    if (nextField && value.length === 1) {
       nextField.focus();
     }
   };
   const otp = [];
   const validateForm = (data) => {
     dispatch(updateOtpProcessed(false));
-    console.log("data-------------------", data);
     const errors = {};
     if (!authData.email) {
       errors.message = constantMessages.emailRequired;
@@ -108,7 +96,6 @@ const OtpVerify = (props) => {
     if (!data.input2) {
       errors.message = "OTP is required";
     } else if (isNaN(data.input2)) {
-      console.log("in -------------1");
       errors.message = "OTP must be a number";
     }
     otp.push(data.input2);
@@ -137,12 +124,10 @@ const OtpVerify = (props) => {
       errors.message = "OTP must be a number";
     }
     otp.push(data.input6);
-    console.log("otp--------------------------------11111", otp);
     if (otp.length !== 6) {
       errors.message = "OTP must be of 6 digits";
     }
     const otpData = otp.join("");
-    console.log("test--------------------", otpData);
 
     return {
       errors,
@@ -247,14 +232,6 @@ const OtpVerify = (props) => {
                   {errors.message && (
                     <span className="error-message">{errors.message}</span>
                   )}
-               
-                  {/* {authData.isOtpProcessed && authData.isSuccess ? (
-                    <span className="error-message" style={{ color: "green" }}>
-                      {authData.message}
-                    </span>
-                  ) : authData.isOtpProcessed && !authData.isSuccess ? (
-                    <span className="error-message">{authData.message}</span>
-                  ) : null} */}
 
                   {authData.isOtpProcessed && authData.isSuccess ? (
                     <Alert
@@ -304,12 +281,14 @@ const OtpVerify = (props) => {
                   </Link>
 
                   <div className="resend">
-                  {authData.isTimerOn ? (
-                     <span>
-                     {constantMessages.otpCountDownMessage}
-                     <Timer minutes={process.env.CHECK_OTP_VALIDATION_TIME} />
-                   </span>
-                   ):null}
+                    {authData.isTimerOn ? (
+                      <span>
+                        {constantMessages.otpCountDownMessage}
+                        <Timer
+                          minutes={process.env.CHECK_OTP_VALIDATION_TIME}
+                        />
+                      </span>
+                    ) : null}
                     <Link to="" onClick={resendOtpAction}>
                       Resend OTP
                     </Link>

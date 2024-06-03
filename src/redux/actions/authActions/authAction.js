@@ -9,10 +9,9 @@ import {
   OTP_RESENT,
   SET_PASSWORD,
   LOGIN_PROCESS,
-  OTP_SENT_FOR_LOGIN_BY_OTP
+  OTP_SENT_FOR_LOGIN_BY_OTP,
 } from "./actionTypes";
 import axios from "axios";
-import { toast } from "react-toastify";
 
 export const makeRequest = () => {
   return {
@@ -32,7 +31,7 @@ export const isOtpSendForLogInByOtp = (data) => {
   };
 };
 
-export const sendOtp = (email,isSetPassword) => {
+export const sendOtp = (email, isSetPassword) => {
   return (dispatch) => {
     dispatch(makeRequest());
     const url = `${process.env.REACT_APP_API_URL}/api/V1/auth/sendOtp`;
@@ -40,7 +39,6 @@ export const sendOtp = (email,isSetPassword) => {
     axios
       .post(url, payload)
       .then((res) => {
-        console.log("sendOtp action ----------------------------", res.data);
         const resData = res.data;
         let data;
         if (resData.success) {
@@ -49,7 +47,7 @@ export const sendOtp = (email,isSetPassword) => {
             variant: "success",
             message: resData.message,
             email,
-            isSetPassword:true
+            isSetPassword: true,
           };
         } else {
           data = {
@@ -57,19 +55,16 @@ export const sendOtp = (email,isSetPassword) => {
             variant: "danger",
             message: resData.message,
             email,
-            isSetPassword:false
+            isSetPassword: false,
           };
         }
-        if(isSetPassword){
+        if (isSetPassword) {
           dispatch(isOtpSendForSetPassword(data));
-       
-        }
-        else{
+        } else {
           dispatch(isOtpSendForLogInByOtp(data));
         }
       })
       .catch((err) => {
-        console.log("err-----------------------------------", err);
         dispatch(failRequest(err.message));
       });
   };
@@ -82,32 +77,26 @@ export const isOtpSendForSetPassword = (data) => {
   };
 };
 
-
 export const updateIsSuccess = (data) => {
-  console.log("data--------------------------------", data);
   return {
     type: UPDATE_ISSUCCESS,
     payload: data,
   };
 };
 
-
 export const isOtpVerified = (data) => {
-  console.log("data--------------------------------", data);
   return {
     type: OTP_VERIFIED,
     payload: data,
   };
 };
 export const verifyOtp = (payload) => {
-  console.log('payload in action----------------',payload)
   return (dispatch) => {
     dispatch(makeRequest());
     const url = `${process.env.REACT_APP_API_URL}/api/V1/auth/verifyOtp`;
     axios
       .post(url, payload)
       .then((res) => {
-        console.log("verifyOtp action ----------------------------", res.data);
         const resData = res.data;
         let data;
         if (resData.success) {
@@ -116,9 +105,8 @@ export const verifyOtp = (payload) => {
             variant: "success",
             message: resData.message,
           };
-          const {token, userData} = resData.data;
-          console.error('resData ------------------------------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>',resData)
-          console.error('token ------------------------------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>',resData.data.token,token)
+          const { token, userData } = resData.data;
+          console.log('------------------------>>>>>>>>>>>',token)
           localStorage.setItem("accessToken", token);
           localStorage.setItem("userData", JSON.stringify(userData));
         } else {
@@ -131,32 +119,23 @@ export const verifyOtp = (payload) => {
         dispatch(isOtpVerified(data));
       })
       .catch((err) => {
-        console.log("err-----------------------------------", err);
         dispatch(failRequest(err.message));
       });
   };
 };
 
-
 export const updateOtpProcessed = (status) => {
-  console.log("status--------------------------------", status);
   return {
     type: UPDATE_OTP_PROCESSED,
-    payload:status
+    payload: status,
   };
 };
 
 export const logOut = () => {
-  
   return {
-    type: PROCESSS_LOGOUT
+    type: PROCESSS_LOGOUT,
   };
 };
-
-
-
-
-
 
 export const reSendOtp = (email) => {
   return (dispatch) => {
@@ -166,7 +145,6 @@ export const reSendOtp = (email) => {
     axios
       .post(url, payload)
       .then((res) => {
-        console.log("resendOtp action ----------------------------", res.data);
         const resData = res.data;
         let data;
         if (resData.success) {
@@ -174,20 +152,19 @@ export const reSendOtp = (email) => {
             ...resData,
             variant: "success",
             message: resData.message,
-            email
+            email,
           };
         } else {
           data = {
             ...resData,
             variant: "danger",
             message: resData.message,
-            email
+            email,
           };
         }
         dispatch(isOtpReSend(data));
       })
       .catch((err) => {
-        console.log("err-----------------------------------", err);
         dispatch(failRequest(err.message));
       });
   };
@@ -200,16 +177,13 @@ export const isOtpReSend = (data) => {
   };
 };
 
-
 export const setPassword = (payload) => {
-  console.log('payload in setPassword action----------------',payload)
   return (dispatch) => {
     dispatch(makeRequest());
     const url = `${process.env.REACT_APP_API_URL}/api/V1/auth/setPassword`;
     axios
       .post(url, payload)
       .then((res) => {
-        console.log("verifyOtp action ----------------------------", res.data);
         const resData = res.data;
         let data;
         if (resData.success) {
@@ -228,12 +202,10 @@ export const setPassword = (payload) => {
         dispatch(isPasswordSet(data));
       })
       .catch((err) => {
-        console.log("err-----------------------------------", err);
         dispatch(failRequest(err.message));
       });
   };
 };
-
 
 export const isPasswordSet = (data) => {
   return {
@@ -242,30 +214,25 @@ export const isPasswordSet = (data) => {
   };
 };
 
-
-
-
 export const logInByPassword = (payload) => {
-  console.log('payload in logInByPassword action----------------',payload)
   return (dispatch) => {
     dispatch(makeRequest());
     const url = `${process.env.REACT_APP_API_URL}/api/V1/auth/signInByPassword`;
     axios
       .post(url, payload)
       .then((res) => {
-        console.log("logInByPassword action ----------------------------", res.data);
         const resData = res.data;
         let data;
         if (resData.success) {
-          const {token, userData} = resData.data;
-          console.error('resData ------------------------------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>',resData)
-          console.error('token ------------------------------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>',resData.data.token,token)
+          const { token, userData } = resData.data;
           localStorage.setItem("accessToken", token);
           localStorage.setItem("userData", JSON.stringify(userData));
+          
           data = {
             ...resData,
             variant: "success",
             message: resData.message,
+            userData
           };
         } else {
           data = {
@@ -277,12 +244,10 @@ export const logInByPassword = (payload) => {
         dispatch(isLogInProcess(data));
       })
       .catch((err) => {
-        console.log("err-----------------------------------", err);
         dispatch(failRequest(err.message));
       });
   };
 };
-
 
 export const isLogInProcess = (data) => {
   return {
@@ -290,4 +255,3 @@ export const isLogInProcess = (data) => {
     payload: data,
   };
 };
-

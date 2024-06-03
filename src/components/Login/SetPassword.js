@@ -4,11 +4,9 @@ import ntsplLogo from "../../assets/images/ntspl_logo.png";
 import LoginImage from "./LoginImage";
 import {
   reSendOtp,
-  sendOtp,
   setPassword,
   updateIsSuccess,
   updateOtpProcessed,
-  verifyOtp,
 } from "../../redux/actions/authActions/authAction";
 import { useSelector, useDispatch } from "react-redux";
 import * as constantMessages from "../../constants/constatntMessages";
@@ -18,13 +16,9 @@ import Alert from "../Common/Alert";
 import Timer from "../Common/Timer";
 
 const SetPassword = (props) => {
-  const [isOtpSend, setIsOtpSend] = useState(false);
-  const [isSignInWithPassword, setIsSignInWithPassword] = useState(false);
   const [errors, setErrors] = useState({});
-  const [isOtpProcessed, setIsOtpProcessed] = useState(false);
   const dispatch = useDispatch();
   const authData = useSelector((state) => state.auth);
-  console.log("auth data--------------------1234", authData);
   const [formData, setFormData] = useState({
     input1: null,
     input2: null,
@@ -39,8 +33,8 @@ const SetPassword = (props) => {
   const isLogIn = false;
   useEffect(() => {
     document.title = "Set Password : Meeting Plus";
-    const inputId=document.getElementById(parseInt(1));
-    inputId.focus()
+    const inputId = document.getElementById(parseInt(1));
+    inputId.focus();
     if (isLogIn) {
       navigate("/dashboard");
     }
@@ -48,25 +42,20 @@ const SetPassword = (props) => {
 
   const handleChange = (e) => {
     setErrors({});
-    console.log("id------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",e.target.id)
     dispatch(updateOtpProcessed(false));
-    const { value, name,id } = e.target;
+    const { value, name, id } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
-    console.log("id------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",id)
-    const inputId=document.getElementById(parseInt(id)+1);
-    const nextField=document.getElementById(parseInt(id)+1)
-    console.log("nextField-------------->>>>>>>>>>>>>>>>>>>>>",nextField)
-    if(nextField && value.length==1){
+    const nextField = document.getElementById(parseInt(id) + 1);
+    if (nextField && value.length === 1) {
       nextField.focus();
     }
   };
   const otp = [];
   const validateForm = (data) => {
     dispatch(updateOtpProcessed(false));
-    console.log("data-------------------", data);
     const errors = {};
     if (!authData.email) {
       errors.message = constantMessages.emailRequired;
@@ -74,7 +63,6 @@ const SetPassword = (props) => {
     if (!data.input1) {
       errors.message = "OTP is required";
     } else if (isNaN(data.input1)) {
-      console.log("in -------------1");
       errors.message = "OTP must be a number";
     }
 
@@ -83,7 +71,6 @@ const SetPassword = (props) => {
     if (!data.input2) {
       errors.otp = "OTP is required";
     } else if (isNaN(data.input2)) {
-      console.log("in -------------1");
       errors.otp = "OTP must be a number";
     }
     otp.push(data.input2);
@@ -119,7 +106,6 @@ const SetPassword = (props) => {
     }
 
     otp.push(data.input6);
-    console.log("otp--------------------------------11111", otp);
     if (otp.length !== 6) {
       errors.message = "OTP must be of 6 digits";
     }
@@ -140,9 +126,6 @@ const SetPassword = (props) => {
     } else if (!regularExpression.test(data.password)) {
       errors.password = constantMessages.passwordRegex;
     }
-
-    console.log("--------------------->>>>>>>>>>>>>>>>>>>>>>>>>123", errors);
-
     return {
       errors,
       otpData,
@@ -150,23 +133,12 @@ const SetPassword = (props) => {
   };
 
   const handleSubmit = (e) => {
-    console.log(
-      "------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",
-      formData
-    );
     e.preventDefault();
     const newErrors = validateForm(formData);
     setErrors(newErrors?.errors);
-    console.log(
-      "FINAL OTP--------------------------------",
-      newErrors.otpData,
-      authData
-    );
     if (Object.keys(newErrors.errors).length === 0) {
       // Form submission logic here
       const otp = newErrors.otpData;
-
-      // setIsOtpProcessed(true);
       dispatch(
         setPassword({ email: authData.email, otp, password: formData.password })
       );
@@ -185,9 +157,6 @@ const SetPassword = (props) => {
       setErrors(errors);
     }
   };
-
-  console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", errors);
-
   const showPassword = (id) => {
     var x = document.getElementById(id);
     if (x.type === "password") {
@@ -198,17 +167,16 @@ const SetPassword = (props) => {
   };
 
   return (
-    //<section className="otp-varify">
     <section className="otp-varify set-pswrd">
       {authData.isOtpVerifiedSuccess && authData.isSuccess ? (
         <Navigate to="/login-by-password" />
       ) : null}
-      
+
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
             <div className="loginform-container">
-              <img src={ntsplLogo} className="ntspl-logo" />
+              <img src={ntsplLogo} className="ntspl-logo" alt="logo" />
               <form onSubmit={handleSubmit}>
                 <div className="text">
                   <h4>Welcome to Meeting Plus</h4>
@@ -363,18 +331,6 @@ const SetPassword = (props) => {
                       </span>
                     )}
                   </div>
-                  {/* {errors.message && (
-                    <span className="error-message">{errors.message}</span>
-                  )} */}
-
-                  {/* {authData.isOtpProcessed && authData.isSuccess ? (
-                    <span className="error-message" style={{ color: "green" }}>
-                      {authData.message}
-                    </span>
-                  ) : authData.isOtpProcessed && !authData.isSuccess ? (
-                    <span className="error-message">{authData.message}</span>
-                  ) : null} */}
-
                   {authData.isOtpProcessed && authData.isSuccess ? (
                     <Alert
                       status={authData.isSuccess}
@@ -387,10 +343,6 @@ const SetPassword = (props) => {
                     />
                   ) : null}
                 </div>
-
-                {/* <a href="/meeting/meeting-list">
-                  <button className="btn1">OTP Verify</button>
-                </a> */}
                 {!authData.loading ? (
                   <button className="btn1" type="submit">
                     {" "}
@@ -401,7 +353,7 @@ const SetPassword = (props) => {
                 )}
 
                 <div className="back-resend back-arrow">
-                <Link to="/login-by-password">
+                  <Link to="/login-by-password">
                     <div className="back">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -426,13 +378,12 @@ const SetPassword = (props) => {
                     </div>
                   </Link>
                   {authData.isTimerOn ? (
-                     <span>
-                     {constantMessages.otpCountDownMessage}
-                     <Timer minutes={process.env.CHECK_OTP_VALIDATION_TIME} />
-                   </span>
-                   ):null}
+                    <span>
+                      {constantMessages.otpCountDownMessage}
+                      <Timer minutes={process.env.CHECK_OTP_VALIDATION_TIME} />
+                    </span>
+                  ) : null}
                   <div className="resend">
-                    {/* <a href="">Resend OTP</a> */}
                     <Link to="" onClick={resendOtpAction}>
                       Resend OTP
                     </Link>

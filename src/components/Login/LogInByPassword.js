@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./style/LogInByPassword.css";
-import configData from "../../config/config";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
-import { useNavigate, Navigate, Link } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import LoginImage from "./LoginImage";
 import {
   logInByPassword,
@@ -11,7 +10,6 @@ import {
   updateOtpProcessed,
 } from "../../redux/actions/authActions/authAction";
 import { useSelector, useDispatch } from "react-redux";
-import ToastBar from "../Common/ToastBar";
 import Alert from "../Common/Alert";
 import * as constantMessages from "../../constants/constatntMessages";
 import LoaderButton from "../Common/LoaderButton";
@@ -22,13 +20,12 @@ const LogInByPassword = (props) => {
     email: "",
     password: "",
   });
-  const [password, setPasword] = useState("");
   const [errors, setErrors] = useState({});
   const [isSetPassword, setIsSetPassword] = useState(false);
 
   const handleChange = (e) => {
     setErrors({});
-     dispatch(updateOtpProcessed(false));
+    dispatch(updateOtpProcessed(false));
     console.log("9999999999999999999999999999999999999", authData);
     const { name, value } = e.target;
     setFormData({
@@ -38,18 +35,12 @@ const LogInByPassword = (props) => {
   };
 
   const handleSubmit = (e) => {
-    // console.log(
-    //   "E---------loginbypassword------------------------->>>>>>>>>>",
-    //   isLogInByPassword
-    // );
     e.preventDefault();
 
     const newErrors = validateForm(formData);
     setErrors(newErrors);
-    //   dispatch(updateOtpProcessed(false));
     if (Object.keys(newErrors).length === 0) {
       // Form submission logic here
-      //  setIsOtpProcessed(true);
       if (isSetPassword) {
         dispatch(sendOtp(formData.email, isSetPassword));
       } else {
@@ -60,7 +51,6 @@ const LogInByPassword = (props) => {
           })
         );
       }
-
       console.log("Form submitted successfully!");
     } else {
       console.log(`Form submission failed
@@ -70,43 +60,27 @@ const LogInByPassword = (props) => {
 
   const validateForm = (data) => {
     const errors = {};
-
     if (!data.email.trim()) {
       errors.email = constantMessages.emailRequired;
     } else if (!/\S+@\S+\.\S+/.test(data.email)) {
       errors.email = constantMessages.invalidEmail;
     }
     if (!isSetPassword) {
-    const regularExpression =
-      /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-
-    if (!data.password.trim()) {
-      errors.password = constantMessages.passwordRequired;
-    } else if (!regularExpression.test(data.password)) {
-      errors.password = constantMessages.passwordRegex;
+      const regularExpression =
+        /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+      if (!data.password.trim()) {
+        errors.password = constantMessages.passwordRequired;
+      } else if (!regularExpression.test(data.password)) {
+        errors.password = constantMessages.passwordRegex;
+      }
     }
-  }
     return errors;
   };
 
   const dispatch = useDispatch();
-  const onSubmit = (e) => {
-    e.preventDefault();
-    console.log("inputData------------", e.target.value);
-    props.setIsSignInWithPassword(true);
-  };
+
   const authData = useSelector((state) => state.auth);
-  console.log("AUTH DATA------------>>>>>>>>>>>>>>>>", authData);
-  let isLogIn = true;
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   if (!isLogIn) {
-  //     navigate("/login");
-  //   } else {
-  //     navigate("/dashboard");
-  //   }
-  // }, []);
-  // console.log("inside--------------")
+ 
   useEffect(() => {
     document.title = "Log In By Password: Meeting Plus";
   }, []);
@@ -123,21 +97,21 @@ const LogInByPassword = (props) => {
   return (
     <section className="sign-in">
       {authData.isLogInSuccess ? <Navigate to="/meeting-list" /> : null}
-      { authData.isSetPassword && authData.isOtpProcessed ? (
+      {authData.isSetPassword && authData.isOtpProcessed ? (
         <Navigate to="/set-password" />
       ) : null}
       <div className="container-fluid">
         <div className="row">
           <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
             <div className="loginform-container by-password">
-              <img src={ntsplLogo} className="ntspl-logo" />
+              <img src={ntsplLogo} className="ntspl-logo" alt="logo" />
 
               <form onSubmit={handleSubmit}>
                 <div className="text">
                   <h4>Welcome to Meeting Plus</h4>
                   <p>Enter email & password to logging in to your account</p>
                 </div>
-                { authData.isOtpVerifiedSuccess  && authData.isOtpProcessed? (
+                {authData.isOtpVerifiedSuccess && authData.isOtpProcessed ? (
                   <Alert
                     status={authData.isSuccess}
                     message={authData.message}
@@ -209,7 +183,7 @@ const LogInByPassword = (props) => {
                     )}
                   </div>
                 </div>
-               
+
                 <div className="remember-forgot-pwd">
                   <div className="remember">
                     <input type="checkbox" />
@@ -218,12 +192,12 @@ const LogInByPassword = (props) => {
                   <div className="set-pwd">
                     {/* <Link to="/set-password" > Forgot Password ?</Link> */}
                     <button
-                    type="submit"
-                    className="signin-btn2"
-                     onClick={() => setIsSetPassword(true)}
-                  >
-                    Forgot Password ?
-                  </button>
+                      type="submit"
+                      className="signin-btn2"
+                      onClick={() => setIsSetPassword(true)}
+                    >
+                      Forgot Password ?
+                    </button>
                   </div>
                 </div>
                 {authData.isLogInProcessed && !authData.isSuccess ? (
@@ -232,7 +206,7 @@ const LogInByPassword = (props) => {
                     message={authData.message}
                   />
                 ) : null}
-                 {/* {authData.isOtpProcessed && !authData.isSuccess ? (
+                {/* {authData.isOtpProcessed && !authData.isSuccess ? (
                   <Alert
                     status={authData.isSuccess}
                     message={authData.message}
@@ -247,7 +221,7 @@ const LogInByPassword = (props) => {
                     type="submit"
                     onClick={() => setIsSetPassword(false)}
                   >
-                   Sign In
+                    Sign In
                   </button>
                 ) : (
                   <LoaderButton />
