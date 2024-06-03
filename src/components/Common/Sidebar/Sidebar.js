@@ -65,15 +65,15 @@ const Sidebar = () => {
             </li>
           </a>
 
-          <Link to="/meetingList" className="link" >
-            <li className={currentPath == "/meetingList" ? "active-menu" : ""}>
+          <Link to="/meeting-list" className="link" >
+            <li className={currentPath == "/meeting-list" ? "active-menu" : ""}>
               <img className="meeting-logo" src={meetingLogo} />
               Meetings
             </li>
           </Link>
 
-          <Link to="/actionList" className="link">
-            <li className={currentPath == "/actionList" ? "active-menu" : ""}>
+          <Link to="/action-list" className="link">
+            <li className={currentPath == "/action-list" ? "active-menu" : ""}>
               <img className="clipboard" src={actionLogo} />
               Actions
             </li>
@@ -115,9 +115,9 @@ const Sidebar = () => {
                     - Alerts
                   </li>
                 </Link>
-                <Link to="/meetingRoom" className="link">
+                <Link to="/meeting-room" className="link">
                   <li
-                     className={currentPath == "/meetingRoom" ? "active-menu" : ""}
+                     className={currentPath == "/meeting-room" ? "active-menu" : ""}
          
                   >
                     - Meeting Rooms

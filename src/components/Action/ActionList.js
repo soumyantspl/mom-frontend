@@ -240,7 +240,7 @@ const ActionList = () => {
                       </DropdownToggle>
                       <DropdownMenu>
                         <DropdownItem>
-                          <Link to="/ActionDetails">
+                          <Link to="/action-details">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="17"
