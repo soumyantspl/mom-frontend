@@ -1302,6 +1302,7 @@ textarea {
 .details-form-right label {
   margin: 0 !important;
   color: rgb(38 40 149);
+  width: 100%;
 }
 
 .details-form-right p {
@@ -1815,6 +1816,12 @@ th.action-col {
 
 
 /* ------------------------------------------ */
+.inner-detail-form button{
+  padding:1rem;
+}
+.agenda-background:has(button[aria-expanded="true"]) h2{
+  background-color: #cfe2ff;
+}
 .add-btn p{
   margin: 0;
 }

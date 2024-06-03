@@ -65,14 +65,14 @@ const Sidebar = () => {
             </li>
           </a>
 
-          <Link to="/meetingList" className="link" >
+          <Link to="/meeting-list" className="link" >
             <li className={currentPath == "/meetingList" ? "active-menu" : ""}>
               <img className="meeting-logo" src={meetingLogo} />
               Meetings
             </li>
           </Link>
 
-          <Link to="/actionList" className="link">
+          <Link to="/action-list" className="link">
             <li className={currentPath == "/actionList" ? "active-menu" : ""}>
               <img className="clipboard" src={actionLogo} />
               Actions
@@ -115,7 +115,7 @@ const Sidebar = () => {
                     - Alerts
                   </li>
                 </Link>
-                <Link to="/meetingRoom" className="link">
+                <Link to="/meeting-room" className="link">
                   <li
                      className={currentPath == "/meetingRoom" ? "active-menu" : ""}
          

@@ -335,7 +335,7 @@ const AddMeeting = (props) => {
                   <div className="form-group d-flex ">
                     <button
                       type="button"
-                      className="btn rounded-pill add-btn Mom-btn d-flex align-items-center justify-content-center"
+                      className="btn rounded-pill add-btn Mom-btn d-flex align-items-center justify-content-center "
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
