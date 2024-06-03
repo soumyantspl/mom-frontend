@@ -29,18 +29,21 @@ export const fetchMeetingList = (payload) => {
         Authorization: accessToken,
       },
       params: {
-        limit: 10,
-        page: 1,
-        order: 1,
+        limit: payload.limit,
+        page: payload.page,
+        order: payload.order
       },
     };
     console.log("webApiUrl----------------", webApiUrl);
     console.log("accessToken------------>>>>>", accessToken);
     // axios
     //   .post(webApiUrl, payload)
-
+const bodyPayload={
+    organizationId:payload.organizationId,
+    searchKey:payload.searchKey?payload.searchKey:undefined
+}
     axios
-      .post(webApiUrl, payload, headerObject)
+      .post(webApiUrl, bodyPayload, headerObject)
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;

@@ -8,6 +8,8 @@ const initialObject = {
   loading: false,
   meetingList: [],
   message: "",
+  totalCount:0,
+
 };
 
 export const meetingReducer = (state = initialObject, action) => {
@@ -30,7 +32,7 @@ export const meetingReducer = (state = initialObject, action) => {
         ...state,
         loading: false,
         message: action.payload.message,
-        meetingList: action.payload.data,
+        meetingList: action.payload.data.meetingData,
       };
 
     default:

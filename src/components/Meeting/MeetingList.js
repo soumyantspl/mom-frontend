@@ -34,21 +34,25 @@ const MeetingList = () => {
   // };
   //  console.log(filter);
   const isLogIn = false;
-  // useEffect(() => {
-  //   document.title = "Meeting List";
-  //   // if (isLogIn) {
-  //   //   navigate("/dashboard");
-  //   // }
-  //   console.log("repeat------------------------");
-  //   const payload = {
-  //     page: searchData.page,
-  //     order: searchData.order,
-  //     limit: searchData.limit,
-  //     organizationId: userData.organizationId,
-  //   };
-  //   console.log("payload in meetinglist----------34-------", payload);
-  //   dispatch(fetchMeetingList(payload));
-  // });
+  useEffect(() => {
+    document.title = "Meeting List";
+    // if (isLogIn) {
+    //   navigate("/dashboard");
+    // }
+    console.log("repeat------------------------");
+    const payload = {
+      page: searchData.page,
+      order: searchData.order,
+      limit: searchData.limit,
+      organizationId: userData.organizationId,
+    };
+    if(searchData.searchKey!==""){
+      payload["searchKey"]=searchData.searchKey
+    }
+    console.log("payload in meetinglist----------34-------", payload);
+    
+    dispatch(fetchMeetingList(payload));
+  },[searchData.searchKey,searchData.order, searchData.page, searchData.limit]);
   console.log(
     "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
     meetingData
@@ -85,7 +89,7 @@ const MeetingList = () => {
       <Header />
       <MeetingHeader />
       <Sidebar />
-      {!meetingData.loading ? (
+      {!meetingData.loading && meetingData.meetingList.length!==0? (
         <div className="main-content">
           <div className="meeting-page ">
             <div className="meeting-header-text">
