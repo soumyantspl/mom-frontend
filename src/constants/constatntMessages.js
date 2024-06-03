@@ -8,7 +8,7 @@ const confirmAndMainPasswordMatch =
 const passwordRequired = "Password is required.";
 const passwordRegex =
   "Your password must be at least eight characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.";
-
+const otpCountDownMessage = "Resend OTP in :";
 module.exports = {
   invalidEmail,
   emailRequired,
@@ -18,4 +18,5 @@ module.exports = {
   otpRequired,
   passwordRequired,
   passwordRegex,
+  otpCountDownMessage,
 };

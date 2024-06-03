@@ -30,6 +30,7 @@ import CreateMeeting from "../components/Meeting/CreateMeeting";
 import MeetingPage from "../components/Meeting/MeetingPage";
 import ViewMeeting from "../components/Meeting/ViewMeeting";
 import { ToastContainer, toast } from "react-toastify";
+import CreateMinutes from "../components/minutes/createMinutes";
 
 const MainRoute = () => {
   return (
@@ -67,6 +68,7 @@ const MainRoute = () => {
           <Route exact path="/employee" element={<Employee />} />
           <Route exact path="/configuration" element={<Configuration />} />
           <Route exact path="/organization" element={<Organization />} />
+          <Route exact path="/write-minutes" element={<CreateMinutes />} />
           <Route exact path="/unit" element={<Unit />} />
           <Route exact path="/department" element={<Department />} />
           <Route exact path="/designation" element={<Designation />} />

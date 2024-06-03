@@ -112,7 +112,6 @@ const ActionDetails = () => {
                 {/* Re-Assign Request */}
                 <button className="add-btn Mom-btn mt-5" onClick={toggleModal}>
                   {" "}
-                  Re-Assign Request
                   <p>Request for Reassign</p>
                 </button>
               </div>

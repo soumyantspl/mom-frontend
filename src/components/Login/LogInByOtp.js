@@ -1,51 +1,37 @@
-  import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./style/Login.css";
-import configData from "../../config/config";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
-import { useNavigate, Navigate, Link } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import LoginImage from "./LoginImage";
 import { useSelector, useDispatch } from "react-redux";
 import {
   sendOtp,
+  updateIsSuccess,
   updateOtpProcessed,
 } from "../../redux/actions/authActions/authAction";
 import * as constantMessages from "../../constants/constatntMessages";
-
-import ToastBar from "../Common/ToastBar";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import LoaderButton from "../Common/LoaderButton";
-import { Button } from "bootstrap";
 import Alert from "../Common/Alert";
 
-const LoginByOtp = (props) => {
-  console.log(configData.baseUrl);
+
+const LoginByOtp = () => {
   const dispatch = useDispatch();
   const authData = useSelector((state) => state.auth);
-  console.log("auth data--------------------1234", authData);
   const [formData, setFormData] = useState({
     email: "",
   });
-  const [otpStatus, setOtpStatus] = useState(false);
-  const [isOtpProcessed, setIsOtpProcessed] = useState(false);
-  const [isSetPasswordSuccess, setIsSetPasswordSuccess] = useState(false);
-  const [isSetPassword, setIsSetPassword] = useState(false);
 
+  const [isSetPassword, setIsSetPassword] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const userObject = {  };
-  //   console.log(userObject)
-  //   dispatch(sendOtp(email))
-  //   navigate('/user')
-  // };
   useEffect(() => {
     document.title = "Log In: Meeting Plus";
   }, []);
+
   const handleChange = (e) => {
     setErrors({});
     dispatch(updateOtpProcessed(false));
-    console.log("9999999999999999999999999999999999999", authData);
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -54,10 +40,6 @@ const LoginByOtp = (props) => {
   };
 
   const handleSubmit = (e) => {
-    console.log(
-      "E---------isSetPassword------------------------->>>>>>>>>>",
-      isSetPassword
-    );
     e.preventDefault();
 
     const newErrors = validateForm(formData);
@@ -65,7 +47,6 @@ const LoginByOtp = (props) => {
     dispatch(updateOtpProcessed(false));
     if (Object.keys(newErrors).length === 0) {
       // Form submission logic here
-      setIsOtpProcessed(true);
       dispatch(sendOtp(formData.email, isSetPassword));
       console.log("Form submitted successfully!");
     } else {
@@ -73,44 +54,19 @@ const LoginByOtp = (props) => {
        due to validation errors.`);
     }
   };
-  console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", formData);
 
   const validateForm = (data) => {
     const errors = {};
-
     if (!data.email.trim()) {
       errors.email = constantMessages.emailRequired;
     } else if (!/\S+@\S+\.\S+/.test(data.email)) {
       errors.email = constantMessages.invalidEmail;
     }
-
     return errors;
   };
 
-  const [isOtpSend, setIsOtpSend] = useState(false);
-  const [isSignInWithPassword, setIsSignInWithPassword] = useState(false);
-
-
-  const submitOtp = (e) => {
-    e.preventDefault();
-    console.log("inputData------------", e.target.value);
-    // navigate("/otp-verify");
-    setIsOtpSend(true);
-    props.setIsOtpSend(true);
-  };
-  console.log(isOtpSend);
-
   const isLogIn = false;
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   console.log("isLogIn-----------------",process.env)
-  //   if (!isLogIn) {
-  //     navigate("/login");
-  //   } else {
-  //     navigate("/dashboard");
-  //   }
-  // }, []);
-  console.log("inside--------------");
+
   return (
     <section className="sign-in login-page">
       {isLogIn ? <Navigate to="/dashboard" /> : null}
@@ -158,7 +114,7 @@ const LoginByOtp = (props) => {
                         placeholder="Type Your Email"
                         name="email"
                         onChange={handleChange}
-                       // onBlur={validateForm}
+                        // onBlur={validateForm}
                         value={formData.email}
                         autocomplete="off"
                       />
@@ -166,16 +122,21 @@ const LoginByOtp = (props) => {
                     {errors.email && (
                       <span className="error-message">{errors.email}</span>
                     )}
-                    {/* {authData.isOtpProcessed ? (
-                      <span className="error-message">{authData.message}</span>
-                    ) : // <ToastBar message={authData.message} variant={authData.variant} />
-                    null} */}
-                    {authData.isOtpProcessed?
-                    <Alert status={authData.isSuccess} message={authData.message}  />:null}
+
+                    {authData.isOtpProcessed ? (
+                      <Alert
+                        status={authData.isSuccess}
+                        message={authData.message}
+                      />
+                    ) : null}
                   </div>
                 </div>
                 {!authData.loading ? (
-                  <button className="signin-btn1" type="submit"  onClick={() => setIsSetPassword(false)}>
+                  <button
+                    className="signin-btn1"
+                    type="submit"
+                    onClick={() => setIsSetPassword(false)}
+                  >
                     Send OTP
                   </button>
                 ) : (
@@ -187,7 +148,9 @@ const LoginByOtp = (props) => {
                 <Link to="/login-by-password">
                   <button
                     className="signin-btn2"
-                    // onClick={() => props.setIsSignInWithPassword(true)}
+                    onClick={() => {
+                      dispatch(updateIsSuccess(true));
+                    }}
                   >
                     Sign In With Password
                   </button>

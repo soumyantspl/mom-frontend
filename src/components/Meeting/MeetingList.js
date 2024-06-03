@@ -9,11 +9,14 @@ import { useNavigate, Navigate, Link } from "react-router-dom";
 import MeetingHeader from "../Common/Header/MeetingHeader";
 //import ButtonToolbar from 'react-bootstrap/ButtonGroup';
 import Button from "react-bootstrap/Button";
+import { useSelector, useDispatch } from "react-redux";
 import "./style/meetings-css.css";
 
 
 const MeetingList = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const authData = useSelector((state) => state.auth);
   const [filter, setfilter] = useState(false);
   const [buttonStatus, setButtonStatus] = useState(false);
 
@@ -28,6 +31,9 @@ const MeetingList = () => {
     if (isLogIn) {
       navigate("/dashboard");
     }
+
+    //dispatch(fetchMeetingList(false));
+
   }, []);
 
   return (
@@ -173,7 +179,7 @@ const MeetingList = () => {
                         </Dropdown.Item>
                         <Dropdown.Item href="#/action-1">
                           <Link
-                            to="/meeting/write-minutes"
+                            to="/write-minutes"
                             style={{ textDecoration: "none", color: "black" }}
                           >
                             <svg

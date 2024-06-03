@@ -199,7 +199,7 @@ const ActionList = () => {
                   owner: "SL",
                   isComplete: false,
                   status: "Pending",
-                  statusClass: "primary",
+                  statusClass: "success",
                 },
               ].map((task, index) => (
                 <tr key={index}>
