@@ -21,10 +21,12 @@ const MeetingList = () => {
   // const authData = useSelector((state) => state.auth);
   const meetingData = useSelector((state) => state.meeting);
   const [filter, setfilter] = useState(false);
+  const [optionArray, setOptionArray] = useState(false);
+
   const [searchData, setSearchData] = useState({
     searchKey: "",
     page: 1,
-    limit: 20,
+    limit: 4,
     order: 1,
   });
 
@@ -46,13 +48,18 @@ const MeetingList = () => {
       limit: searchData.limit,
       organizationId: userData.organizationId,
     };
-    if(searchData.searchKey!==""){
-      payload["searchKey"]=searchData.searchKey
+    if (searchData.searchKey !== "") {
+      payload["searchKey"] = searchData.searchKey;
     }
     console.log("payload in meetinglist----------34-------", payload);
-    
+
     dispatch(fetchMeetingList(payload));
-  },[searchData.searchKey,searchData.order, searchData.page, searchData.limit]);
+  }, [
+    searchData.searchKey,
+    searchData.order,
+    searchData.page,
+    searchData.limit,
+  ]);
   console.log(
     "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
     meetingData
@@ -65,32 +72,40 @@ const MeetingList = () => {
       ...searchData,
       [name]: value,
     });
-    console.log("->>>>>>>66666666666666666",searchData)
+    console.log("->>>>>>>66666666666666666", searchData);
 
-
-
-
-    
     const payload = {
       page: searchData.page,
       order: searchData.order,
       limit: searchData.limit,
       organizationId: userData.organizationId,
     };
-  if(searchData.searchKey!==""){
-    payload["searchKey"]=searchData.searchKey
-  }
-  console.log("payload in meetinglist-------------12----", payload);
+    if (searchData.searchKey !== "") {
+      payload["searchKey"] = searchData.searchKey;
+    }
+    console.log("payload in meetinglist-------------12----", payload);
     dispatch(fetchMeetingList(payload));
   };
+  const totalOption =Math.round((meetingData.totalCount / searchData.limit)+ 0.5 );
+  console.log("totalOption-------------------->",(meetingData.totalCount / searchData.limit)+ 0.5 , totalOption);
+  //const fromDataCount= searchData.page===1?searchData.limit+meetingData.meetingList.length
+  const fromDataCount = (searchData.page - 1) * searchData.limit + 1;
+  const toDataCount =
+    (searchData.page - 1) * searchData.limit + meetingData.meetingList.length;
+  //searchData.limit+meetingData.meetingList.length
+  const totalCount = meetingData.totalCount;
+  console.log(fromDataCount, toDataCount, totalCount);
 
   return (
     <div>
       <Header />
       <MeetingHeader />
       <Sidebar />
-      {!meetingData.loading && meetingData.meetingList.length!==0? (
+      {!meetingData.loading && meetingData.meetingList.length !== 0 ? (
         <div className="main-content">
+          {/* {meetingData.meetingList.map((meeting,index)=>{
+
+          })} */}
           <div className="meeting-page ">
             <div className="meeting-header-text">
               <div>
@@ -123,7 +138,10 @@ const MeetingList = () => {
           <div className="mt-2 table-box">
             <div className="tbl-text-search">
               <div className="left-tbl-text">
-                <p>Showing 1 to 2 of 2 entries</p>
+                <p>
+                  Showing {fromDataCount} to {toDataCount} of {totalCount}{" "}
+                  entries
+                </p>
               </div>
               <div className="search-box">
                 <input
@@ -310,6 +328,8 @@ const MeetingList = () => {
                 </tr>
               </tbody>
             </table>
+            {totalCount <= searchData.limit ? null : (
+            
             <div className="tbl-bottom">
               <div className="left-tbl-bottom">
                 <button className="left-arrow">
@@ -328,8 +348,12 @@ const MeetingList = () => {
                   </svg>
                 </button>
                 <ul>
-                  <li>1</li>
-                  <li>2</li>
+                {totalOption &&  
+                     Array(totalOption).fill().map((_,option) => {
+                      console.log("option-----------------------",option)
+                        return <li>{option+1}</li>;
+                      })}
+                 
                 </ul>
                 <button className="right-arrow">
                   <svg
@@ -347,17 +371,26 @@ const MeetingList = () => {
                   </svg>
                 </button>
               </div>
-
-              <div className="right-tbl-bottom">
-                <p>Rows Per Page</p>
-                <select className="no-opt-box">
+             
+                <div className="right-tbl-bottom">
+                  <p>Rows Per Page</p>
+                  <select className="no-opt-box">
+                    {totalOption &&  
+                     Array(totalOption).fill().map((_,option) => {
+                      console.log("option-----------------------",option)
+                        return <option value={option}>{(option+1)*searchData.limit}</option>;
+                      })}
+                    {/* <option>10</option>
                   <option>20</option>
                   <option>30</option>
                   <option>40</option>
-                  <option>50</option>
-                </select>
-              </div>
+                  <option>50</option> */}
+                  </select>
+                </div>
+            
             </div>
+            )}
+                
           </div>
         </div>
       ) : (

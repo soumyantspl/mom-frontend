@@ -33,6 +33,7 @@ export const meetingReducer = (state = initialObject, action) => {
         loading: false,
         message: action.payload.message,
         meetingList: action.payload.data.meetingData,
+        totalCount:action.payload.data.totalCount
       };
 
     default:
