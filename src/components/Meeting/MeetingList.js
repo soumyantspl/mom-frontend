@@ -26,7 +26,7 @@ const MeetingList = () => {
   const [searchData, setSearchData] = useState({
     searchKey: "",
     page: 1,
-    limit: 4,
+    limit: 10,
     order: 1,
   });
 
@@ -50,6 +50,11 @@ const MeetingList = () => {
     };
     if (searchData.searchKey !== "") {
       payload["searchKey"] = searchData.searchKey;
+      setSearchData({
+        ...searchData,
+        page: 1,
+      });
+      payload.page = 1;
     }
     console.log("payload in meetinglist----------34-------", payload);
 
@@ -74,24 +79,31 @@ const MeetingList = () => {
     });
     console.log("->>>>>>>66666666666666666", searchData);
 
-    const payload = {
-      page: searchData.page,
-      order: searchData.order,
-      limit: searchData.limit,
-      organizationId: userData.organizationId,
-    };
-    if (searchData.searchKey !== "") {
-      payload["searchKey"] = searchData.searchKey;
-    }
-    console.log("payload in meetinglist-------------12----", payload);
-    dispatch(fetchMeetingList(payload));
+    // const payload = {
+    //   page: searchData.page,
+    //   order: searchData.order,
+    //   limit: searchData.limit,
+    //   organizationId: userData.organizationId,
+    // };
+    // if (searchData.searchKey !== "") {
+    //   payload["searchKey"] = searchData.searchKey;
+    // }
+    // console.log("payload in meetinglist-------------12----", payload);
+    // // dispatch(fetchMeetingList(payload));
   };
-  const totalOption =Math.round((meetingData.totalCount / searchData.limit)+ 0.5 );
-  console.log("totalOption-------------------->",(meetingData.totalCount / searchData.limit)+ 0.5 , totalOption);
+
+  const totalOption = Math.round(meetingData.totalCount / 5 + 0.5);
+  const totalPage = Math.round(meetingData.totalCount / searchData.limit + 0.5);
+  const totalPageArray = Array(totalPage).fill();
+  console.log(
+    "totalOption-------------------->",
+    meetingData.totalCount / searchData.limit + 0.5,
+    totalOption
+  );
   //const fromDataCount= searchData.page===1?searchData.limit+meetingData.meetingList.length
   const fromDataCount = (searchData.page - 1) * searchData.limit + 1;
   const toDataCount =
-    (searchData.page - 1) * searchData.limit + meetingData.meetingList.length;
+    (searchData.page - 1) * searchData.limit + meetingData.meetingList?.length;
   //searchData.limit+meetingData.meetingList.length
   const totalCount = meetingData.totalCount;
   console.log(fromDataCount, toDataCount, totalCount);
@@ -101,11 +113,8 @@ const MeetingList = () => {
       <Header />
       <MeetingHeader />
       <Sidebar />
-      {!meetingData.loading && meetingData.meetingList.length !== 0 ? (
+      {!meetingData.loading && meetingData.meetingList?.length !== 0 &&  meetingData.isSuccess? (
         <div className="main-content">
-          {/* {meetingData.meetingList.map((meeting,index)=>{
-
-          })} */}
           <div className="meeting-page ">
             <div className="meeting-header-text">
               <div>
@@ -139,7 +148,7 @@ const MeetingList = () => {
             <div className="tbl-text-search">
               <div className="left-tbl-text">
                 <p>
-                  Showing {fromDataCount} to {toDataCount} of {totalCount}{" "}
+                  Showing {fromDataCount} to {toDataCount} of {totalCount}
                   entries
                 </p>
               </div>
@@ -150,6 +159,7 @@ const MeetingList = () => {
                   onChange={handleChange}
                   name="searchKey"
                   value={searchData.searchKey}
+                  autoComplete="off"
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -180,206 +190,271 @@ const MeetingList = () => {
               </thead>
 
               <tbody>
-                <tr>
-                  <td data-label="Meeting Date & Time">
-                    09 Feb 2024
-                    <p className="detail-date-time">11:00 AM</p>
-                  </td>
-                  <td data-label="Meeting Title">
-                    Friday morning meeting
-                    <div className="respond-button">
-                      <button className="respond-action">Yes</button>
-                      <button className="respond-action">No</button>
-                      <button className="respond-action">May Be</button>
-                    </div>
-                  </td>
-                  <td data-label="Attendees" className="cursor-pointer">
-                    <div className="attendees">
-                      <div className="attendee-list">SL</div>
-                      <div className="attendee-list">PK</div>
-                      <div className="attendee-list">RB</div>
-                      <div className="attendee-list">YH</div>
-                      <div className="attendee-list">DB</div>
-                      <p className="plus-more-text m-0">+5 More</p>
-                    </div>
-                  </td>
-                  <td data-label="RSVP Confirmation">
-                    <p>10 Attendees</p>
-                    <p className="detail-date-time">5 Yes, 1 No, 5 Awaiting</p>
-                  </td>
-                  <td data-label="Status">
-                    <span className="badge bg-success bg-opacity-10 text-success">
-                      Scheduled
-                    </span>
-                    {/* <Button variant="success"  size="sm" style={{fontWeight:"bold"}} >Scheduled</Button> */}
-                  </td>
-                  <td data-label="Action Due">0/0</td>
-                  <td data-label="Action">
-                    <div className="d-inline-block menu-dropdown custom-dropdown">
-                      <Dropdown>
-                        <Dropdown.Toggle>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="#000"
-                            className="bi bi-three-dots-vertical"
-                            viewBox="0 0 16 16"
-                          >
-                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                          </svg>
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                          <Dropdown.Item href="#/action-2">
-                            <Link
-                              to="/viewMeetingDetails"
-                              style={{ textDecoration: "none", color: "black" }}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="17"
-                                height="17"
-                                fill="currentColor"
-                                className="bi bi-eye me-2"
-                                viewBox="0 0 16 16"
-                              >
-                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
-                                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
-                              </svg>
-                              View Meeting Details
-                            </Link>
-                          </Dropdown.Item>
-                          <Dropdown.Item href="#/action-1">
-                            <Link
-                              to="/meeting/write-minutes"
-                              style={{ textDecoration: "none", color: "black" }}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg "
-                                width="16"
-                                height="16"
-                                fill="currentColor"
-                                className="bi bi-pencil-square me-2"
-                                viewBox="0 0 16 16"
-                              >
-                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                <path
-                                  fill-rule="evenodd"
-                                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-                                />
-                              </svg>
-                              Write Minutes
-                            </Link>
-                          </Dropdown.Item>
-                          <Dropdown.Item href="#/action-3">
-                            <Link
-                              style={{ textDecoration: "none", color: "black" }}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                fill="currentColor"
-                                className="bi bi-pencil-square me-2"
-                                viewBox="0 0 16 16"
-                              >
-                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                <path
-                                  fill-rule="evenodd"
-                                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-                                />
-                              </svg>
-                              Edit Meeting
-                            </Link>
-                          </Dropdown.Item>
-                          <Dropdown.Divider />
-                          <Dropdown.Item eventKey="4">
-                            <Link
-                              style={{ textDecoration: "none", color: "black" }}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="17"
-                                height="17"
-                                fill="currentColor"
-                                className="bi bi-x-circle me-2"
-                                viewBox="0 0 16 16"
-                              >
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-                              </svg>
-                              Cancel Meeting
-                            </Link>
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-
-                      {/* {buttonStatus ? <VariantsExample /> : null} */}
-
-                      <div
-                        aria-labelledby="dropdownBasic1"
-                        className="list-dropdown"
-                      >
-                        <div className="dropdown-divider"></div>
+                {meetingData.meetingList.map((meeting, index) => {
+                
+                 return ( <tr>
+                    <td data-label="Meeting Date & Time">
+                    {meeting.date}
+                      <p className="detail-date-time">11:00 AM</p>
+                    </td>
+                    <td data-label="Meeting Title">
+                      Friday morning meeting
+                      <div className="respond-button">
+                        <button className="respond-action">Yes</button>
+                        <button className="respond-action">No</button>
+                        <button className="respond-action">May Be</button>
                       </div>
-                    </div>
-                  </td>
-                </tr>
+                    </td>
+                    <td data-label="Attendees" className="cursor-pointer">
+                      <div className="attendees">
+                        <div className="attendee-list">SL</div>
+                        <div className="attendee-list">PK</div>
+                        <div className="attendee-list">RB</div>
+                        <div className="attendee-list">YH</div>
+                        <div className="attendee-list">DB</div>
+                        <p className="plus-more-text m-0">+5 More</p>
+                      </div>
+                    </td>
+                    <td data-label="RSVP Confirmation">
+                      <p>10 Attendees</p>
+                      <p className="detail-date-time">
+                        5 Yes, 1 No, 5 Awaiting
+                      </p>
+                    </td>
+                    <td data-label="Status">
+                      <span className="badge bg-success bg-opacity-10 text-success">
+                        Scheduled
+                      </span>
+                      {/* <Button variant="success"  size="sm" style={{fontWeight:"bold"}} >Scheduled</Button> */}
+                    </td>
+                    <td data-label="Action Due">0/0</td>
+                    <td data-label="Action">
+                      <div className="d-inline-block menu-dropdown custom-dropdown">
+                        <Dropdown>
+                          <Dropdown.Toggle>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="#000"
+                              className="bi bi-three-dots-vertical"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                            </svg>
+                          </Dropdown.Toggle>
+
+                          <Dropdown.Menu>
+                            <Dropdown.Item href="#/action-2">
+                              <Link
+                                to="/viewMeetingDetails"
+                                style={{
+                                  textDecoration: "none",
+                                  color: "black",
+                                }}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="17"
+                                  height="17"
+                                  fill="currentColor"
+                                  className="bi bi-eye me-2"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                                  <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                                </svg>
+                                View Meeting Details
+                              </Link>
+                            </Dropdown.Item>
+                            <Dropdown.Item href="#/action-1">
+                              <Link
+                                to="/meeting/write-minutes"
+                                style={{
+                                  textDecoration: "none",
+                                  color: "black",
+                                }}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg "
+                                  width="16"
+                                  height="16"
+                                  fill="currentColor"
+                                  className="bi bi-pencil-square me-2"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                  <path
+                                    fill-rule="evenodd"
+                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                                  />
+                                </svg>
+                                Write Minutes
+                              </Link>
+                            </Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">
+                              <Link
+                                style={{
+                                  textDecoration: "none",
+                                  color: "black",
+                                }}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  fill="currentColor"
+                                  className="bi bi-pencil-square me-2"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                  <path
+                                    fill-rule="evenodd"
+                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                                  />
+                                </svg>
+                                Edit Meeting
+                              </Link>
+                            </Dropdown.Item>
+                            <Dropdown.Divider />
+                            <Dropdown.Item eventKey="4">
+                              <Link
+                                style={{
+                                  textDecoration: "none",
+                                  color: "black",
+                                }}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="17"
+                                  height="17"
+                                  fill="currentColor"
+                                  className="bi bi-x-circle me-2"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                                </svg>
+                                Cancel Meeting
+                              </Link>
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+
+                        {/* {buttonStatus ? <VariantsExample /> : null} */}
+
+                        <div
+                          aria-labelledby="dropdownBasic1"
+                          className="list-dropdown"
+                        >
+                          <div className="dropdown-divider"></div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                 )
+                })}
               </tbody>
             </table>
-            {totalCount <= searchData.limit ? null : (
-            
-            <div className="tbl-bottom">
-              <div className="left-tbl-bottom">
-                <button className="left-arrow">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    className="bi bi-chevron-left"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"
-                    />
-                  </svg>
-                </button>
-                <ul>
-                {totalOption &&  
-                     Array(totalOption).fill().map((_,option) => {
-                      console.log("option-----------------------",option)
-                        return <li>{option+1}</li>;
+
+            {totalCount <= 1 ? null : (
+              <div className="tbl-bottom">
+                <div className="left-tbl-bottom">
+                  {searchData.page !== 1 ? (
+                    <button
+                      className="left-arrow"
+                      onClick={(e) =>
+                        setSearchData({
+                          ...searchData,
+                          page: searchData.page - 1,
+                        })
+                      }
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        className="bi bi-chevron-left"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"
+                        />
+                      </svg>
+                    </button>
+                  ) : null}
+                  <ul>
+                    {totalPageArray?.length &&
+                      totalPageArray.map((_, option) => {
+                        console.log("option-----------------------", option);
+                        return (
+                          <li
+                            onClick={(e) => {
+                              setSearchData({
+                                ...searchData,
+                                page: option + 1,
+                              });
+                            }}
+                          >
+                            {option + 1}
+                          </li>
+                        );
                       })}
-                 
-                </ul>
-                <button className="right-arrow">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="#fff"
-                    className="bi bi-chevron-right"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
-                    />
-                  </svg>
-                </button>
-              </div>
-             
+                  </ul>
+                  {totalPageArray?.length !== searchData.page ? (
+                    <button
+                      className="right-arrow"
+                      onClick={(e) =>
+                        setSearchData({
+                          ...searchData,
+                          page: searchData.page + 1,
+                        })
+                      }
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="#fff"
+                        className="bi bi-chevron-right"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                        />
+                      </svg>
+                    </button>
+                  ) : null}
+                </div>
+
                 <div className="right-tbl-bottom">
                   <p>Rows Per Page</p>
-                  <select className="no-opt-box">
-                    {totalOption &&  
-                     Array(totalOption).fill().map((_,option) => {
-                      console.log("option-----------------------",option)
-                        return <option value={option}>{(option+1)*searchData.limit}</option>;
-                      })}
+                  <select
+                    className="no-opt-box"
+                    name="limit"
+                    onChange={(e) =>
+                      setSearchData({
+                        ...searchData,
+                        page: 1,
+                        limit: e.target.value,
+                      })
+                    }
+                    value={searchData.limit}
+                  >
+                    {totalOption &&
+                      Array(totalOption)
+                        .fill()
+                        .map((_, option) => {
+                          console.log("option-----------------------", option);
+                          return (
+                            <option value={(option + 1) * 5}>
+                              {(option + 1) * 5}
+                            </option>
+                          );
+                        })}
                     {/* <option>10</option>
                   <option>20</option>
                   <option>30</option>
@@ -387,11 +462,14 @@ const MeetingList = () => {
                   <option>50</option> */}
                   </select>
                 </div>
-            
-            </div>
+              </div>
             )}
-                
           </div>
+        </div>
+      ) : !meetingData.loading && meetingData.meetingList?.length === 0 ? (
+        <div>
+          {" "}
+          <p>NO DATA FOUND</p>
         </div>
       ) : (
         <div className="main-content">

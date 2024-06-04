@@ -9,6 +9,7 @@ const initialObject = {
   meetingList: [],
   message: "",
   totalCount:0,
+  isSuccess:false
 
 };
 
@@ -18,7 +19,8 @@ export const meetingReducer = (state = initialObject, action) => {
     case MAKE_REQUEST:
       return {
         ...state,
-        loading: true
+        loading: true,
+        meetingList: []
       };
     case FAIL_REQUEST:
       return {
@@ -32,8 +34,9 @@ export const meetingReducer = (state = initialObject, action) => {
         ...state,
         loading: false,
         message: action.payload.message,
-        meetingList: action.payload.data.meetingData,
-        totalCount:action.payload.data.totalCount
+        meetingList: action.payload.data?.meetingData,
+        totalCount:action.payload.data?.totalCount,
+        isSuccess: action.payload.success
       };
 
     default:
