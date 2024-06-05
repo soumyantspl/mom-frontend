@@ -28,7 +28,7 @@ const MeetingList = () => {
   const [searchData, setSearchData] = useState({
     searchKey: "",
     page: 1,
-    limit: 10,
+    limit: 5,
     order: -1,
     filterData: {},
   });
@@ -361,7 +361,10 @@ const MeetingList = () => {
               </tbody>
             </table>
           ) : !meetingData.loading && meetingData.meetingList?.length === 0 ? (
+            <div>
             <Alert message="No Data Found !" status={false} />
+            <button>Back</button>
+            </div>
           ) : (
             <div
               className="meeting-page "
