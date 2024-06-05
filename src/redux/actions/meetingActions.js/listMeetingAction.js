@@ -1,5 +1,10 @@
 import axios from "axios";
-import { FAIL_REQUEST, GET_MEETING_LIST, MAKE_REQUEST } from "./actionTypes";
+import {
+  FAIL_REQUEST,
+  GET_ATTENDEES_LIST,
+  GET_MEETING_LIST,
+  MAKE_REQUEST,
+} from "./actionTypes";
 const accessToken = localStorage.getItem("accessToken");
 
 // axios.defaults.headers = {
@@ -31,17 +36,21 @@ export const fetchMeetingList = (payload) => {
       params: {
         limit: payload.limit,
         page: payload.page,
-        order: payload.order
+        order: payload.order,
       },
     };
     console.log("webApiUrl----------------", webApiUrl);
     console.log("accessToken------------>>>>>", accessToken);
     // axios
     //   .post(webApiUrl, payload)
-const bodyPayload={
-    organizationId:payload.organizationId,
-    searchKey:payload.searchKey?payload.searchKey:undefined
-}
+    const bodyPayload = {
+      organizationId: payload.organizationId,
+      searchKey: payload.searchKey ? payload.searchKey : undefined,
+      meetingStatus: payload.meetingStatus ? payload.meetingStatus : undefined,
+      toDate: payload.toDate ? payload.toDate : undefined,
+      fromDate: payload.fromDate ? payload.fromDate : undefined,
+      attendeeId: payload.attendeeId ? payload.attendeeId : undefined
+    };
     axios
       .post(webApiUrl, bodyPayload, headerObject)
       .then((result) => {
@@ -60,6 +69,45 @@ const bodyPayload={
 export const getMeetingList = (data) => {
   return {
     type: GET_MEETING_LIST,
+    payload: data,
+  };
+};
+
+export const fetchAttendeesList = (payload) => {
+  return (dispatch) => {
+    dispatch(makeRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/listAttendeesFromPreviousMeeting/${payload.organizationId}`;
+    const headerObject = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: accessToken,
+      },
+    };
+    console.log("webApiUrl----------------", webApiUrl);
+    console.log("accessToken------------>>>>>", accessToken);
+    // axios
+    //   .post(webApiUrl, payload)
+    const bodyPayload = {
+      organizationId: payload.organizationId,
+    };
+    axios
+      .get(webApiUrl, headerObject)
+      .then((result) => {
+        console.log("result------------------------->>>>>>>", result);
+        const resData = result.data;
+
+        dispatch(getAttendeesList(resData));
+      })
+      .catch((err) => {
+        console.log("err------------------------->>>>>>>", err);
+        dispatch(failRequest(err.message));
+      });
+  };
+};
+
+export const getAttendeesList = (data) => {
+  return {
+    type: GET_ATTENDEES_LIST,
     payload: data,
   };
 };

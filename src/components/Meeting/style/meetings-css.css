@@ -16,3 +16,6 @@
     border-top: 1px solid #80808042;
     /* margin-top: 16px; */
 }
+.selected-page{
+    color:"blue";
+}

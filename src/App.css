@@ -784,7 +784,10 @@ margin-left: 10px !important;
 .right-arrow {
   background-color: #0202bb !important;
 }
-
+.selected-page{
+  color:blue;
+  font-weight: 600px;
+}
 .no-opt-box {
   width: 55px;
   padding: 2px 3px;

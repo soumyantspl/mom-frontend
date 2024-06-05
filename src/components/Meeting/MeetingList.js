@@ -15,7 +15,7 @@ import LoaderButton from "../Common/LoaderButton";
 import Loader from "../Common/Loader";
 import Alert from "../Common/Alert";
 import MeetingDropDown from "./MeetingDropDown";
-
+import FilterComponent from "./FilterComponent";
 const MeetingList = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const navigate = useNavigate();
@@ -30,12 +30,16 @@ const MeetingList = () => {
     page: 1,
     limit: 10,
     order: -1,
+    filterData: {},
   });
 
-  // const showFilter = () => {
-  //   setfilter(true);
-  //   console.log(filter);
-  // };
+  const filterData = (data) => {
+    console.log(data);
+    setSearchData({
+      ...searchData,
+      filterData: data,
+    });
+  };
   //  console.log(filter);
   const isLogIn = false;
   useEffect(() => {
@@ -43,12 +47,16 @@ const MeetingList = () => {
     // if (isLogIn) {
     //   navigate("/dashboard");
     // }
-    console.log("repeat------------------------");
+    console.log("repeat------------------------", searchData);
     const payload = {
       page: searchData.page,
       order: searchData.order,
       limit: searchData.limit,
       organizationId: userData.organizationId,
+      meetingStatus: searchData.filterData?.meetingStatus,
+      toDate: searchData.filterData?.toDate,
+      fromDate: searchData.filterData?.fromDate,
+      attendeeId: searchData.filterData?.attendeeId,
     };
     if (searchData.searchKey !== "") {
       payload["searchKey"] = searchData.searchKey;
@@ -66,6 +74,7 @@ const MeetingList = () => {
     searchData.order,
     searchData.page,
     searchData.limit,
+    searchData.filterData,
   ]);
   console.log(
     "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
@@ -148,6 +157,25 @@ const MeetingList = () => {
     return `${yesCount} Yes, ${noCount} No, ${pendingCount} Awaiting`;
   };
 
+  const formatDateTimeFormat = (date) => {
+    console.log(date);
+    const sourceDate = new Date(date).toDateString();
+    const sourceTime = new Date(date).toLocaleTimeString();
+    // The above yields e.g. 'Mon Jan 06 2020'
+
+    const [, month, day, year] = sourceDate.split(" ");
+    const formattedDate = [day, month, year].join(" ");
+    console.log(formattedDate);
+
+    const [hour, minute, second] = sourceTime.split(" ")[0].split(":");
+    const formattedTime =
+      [hour, minute].join(":") + " " + sourceTime.split(" ")[1];
+    return {
+      formattedTime,
+      formattedDate,
+    };
+  };
+
   return (
     <div>
       <Header />
@@ -181,7 +209,9 @@ const MeetingList = () => {
             </div>
           </div>
 
-          {filter ? <FilterComponent setfilter={setfilter} /> : null}
+          {filter ? (
+            <FilterComponent setfilter={setfilter} filterData={filterData} />
+          ) : null}
         </div>
 
         <div className="mt-2 table-box">
@@ -235,8 +265,10 @@ const MeetingList = () => {
                   return (
                     <tr>
                       <td data-label="Meeting Date & Time">
-                        {meeting.date}
-                        <p className="detail-date-time">11:00 AM</p>
+                        {formatDateTimeFormat(meeting.date).formattedDate}
+                        <p className="detail-date-time">
+                          {formatDateTimeFormat(meeting.date).formattedTime}
+                        </p>
                       </td>
                       <td data-label="Meeting Title">
                         {meeting.title}
@@ -280,17 +312,37 @@ const MeetingList = () => {
                         </p>
                       </td>
                       <td data-label="Status">
-                        <span className="badge bg-success bg-opacity-10 text-success">
-                         {meeting.meetingStatus.status.charAt(0).toUpperCase() + meeting.meetingStatus.status.slice(1)}
+                        <span
+                          className={
+                            meeting.meetingStatus.status === "due" ||
+                            meeting.meetingStatus.status === "scheduled" ||
+                            meeting.meetingStatus.status === "rescheduled"
+                              ? "badge bg-success bg-opacity-10 text-success"
+                              : meeting.meetingStatus.status === "closed"
+                              ? "badge bg-primary bg-opacity-10 text-success"
+                              : "badge bg-danger bg-opacity-10 text-success"
+                          }
+                        >
+                          {meeting.meetingStatus.status
+                            .charAt(0)
+                            .toUpperCase() +
+                            meeting.meetingStatus.status.slice(1)}
                         </span>
                         {/* <Button variant="success"  size="sm" style={{fontWeight:"bold"}} >Scheduled</Button> */}
                       </td>
-                      <td data-label="Action Due">{meeting.actionDetail.filter((item)=>item.isComplete).length}/{meeting.actionDetail.length}</td>
+                      <td data-label="Action Due">
+                        {
+                          meeting.actionDetail.filter((item) => item.isComplete)
+                            .length
+                        }
+                        /{meeting.actionDetail.length}
+                      </td>
                       <td data-label="Action">
                         <div className="d-inline-block menu-dropdown custom-dropdown">
                           <Dropdown>
-
-                          <MeetingDropDown status={meeting.meetingStatus.status}/>
+                            <MeetingDropDown
+                              status={meeting.meetingStatus.status}
+                            />
                           </Dropdown>
 
                           {/* {buttonStatus ? <VariantsExample /> : null} */}
@@ -352,6 +404,12 @@ const MeetingList = () => {
                       console.log("option-----------------------", option);
                       return (
                         <li
+                          //  className="selected-page"
+                          className={
+                            option + 1 === searchData.page
+                              ? "selected-page"
+                              : null
+                          }
                           onClick={(e) => {
                             setSearchData({
                               ...searchData,
@@ -379,7 +437,7 @@ const MeetingList = () => {
                       width="16"
                       height="16"
                       fill="#fff"
-                      className="bi bi-chevron-right"
+                      // className="bi bi-chevron-right"
                       viewBox="0 0 16 16"
                     >
                       <path
@@ -427,88 +485,6 @@ const MeetingList = () => {
           )}
         </div>
       </div>
-    </div>
-  );
-};
-
-// FILTER COMPONENT
-const FilterComponent = (props) => {
-  return (
-    <div className="filter show" id="form-container">
-      <div className="filter-container">
-        <h4 className="filterheading mb-0">Filter Meetings</h4>
-        <button
-          type="button"
-          onClick={(e) => props.setfilter(false)}
-          style={{ border: "none", padding: 0, margin: 0 }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="36"
-            height="36"
-            fill="currentColor"
-            className="bi bi-x"
-            viewBox="0 0 16 16"
-          >
-            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-          </svg>
-        </button>
-      </div>
-
-      <form id="myForm">
-        <label htmlFor="from">From Date</label>
-        <div className="from-to">
-          <input className="filter-date" type="date" id="from" name="" />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="#fff"
-            className="bi bi-calendar3 calender"
-            viewBox="0 0 16 16"
-          >
-            <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z" />
-            <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
-          </svg>
-        </div>
-        <br />
-        <label htmlFor="to">To Date</label>
-        <div className="from-to">
-          <input className="filter-date" type="date" id="" name=" " />
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="#fff"
-            className="bi bi-calendar3 calender"
-            viewBox="0 0 16 16"
-          >
-            <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z" />
-            <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
-          </svg>
-        </div>
-        <br />
-        <label>Attendee(s)</label>
-        <select className="fltr-opt" aria-placeholder="Select Attendee">
-          <option>Select Attendee(s)</option>
-          <option></option>
-        </select>
-        <br />
-        <label>Status</label>
-        <select className="fltr-opt" aria-placeholder="Select Status">
-          <option>Select Status</option>
-          <option>Due</option>
-        </select>
-        <div className="mt-2 form-btm-btn">
-          <button className="reset">
-            <p>Reset</p>
-          </button>
-          <button className="add-btn Mom-btn">
-            <p>Filter</p>
-          </button>
-        </div>
-      </form>
     </div>
   );
 };
