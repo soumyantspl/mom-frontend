@@ -28,7 +28,7 @@ const MeetingList = () => {
     searchKey: "",
     page: 1,
     limit: 10,
-    order: 1,
+    order: -1,
   });
 
   // const showFilter = () => {
@@ -109,6 +109,44 @@ const MeetingList = () => {
   const totalCount = meetingData.totalCount;
   console.log(fromDataCount, toDataCount, totalCount);
 
+  const customName = (fullname) => {
+    const nameArray = fullname.split(" ");
+    console.log(
+      "nameArray=================================================",
+      nameArray
+    );
+    let result;
+
+    if (nameArray.length > 1) {
+      result =
+        nameArray[0].charAt(0).toUpperCase() +
+        nameArray[nameArray.length - 1].charAt(0).toUpperCase();
+    } else {
+      result = nameArray[0].charAt(0).toUpperCase();
+    }
+    console.log(
+      "result---------------------------------->>>>>>>>>>>>>",
+      result
+    );
+    return result;
+  };
+
+  const checkRsvpCount = (attendees) => {
+    let yesCount = 0;
+    let noCount = 0;
+    let pendingCount = 0;
+
+    attendees.map((item) => {
+      item.rsvp === "YES"
+        ? (yesCount = yesCount + 1)
+        : item.rsvp === "NO"
+        ? (noCount = noCount + 1)
+        : (pendingCount = pendingCount + 1);
+    });
+
+    return `${yesCount} Yes, ${noCount} No, ${pendingCount} Awaiting`;
+  };
+
   return (
     <div>
       <Header />
@@ -149,8 +187,7 @@ const MeetingList = () => {
           <div className="tbl-text-search">
             <div className="left-tbl-text">
               <p>
-                Showing {fromDataCount} to {toDataCount} of {totalCount} {" "}
-                entries
+                Showing {fromDataCount} to {toDataCount} of {totalCount} entries
               </p>
             </div>
             <div className="search-box">
@@ -201,32 +238,49 @@ const MeetingList = () => {
                         <p className="detail-date-time">11:00 AM</p>
                       </td>
                       <td data-label="Meeting Title">
-                      {meeting.title}
-                        <div className="respond-button">
-                          <button className="respond-action">Yes</button>
-                          <button className="respond-action">No</button>
-                          <button className="respond-action">May Be</button>
-                        </div>
+                        {meeting.title}
+
+                        {meeting.rsvp === "PENDING" ? (
+                          <div className="respond-button">
+                            <button className="respond-action">Yes</button>
+                            <button className="respond-action">No</button>
+                            <button className="respond-action">May Be</button>
+                          </div>
+                        ) : null}
                       </td>
                       <td data-label="Attendees" className="cursor-pointer">
                         <div className="attendees">
-                          <div className="attendee-list">SL</div>
-                          <div className="attendee-list">PK</div>
+                          {meeting.attendees &&
+                            meeting.attendees
+                              .filter((item, index) => index < 5)
+                              .map((attendee, index) => {
+                                return (
+                                  <div className="attendee-list">
+                                    {customName(attendee.name)}
+                                  </div>
+                                );
+                              })}
+                        </div>
+
+                        {/* <div className="attendee-list">PK</div>
                           <div className="attendee-list">RB</div>
                           <div className="attendee-list">YH</div>
-                          <div className="attendee-list">DB</div>
-                          <p className="plus-more-text m-0">+5 More</p>
-                        </div>
+                          <div className="attendee-list">DB</div> */}
+                        <p className="plus-more-text m-0">
+                          {meeting.attendees.length > 5
+                            ? `+${meeting.attendees.length - 5} More`
+                            : null}
+                        </p>
                       </td>
                       <td data-label="RSVP Confirmation">
-                        <p>10 Attendees</p>
+                        <p>{meeting.attendees.length} Attendees</p>
                         <p className="detail-date-time">
-                          5 Yes, 1 No, 5 Awaiting
+                          {checkRsvpCount(meeting.attendees)}
                         </p>
                       </td>
                       <td data-label="Status">
                         <span className="badge bg-success bg-opacity-10 text-success">
-                          Scheduled
+                         {meeting.meetingStatus.status.charAt(0).toUpperCase() + meeting.meetingStatus.status.slice(1)}
                         </span>
                         {/* <Button variant="success"  size="sm" style={{fontWeight:"bold"}} >Scheduled</Button> */}
                       </td>
