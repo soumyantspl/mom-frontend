@@ -10,12 +10,17 @@ import MeetingHeader from "../Common/Header/MeetingHeader";
 import Button from "react-bootstrap/Button";
 import { useSelector, useDispatch } from "react-redux";
 import "./style/meetings-css.css";
-import { fetchMeetingList, updateRsvp } from "../../redux/actions/meetingActions.js/listMeetingAction";
+import {
+  fetchMeetingList,
+  updateRsvp,
+} from "../../redux/actions/meetingActions.js/listMeetingAction";
 import LoaderButton from "../Common/LoaderButton";
 import Loader from "../Common/Loader";
 import Alert from "../Common/Alert";
 import MeetingDropDown from "./MeetingDropDown";
 import FilterComponent from "./FilterComponent";
+import AttendeesModal from "./AttendeesModal";
+import { customName } from "../../helpers/commonHelpers";
 const MeetingList = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const navigate = useNavigate();
@@ -23,7 +28,11 @@ const MeetingList = () => {
   // const authData = useSelector((state) => state.auth);
   const meetingData = useSelector((state) => state.meeting);
   const [filter, setfilter] = useState(false);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [optionArray, setOptionArray] = useState(false);
+  const [attendeesData, setAttendeesData] = useState(false);
+
   const [isBack, setIsBack] = useState(false);
   const [searchData, setSearchData] = useState({
     searchKey: "",
@@ -40,6 +49,12 @@ const MeetingList = () => {
       filterData: data,
     });
   };
+
+  const setModalStatus = (value, attendeesData) => {
+    setIsModalOpen(value);
+    setAttendeesData(attendeesData);
+  };
+
   //  console.log(filter);
   const isLogIn = false;
   useEffect(() => {
@@ -47,7 +62,7 @@ const MeetingList = () => {
     // if (isLogIn) {
     //   navigate("/dashboard");
     // }
-    console.log("repeat------------------------", searchData);
+    //   console.log("repeat------------------------", searchData);
     const payload = {
       page: searchData.page,
       order: searchData.order,
@@ -66,7 +81,7 @@ const MeetingList = () => {
       });
       payload.page = 1;
     }
-    console.log("payload in meetinglist----------34-------", payload);
+    // console.log("payload in meetinglist----------34-------", payload);
 
     dispatch(fetchMeetingList(payload));
   }, [
@@ -75,21 +90,20 @@ const MeetingList = () => {
     searchData.page,
     searchData.limit,
     searchData.filterData,
-    meetingData.isRsvpUpdated
+    meetingData.isRsvpUpdated,
   ]);
-  console.log(
-    "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
-    meetingData
-  );
+  // console.log(
+  //   "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
+  //   meetingData
+  // );
 
   const handleChange = (e) => {
-    console.log("on change------------------->>>>>>", e.target);
+    // console.log("on change------------------->>>>>>", e.target);
     const { name, value } = e.target;
     setSearchData({
       ...searchData,
       [name]: value,
     });
-    console.log("->>>>>>>66666666666666666", searchData);
 
     // const payload = {
     //   page: searchData.page,
@@ -103,15 +117,18 @@ const MeetingList = () => {
     // console.log("payload in meetinglist-------------12----", payload);
     // // dispatch(fetchMeetingList(payload));
   };
-
+  console.log(
+    "->>>>>>>66666666666666666----------------isModalOpen",
+    isModalOpen
+  );
   const totalOption = Math.round(meetingData.totalCount / 5 + 0.5);
   const totalPage = Math.round(meetingData.totalCount / searchData.limit + 0.5);
   const totalPageArray = Array(totalPage).fill();
-  console.log(
-    "totalOption-------------------->",
-    meetingData.totalCount / searchData.limit + 0.5,
-    totalOption
-  );
+  // console.log(
+  //   "totalOption-------------------->",
+  //   meetingData.totalCount / searchData.limit + 0.5,
+  //   totalOption
+  // );
   //const fromDataCount= searchData.page===1?searchData.limit+meetingData.meetingList.length
   const fromDataCount = (searchData.page - 1) * searchData.limit + 1;
   const toDataCount =
@@ -119,28 +136,6 @@ const MeetingList = () => {
   //searchData.limit+meetingData.meetingList.length
   const totalCount = meetingData.totalCount;
   console.log(fromDataCount, toDataCount, totalCount);
-
-  const customName = (fullname) => {
-    const nameArray = fullname.split(" ");
-    console.log(
-      "nameArray=================================================",
-      nameArray
-    );
-    let result;
-
-    if (nameArray.length > 1) {
-      result =
-        nameArray[0].charAt(0).toUpperCase() +
-        nameArray[nameArray.length - 1].charAt(0).toUpperCase();
-    } else {
-      result = nameArray[0].charAt(0).toUpperCase();
-    }
-    console.log(
-      "result---------------------------------->>>>>>>>>>>>>",
-      result
-    );
-    return result;
-  };
 
   const checkRsvpCount = (attendees) => {
     let yesCount = 0;
@@ -159,14 +154,14 @@ const MeetingList = () => {
   };
 
   const formatDateTimeFormat = (date) => {
-    console.log(date);
+    //  console.log(date);
     const sourceDate = new Date(date).toDateString();
     const sourceTime = new Date(date).toLocaleTimeString();
     // The above yields e.g. 'Mon Jan 06 2020'
 
     const [, month, day, year] = sourceDate.split(" ");
     const formattedDate = [day, month, year].join(" ");
-    console.log(formattedDate);
+    // console.log(formattedDate);
 
     const [hour, minute, second] = sourceTime.split(" ")[0].split(":");
     const formattedTime =
@@ -176,7 +171,7 @@ const MeetingList = () => {
       formattedDate,
     };
   };
-  console.log("repeat------------------------", searchData);
+  // console.log("repeat------------------------", searchData);
   return (
     <div>
       <Header />
@@ -281,7 +276,15 @@ const MeetingList = () => {
                               <>&#x2713; </>Yes
                             </button>
                           ) : (
-                            <button className="respond-action" onClick={()=>{dispatch(updateRsvp("YES",meeting._id))}}> Yes</button>
+                            <button
+                              className="respond-action"
+                              onClick={() => {
+                                dispatch(updateRsvp("YES", meeting._id));
+                              }}
+                            >
+                              {" "}
+                              Yes
+                            </button>
                           )}
 
                           {meeting.rsvp === "NO" ? (
@@ -290,7 +293,15 @@ const MeetingList = () => {
                               <>&#x2713; </>No
                             </button>
                           ) : (
-                            <button className="respond-action" onClick={()=>{dispatch(updateRsvp("NO",meeting._id))}}> No</button>
+                            <button
+                              className="respond-action"
+                              onClick={() => {
+                                dispatch(updateRsvp("NO", meeting._id));
+                              }}
+                            >
+                              {" "}
+                              No
+                            </button>
                           )}
 
                           {meeting.rsvp === "MAYBE" ? (
@@ -299,15 +310,27 @@ const MeetingList = () => {
                               <>&#x2713; </>May Be
                             </button>
                           ) : (
-                            <button className="respond-action" onClick={()=>{dispatch(updateRsvp("MAYBE",meeting._id))}}> May Be</button>
+                            <button
+                              className="respond-action"
+                              onClick={() => {
+                                dispatch(updateRsvp("MAYBE", meeting._id));
+                              }}
+                            >
+                              {" "}
+                              May Be
+                            </button>
                           )}
 
-                          {/* <button className="respond-action" onClick={dispatch(updateRsvp("YES"))}>Yes</button>
-                            <button className="respond-action" onClick={dispatch(updateRsvp("NO"))}>No</button>
-                            <button className="respond-action" onClick={dispatch(updateRsvp("MAYBE"))}>May Be</button> */}
+                  
                         </div>
                       </td>
-                      <td data-label="Attendees" className="cursor-pointer">
+                      <td
+                        data-label="Attendees"
+                        className="cursor-pointer"
+                        onClick={(e) => {
+                          setModalStatus(true, meeting.attendees);
+                        }}
+                      >
                         <div className="attendees">
                           {meeting.attendees &&
                             meeting.attendees
@@ -320,11 +343,7 @@ const MeetingList = () => {
                                 );
                               })}
                         </div>
-
-                        {/* <div className="attendee-list">PK</div>
-                          <div className="attendee-list">RB</div>
-                          <div className="attendee-list">YH</div>
-                          <div className="attendee-list">DB</div> */}
+                      
                         <p className="plus-more-text m-0">
                           {meeting.attendees.length > 5
                             ? `+${meeting.attendees.length - 5} More`
@@ -384,6 +403,13 @@ const MeetingList = () => {
                     </tr>
                   );
                 })}
+
+                <AttendeesModal
+                  IsModalOpen={isModalOpen}
+                  attendees={attendeesData}
+                  setIsModalOpen={setIsModalOpen}
+                  // attendeeData={meeting.attendees}
+                />
               </tbody>
             </table>
           ) : !meetingData.loading && meetingData.meetingList?.length === 0 ? (
@@ -439,7 +465,7 @@ const MeetingList = () => {
                 <ul>
                   {totalPageArray?.length &&
                     totalPageArray.map((_, option) => {
-                      console.log("option-----------------------", option);
+                      //   console.log("option-----------------------", option);
                       return (
                         <li
                           //  className="selected-page"
@@ -505,7 +531,7 @@ const MeetingList = () => {
                     Array(totalOption)
                       .fill()
                       .map((_, option) => {
-                        console.log("option-----------------------", option);
+                        //  console.log("option-----------------------", option);
                         return (
                           <option value={(option + 1) * 5}>
                             {(option + 1) * 5}
