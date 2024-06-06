@@ -3,6 +3,8 @@ import {
   GET_ATTENDEES_LIST,
   GET_MEETING_LIST,
   MAKE_REQUEST,
+  MAKE_RSVP_UPDATE_REQUEST,
+  UPDATE_RSVP
 } from "../actions/meetingActions.js/actionTypes";
 
 const initialObject = {
@@ -13,6 +15,7 @@ const initialObject = {
   isSuccess: false,
   statusData:  ["closed", "scheduled", "rescheduled", "cancelled", "due"],
   attendeesList: [],
+  isRsvpUpdated:false,
 };
 
 export const meetingReducer = (state = initialObject, action) => {
@@ -21,7 +24,7 @@ export const meetingReducer = (state = initialObject, action) => {
     case MAKE_REQUEST:
       return {
         ...state,
-        loading: true,
+      //  loading: true,
         // meetingList: []
       };
     case FAIL_REQUEST:
@@ -31,6 +34,7 @@ export const meetingReducer = (state = initialObject, action) => {
         message: action.payload.message,
       };
 
+     
     case GET_MEETING_LIST:
       return {
         ...state,
@@ -48,6 +52,21 @@ export const meetingReducer = (state = initialObject, action) => {
         attendeesList: action.payload.data,
         isSuccess: action.payload.success,
       };
+
+      case MAKE_RSVP_UPDATE_REQUEST:
+        return {
+          ...state,
+          isRsvpUpdated:false
+          // meetingList: []
+        };
+
+      case UPDATE_RSVP:
+        return {
+          ...state,
+        //  loading: false,
+          message: action.payload.message,
+          isRsvpUpdated:action.payload.success,
+        };
     default:
       return state;
   }

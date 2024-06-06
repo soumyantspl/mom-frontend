@@ -1894,6 +1894,12 @@ button{
   display: none;
 }
 
+.back-resend span{
+    display: flex;
+    align-items: center;
+    color: #e02e5a;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -1905,3 +1911,5 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+

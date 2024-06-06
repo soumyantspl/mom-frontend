@@ -4,6 +4,8 @@ import {
   GET_ATTENDEES_LIST,
   GET_MEETING_LIST,
   MAKE_REQUEST,
+  MAKE_RSVP_UPDATE_REQUEST,
+  UPDATE_RSVP,
 } from "./actionTypes";
 const accessToken = localStorage.getItem("accessToken");
 
@@ -23,6 +25,7 @@ export const failRequest = (err) => {
     payload: err,
   };
 };
+
 
 export const fetchMeetingList = (payload) => {
   return (dispatch) => {
@@ -49,7 +52,7 @@ export const fetchMeetingList = (payload) => {
       meetingStatus: payload.meetingStatus ? payload.meetingStatus : undefined,
       toDate: payload.toDate ? payload.toDate : undefined,
       fromDate: payload.fromDate ? payload.fromDate : undefined,
-      attendeeId: payload.attendeeId ? payload.attendeeId : undefined
+      attendeeId: payload.attendeeId ? payload.attendeeId : undefined,
     };
     axios
       .post(webApiUrl, bodyPayload, headerObject)
@@ -75,7 +78,7 @@ export const getMeetingList = (data) => {
 
 export const fetchAttendeesList = (payload) => {
   return (dispatch) => {
-    dispatch(makeRequest());
+     dispatch(makeRsvpRequest());
     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/listAttendeesFromPreviousMeeting/${payload.organizationId}`;
     const headerObject = {
       headers: {
@@ -108,6 +111,49 @@ export const fetchAttendeesList = (payload) => {
 export const getAttendeesList = (data) => {
   return {
     type: GET_ATTENDEES_LIST,
+    payload: data,
+  };
+};
+export const makeRsvpRequest = () => {
+  return {
+    type: MAKE_RSVP_UPDATE_REQUEST,
+  };
+};
+export const updateRsvp = (rsvp, meetingId) => {
+  return (dispatch) => {
+     dispatch(makeRsvpRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/updateRsvp/${meetingId}`;
+    const headerObject = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: accessToken,
+      },
+    };
+    console.log("webApiUrl----------------", webApiUrl);
+    console.log("accessToken------------>>>>>", accessToken);
+    // axios
+    //   .post(webApiUrl, payload)
+    const bodyPayload = {
+      rsvp,
+    };
+    axios
+      .put(webApiUrl, bodyPayload, headerObject)
+      .then((result) => {
+        console.log("result------------------------->>>>>>>", result);
+        const resData = result.data;
+
+        dispatch(updateRsvpStatus(resData));
+      })
+      .catch((err) => {
+        console.log("err------------------------->>>>>>>", err);
+        dispatch(failRequest(err.message));
+      });
+  };
+};
+
+export const updateRsvpStatus = (data) => {
+  return {
+    type: UPDATE_RSVP,
     payload: data,
   };
 };

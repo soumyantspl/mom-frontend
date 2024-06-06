@@ -10,6 +10,7 @@ import {
   SET_PASSWORD,
   LOGIN_PROCESS,
   OTP_SENT_FOR_LOGIN_BY_OTP,
+  UPDATE_TIMER,
 } from "./actionTypes";
 import axios from "axios";
 
@@ -27,6 +28,13 @@ export const failRequest = (err) => {
 export const isOtpSendForLogInByOtp = (data) => {
   return {
     type: OTP_SENT_FOR_LOGIN_BY_OTP,
+    payload: data,
+  };
+};
+
+export const updateTimer = (data) => {
+  return {
+    type: UPDATE_TIMER,
     payload: data,
   };
 };

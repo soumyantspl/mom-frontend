@@ -10,7 +10,7 @@ import MeetingHeader from "../Common/Header/MeetingHeader";
 import Button from "react-bootstrap/Button";
 import { useSelector, useDispatch } from "react-redux";
 import "./style/meetings-css.css";
-import { fetchMeetingList } from "../../redux/actions/meetingActions.js/listMeetingAction";
+import { fetchMeetingList, updateRsvp } from "../../redux/actions/meetingActions.js/listMeetingAction";
 import LoaderButton from "../Common/LoaderButton";
 import Loader from "../Common/Loader";
 import Alert from "../Common/Alert";
@@ -24,12 +24,12 @@ const MeetingList = () => {
   const meetingData = useSelector((state) => state.meeting);
   const [filter, setfilter] = useState(false);
   const [optionArray, setOptionArray] = useState(false);
-
+  const [isBack, setIsBack] = useState(false);
   const [searchData, setSearchData] = useState({
     searchKey: "",
     page: 1,
     limit: 5,
-    order: -1,
+    order: 1,
     filterData: {},
   });
 
@@ -75,6 +75,7 @@ const MeetingList = () => {
     searchData.page,
     searchData.limit,
     searchData.filterData,
+    meetingData.isRsvpUpdated
   ]);
   console.log(
     "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
@@ -175,7 +176,7 @@ const MeetingList = () => {
       formattedDate,
     };
   };
-
+  console.log("repeat------------------------", searchData);
   return (
     <div>
       <Header />
@@ -224,7 +225,7 @@ const MeetingList = () => {
             <div className="search-box">
               <input
                 type="search"
-                placeholder="Search"
+                placeholder="Meeting Title"
                 onChange={handleChange}
                 name="searchKey"
                 value={searchData.searchKey}
@@ -273,13 +274,38 @@ const MeetingList = () => {
                       <td data-label="Meeting Title">
                         {meeting.title}
 
-                        {meeting.rsvp === "PENDING" ? (
-                          <div className="respond-button">
-                            <button className="respond-action">Yes</button>
-                            <button className="respond-action">No</button>
-                            <button className="respond-action">May Be</button>
-                          </div>
-                        ) : null}
+                        <div className="respond-button">
+                          {meeting.rsvp === "YES" ? (
+                            <button disabled className="respond-action">
+                              {" "}
+                              <>&#x2713; </>Yes
+                            </button>
+                          ) : (
+                            <button className="respond-action" onClick={()=>{dispatch(updateRsvp("YES",meeting._id))}}> Yes</button>
+                          )}
+
+                          {meeting.rsvp === "NO" ? (
+                            <button disabled className="respond-action">
+                              {" "}
+                              <>&#x2713; </>No
+                            </button>
+                          ) : (
+                            <button className="respond-action" onClick={()=>{dispatch(updateRsvp("NO",meeting._id))}}> No</button>
+                          )}
+
+                          {meeting.rsvp === "MAYBE" ? (
+                            <button disabled className="respond-action">
+                              {" "}
+                              <>&#x2713; </>May Be
+                            </button>
+                          ) : (
+                            <button className="respond-action" onClick={()=>{dispatch(updateRsvp("MAYBE",meeting._id))}}> May Be</button>
+                          )}
+
+                          {/* <button className="respond-action" onClick={dispatch(updateRsvp("YES"))}>Yes</button>
+                            <button className="respond-action" onClick={dispatch(updateRsvp("NO"))}>No</button>
+                            <button className="respond-action" onClick={dispatch(updateRsvp("MAYBE"))}>May Be</button> */}
+                        </div>
                       </td>
                       <td data-label="Attendees" className="cursor-pointer">
                         <div className="attendees">
@@ -362,8 +388,17 @@ const MeetingList = () => {
             </table>
           ) : !meetingData.loading && meetingData.meetingList?.length === 0 ? (
             <div>
-            <Alert message="No Data Found !" status={false} />
-            <button>Back</button>
+              <Alert message="No Data Found !" status={false} />
+              <button
+                onClick={(e) => {
+                  setSearchData({
+                    ...searchData,
+                    searchKey: "",
+                  });
+                }}
+              >
+                Back
+              </button>
             </div>
           ) : (
             <div
