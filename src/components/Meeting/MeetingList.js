@@ -28,6 +28,7 @@ const MeetingList = () => {
   // const authData = useSelector((state) => state.auth);
   const meetingData = useSelector((state) => state.meeting);
   const [filter, setfilter] = useState(false);
+  const [isUser, setIsUser] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [optionArray, setOptionArray] = useState(false);
@@ -50,9 +51,10 @@ const MeetingList = () => {
     });
   };
 
-  const setModalStatus = (value, attendeesData) => {
+  const setModalStatus = (value, attendeesData,isUser) => {
     setIsModalOpen(value);
     setAttendeesData(attendeesData);
+    setIsUser(isUser)
   };
 
   //  console.log(filter);
@@ -320,15 +322,13 @@ const MeetingList = () => {
                               May Be
                             </button>
                           )}
-
-                  
                         </div>
                       </td>
                       <td
                         data-label="Attendees"
                         className="cursor-pointer"
                         onClick={(e) => {
-                          setModalStatus(true, meeting.attendees);
+                          setModalStatus(true, meeting.attendees,true);
                         }}
                       >
                         <div className="attendees">
@@ -343,14 +343,19 @@ const MeetingList = () => {
                                 );
                               })}
                         </div>
-                      
+
                         <p className="plus-more-text m-0">
                           {meeting.attendees.length > 5
                             ? `+${meeting.attendees.length - 5} More`
                             : null}
                         </p>
                       </td>
-                      <td data-label="RSVP Confirmation">
+                      <td
+                        data-label="RSVP Confirmation"
+                        onClick={(e) => {
+                          setModalStatus(true, meeting.attendees,true);
+                        }}
+                      >
                         <p>{meeting.attendees.length} Attendees</p>
                         <p className="detail-date-time">
                           {checkRsvpCount(meeting.attendees)}
@@ -408,6 +413,7 @@ const MeetingList = () => {
                   IsModalOpen={isModalOpen}
                   attendees={attendeesData}
                   setIsModalOpen={setIsModalOpen}
+                  isUser={isUser}
                   // attendeeData={meeting.attendees}
                 />
               </tbody>

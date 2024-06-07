@@ -1911,5 +1911,11 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+.respond-action:disabled {
+  background-color:rgb(2, 2, 187);
+  color: #fff;
+}
+.dropdown .btn-primary {
+  /* background: transparent !important; */
 
-
+}

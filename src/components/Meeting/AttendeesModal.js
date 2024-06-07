@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import { customName } from "../../helpers/commonHelpers";
 
 const AttendeesModal = (props) => {
-  console.log(props.attendees);
+  console.log(props);
   const { attendees } = props;
   console.log(attendees);
   return (
@@ -31,26 +31,30 @@ const AttendeesModal = (props) => {
           <Modal.Body>
             <div className="modal-body attendees-popup">
               {attendees &&
-                attendees.map((attendee) => {
+                attendees.map((attendee,index) => {
                   return (
-                    <div className="attendee-content">
+                    <div className="attendee-content" key={index}>
                       <div className="check-attendee">
-                        <input
+                        {!props.isUser?(<input
                           type="checkbox"
                           name=""
                           id=""
                           className="form-check-input"
                           checked
-                        />
+                        />):null}
+                      
                         <div className="attendee1 attendee-list sl">
                           {" "}
                           {customName(attendee.name)}
+                          
                         </div>
+                        
                       </div>
+                      
                       <div className="action-cmnt-text">
                         <p className="detail-name">{attendee.name}</p>
                         <p className="name-undertext comment-text"></p>
-                        <p className="permission">With MOM write permission</p>
+                        {!props.isUser?( <p className="permission">With MOM write permission</p>):  <p>RSVP :{attendee.rsvp.charAt(0)+attendee.rsvp.slice(1).toLowerCase()}</p>}
                       </div>
                     </div>
                   );
@@ -65,12 +69,12 @@ const AttendeesModal = (props) => {
            Close 
           </Button>  */}
             <div className="modal-footer">
-              <button
+            {!props.isUser?(  <button
                 type="button"
                 className="Mom-btn btn btn-secondary bg-primary border-primary"
               >
                 <p>Set MOM Write Permission</p>
-              </button>
+              </button>):null}
               {/* <button
                 type="button"
                 onClick={(e) => props.setIsModalOpen(false)}
