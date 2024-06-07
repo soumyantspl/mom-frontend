@@ -1,8 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../../Common/Header/Header";
 import Sidebar from "../../Common/Sidebar/Sidebar";
 import MeetingHeader from "../../Common/Header/MeetingHeader";
+import axios from "axios";
+
 const Employee = () => {
+  const [employeeData, setEmployeeData] = useState({
+    name: "",
+    empId: "",
+    designation: "",
+    depratment: "",
+    unit: "",
+    isMeetingOrganiser: "",
+  });
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setEmployeeData({
+      ...employeeData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      console.log("employeeData---->", employeeData);
+      const response = await axios.post(
+        "http://localhost:8000/api/V1/employee/createEmployee",
+        employeeData
+      );
+      console.log("Employee created succesfully", response.data);
+    } catch (error) {
+      console.log("Error while creating employee", error);
+    }
+  };
   return (
     <div>
       <Header />
@@ -14,22 +44,31 @@ const Employee = () => {
             <h4>Add Employees</h4>
           </div>
           <div className="mt-2 table-box">
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="row">
                 <div className="col-xl-4">
                   <div className="form-group">
                     <label className="mb-1">
                       Employee Name<span className="star-mark"> *</span>
                     </label>
-                    <input type="text" placeholder="Enter Employee Name" />
+                    <input
+                      type="text"
+                      placeholder="Enter Employee Name"
+                      onChange={handleChange}
+                    />
                   </div>
+                  *
                 </div>
                 <div className="col-xl-4">
                   <div className="form-group">
                     <label className="mb-1">
                       Employee ID<span className="star-mark"> *</span>
                     </label>
-                    <input type="text" placeholder="Enter Employee ID" />
+                    <input
+                      type="text"
+                      placeholder="Enter Employee ID"
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
                 <div className="col-xl-4">
@@ -37,7 +76,11 @@ const Employee = () => {
                     <label className="mb-1">
                       Email<span className="star-mark"> *</span>
                     </label>
-                    <input type="email" placeholder="Enter Email" />
+                    <input
+                      type="email"
+                      placeholder="Enter Email"
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
                 <div className="col-xl-4">
@@ -45,7 +88,11 @@ const Employee = () => {
                     <label className="mb-1">
                       Designation<span className="star-mark"> *</span>
                     </label>
-                    <input type="text" placeholder="Enter Designation" />
+                    <input
+                      type="text"
+                      placeholder="Enter Designation"
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
                 <div className="col-xl-4">
@@ -53,7 +100,11 @@ const Employee = () => {
                     <label className="mb-1">
                       Department<span className="star-mark"> *</span>
                     </label>
-                    <input type="text" placeholder="Enter Department" />
+                    <input
+                      type="text"
+                      placeholder="Enter Department"
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
                 <div className="col-xl-4">
@@ -61,12 +112,20 @@ const Employee = () => {
                     <label className="mb-1">
                       Unit<span className="star-mark"> *</span>
                     </label>
-                    <input type="text" placeholder="Enter Unit" />
+                    <input
+                      type="text"
+                      placeholder="Enter Unit"
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
               </div>
               <div className="meeting-organiser d-flex align-items-center">
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  name="isMeetingOrganiser"
+                  onChange={handleChange}
+                />
                 <span>Set as Meeting Organiser</span>
               </div>
               <button className="save Mom-btn mt-3">

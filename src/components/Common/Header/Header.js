@@ -29,7 +29,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    console.log('userData',userData)
+    console.log("userData", userData);
     if (userData) {
       setName(userData?.name);
     }
@@ -37,7 +37,7 @@ const Header = () => {
 
   return (
     <section className="topbar">
-   {/* {!accessToken?<Navigate to="/login" />:null} */}
+      {/* {!accessToken?<Navigate to="/login" />:null} */}
       <div className="topbar-1">
         <div className="topbar1-content">
           <div className="d-flex align-items-center">

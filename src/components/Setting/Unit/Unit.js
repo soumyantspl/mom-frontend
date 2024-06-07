@@ -1,10 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../../Common/Header/Header";
 import Sidebar from "../../Common/Sidebar/Sidebar";
 import MeetingHeader from "../../Common/Header/MeetingHeader";
 import "../Unit/style/unit.css";
+import axios from "../../../../node_modules/axios/index";
 
 const Unit = () => {
+  const [unitData, setUnitData] = useState({
+    name: "",
+    address: "",
+  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUnitData({
+      ...unitData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      console.log("unitData", unitData);
+      const response = await axios.post(
+        "http://localhost:8000/api/V1/unit/createUnit",
+        unitData
+      );
+      console.log("Unit created successfully", response.data);
+    } catch (error) {
+      console.log("Error while creating unit", error);
+    }
+  };
   return (
     <div>
       <Header />
@@ -21,7 +47,11 @@ const Unit = () => {
                 <label className="mb-1">
                   Unit Name<span className="star-mark"> *</span>
                 </label>
-                <input type="text" placeholder="Enter Unit Name" />
+                <input
+                  type="text"
+                  placeholder="Enter Unit Name"
+                  onChange={handleChange}
+                />
               </div>
 
               <div className="col-xl-4">
@@ -33,6 +63,7 @@ const Unit = () => {
                     cols="3"
                     rows="3"
                     placeholder="Enter Unit Address"
+                    onChange={handleChange}
                   ></textarea>
                 </div>
               </div>
@@ -41,33 +72,6 @@ const Unit = () => {
                 <p>Submit</p>
               </button>
             </form>
-            {/* <form>
-              <div className="row">
-                <div className="col-xl-4">
-                  <div className="form-group">
-                    <label className="mb-1">
-                      Unit Name<span className="star-mark"> *</span>
-                    </label>
-                    <input type="text" placeholder="Enter Unit Name" />
-                  </div>
-                </div>
-                <div className="col-xl-4">
-                  <div className="form-group">
-                    <label className="mb-1">Unit Address</label>
-                    <textarea
-                      name=""
-                      id=""
-                      cols="3"
-                      rows="3"
-                      placeholder="Enter Unit Address"
-                    ></textarea>
-                  </div>
-                </div>
-              </div>
-              <button className="save Mom-btn">
-                <p>Submit</p>
-              </button>
-            </form> */}
           </div>
 
           <div className="meeting-header-text">

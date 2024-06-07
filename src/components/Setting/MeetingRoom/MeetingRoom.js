@@ -21,12 +21,16 @@ const MeetingRoom = () => {
                 <label className="mb-1">
                   Room Title<span className="star-mark"> *</span>
                 </label>
-                <input type="text" placeholder="Enter Room Title" />
+                <div className="form-group">
+                  <input type="text" placeholder="Enter Room Title" />
+                </div>
               </div>
               <div className="form-group">
                 <label className="mb-1">
                   Meeting Room Location<span className="star-mark"> *</span>
                 </label>
+              </div>
+              <div className="form-group">
                 <textarea
                   name=""
                   placeholder="Enter Location"
@@ -35,7 +39,6 @@ const MeetingRoom = () => {
                   rows="3"
                 ></textarea>
               </div>
-
               <button className="save Mom-btn mt-3">
                 <p>Submit</p>
               </button>
