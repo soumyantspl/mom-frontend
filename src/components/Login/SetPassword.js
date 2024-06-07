@@ -377,17 +377,27 @@ const SetPassword = (props) => {
                       </span>
                     </div>
                   </Link>
+               
+
+
                   {authData.isTimerOn ? (
                     <span>
                       {constantMessages.otpCountDownMessage}
-                      <Timer minutes={process.env.CHECK_OTP_VALIDATION_TIME} />
+                      <Timer
+                       
+                        minutes={process.env.CHECK_OTP_VALIDATION_TIME}
+                      />
                     </span>
-                  ) : null}
-                  <div className="resend">
-                    <Link to="" onClick={resendOtpAction}>
-                      Resend OTP
-                    </Link>
-                  </div>
+                  ) : (
+                    <div className="resend">
+                      <Link to="" onClick={resendOtpAction}>
+                        Resend OTP
+                      </Link>
+                    </div>
+                  )}
+
+
+
                 </div>
               </form>
             </div>

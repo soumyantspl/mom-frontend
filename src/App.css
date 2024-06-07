@@ -784,7 +784,10 @@ margin-left: 10px !important;
 .right-arrow {
   background-color: #0202bb !important;
 }
-
+.selected-page{
+  color:blue;
+  font-weight: 600px;
+}
 .no-opt-box {
   width: 55px;
   padding: 2px 3px;
@@ -1302,6 +1305,7 @@ textarea {
 .details-form-right label {
   margin: 0 !important;
   color: rgb(38 40 149);
+  width: 100%;
 }
 
 .details-form-right p {
@@ -1815,6 +1819,12 @@ th.action-col {
 
 
 /* ------------------------------------------ */
+.inner-detail-form button{
+  padding:1rem;
+}
+.agenda-background:has(button[aria-expanded="true"]) h2{
+  background-color: #cfe2ff;
+}
 .add-btn p{
   margin: 0;
 }
@@ -1884,6 +1894,12 @@ button{
   display: none;
 }
 
+.back-resend span{
+    display: flex;
+    align-items: center;
+    color: #e02e5a;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -1894,4 +1910,12 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+.respond-action:disabled {
+  background-color:rgb(2, 2, 187);
+  color: #fff;
+}
+.dropdown .btn-primary {
+  /* background: transparent !important; */
+
 }
