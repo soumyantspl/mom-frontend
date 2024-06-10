@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import { customName } from "../../helpers/commonHelpers";
 
 const AttendeesModal = (props) => {
-  console.log(props);
+  console.log(props.loginUserData);
   const { attendees } = props;
   console.log(attendees);
   return (
@@ -35,7 +35,7 @@ const AttendeesModal = (props) => {
                   return (
                     <div className="attendee-content" key={index}>
                       <div className="check-attendee">
-                        {!props.isUser?(<input
+                        {props.loginUserData?.userData?.isMeetingOrganiser?(<input
                           type="checkbox"
                           name=""
                           id=""
@@ -54,7 +54,7 @@ const AttendeesModal = (props) => {
                       <div className="action-cmnt-text">
                         <p className="detail-name">{attendee.name}</p>
                         <p className="name-undertext comment-text"></p>
-                        {!props.isUser?( <p className="permission">With MOM write permission</p>):  <p>RSVP :{attendee.rsvp.charAt(0)+attendee.rsvp.slice(1).toLowerCase()}</p>}
+                        {props.loginUserData?.userData?.isMeetingOrganiser?( <p className="permission">With MOM write permission</p>):  <p>RSVP :{attendee.rsvp.charAt(0)+attendee.rsvp.slice(1).toLowerCase()}</p>}
                       </div>
                     </div>
                   );
@@ -69,7 +69,7 @@ const AttendeesModal = (props) => {
            Close 
           </Button>  */}
             <div className="modal-footer">
-            {!props.isUser?(  <button
+            {props.loginUserData?.userData?.isMeetingOrganiser?(  <button
                 type="button"
                 className="Mom-btn btn btn-secondary bg-primary border-primary"
               >

@@ -301,6 +301,10 @@ Link {
   left: 0;
   border-radius: 20px;
 }
+
+.alert:before{
+  background-color: transparent;
+}
 .home a:hover .home-text,
 .agenda-top a:hover .agenda-text,
 .alert a:hover .alert-text,
@@ -785,8 +789,9 @@ margin-left: 10px !important;
   background-color: #0202bb !important;
 }
 .selected-page{
-  color:blue;
-  font-weight: 600px;
+  color: #343a40;
+    font-weight: bolder;
+    background-color: #c7c7c7 !important;
 }
 .no-opt-box {
   width: 55px;

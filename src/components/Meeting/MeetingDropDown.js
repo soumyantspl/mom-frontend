@@ -24,7 +24,7 @@ const MeetingDropDown = (props) => {
       <Dropdown.Menu>
         <Dropdown.Item href="#/action-2">
           <Link
-            to="/viewMeetingDetails"
+            to="/view-meeting-details"
             style={{
               textDecoration: "none",
               color: "black",
@@ -47,7 +47,7 @@ const MeetingDropDown = (props) => {
         {props.status === "scheduled"||props.status === "due"||props.status === "rescheduled" ? (
           <Dropdown.Item href="#/action-1">
             <Link
-              to="/meeting/write-minutes"
+              to="/write-minutes"
               style={{
                 textDecoration: "none",
                 color: "black",
@@ -74,6 +74,7 @@ const MeetingDropDown = (props) => {
         {props.status === "scheduled"||props.status === "due"||props.status === "rescheduled" ? (
           <Dropdown.Item href="#/action-3">
             <Link
+              to="/edit-minutes"
               style={{
                 textDecoration: "none",
                 color: "black",

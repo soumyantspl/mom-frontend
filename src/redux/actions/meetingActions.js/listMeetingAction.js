@@ -34,7 +34,7 @@ export const fetchMeetingList = (payload) => {
     const headerObject = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: accessToken,
+        Authorization: payload.accessToken,
       },
       params: {
         limit: payload.limit,

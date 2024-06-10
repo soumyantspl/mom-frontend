@@ -19,12 +19,12 @@ const initialObject = {
 };
 
 export const meetingReducer = (state = initialObject, action) => {
-  console.log("----------------------->>>>>>", action.payload);
+  console.log("----------------------->>>>>>", action);
   switch (action.type) {
     case MAKE_REQUEST:
       return {
         ...state,
-      //  loading: true,
+        loading: true,
         // meetingList: []
       };
     case FAIL_REQUEST:

@@ -23,10 +23,12 @@ import AttendeesModal from "./AttendeesModal";
 import { customName } from "../../helpers/commonHelpers";
 const MeetingList = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
+  const accessToken = localStorage.getItem("accessToken");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // const authData = useSelector((state) => state.auth);
   const meetingData = useSelector((state) => state.meeting);
+  const loginUserData = useSelector((state) => state.user);
   const [filter, setfilter] = useState(false);
   const [isUser, setIsUser] = useState(false);
 
@@ -54,16 +56,21 @@ const MeetingList = () => {
   const setModalStatus = (value, attendeesData,isUser) => {
     setIsModalOpen(value);
     setAttendeesData(attendeesData);
-    setIsUser(isUser)
+   // setIsUser(isUser)
   };
 
   //  console.log(filter);
   const isLogIn = false;
   useEffect(() => {
     document.title = "Meeting List";
-    // if (isLogIn) {
-    //   navigate("/dashboard");
-    // }
+    console.log("userData------------",userData)
+    if (!userData) {
+      navigate("/login");
+    }
+    else{
+
+    
+    console.log("userData------------",userData)
     //   console.log("repeat------------------------", searchData);
     const payload = {
       page: searchData.page,
@@ -74,6 +81,7 @@ const MeetingList = () => {
       toDate: searchData.filterData?.toDate,
       fromDate: searchData.filterData?.fromDate,
       attendeeId: searchData.filterData?.attendeeId,
+      accessToken
     };
     if (searchData.searchKey !== "") {
       payload["searchKey"] = searchData.searchKey;
@@ -86,6 +94,7 @@ const MeetingList = () => {
     // console.log("payload in meetinglist----------34-------", payload);
 
     dispatch(fetchMeetingList(payload));
+  }
   }, [
     searchData.searchKey,
     searchData.order,
@@ -94,10 +103,10 @@ const MeetingList = () => {
     searchData.filterData,
     meetingData.isRsvpUpdated,
   ]);
-  // console.log(
-  //   "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
-  //   meetingData
-  // );
+  console.log(
+    "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
+    meetingData
+  );
 
   const handleChange = (e) => {
     // console.log("on change------------------->>>>>>", e.target);
@@ -173,13 +182,14 @@ const MeetingList = () => {
       formattedDate,
     };
   };
+
   // console.log("repeat------------------------", searchData);
   return (
     <div>
       <Header />
       <MeetingHeader />
       <Sidebar />
-
+      {!accessToken?<Navigate to="/login" />:null} 
       <div className="main-content">
         <div className="meeting-page ">
           <div className="meeting-header-text">
@@ -413,7 +423,7 @@ const MeetingList = () => {
                   IsModalOpen={isModalOpen}
                   attendees={attendeesData}
                   setIsModalOpen={setIsModalOpen}
-                  isUser={isUser}
+                  loginUserData={loginUserData}
                   // attendeeData={meeting.attendees}
                 />
               </tbody>
@@ -435,7 +445,7 @@ const MeetingList = () => {
           ) : (
             <div
               className="meeting-page "
-              style={{ textAlign: "center", paddingTop: 280 }}
+              style={{ textAlign: "center", paddingTop: 20 }}
             >
               <Loader />
             </div>

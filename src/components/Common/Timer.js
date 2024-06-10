@@ -4,7 +4,7 @@ import { updateTimer } from '../../redux/actions/authActions/authAction';
 import { useSelector, useDispatch } from "react-redux";
 
 const Timer = (props) => {
-    const initialTime=1
+    const initialTime=3
     const initialMinute=initialTime?parseInt(initialTime-1):2
     const initialSeconds = 59;
     const [ minutes, setMinutes ] = useState(initialMinute);

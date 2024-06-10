@@ -7,33 +7,43 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { logOut } from "../../../redux/actions/authActions/authAction";
 import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchSingleUser,
+  viewSingleUser,
+} from "../../../redux/actions/userAction/userAction";
+import CommonModal from "../CommonModal";
 
 const Header = () => {
   const [name, setName] = useState("");
-  const [navigate, setNavigate] = useState(false);
+  // const [navigate, setNavigate] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const dispatch = useDispatch();
 
   const userData = JSON.parse(localStorage.getItem("userData"));
   const accessToken = localStorage.getItem("accessToken");
-
+  const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("userData");
     dispatch(logOut());
-    alert("You will be log out");
+    setIsModalOpen(false);
+   // alert("You will be log out");
   };
 
   useEffect(() => {
-    console.log('userData',userData)
+    console.log("userData", userData);
     if (userData) {
       setName(userData?.name);
+      dispatch(viewSingleUser(userData._id, accessToken));
+    } else {
+      navigate("/login");
     }
   }, []);
 
   return (
     <section className="topbar">
-   {/* {!accessToken?<Navigate to="/login" />:null} */}
+      {!accessToken ? <Navigate to="/login" /> : null}
       <div className="topbar-1">
         <div className="topbar1-content">
           <div className="d-flex align-items-center">
@@ -131,7 +141,7 @@ const Header = () => {
                 </div> */}
 
             <Dropdown>
-              <Dropdown.Toggle>
+              <Dropdown.Toggle >
                 <div className="d-flex admin-box">
                   <img src={profileImage} className="user" />
                   <span>{name}</span>
@@ -160,9 +170,11 @@ const Header = () => {
                 <Dropdown.Divider />
                 <Dropdown.Item eventKey="4">
                   <Link
-                    to="/logIn"
+                    to="#"
                     style={{ textDecoration: "none", color: "black" }}
-                    onClick={handleLogout}
+                    onClick={() => {
+                      setIsModalOpen(true);
+                    }}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -189,6 +201,14 @@ const Header = () => {
           </div>
         </div>
       </div>
+      <CommonModal
+        message={"Do you want to logout ?"}
+        title={"Logout"}
+        setIsModalOpen={setIsModalOpen}
+        isModalOpen={isModalOpen}
+        handleSubmit={handleLogout}
+        buttonName={"Logout"}
+      />
     </section>
   );
 };
