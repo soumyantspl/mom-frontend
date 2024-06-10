@@ -21,6 +21,7 @@ import MeetingDropDown from "./MeetingDropDown";
 import FilterComponent from "./FilterComponent";
 import AttendeesModal from "./AttendeesModal";
 import { customName } from "../../helpers/commonHelpers";
+import NoDataFound from "../Common/NoDataFound";
 const MeetingList = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const accessToken = localStorage.getItem("accessToken");
@@ -141,7 +142,7 @@ const MeetingList = () => {
   //   totalOption
   // );
   //const fromDataCount= searchData.page===1?searchData.limit+meetingData.meetingList.length
-  const fromDataCount = (searchData.page - 1) * searchData.limit + 1;
+  const fromDataCount = meetingData.meetingList?.length===0?0:(searchData.page - 1) * searchData.limit + 1;
   const toDataCount =
     (searchData.page - 1) * searchData.limit + meetingData.meetingList?.length;
   //searchData.limit+meetingData.meetingList.length
@@ -225,14 +226,15 @@ const MeetingList = () => {
         <div className="mt-2 table-box">
           <div className="tbl-text-search">
             <div className="left-tbl-text">
-              <p>
+              {totalCount>0?( <p>
                 Showing {fromDataCount} to {toDataCount} of {totalCount} entries
-              </p>
+              </p>):null}
+             
             </div>
             <div className="search-box">
               <input
                 type="search"
-                placeholder="Meeting Title"
+                placeholder="Search By Meeting Title"
                 onChange={handleChange}
                 name="searchKey"
                 value={searchData.searchKey}
@@ -374,7 +376,6 @@ const MeetingList = () => {
                       <td data-label="Status">
                         <span
                           className={
-                            meeting.meetingStatus.status === "due" ||
                             meeting.meetingStatus.status === "scheduled" ||
                             meeting.meetingStatus.status === "rescheduled"
                               ? "badge bg-success bg-opacity-10 text-success"
@@ -429,9 +430,10 @@ const MeetingList = () => {
               </tbody>
             </table>
           ) : !meetingData.loading && meetingData.meetingList?.length === 0 ? (
-            <div>
-              <Alert message="No Data Found !" status={false} />
-              <button
+            <div className="mt-2 table-box no-data-img">
+              {/* <Alert message="No Data Found !" status={false} /> */}
+              <NoDataFound />
+              <Button variant="primary" 
                 onClick={(e) => {
                   setSearchData({
                     ...searchData,
@@ -440,7 +442,7 @@ const MeetingList = () => {
                 }}
               >
                 Back
-              </button>
+              </Button>
             </div>
           ) : (
             <div
@@ -554,11 +556,6 @@ const MeetingList = () => {
                           </option>
                         );
                       })}
-                  {/* <option>10</option>
-                  <option>20</option>
-                  <option>30</option>
-                  <option>40</option>
-                  <option>50</option> */}
                 </select>
               </div>
             </div>

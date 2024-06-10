@@ -20,9 +20,10 @@ export const fetchSingleUser = (data) => {
 };
 
 export const viewSingleUser = (userId,accessToken) => {
+    console.log("userId----------------",userId)
   return (dispatch) => {
     dispatch(makeRequest());
-    console.log("userId----------------",userId)
+
     const url = `${process.env.REACT_APP_API_URL}/api/V1/employee/viewSingleEmployee/${userId}`;
     const headerObject = {
         headers: {

@@ -26,7 +26,6 @@ export const failRequest = (err) => {
   };
 };
 
-
 export const fetchMeetingList = (payload) => {
   return (dispatch) => {
     dispatch(makeRequest());
@@ -59,7 +58,6 @@ export const fetchMeetingList = (payload) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
-
         dispatch(getMeetingList(resData));
       })
       .catch((err) => {
@@ -78,7 +76,7 @@ export const getMeetingList = (data) => {
 
 export const fetchAttendeesList = (payload) => {
   return (dispatch) => {
-     dispatch(makeRsvpRequest());
+    dispatch(makeRsvpRequest());
     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/listAttendeesFromPreviousMeeting/${payload.organizationId}`;
     const headerObject = {
       headers: {
@@ -121,7 +119,7 @@ export const makeRsvpRequest = () => {
 };
 export const updateRsvp = (rsvp, meetingId) => {
   return (dispatch) => {
-     dispatch(makeRsvpRequest());
+    dispatch(makeRsvpRequest());
     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/updateRsvp/${meetingId}`;
     const headerObject = {
       headers: {

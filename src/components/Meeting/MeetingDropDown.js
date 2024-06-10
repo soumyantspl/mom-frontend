@@ -20,7 +20,7 @@ const MeetingDropDown = (props) => {
           <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
         </svg>
       </Dropdown.Toggle>
-      {/* enum: ["closed", "sceduled", "rescheduled", "canceled", "due"], */}
+   
       <Dropdown.Menu>
         <Dropdown.Item href="#/action-2">
           <Link
@@ -44,7 +44,7 @@ const MeetingDropDown = (props) => {
             View Meeting Details
           </Link>
         </Dropdown.Item>
-        {props.status === "scheduled"||props.status === "due"||props.status === "rescheduled" ? (
+        {props.status === "scheduled"||props.status === "rescheduled" ? (
           <Dropdown.Item href="#/action-1">
             <Link
               to="/write-minutes"
@@ -71,7 +71,7 @@ const MeetingDropDown = (props) => {
             </Link>
           </Dropdown.Item>
         ) : null}
-        {props.status === "scheduled"||props.status === "due"||props.status === "rescheduled" ? (
+        {props.status === "scheduled"||props.status === "rescheduled" ? (
           <Dropdown.Item href="#/action-3">
             <Link
               to="/edit-minutes"
@@ -98,9 +98,9 @@ const MeetingDropDown = (props) => {
             </Link>
           </Dropdown.Item>
         ) : null}
-         {props.status === "scheduled"||props.status === "due"||props.status === "rescheduled" ?   <Dropdown.Divider />:null}
+         {props.status === "scheduled"||props.status === "rescheduled" ?   <Dropdown.Divider />:null}
       
-        {props.status === "scheduled"||props.status === "due"||props.status === "rescheduled" ? (
+        {props.status === "scheduled"||props.status === "rescheduled" ? (
           <Dropdown.Item eventKey="4">
             <Link
               style={{

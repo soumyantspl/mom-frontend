@@ -12,6 +12,7 @@ import {
   viewSingleUser,
 } from "../../../redux/actions/userAction/userAction";
 import CommonModal from "../CommonModal";
+import { logOutMessage } from "../../../constants/constatntMessages";
 
 const Header = () => {
   const [name, setName] = useState("");
@@ -35,7 +36,7 @@ const Header = () => {
     console.log("userData", userData);
     if (userData) {
       setName(userData?.name);
-      dispatch(viewSingleUser(userData._id, accessToken));
+      dispatch(viewSingleUser(userData.id, accessToken));
     } else {
       navigate("/login");
     }
@@ -202,7 +203,7 @@ const Header = () => {
         </div>
       </div>
       <CommonModal
-        message={"Do you want to logout ?"}
+        message={logOutMessage}
         title={"Logout"}
         setIsModalOpen={setIsModalOpen}
         isModalOpen={isModalOpen}

@@ -28,12 +28,14 @@ const CommonModal = (props) => {
       </Modal.Header>
       <Modal.Body>{props.message}</Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary"  onClick={(e) => props.setIsModalOpen(false)}>
-          Close
+      <Button variant="primary" onClick={handleSubmit}>
+         {/* {props.buttonName} */}
+         Yes
         </Button>
-        <Button variant="primary" onClick={handleSubmit}>
-         {props.buttonName}
+        <Button   onClick={(e) => props.setIsModalOpen(false)} className="add-btn Mom-btn">
+          No
         </Button>
+       
       </Modal.Footer>
     </Modal>
   </>

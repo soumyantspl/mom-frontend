@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import { customName } from "../../helpers/commonHelpers";
 
 const AttendeesModal = (props) => {
-  console.log(props.loginUserData);
+  console.log(props);
   const { attendees } = props;
   console.log(attendees);
   return (
@@ -15,21 +15,26 @@ const AttendeesModal = (props) => {
         onHide={(e) => props.setIsModalOpen(false)}
       >
         <Modal.Dialog>
-          <Modal.Header>
-            <Modal.Title>
-              <div className="modal-header">
-                <h4 className="modal-title">Attendees</h4>
+         
+            {/* <Modal.Title> */}
+              <div className="modal-header attendees-modal">
+              <div>
+                <h4 className="modal-title">Attendees</h4> 
+                </div>             
+                <div>
+              
                 <button
                   type="button"
                   className="btn-close"
                   aria-label="Close"
                   onClick={(e) => props.setIsModalOpen(false)}
                 ></button>
+                 </div>
               </div>
-            </Modal.Title>
-          </Modal.Header>
+           
+      
           <Modal.Body>
-            <div className="modal-body attendees-popup">
+            <div className="attendees-popup">
               {attendees &&
                 attendees.map((attendee,index) => {
                   return (
@@ -48,13 +53,14 @@ const AttendeesModal = (props) => {
                           {customName(attendee.name)}
                           
                         </div>
-                        
+                      
                       </div>
                       
                       <div className="action-cmnt-text">
                         <p className="detail-name">{attendee.name}</p>
+                        <p className="detail-name">{attendee.name}</p>
                         <p className="name-undertext comment-text"></p>
-                        {props.loginUserData?.userData?.isMeetingOrganiser?( <p className="permission">With MOM write permission</p>):  <p>RSVP :{attendee.rsvp.charAt(0)+attendee.rsvp.slice(1).toLowerCase()}</p>}
+                        {props.loginUserData?.userData?.isMeetingOrganiser?( <span className="permission">With MOM write permission</span>):  <span>RSVP :{attendee.rsvp.charAt(0)+attendee.rsvp.slice(1).toLowerCase()}</span>}
                       </div>
                     </div>
                   );
@@ -68,7 +74,7 @@ const AttendeesModal = (props) => {
           <Button variant="secondary"> 
            Close 
           </Button>  */}
-            <div className="modal-footer">
+            <div className="">
             {props.loginUserData?.userData?.isMeetingOrganiser?(  <button
                 type="button"
                 className="Mom-btn btn btn-secondary bg-primary border-primary"

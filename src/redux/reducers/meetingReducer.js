@@ -13,7 +13,7 @@ const initialObject = {
   message: "",
   totalCount: 0,
   isSuccess: false,
-  statusData:  ["closed", "scheduled", "rescheduled", "cancelled", "due"],
+  statusData:  ["closed", "scheduled", "rescheduled", "cancelled"],
   attendeesList: [],
   isRsvpUpdated:false,
 };
