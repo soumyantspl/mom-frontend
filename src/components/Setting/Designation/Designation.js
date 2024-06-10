@@ -2,13 +2,45 @@ import React, { useState } from "react";
 import Header from "../../Common/Header/Header";
 import Sidebar from "../../Common/Sidebar/Sidebar";
 import MeetingHeader from "../../Common/Header/MeetingHeader";
+import axios from "../../../../node_modules/axios/index";
 
 const Designation = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const organizationId = userData.organizationId;
-  const accessToken = localStorage.getItem("accessToken")
-  const [designation,setDesignation] = useState()
-   return (
+  const accessToken = localStorage.getItem("accessToken");
+  console.log(userData);
+  const [designationData, setDesignationData] = useState({
+    name: "",
+    organizationId,
+  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setDesignationData({
+      ...designationData,
+      [name]: value,
+    });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/V1/designation/createDesignation",
+        {
+          ...designationData,
+        },
+        {
+          headers: {
+            Authorization: `${accessToken}`,
+          },
+        }
+      );
+      console.log("Designation created successfully:", response.data);
+    } catch (error) {
+      console.error("Error creating Designation:", error);
+    }
+  };
+
+  return (
     <div>
       <Header />
       <MeetingHeader />
@@ -19,14 +51,19 @@ const Designation = () => {
             <h4>Add Designations</h4>
           </div>
           <div className="mt-2 table-box">
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="row">
                 <div className="col-xl-4">
                   <div className="form-group">
                     <label className="mb-1">
                       Designation<span className="star-mark"> *</span>
                     </label>
-                    <input type="text" placeholder="Enter Designation" />
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Enter Designation"
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
               </div>
