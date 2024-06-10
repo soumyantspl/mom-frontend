@@ -58,7 +58,7 @@ const AttendeesModal = (props) => {
                       
                       <div className="action-cmnt-text">
                         <p className="detail-name">{attendee.name}</p>
-                        <p className="detail-name">{attendee.name}</p>
+                        <p className="detail-name">{attendee.email}</p>
                         <p className="name-undertext comment-text"></p>
                         {props.loginUserData?.userData?.isMeetingOrganiser?( <span className="permission">With MOM write permission</span>):  <span>RSVP :{attendee.rsvp.charAt(0)+attendee.rsvp.slice(1).toLowerCase()}</span>}
                       </div>

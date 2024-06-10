@@ -22,6 +22,7 @@ import FilterComponent from "./FilterComponent";
 import AttendeesModal from "./AttendeesModal";
 import { customName } from "../../helpers/commonHelpers";
 import NoDataFound from "../Common/NoDataFound";
+import AttendeesRsvpModal from "./AttendeesRsvpModal";
 const MeetingList = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const accessToken = localStorage.getItem("accessToken");
@@ -33,9 +34,11 @@ const MeetingList = () => {
   const [filter, setfilter] = useState(false);
   const [isUser, setIsUser] = useState(false);
 
+  const [isRsvpModalOpen, setIsRsvpModalOpen] = useState(false);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [optionArray, setOptionArray] = useState(false);
-  const [attendeesData, setAttendeesData] = useState(false);
+  const [attendeesData, setAttendeesData] = useState([]);
 
   const [isBack, setIsBack] = useState(false);
   const [searchData, setSearchData] = useState({
@@ -54,9 +57,15 @@ const MeetingList = () => {
     });
   };
 
-  const setModalStatus = (value, attendeesData,isUser) => {
+  const setModalStatus = ( value,attendeesData) => {
     setIsModalOpen(value);
-    setAttendeesData(attendeesData);
+    setAttendeesData([...attendeesData]);
+   // setIsUser(isUser)
+  };
+  
+  const setRsvpModalStatus = (value,attendeesData) => {
+    setIsRsvpModalOpen(value)
+    setAttendeesData([...attendeesData]);
    // setIsUser(isUser)
   };
 
@@ -340,7 +349,7 @@ const MeetingList = () => {
                         data-label="Attendees"
                         className="cursor-pointer"
                         onClick={(e) => {
-                          setModalStatus(true, meeting.attendees,true);
+                          setModalStatus(true,meeting.attendees);
                         }}
                       >
                         <div className="attendees">
@@ -365,7 +374,7 @@ const MeetingList = () => {
                       <td
                         data-label="RSVP Confirmation"
                         onClick={(e) => {
-                          setModalStatus(true, meeting.attendees,true);
+                          setRsvpModalStatus(true,meeting.attendees);
                         }}
                       >
                         <p>{meeting.attendees.length} Attendees</p>
@@ -427,6 +436,13 @@ const MeetingList = () => {
                   loginUserData={loginUserData}
                   // attendeeData={meeting.attendees}
                 />
+                 <AttendeesRsvpModal
+                  IsRsvpModalOpen={isRsvpModalOpen}
+                  attendees={attendeesData}
+                  setIsRsvpModalOpen={setIsRsvpModalOpen}
+                  loginUserData={loginUserData}
+                  // attendeeData={meeting.attendees}
+                />
               </tbody>
             </table>
           ) : !meetingData.loading && meetingData.meetingList?.length === 0 ? (
@@ -441,7 +457,7 @@ const MeetingList = () => {
                   });
                 }}
               >
-                Back
+                Clear
               </Button>
             </div>
           ) : (
