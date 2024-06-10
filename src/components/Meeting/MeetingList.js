@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Common/Header/Header";
 import Sidebar from "../Common/Sidebar/Sidebar";
 // @ts-ignore
@@ -11,7 +11,6 @@ import MeetingHeader from "../Common/Header/MeetingHeader";
 import Button from "react-bootstrap/Button";
 import { useSelector, useDispatch } from "react-redux";
 import "./style/meetings-css.css";
-
 
 const MeetingList = () => {
   const navigate = useNavigate();
@@ -33,7 +32,6 @@ const MeetingList = () => {
     }
 
     //dispatch(fetchMeetingList(false));
-
   }, []);
 
   return (

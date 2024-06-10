@@ -6,10 +6,18 @@ import "../Unit/style/unit.css";
 import axios from "../../../../node_modules/axios/index";
 
 const Unit = () => {
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userId = userData.id;
+  const organizationId = userData.organizationId;
+  const accessToken = localStorage.getItem("accessToken");
+  console.log("UserData-->>", userData);
+  console.log("accessToken--->>", accessToken);
   const [unitData, setUnitData] = useState({
     name: "",
     address: "",
+    organizationId,
   });
+  console.log("unitData---->>", unitData);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUnitData({
@@ -21,14 +29,20 @@ const Unit = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("unitData", unitData);
       const response = await axios.post(
         "http://localhost:8000/api/V1/unit/createUnit",
-        unitData
+        {
+          ...unitData,
+        },
+        {
+          headers: {
+            Authorization: `${accessToken}`,
+          },
+        }
       );
-      console.log("Unit created successfully", response.data);
+      console.log("Unit created successfully:", response.data);
     } catch (error) {
-      console.log("Error while creating unit", error);
+      console.error("Error creating unit:", error);
     }
   };
   return (
@@ -42,13 +56,14 @@ const Unit = () => {
             <h4>Add Units</h4>
           </div>
           <div className="mt-2 table-box">
-            <form className="meeting-form">
+            <form className="meeting-form" onSubmit={handleSubmit}>
               <div className="form-group">
                 <label className="mb-1">
                   Unit Name<span className="star-mark"> *</span>
                 </label>
                 <input
                   type="text"
+                  name="name"
                   placeholder="Enter Unit Name"
                   onChange={handleChange}
                 />
@@ -58,8 +73,7 @@ const Unit = () => {
                 <div className="form-group">
                   <label className="mb-1">Unit Address</label>
                   <textarea
-                    name=""
-                    id=""
+                    name="address"
                     cols="3"
                     rows="3"
                     placeholder="Enter Unit Address"
@@ -68,7 +82,7 @@ const Unit = () => {
                 </div>
               </div>
 
-              <button className="save Mom-btn">
+              <button className="save Mom-btn" type="submit">
                 <p>Submit</p>
               </button>
             </form>

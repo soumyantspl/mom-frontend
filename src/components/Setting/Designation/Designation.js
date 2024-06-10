@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../../Common/Header/Header";
 import Sidebar from "../../Common/Sidebar/Sidebar";
 import MeetingHeader from "../../Common/Header/MeetingHeader";
 
 const Designation = () => {
-  return (
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const organizationId = userData.organizationId;
+  const accessToken = localStorage.getItem("accessToken")
+  const [designation,setDesignation] = useState()
+   return (
     <div>
       <Header />
       <MeetingHeader />
