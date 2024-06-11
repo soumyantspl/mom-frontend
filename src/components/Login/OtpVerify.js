@@ -17,6 +17,7 @@ import Timer from "../Common/Timer";
 const isLogIn = false;
 
 const OtpVerify = () => {
+  console.log(process.env)
   const [errors, setErrors] = useState({});
   const [isResendOtp, setIsResendOtp] = useState(false);
   const [formData, setFormData] = useState({
@@ -308,7 +309,7 @@ console.log(authData)
                           dispatch(updateIsSuccess(false));
                         }}
                       >
-                        Back to Sign In
+                        Back to Sign In 
                       </span>
                     </div>
                   </Link>
@@ -317,7 +318,7 @@ console.log(authData)
                       {constantMessages.otpCountDownMessage}
                       <Timer
                         setResendOtp={setResendOtp}
-                        minutes={authData.isOtpProcessed && !authData.isSuccess?process.env.OTP_RESEND_TIME:process.env.CHECK_OTP_VALIDATION_TIME}
+                        minutes={authData.isOtpProcessed && !authData.isSuccess?process.env.REACT_APP_OTP_RESEND_TIME:process.env.REACT_APP_CHECK_OTP_VALIDATION_TIME}
                       />
                     </span>
                   ) : (

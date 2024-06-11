@@ -176,7 +176,7 @@ const MeetingList = () => {
         : (pendingCount = pendingCount + 1);
     });
 
-     const countMessage=`${yesCount} Yes, ${noCount} No, ${mayBeCount} Maybe, ${pendingCount} Awaiting`;
+     const countMessage=`${yesCount} Yes, ${noCount} No, ${mayBeCount} May Be, ${pendingCount} Awaiting`;
     
      return countMessage;
   };
@@ -497,7 +497,7 @@ const MeetingList = () => {
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
                       height="16"
-                      fill="currentColor"
+                      fill="#fff"
                       className="bi bi-chevron-left"
                       viewBox="0 0 16 16"
                     >

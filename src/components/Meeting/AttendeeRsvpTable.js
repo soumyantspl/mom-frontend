@@ -2,22 +2,6 @@ import React from "react";
 import Table from "react-bootstrap/Table";
 import { customName } from "../../helpers/commonHelpers";
 
-// const p = {
-//     "p1": "value1",
-//     "p2": "value2",
-//     "p3": "value3"
-// };
-
-//   return (
-//     <div>
-//       <h2>Seasons of the year</h2>
-//       <ul>{seasonsList}</ul>
-//     </div>
-//   );
-// }
-
-// export default App;
-
 const AttendeeRsvpTable = (props) => {
   console.log(props);
   let trData = [];
@@ -36,7 +20,7 @@ const AttendeeRsvpTable = (props) => {
               value.map((attendee, index) => {
                 return (
                   <div className="attendee-content" key={index}>
-                    <div className="attendee-content" key={index}>
+                    <div className="" key={index}>
                       <div className="attendee-list">
                         {" "}
                         {customName(attendee.name)}
@@ -51,9 +35,7 @@ const AttendeeRsvpTable = (props) => {
                       </p>
                     </div>
                   </div>
-                  //////////////////////////////////
                 );
-                //  return <p>{`${index+1} - ${attendee.name}  `}</p>;
               })}
           </td>
         </tr>
@@ -62,7 +44,7 @@ const AttendeeRsvpTable = (props) => {
   }
 
   return (
-    <Table striped bordered hover>
+    <Table striped bordered>
       {trData}
     </Table>
   );

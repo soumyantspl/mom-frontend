@@ -29,7 +29,7 @@ const AttendeesRsvpModal = (props) => {
           {/* <Modal.Title> */}
           <div className="modal-header attendees-modal">
             <div>
-              <h4 className="modal-title">RSVP</h4>
+              <h4 className="modal-title">RSVP Confirmation</h4>
               <span>{props.rsvpCount}</span>
             </div>
             <div>

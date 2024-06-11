@@ -804,6 +804,9 @@ button.btn.btn-light {
 .right-arrow {
   background-color: #0202bb !important;
 }
+.left-arrow {
+  background-color: #0202bb !important;
+}
 .selected-page{
   color: #343a40;
     font-weight: bolder;
@@ -2018,11 +2021,24 @@ margin-bottom: 18px;
   }
 
   .modal-margin .attendee-content {
-    margin-bottom: 0 !important;
-    padding: 10px 0;
+    margin-bottom: 0px !important;
+    padding: 12px 0px 12px 0;
     display: flex;
     align-items: center;
+    border-bottom: 1px dashed #bbb9b9;
+  }
+  .modal-margin .attendee-content:last-child{
+    border-bottom: none;
   }
   .modal-margin  .attendee-list{
- margin-left: 0 !important;
+  margin-left: 0 !important;
   }
+  .modal-margin table{
+    margin-bottom: 0 !important;
+  }
+  .modal-margin .attendee-content:first-child{
+padding-top:0 ;
+  }
+  .modal-margin .attendee-content:last-child{
+    padding-bottom:0 ;
+      }
