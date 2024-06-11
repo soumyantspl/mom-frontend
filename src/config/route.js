@@ -32,7 +32,14 @@ import { ToastContainer, toast } from "react-toastify";
 
 const PrivateRoutes = () => {
   let accessToken = localStorage.getItem("accessToken");
+  const userStore = localStorage.getItem("username");
   return accessToken ? <Outlet /> : <Navigate to="/login" />;
+};
+
+const AuthRoutes = () => {
+  let accessToken = localStorage.getItem("accessToken");
+  const isRememberMe = localStorage.getItem("rememberMe");
+  return !isRememberMe ? <Outlet /> : <Navigate to="/meeting-list" />;
 };
 
 const MainRoute = () => {
@@ -69,6 +76,7 @@ const MainRoute = () => {
               element={<ViewMeeting />}
             />
           </Route>
+          <Route element={<AuthRoutes />}>
           <Route exact path="/" element={<LoginByOtp />} />
           <Route
             exact
@@ -91,6 +99,7 @@ const MainRoute = () => {
           />
           <Route exact path="/set-password" element={<SetPassword />} />
           <Route exact path="/sign-up" element={<SignUp />} />
+          </Route>
         </Routes>
       </Router>
       <ToastContainer className="toast-position" position="bottom-right" />

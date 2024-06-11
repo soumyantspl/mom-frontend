@@ -29,9 +29,11 @@ const AttendeesRsvpModal = (props) => {
           {/* <Modal.Title> */}
           <div className="modal-header attendees-modal">
             <div>
-              <h4 className="modal-title">Attendees</h4>
+              <h4 className="modal-title">RSVP</h4>
+              <span>{props.rsvpCount}</span>
             </div>
             <div>
+           
               <button
                 type="button"
                 className="btn-close"
@@ -42,73 +44,11 @@ const AttendeesRsvpModal = (props) => {
           </div>
 
           <Modal.Body>
-            <div className="attendees-popup">
+          <div className="attendees-popup modal-margin">
             <AttendeeRsvpTable rsvpObject={rsvpObject}/>
-              {/* {attendees?.length !== 0 &&
-                attendees
-                  .filter((attendee) => attendee.rsvp === "YES")
-                  .map((item) => {
-                    return <CommonTable rsvpObject={rsvpObject}/>
-                  })}
-
-              {attendees?.length !== 0 &&
-                attendees
-                  .filter((attendee) => attendee.rsvp === "NO")
-                  .map((item) => {
-                    return item.name;
-                  })}
-
-              {attendees?.length !== 0 &&
-                attendees
-                  .filter((attendee) => attendee.rsvp === "MAYBE")
-                  .map((item) => {
-                    return item.name;
-                  })}
-              {attendees?.length !== 0 &&
-                attendees
-                  .filter((attendee) => attendee.rsvp === "WAITING")
-                  .map((item) => {
-                    return item.name;
-                  })} */}
-              {/* return (
-                    <div className="attendee-content" key={index}>
-                      <div className="check-attendee">
-                        {props.loginUserData?.userData?.isMeetingOrganiser ? (
-                          <input
-                            type="checkbox"
-                            name=""
-                            id=""
-                            className="form-check-input"
-                            checked
-                          />
-                        ) : null}
-                  <div className="attendee1 attendee-list sl">
-                          {" "}
-                          {customName(attendee.name)}
-                        </div>
-                      </div>
-
-                      <div className="action-cmnt-text">
-                        <p className="detail-name">{attendee.name}</p>
-                        <p className="detail-name">{attendee.email}</p>
-                        <p className="name-undertext comment-text"></p>
-                        {props.loginUserData?.userData?.isMeetingOrganiser ? (
-                          <span className="permission">
-                            With MOM write permission
-                          </span>
-                        ) : (
-                          <span>
-                            RSVP :
-                            {attendee.rsvp.charAt(0) +
-                              attendee.rsvp.slice(1).toLowerCase()}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ); */}
-            </div>
+             </div>
           </Modal.Body>
-          <Modal.Footer>
+        
             {/* <Button variant="primary"> 
            Save changes 
           </Button> 
@@ -116,7 +56,7 @@ const AttendeesRsvpModal = (props) => {
            Close 
           </Button>  */}
        
-          </Modal.Footer>
+       
         </Modal.Dialog>
       </Modal>
     </>

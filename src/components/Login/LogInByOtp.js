@@ -54,6 +54,21 @@ const LoginByOtp = () => {
     }
   };
 
+  const fieldValidationCheck=(e)=>{
+    e.preventDefault();
+
+    const newErrors = validateForm(formData);
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length === 0) {
+      // Form submission logic here
+    
+      console.log("Form submitted successfully!");
+    } else {
+      console.log(`Form submission failed
+       due to validation errors.`);
+    }
+  }
+
   const validateForm = (data) => {
     const errors = {};
     if (!data.email.trim()) {
@@ -112,7 +127,7 @@ const LoginByOtp = () => {
                         placeholder="Type Your Email"
                         name="email"
                         onChange={handleChange}
-                        // onBlur={validateForm}
+                        onBlur={fieldValidationCheck}
                         value={formData.email}
                         autocomplete="off"
                       />

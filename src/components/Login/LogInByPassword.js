@@ -24,6 +24,7 @@ const LogInByPassword = (props) => {
     password: "",
   });
   const [errors, setErrors] = useState({});
+  const [rememberMe, setRememberMe] = useState(false);
   const [isSetPassword, setIsSetPassword] = useState(false);
 
   const handleChange = (e) => {
@@ -51,7 +52,8 @@ const LogInByPassword = (props) => {
           logInByPassword({
             email: formData.email,
             password: formData.password,
-          })
+           
+          },rememberMe)
         );
       }
       console.log("Form submitted successfully!");
@@ -107,6 +109,20 @@ const LogInByPassword = (props) => {
       x.type = "password";
     }
   };
+  const fieldValidationCheck=(e)=>{
+    e.preventDefault();
+
+    const newErrors = validateForm(formData);
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length === 0) {
+      // Form submission logic here
+    
+      console.log("Form submitted successfully!");
+    } else {
+      console.log(`Form submission failed
+       due to validation errors.`);
+    }
+  }
 
   return (
     <section className="sign-in">
@@ -154,6 +170,7 @@ const LogInByPassword = (props) => {
                         value={formData.email}
                         autocomplete="off"
                         onChange={handleChange}
+                        onBlur={fieldValidationCheck}
                         name="email"
                       />
                     </div>
@@ -188,6 +205,7 @@ const LogInByPassword = (props) => {
                         value={formData.password}
                         autocomplete="off"
                         onChange={handleChange}
+                        onBlur={fieldValidationCheck}
                         name="password"
                         id="password"
                       />
@@ -200,8 +218,11 @@ const LogInByPassword = (props) => {
 
                 <div className="remember-forgot-pwd">
                   <div className="remember">
-                    {/* <input type="checkbox" />
-                    Remember */}
+                    <input type="checkbox" 
+                    checked={rememberMe}
+                    onChange={() => setRememberMe(!rememberMe)}
+                    />
+                    Remember
                   </div>
                   <div className="set-pwd">
                     {/* <Link to="/set-password" > Forgot Password ?</Link> */}
