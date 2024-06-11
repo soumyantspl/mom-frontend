@@ -17,6 +17,7 @@ import Timer from "../Common/Timer";
 const isLogIn = false;
 
 const OtpVerify = () => {
+  console.log(process.env)
   const [errors, setErrors] = useState({});
   const [isResendOtp, setIsResendOtp] = useState(false);
   const [formData, setFormData] = useState({
@@ -145,6 +146,22 @@ const OtpVerify = () => {
       otpData,
     };
   };
+
+
+  const fieldValidationCheck=(e)=>{
+    e.preventDefault();
+
+    const newErrors = validateForm(formData);
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length === 0) {
+      // Form submission logic here
+    
+      console.log("Form submitted successfully!");
+    } else {
+      console.log(`Form submission failed
+       due to validation errors.`);
+    }
+  }
 console.log(authData)
   return (
     <section className="otp-varify">
@@ -177,6 +194,7 @@ console.log(authData)
                         name="input1"
                         maxLength={1}
                         onChange={handleChange}
+                        onBlur={fieldValidationCheck}
                         value={formData.input1}
                         autocomplete="off"
                         autofocus={true}
@@ -190,6 +208,7 @@ console.log(authData)
                         name="input2"
                         maxLength={1}
                         onChange={handleChange}
+                        onBlur={fieldValidationCheck}
                         value={formData.input2}
                         autocomplete="off"
                         id={2}
@@ -201,6 +220,7 @@ console.log(authData)
                         name="input3"
                         maxLength={1}
                         onChange={handleChange}
+                        onBlur={fieldValidationCheck}
                         value={formData.input3}
                         autocomplete="off"
                         id={3}
@@ -212,6 +232,7 @@ console.log(authData)
                         name="input4"
                         maxLength={1}
                         onChange={handleChange}
+                        onBlur={fieldValidationCheck}
                         value={formData.input4}
                         autocomplete="off"
                         id={4}
@@ -223,6 +244,7 @@ console.log(authData)
                         name="input5"
                         maxLength={1}
                         onChange={handleChange}
+                        onBlur={fieldValidationCheck}
                         value={formData.input5}
                         autocomplete="off"
                         id={5}
@@ -234,6 +256,7 @@ console.log(authData)
                         name="input6"
                         maxLength={1}
                         onChange={handleChange}
+                        onBlur={fieldValidationCheck}
                         value={formData.input6}
                         autocomplete="off"
                         id={6}
@@ -286,7 +309,7 @@ console.log(authData)
                           dispatch(updateIsSuccess(false));
                         }}
                       >
-                        Back to Sign In
+                        Back to Sign In 
                       </span>
                     </div>
                   </Link>
@@ -295,7 +318,7 @@ console.log(authData)
                       {constantMessages.otpCountDownMessage}
                       <Timer
                         setResendOtp={setResendOtp}
-                        minutes={authData.isOtpProcessed && !authData.isSuccess?process.env.OTP_RESEND_TIME:process.env.CHECK_OTP_VALIDATION_TIME}
+                        minutes={authData.isOtpProcessed && !authData.isSuccess?process.env.REACT_APP_OTP_RESEND_TIME:process.env.REACT_APP_CHECK_OTP_VALIDATION_TIME}
                       />
                     </span>
                   ) : (
