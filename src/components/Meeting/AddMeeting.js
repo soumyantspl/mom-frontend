@@ -11,7 +11,7 @@ const AddMeeting = (props) => {
   const [selectedOption, setSelectedOption] = useState("prevMeetingRadio");
 
   const submitMeetingDetails = (e) => {
-    console.log("submitMeetingDetails--------------------------");
+    console.log("submitMeetingDetails------------------------------");
     e.preventDefault();
     setStep(2);
   };
