@@ -9,7 +9,7 @@ import {
   OTP_RESENT,
   SET_PASSWORD,
   LOGIN_PROCESS,
-  OTP_SENT_FOR_LOGIN_BY_OTP,
+  OTP_SENT_FOR_LOGIN_BY_OTP,UPDATE_TIMER
 } from "../actions/authActions/actionTypes";
 
 const initialObject = {
@@ -31,7 +31,7 @@ const initialObject = {
 };
 
 export const authReducer = (state = initialObject, action) => {
-  console.log("----------------------->>>>>>", action.payload);
+  console.log("----------------------->>>>>>", action);
   switch (action.type) {
     case MAKE_REQUEST:
       return {
@@ -45,6 +45,12 @@ export const authReducer = (state = initialObject, action) => {
         loading: false,
         errorMessage: action.payload,
       };
+    case UPDATE_TIMER:
+      return {
+        ...state,
+        isTimerOn: !state.isTimerOn,
+      };
+
     case OTP_SENT:
       return {
         ...state,
@@ -91,6 +97,7 @@ export const authReducer = (state = initialObject, action) => {
         isSuccess: action.payload.success,
         isOtpProcessed: true,
         isSetPassword: action.payload.isSetPassword,
+        isTimerOn: true,
       };
     case OTP_VERIFIED:
       return {
@@ -101,7 +108,7 @@ export const authReducer = (state = initialObject, action) => {
         data: action.payload.data,
         message: action.payload.message,
         loading: false,
-        userData:action.payload.userData
+        userData: action.payload.userData,
       };
     case UPDATE_OTP_PROCESSED:
       return {
@@ -142,7 +149,7 @@ export const authReducer = (state = initialObject, action) => {
         isSuccess: action.payload.success,
         message: action.payload.message,
         isOtpProcessed: false,
-        userData:action.payload.userData
+        userData: action.payload.userData,
       };
 
     default:

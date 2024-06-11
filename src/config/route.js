@@ -3,6 +3,7 @@ import React from "react";
 import {
   Route,
   BrowserRouter as Router,
+  Outlet,
   Routes,
   Navigate,
   // @ts-ignore
@@ -30,15 +31,47 @@ import CreateMeeting from "../components/Meeting/CreateMeeting";
 import MeetingPage from "../components/Meeting/MeetingPage";
 import ViewMeeting from "../components/Meeting/ViewMeeting";
 import { ToastContainer, toast } from "react-toastify";
-import CreateMinutes from "../components/minutes/createMinutes";
+
+const PrivateRoutes = () => {
+  let accessToken = localStorage.getItem("accessToken");
+  return accessToken ? <Outlet /> : <Navigate to="/login" />;
+};
 
 const MainRoute = () => {
   return (
     <div>
+      {/* <Router>
+        <Routes>
+          <Route element={<PrivateRoutes/>}>
+              <Route path='/' element={<Users/>} />
+              <Route path='/products' element={<Products/>} />
+          </Route>
+          <Route path='/login' element={<Login/>}/>
+        </Routes>
+    </Router> */}
+
       <Router>
         <Routes>
+          <Route element={<PrivateRoutes />}>
+            <Route exact path="/dashboard" element={<Dashboard />} />
+            <Route exact path="/meeting-list" element={<MeetingList />} />
+            <Route exact path="/action-list" element={<ActionList />} />
+            <Route exact path="/alerts" element={<Alert />} />
+            <Route exact path="/meeting-room" element={<MeetingRoom />} />
+            <Route exact path="/employee" element={<Employee />} />
+            <Route exact path="/configuration" element={<Configuration />} />
+            <Route exact path="/organization" element={<Organization />} />
+            <Route exact path="/unit" element={<Unit />} />
+            <Route exact path="/department" element={<Department />} />
+            <Route exact path="/designation" element={<Designation />} />
+            <Route exact path="/create-meeting" element={<MeetingPage />} />
+            <Route
+              exact
+              path="/view-meeting-details"
+              element={<ViewMeeting />}
+            />
+          </Route>
           <Route exact path="/" element={<LoginByOtp />} />
-          <Route exact path="/dashboard" element={<Dashboard />} />
           <Route
             exact
             path="/login"
@@ -60,20 +93,6 @@ const MainRoute = () => {
           />
           <Route exact path="/set-password" element={<SetPassword />} />
           <Route exact path="/sign-up" element={<SignUp />} />
-          <Route exact path="/meeting-list" element={<MeetingList />} />
-          <Route exact path="/action-list" element={<ActionList />} />
-          <Route exact path="/action-details" element={<ActionDetails />} />
-          <Route exact path="/alerts" element={<Alert />} />
-          <Route exact path="/meeting-room" element={<MeetingRoom />} />
-          <Route exact path="/employee" element={<Employee />} />
-          <Route exact path="/configuration" element={<Configuration />} />
-          <Route exact path="/organization" element={<Organization />} />
-          <Route exact path="/write-minutes" element={<CreateMinutes />} />
-          <Route exact path="/unit" element={<Unit />} />
-          <Route exact path="/department" element={<Department />} />
-          <Route exact path="/designation" element={<Designation />} />
-          <Route exact path="/create-meeting" element={<MeetingPage />} />
-          <Route exact path="/view-meeting-details" element={<ViewMeeting />} />
         </Routes>
       </Router>
       <ToastContainer className="toast-position" position="bottom-right" />

@@ -1,14 +1,22 @@
 
 import React,{ useState, useEffect } from 'react';
+import { updateTimer } from '../../redux/actions/authActions/authAction';
+import { useSelector, useDispatch } from "react-redux";
 
 const Timer = (props) => {
-    const initialTime=props.minutes
+    const initialTime=3
     const initialMinute=initialTime?parseInt(initialTime-1):2
     const initialSeconds = 59;
     const [ minutes, setMinutes ] = useState(initialMinute);
     const [seconds, setSeconds ] =  useState(initialSeconds);
+    const dispatch = useDispatch();
     useEffect(()=>{
     let myInterval = setInterval(() => {
+        if( minutes === 0 && seconds === 0){
+            console.log("call------------22--->>>>>>>>>>>>>>")
+           
+            dispatch(updateTimer(false))
+        }
             if (seconds > 0) {
                 setSeconds(seconds - 1);
             }
@@ -22,6 +30,9 @@ const Timer = (props) => {
             } 
         }, 1000)
         return ()=> {
+            console.log("call--------------->>>>>>>>>>>>>>")
+           
+            
             clearInterval(myInterval);
           };
     });
@@ -29,10 +40,9 @@ const Timer = (props) => {
     return (
         <div>
           
-        { minutes === 0 && seconds === 0
-            ? null
-            : <p><strong>{minutes}:{seconds < 10 ?  `0${seconds}` : seconds}</strong></p> 
-        }
+      
+            <p><strong>{minutes}:{seconds < 10 ?  `0${seconds}` : seconds}</strong></p> 
+        
         </div>
     )
 }

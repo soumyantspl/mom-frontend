@@ -18,6 +18,7 @@ const isLogIn = false;
 
 const OtpVerify = () => {
   const [errors, setErrors] = useState({});
+  const [isResendOtp, setIsResendOtp] = useState(false);
   const [formData, setFormData] = useState({
     input1: null,
     input2: null,
@@ -36,11 +37,15 @@ const OtpVerify = () => {
     if (isLogIn) {
       navigate("/dashboard");
     }
+    if (!authData.email) {
+      navigate("/login");
+    }
   }, []);
 
   const resendOtpAction = (e) => {
     if (authData.email) {
       dispatch(reSendOtp(authData.email));
+      setIsResendOtp(false);
     } else {
       errors.message = constantMessages.emailRequired;
       setErrors(errors);
@@ -77,6 +82,12 @@ const OtpVerify = () => {
       nextField.focus();
     }
   };
+
+  const setResendOtp = (data) => {
+    console.log(data);
+    setIsResendOtp(true);
+  };
+
   const otp = [];
   const validateForm = (data) => {
     dispatch(updateOtpProcessed(false));
@@ -134,7 +145,7 @@ const OtpVerify = () => {
       otpData,
     };
   };
-
+console.log(authData)
   return (
     <section className="otp-varify">
       {authData.isOtpVerifiedSuccess ? <Navigate to="/meeting-list" /> : null}
@@ -279,20 +290,35 @@ const OtpVerify = () => {
                       </span>
                     </div>
                   </Link>
-
-                  <div className="resend">
-                    {authData.isTimerOn ? (
-                      <span>
-                        {constantMessages.otpCountDownMessage}
-                        <Timer
-                          minutes={process.env.CHECK_OTP_VALIDATION_TIME}
-                        />
-                      </span>
-                    ) : null}
-                    <Link to="" onClick={resendOtpAction}>
-                      Resend OTP
-                    </Link>
-                  </div>
+                  {authData.isTimerOn ? (
+                    <span>
+                      {constantMessages.otpCountDownMessage}
+                      <Timer
+                        setResendOtp={setResendOtp}
+                        minutes={authData.isOtpProcessed && !authData.isSuccess?process.env.OTP_RESEND_TIME:process.env.CHECK_OTP_VALIDATION_TIME}
+                      />
+                    </span>
+                  ) : (
+                    <div className="resend">
+                      <Link to="" onClick={resendOtpAction}>
+                        Resend OTP
+                      </Link>
+                    </div>
+                  )}
+                  {/* {isResendOtp ? (
+                    <div className="resend">
+                      <Link to="" onClick={resendOtpAction}>
+                        Resend OTP
+                      </Link>
+                    </div>
+                  ) : authData.isTimerOn ? (
+                    <span>
+                      {constantMessages.otpCountDownMessage}
+                      <Timer
+                        minutes={process.env.CHECK_OTP_VALIDATION_TIME}
+                      />
+                    </span>
+                  ) : null} */}
                 </div>
               </form>
             </div>

@@ -66,14 +66,14 @@ const Sidebar = () => {
           </a>
 
           <Link to="/meeting-list" className="link" >
-            <li className={currentPath == "/meeting-list" ? "active-menu" : ""}>
+            <li className={currentPath == "/meetingList" ? "active-menu" : ""}>
               <img className="meeting-logo" src={meetingLogo} />
               Meetings
             </li>
           </Link>
 
           <Link to="/action-list" className="link">
-            <li className={currentPath == "/action-list" ? "active-menu" : ""}>
+            <li className={currentPath == "/actionList" ? "active-menu" : ""}>
               <img className="clipboard" src={actionLogo} />
               Actions
             </li>
