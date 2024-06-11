@@ -18,16 +18,37 @@ const Unit = () => {
     organizationId,
   });
   console.log("unitData---->>", unitData);
+  const [formValues, setFormValues] = useState({ name: "", address: "" });
+  const [errors, setErrors] = useState({ name: "", address: "" });
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUnitData({
       ...unitData,
       [name]: value,
     });
+    setFormValues({ ...formValues, [name]: value });
+    setErrors({ ...errors, [name]: "" });
   };
 
+  const validate = () => {
+    let isValid = true;
+    let errors = {};
+    if (!formValues.name.trim()) {
+      errors.name = "Unit Name is required";
+      isValid = false;
+    }
+    if (!formValues.address.trim()) {
+      errors.address = "Address is required";
+      isValid = false;
+    }
+    setErrors(errors);
+    return isValid;
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (validate()) {
+      console.log("Form submitted", formValues);
+    }
     try {
       const response = await axios.post(
         "http://localhost:8000/api/V1/unit/createUnit",
@@ -45,13 +66,14 @@ const Unit = () => {
       console.error("Error creating unit:", error);
     }
   };
+
   return (
     <div>
       <Header />
       <MeetingHeader />
       <Sidebar />
       <div className="main-content">
-        <div className="Action-list-page">
+        <div className="Action-list-page input-width">
           <div className="meeting-header-text">
             <h4>Add Units</h4>
           </div>
@@ -66,21 +88,31 @@ const Unit = () => {
                   name="name"
                   placeholder="Enter Unit Name"
                   onChange={handleChange}
+                  value={formValues.name}
                 />
+                {errors.name && (
+                  <span className="error-message">{errors.name}</span>
+                )}
               </div>
 
-              <div className="col-xl-4">
+         
                 <div className="form-group">
-                  <label className="mb-1">Unit Address</label>
+                  <label className="mb-1">Unit Address
+                  <span className="star-mark"> *</span>
+                  </label>
                   <textarea
                     name="address"
                     cols="3"
                     rows="3"
                     placeholder="Enter Unit Address"
                     onChange={handleChange}
+                    value={formValues.address}
                   ></textarea>
+                  {errors.address && (
+                    <span className="error-message">{errors.address}</span>
+                  )}
                 </div>
-              </div>
+             
 
               <button className="save Mom-btn" type="submit">
                 <p>Submit</p>
@@ -100,8 +132,8 @@ const Unit = () => {
                 <input type="search" placeholder="search" />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
+                  width="22"
+                  height="22"
                   fill="#4F2CC8"
                   className="bi bi-search"
                   viewBox="0 0 16 16"

@@ -14,7 +14,6 @@ import { ToastContainer } from "react-toastify";
 import LoaderButton from "../Common/LoaderButton";
 import Alert from "../Common/Alert";
 
-
 const LoginByOtp = () => {
   const dispatch = useDispatch();
   const authData = useSelector((state) => state.auth);

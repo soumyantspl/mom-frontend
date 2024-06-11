@@ -57,7 +57,7 @@ const Employee = () => {
                       onChange={handleChange}
                     />
                   </div>
-                  *
+                 
                 </div>
                 <div className="col-xl-4">
                   <div className="form-group">
