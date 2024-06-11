@@ -15,27 +15,32 @@ const AttendeesModal = (props) => {
         onHide={(e) => props.setIsModalOpen(false)}
       >
         <Modal.Dialog>
-          <Modal.Header>
-            <Modal.Title>
-              <div className="modal-header">
-                <h4 className="modal-title">Attendees</h4>
+         
+            {/* <Modal.Title> */}
+              <div className="modal-header attendees-modal">
+              <div>
+                <h4 className="modal-title">Attendees</h4> 
+                </div>             
+                <div>
+              
                 <button
                   type="button"
                   className="btn-close"
                   aria-label="Close"
                   onClick={(e) => props.setIsModalOpen(false)}
                 ></button>
+                 </div>
               </div>
-            </Modal.Title>
-          </Modal.Header>
+           
+      
           <Modal.Body>
-            <div className="modal-body attendees-popup">
+            <div className="attendees-popup">
               {attendees &&
                 attendees.map((attendee,index) => {
                   return (
                     <div className="attendee-content" key={index}>
                       <div className="check-attendee">
-                        {!props.isUser?(<input
+                        {props.loginUserData?.userData?.isMeetingOrganiser?(<input
                           type="checkbox"
                           name=""
                           id=""
@@ -48,13 +53,14 @@ const AttendeesModal = (props) => {
                           {customName(attendee.name)}
                           
                         </div>
-                        
+                      
                       </div>
                       
                       <div className="action-cmnt-text">
                         <p className="detail-name">{attendee.name}</p>
+                        <p className="detail-name">{attendee.email}</p>
                         <p className="name-undertext comment-text"></p>
-                        {!props.isUser?( <p className="permission">With MOM write permission</p>):  <p>RSVP :{attendee.rsvp.charAt(0)+attendee.rsvp.slice(1).toLowerCase()}</p>}
+                        {props.loginUserData?.userData?.isMeetingOrganiser?( <span className="permission">With MOM write permission</span>):  <span>RSVP :{attendee.rsvp.charAt(0)+attendee.rsvp.slice(1).toLowerCase()}</span>}
                       </div>
                     </div>
                   );
@@ -68,8 +74,8 @@ const AttendeesModal = (props) => {
           <Button variant="secondary"> 
            Close 
           </Button>  */}
-            <div className="modal-footer">
-            {!props.isUser?(  <button
+            <div className="">
+            {props.loginUserData?.userData?.isMeetingOrganiser?(  <button
                 type="button"
                 className="Mom-btn btn btn-secondary bg-primary border-primary"
               >

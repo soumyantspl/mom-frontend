@@ -38,6 +38,9 @@ const SetPassword = (props) => {
     if (isLogIn) {
       navigate("/dashboard");
     }
+    if (!authData.email) {
+      navigate("/login");
+    }
   }, []);
 
   const handleChange = (e) => {

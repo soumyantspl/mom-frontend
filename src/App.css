@@ -301,6 +301,10 @@ Link {
   left: 0;
   border-radius: 20px;
 }
+
+.alert:before{
+  background-color: transparent;
+}
 .home a:hover .home-text,
 .agenda-top a:hover .agenda-text,
 .alert a:hover .alert-text,
@@ -530,7 +534,12 @@ Link {
   /* overflow-x: auto; */
   width: 100%;
 }
-
+.no-data-img{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
 .tbl-text-search {
   display: flex;
   justify-content: space-between;
@@ -707,15 +716,26 @@ margin-left: 10px !important;
 .search-box input {
   border: none;
   outline: none;
-  width: 100px;
+  width: 100%;
   text-indent: 5px;
+  padding-right: 10px;
+}
+
+
+button.btn.btn-light {
+  border: 1px solid #ddd;
+  border-radius: 23px;
 }
 
 .search-box {
   border-radius: 18px;
-  border: 1px solid #4f2cc8;
+  border: 1px solid #e7e7e7;
   outline: none;
   padding: 2px 7px;
+  width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .search-box input::placeholder {
@@ -785,8 +805,9 @@ margin-left: 10px !important;
   background-color: #0202bb !important;
 }
 .selected-page{
-  color:blue;
-  font-weight: 600px;
+  color: #343a40;
+    font-weight: bolder;
+    background-color: #c7c7c7 !important;
 }
 .no-opt-box {
   width: 55px;
@@ -957,7 +978,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   width: 300px;
   height: 100%;
   z-index: 999;
-  background-color: #f0f0f0;
+  background-color: #ffffff;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   transition: right 0.3s ease-in-out;
@@ -1527,13 +1548,18 @@ textarea {
   float: right;
   overflow: hidden;
 }
-.white-box {
-  height: 400px;
+.white-box {  
   width: 425px;
   background-color: #ffffff;
   border-radius: 10px;
   z-index: 1;
+  margin-bottom: 40px;
 }
+
+.table-box.no-data-img{
+  box-shadow: none;
+}
+
 .white-box img {
   width: 100%;
 }
@@ -1871,6 +1897,22 @@ th.action-col {
     position: relative;
     overflow: hidden;
 }
+
+.dropdown-toggle.btn-primary {
+  background: linear-gradient(117deg, #eaebee, #edecee 59%) !important;
+  color: #000000 !important;  
+}
+
+.custom-dropdown .dropdown-toggle{
+  padding: 0 !important;
+}
+
+.custom-dropdown .dropdown-toggle:hover{
+  color: #333 !important;
+  background: linear-gradient(117deg, #5171d3, #93a4d5 59%) !important;
+}
+
+
 button{
   border: none;
     background: transparent;
@@ -1919,3 +1961,26 @@ input[type=number] {
   /* background: transparent !important; */
 
 }
+.modal-title .attendees-modal{
+  border: none !important;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 !important;
+}
+.modal-content .attendees-modal{
+justify-content: space-between;
+align-items: center;
+}
+.modal-body .attendee-content{
+margin-bottom: 18px;
+}
+.modal-body .attendee-content:last-child{
+  margin-bottom: 0;
+  }
+  .modal-content .modal-dialog{
+    margin: 0 !important;
+  }
+  .modal-footer .Mom-btn{
+    border-radius: 30px;
+    border: none;
+  }

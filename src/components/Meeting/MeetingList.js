@@ -21,18 +21,24 @@ import MeetingDropDown from "./MeetingDropDown";
 import FilterComponent from "./FilterComponent";
 import AttendeesModal from "./AttendeesModal";
 import { customName } from "../../helpers/commonHelpers";
+import NoDataFound from "../Common/NoDataFound";
+import AttendeesRsvpModal from "./AttendeesRsvpModal";
 const MeetingList = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
+  const accessToken = localStorage.getItem("accessToken");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // const authData = useSelector((state) => state.auth);
   const meetingData = useSelector((state) => state.meeting);
+  const loginUserData = useSelector((state) => state.user);
   const [filter, setfilter] = useState(false);
   const [isUser, setIsUser] = useState(false);
 
+  const [isRsvpModalOpen, setIsRsvpModalOpen] = useState(false);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [optionArray, setOptionArray] = useState(false);
-  const [attendeesData, setAttendeesData] = useState(false);
+  const [attendeesData, setAttendeesData] = useState([]);
 
   const [isBack, setIsBack] = useState(false);
   const [searchData, setSearchData] = useState({
@@ -51,19 +57,30 @@ const MeetingList = () => {
     });
   };
 
-  const setModalStatus = (value, attendeesData,isUser) => {
+  const setModalStatus = ( value,attendeesData) => {
     setIsModalOpen(value);
-    setAttendeesData(attendeesData);
-    setIsUser(isUser)
+    setAttendeesData([...attendeesData]);
+   // setIsUser(isUser)
+  };
+  
+  const setRsvpModalStatus = (value,attendeesData) => {
+    setIsRsvpModalOpen(value)
+    setAttendeesData([...attendeesData]);
+   // setIsUser(isUser)
   };
 
   //  console.log(filter);
   const isLogIn = false;
   useEffect(() => {
     document.title = "Meeting List";
-    // if (isLogIn) {
-    //   navigate("/dashboard");
-    // }
+    console.log("userData------------",userData)
+    if (!userData) {
+      navigate("/login");
+    }
+    else{
+
+    
+    console.log("userData------------",userData)
     //   console.log("repeat------------------------", searchData);
     const payload = {
       page: searchData.page,
@@ -74,6 +91,7 @@ const MeetingList = () => {
       toDate: searchData.filterData?.toDate,
       fromDate: searchData.filterData?.fromDate,
       attendeeId: searchData.filterData?.attendeeId,
+      accessToken
     };
     if (searchData.searchKey !== "") {
       payload["searchKey"] = searchData.searchKey;
@@ -86,6 +104,7 @@ const MeetingList = () => {
     // console.log("payload in meetinglist----------34-------", payload);
 
     dispatch(fetchMeetingList(payload));
+  }
   }, [
     searchData.searchKey,
     searchData.order,
@@ -94,10 +113,10 @@ const MeetingList = () => {
     searchData.filterData,
     meetingData.isRsvpUpdated,
   ]);
-  // console.log(
-  //   "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
-  //   meetingData
-  // );
+  console.log(
+    "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
+    meetingData
+  );
 
   const handleChange = (e) => {
     // console.log("on change------------------->>>>>>", e.target);
@@ -132,7 +151,7 @@ const MeetingList = () => {
   //   totalOption
   // );
   //const fromDataCount= searchData.page===1?searchData.limit+meetingData.meetingList.length
-  const fromDataCount = (searchData.page - 1) * searchData.limit + 1;
+  const fromDataCount = meetingData.meetingList?.length===0?0:(searchData.page - 1) * searchData.limit + 1;
   const toDataCount =
     (searchData.page - 1) * searchData.limit + meetingData.meetingList?.length;
   //searchData.limit+meetingData.meetingList.length
@@ -173,13 +192,14 @@ const MeetingList = () => {
       formattedDate,
     };
   };
+
   // console.log("repeat------------------------", searchData);
   return (
     <div>
       <Header />
       <MeetingHeader />
       <Sidebar />
-
+      {!accessToken?<Navigate to="/login" />:null} 
       <div className="main-content">
         <div className="meeting-page ">
           <div className="meeting-header-text">
@@ -215,14 +235,15 @@ const MeetingList = () => {
         <div className="mt-2 table-box">
           <div className="tbl-text-search">
             <div className="left-tbl-text">
-              <p>
+              {totalCount>0?( <p>
                 Showing {fromDataCount} to {toDataCount} of {totalCount} entries
-              </p>
+              </p>):null}
+             
             </div>
             <div className="search-box">
               <input
                 type="search"
-                placeholder="Meeting Title"
+                placeholder="Search By Meeting Title"
                 onChange={handleChange}
                 name="searchKey"
                 value={searchData.searchKey}
@@ -328,7 +349,7 @@ const MeetingList = () => {
                         data-label="Attendees"
                         className="cursor-pointer"
                         onClick={(e) => {
-                          setModalStatus(true, meeting.attendees,true);
+                          setModalStatus(true,meeting.attendees);
                         }}
                       >
                         <div className="attendees">
@@ -353,7 +374,7 @@ const MeetingList = () => {
                       <td
                         data-label="RSVP Confirmation"
                         onClick={(e) => {
-                          setModalStatus(true, meeting.attendees,true);
+                          setRsvpModalStatus(true,meeting.attendees);
                         }}
                       >
                         <p>{meeting.attendees.length} Attendees</p>
@@ -364,7 +385,6 @@ const MeetingList = () => {
                       <td data-label="Status">
                         <span
                           className={
-                            meeting.meetingStatus.status === "due" ||
                             meeting.meetingStatus.status === "scheduled" ||
                             meeting.meetingStatus.status === "rescheduled"
                               ? "badge bg-success bg-opacity-10 text-success"
@@ -413,15 +433,23 @@ const MeetingList = () => {
                   IsModalOpen={isModalOpen}
                   attendees={attendeesData}
                   setIsModalOpen={setIsModalOpen}
-                  isUser={isUser}
+                  loginUserData={loginUserData}
+                  // attendeeData={meeting.attendees}
+                />
+                 <AttendeesRsvpModal
+                  IsRsvpModalOpen={isRsvpModalOpen}
+                  attendees={attendeesData}
+                  setIsRsvpModalOpen={setIsRsvpModalOpen}
+                  loginUserData={loginUserData}
                   // attendeeData={meeting.attendees}
                 />
               </tbody>
             </table>
           ) : !meetingData.loading && meetingData.meetingList?.length === 0 ? (
-            <div>
-              <Alert message="No Data Found !" status={false} />
-              <button
+            <div className="mt-2 table-box no-data-img">
+              {/* <Alert message="No Data Found !" status={false} /> */}
+              <NoDataFound />
+              <Button variant="primary" 
                 onClick={(e) => {
                   setSearchData({
                     ...searchData,
@@ -429,13 +457,13 @@ const MeetingList = () => {
                   });
                 }}
               >
-                Back
-              </button>
+                Clear
+              </Button>
             </div>
           ) : (
             <div
               className="meeting-page "
-              style={{ textAlign: "center", paddingTop: 280 }}
+              style={{ textAlign: "center", paddingTop: 20 }}
             >
               <Loader />
             </div>
@@ -544,11 +572,6 @@ const MeetingList = () => {
                           </option>
                         );
                       })}
-                  {/* <option>10</option>
-                  <option>20</option>
-                  <option>30</option>
-                  <option>40</option>
-                  <option>50</option> */}
                 </select>
               </div>
             </div>

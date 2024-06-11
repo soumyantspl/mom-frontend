@@ -31,7 +31,7 @@ const initialObject = {
 };
 
 export const authReducer = (state = initialObject, action) => {
-  console.log("----------------------->>>>>>", action.payload);
+  console.log("----------------------->>>>>>", action);
   switch (action.type) {
     case MAKE_REQUEST:
       return {

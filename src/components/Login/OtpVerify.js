@@ -37,6 +37,9 @@ const OtpVerify = () => {
     if (isLogIn) {
       navigate("/dashboard");
     }
+    if (!authData.email) {
+      navigate("/login");
+    }
   }, []);
 
   const resendOtpAction = (e) => {
@@ -142,7 +145,7 @@ const OtpVerify = () => {
       otpData,
     };
   };
-
+console.log(authData)
   return (
     <section className="otp-varify">
       {authData.isOtpVerifiedSuccess ? <Navigate to="/meeting-list" /> : null}
@@ -292,7 +295,7 @@ const OtpVerify = () => {
                       {constantMessages.otpCountDownMessage}
                       <Timer
                         setResendOtp={setResendOtp}
-                        minutes={process.env.CHECK_OTP_VALIDATION_TIME}
+                        minutes={authData.isOtpProcessed && !authData.isSuccess?process.env.OTP_RESEND_TIME:process.env.CHECK_OTP_VALIDATION_TIME}
                       />
                     </span>
                   ) : (
