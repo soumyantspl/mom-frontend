@@ -388,7 +388,7 @@ const SetPassword = (props) => {
                       {constantMessages.otpCountDownMessage}
                       <Timer
                        
-                        minutes={process.env.CHECK_OTP_VALIDATION_TIME}
+                       minutes={authData.isOtpProcessed && !authData.isSuccess?process.env.OTP_RESEND_TIME:process.env.CHECK_OTP_VALIDATION_TIME}
                       />
                     </span>
                   ) : (

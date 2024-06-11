@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./style/LogInByPassword.css";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link,useLocation , UNSAFE_NavigationContext } from "react-router-dom";
 import LoginImage from "./LoginImage";
 import {
   logInByPassword,
@@ -16,6 +16,9 @@ import LoaderButton from "../Common/LoaderButton";
 //import Toast from "../Common/Toast";
 
 const LogInByPassword = (props) => {
+  const location = useLocation();
+  const stateData = location.state;
+  console.log(stateData);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -83,6 +86,17 @@ const LogInByPassword = (props) => {
  
   useEffect(() => {
     document.title = "Log In By Password: Meeting Plus";
+    if(stateData.email){
+      setFormData({
+        ...formData,
+       email: stateData.email
+      });
+    }
+    return () => {
+      // Anything in here is fired on component unmount.
+      console.log('component un mount')
+      dispatch(updateIsSuccess(false));
+  }
   }, []);
 
   const showPassword = (id) => {
@@ -186,8 +200,8 @@ const LogInByPassword = (props) => {
 
                 <div className="remember-forgot-pwd">
                   <div className="remember">
-                    <input type="checkbox" />
-                    Remember
+                    {/* <input type="checkbox" />
+                    Remember */}
                   </div>
                   <div className="set-pwd">
                     {/* <Link to="/set-password" > Forgot Password ?</Link> */}

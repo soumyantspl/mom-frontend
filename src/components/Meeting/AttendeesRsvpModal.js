@@ -1,8 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import { customName } from "../../helpers/commonHelpers";
+import AttendeeRsvpTable from "./AttendeeRsvpTable";
 const AttendeesRsvpModal = (props) => {
   console.log(props);
   const { attendees } = props;
@@ -44,11 +43,12 @@ const AttendeesRsvpModal = (props) => {
 
           <Modal.Body>
             <div className="attendees-popup">
-              {attendees?.length !== 0 &&
+            <AttendeeRsvpTable rsvpObject={rsvpObject}/>
+              {/* {attendees?.length !== 0 &&
                 attendees
                   .filter((attendee) => attendee.rsvp === "YES")
                   .map((item) => {
-                    return item.name;
+                    return <CommonTable rsvpObject={rsvpObject}/>
                   })}
 
               {attendees?.length !== 0 &&
@@ -69,7 +69,7 @@ const AttendeesRsvpModal = (props) => {
                   .filter((attendee) => attendee.rsvp === "WAITING")
                   .map((item) => {
                     return item.name;
-                  })}
+                  })} */}
               {/* return (
                     <div className="attendee-content" key={index}>
                       <div className="check-attendee">
@@ -115,23 +115,7 @@ const AttendeesRsvpModal = (props) => {
           <Button variant="secondary"> 
            Close 
           </Button>  */}
-            <div className="">
-              {props.loginUserData?.userData?.isMeetingOrganiser ? (
-                <button
-                  type="button"
-                  className="Mom-btn btn btn-secondary bg-primary border-primary"
-                >
-                  <p>Set MOM Write Permission</p>
-                </button>
-              ) : null}
-              {/* <button
-                type="button"
-                onClick={(e) => props.setIsModalOpen(false)}
-                className="reset btn btn-secondary bg-white border-primary text-primary"
-              >
-                <p>Close</p>
-              </button> */}
-            </div>
+       
           </Modal.Footer>
         </Modal.Dialog>
       </Modal>
