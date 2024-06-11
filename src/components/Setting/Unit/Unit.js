@@ -20,6 +20,7 @@ const Unit = () => {
   console.log("unitData---->>", unitData);
   const [formValues, setFormValues] = useState({ name: "", address: "" });
   const [errors, setErrors] = useState({ name: "", address: "" });
+  const [apiResponse, setApiResponse] = useState("");
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUnitData({
@@ -45,25 +46,35 @@ const Unit = () => {
     return isValid;
   };
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (validate()) {
-      console.log("Form submitted", formValues);
-    }
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/V1/unit/createUnit",
-        {
-          ...unitData,
-        },
-        {
-          headers: {
-            Authorization: `${accessToken}`,
+      e.preventDefault();
+      if (validate()) {
+        console.log("Form submitted", formValues);
+        const response = await axios.post(
+          "http://localhost:8000/api/V1/unit/createUnit",
+          {
+            ...unitData,
           },
-        }
-      );
-      console.log("Unit created successfully:", response.data);
+          {
+            headers: {
+              Authorization: `${accessToken}`,
+            },
+          }
+        );
+        console.log("Unit created successfully:", response.data);
+        setApiResponse(response.data.message);
+      }
     } catch (error) {
       console.error("Error creating unit:", error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setApiResponse(error.response.data.message);
+      } else {
+        setApiResponse("Error: Failed to create unit.");
+      }
     }
   };
 
@@ -94,29 +105,30 @@ const Unit = () => {
                   <span className="error-message">{errors.name}</span>
                 )}
               </div>
-
-         
-                <div className="form-group">
-                  <label className="mb-1">Unit Address
+              <div className="form-group">
+                <label className="mb-1">
+                  Unit Address
                   <span className="star-mark"> *</span>
-                  </label>
-                  <textarea
-                    name="address"
-                    cols="3"
-                    rows="3"
-                    placeholder="Enter Unit Address"
-                    onChange={handleChange}
-                    value={formValues.address}
-                  ></textarea>
-                  {errors.address && (
-                    <span className="error-message">{errors.address}</span>
-                  )}
-                </div>
-             
+                </label>
+                <textarea
+                  name="address"
+                  cols="3"
+                  rows="3"
+                  placeholder="Enter Unit Address"
+                  onChange={handleChange}
+                  value={formValues.address}
+                ></textarea>
+                {errors.address && (
+                  <span className="error-message">{errors.address}</span>
+                )}
+              </div>
 
               <button className="save Mom-btn" type="submit">
                 <p>Submit</p>
               </button>
+              {apiResponse && (
+                <span className="error-message">{apiResponse}</span>
+              )}
             </form>
           </div>
 
