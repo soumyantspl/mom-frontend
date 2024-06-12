@@ -14,7 +14,6 @@ import { ToastContainer } from "react-toastify";
 import LoaderButton from "../Common/LoaderButton";
 import Alert from "../Common/Alert";
 
-
 const LoginByOtp = () => {
   const dispatch = useDispatch();
   const authData = useSelector((state) => state.auth);
@@ -55,6 +54,21 @@ const LoginByOtp = () => {
     }
   };
 
+  const fieldValidationCheck=(e)=>{
+    e.preventDefault();
+
+    const newErrors = validateForm(formData);
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length === 0) {
+      // Form submission logic here
+    
+      console.log("Form submitted successfully!");
+    } else {
+      console.log(`Form submission failed
+       due to validation errors.`);
+    }
+  }
+
   const validateForm = (data) => {
     const errors = {};
     if (!data.email.trim()) {
@@ -65,11 +79,10 @@ const LoginByOtp = () => {
     return errors;
   };
 
-  const isLogIn = false;
 
   return (
     <section className="sign-in login-page">
-      {isLogIn ? <Navigate to="/dashboard" /> : null}
+     
       {authData.isSuccess && !authData.isSetPassword ? (
         <Navigate to="/otp-verify" />
       ) : null}
@@ -114,7 +127,7 @@ const LoginByOtp = () => {
                         placeholder="Type Your Email"
                         name="email"
                         onChange={handleChange}
-                        // onBlur={validateForm}
+                        onBlur={fieldValidationCheck}
                         value={formData.email}
                         autocomplete="off"
                       />
@@ -145,7 +158,9 @@ const LoginByOtp = () => {
 
                 <div className="or">or</div>
 
-                <Link to="/login-by-password">
+                <Link to="/login-by-password" state={formData}
+                 
+                >
                   <button
                     className="signin-btn2"
                     onClick={() => {

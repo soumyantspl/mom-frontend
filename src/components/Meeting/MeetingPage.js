@@ -12,7 +12,7 @@ import { useNavigate, Navigate, Link } from "react-router-dom";
 import "./style/meetings-css.css";
 const MeetingPage = () => {
   return (
-    <div>
+    <>
       <Header />
       <MeetingHeader />
       <Sidebar />
@@ -25,17 +25,14 @@ const MeetingPage = () => {
             <AddMeeting />
           </div>
           <div className="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 detail-col">
-            <div>
-              <div className="meeting-header-text">
-                <h4>Meeting Preview</h4>
-              </div>
+            <div className="meeting-header-text">
+              <h4>Meeting Preview</h4>
             </div>
-
             <ViewMeeting />
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
