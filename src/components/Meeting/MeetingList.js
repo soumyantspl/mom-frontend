@@ -34,9 +34,10 @@ const MeetingList = () => {
   const loginUserData = useSelector((state) => state.user);
   const [filter, setfilter] = useState(false);
   const [isUser, setIsUser] = useState(false);
+  const [rsvpCount, setRsvpCount] = useState("");
 
   const [isRsvpModalOpen, setIsRsvpModalOpen] = useState(false);
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [optionArray, setOptionArray] = useState(false);
   const [attendeesData, setAttendeesData] = useState([]);
@@ -58,54 +59,52 @@ const MeetingList = () => {
     });
   };
 
-  const setModalStatus = ( value,attendeesData) => {
+  const setModalStatus = (value, attendeesData) => {
     setIsModalOpen(value);
     setAttendeesData([...attendeesData]);
-   // setIsUser(isUser)
+    // setIsUser(isUser)
   };
-  
-  const setRsvpModalStatus = (value,attendeesData) => {
-    setIsRsvpModalOpen(value)
+
+  const setRsvpModalStatus = (value, attendeesData,rsvpCount) => {
+    setIsRsvpModalOpen(value);
     setAttendeesData([...attendeesData]);
-   // setIsUser(isUser)
+    setRsvpCount(rsvpCount)
+    // setIsUser(isUser)
   };
 
   //  console.log(filter);
   const isLogIn = false;
   useEffect(() => {
     document.title = "Meeting List";
-    console.log("userData------------",userData)
+    console.log("userData------------", userData);
     if (!userData) {
       navigate("/login");
-    }
-    else{
+    } else {
+      console.log("userData------------", userData);
+      //   console.log("repeat------------------------", searchData);
+      const payload = {
+        page: searchData.page,
+        order: searchData.order,
+        limit: searchData.limit,
+        organizationId: userData.organizationId,
+        meetingStatus: searchData.filterData?.meetingStatus,
+        toDate: searchData.filterData?.toDate,
+        fromDate: searchData.filterData?.fromDate,
+        attendeeId: searchData.filterData?.attendeeId,
+        accessToken,
+      };
+      if (searchData.searchKey !== "") {
+        payload["searchKey"] = searchData.searchKey;
+        setSearchData({
+          ...searchData,
+          page: 1,
+        });
+        payload.page = 1;
+      }
+      // console.log("payload in meetinglist----------34-------", payload);
 
-    
-    console.log("userData------------",userData)
-    //   console.log("repeat------------------------", searchData);
-    const payload = {
-      page: searchData.page,
-      order: searchData.order,
-      limit: searchData.limit,
-      organizationId: userData.organizationId,
-      meetingStatus: searchData.filterData?.meetingStatus,
-      toDate: searchData.filterData?.toDate,
-      fromDate: searchData.filterData?.fromDate,
-      attendeeId: searchData.filterData?.attendeeId,
-      accessToken
-    };
-    if (searchData.searchKey !== "") {
-      payload["searchKey"] = searchData.searchKey;
-      setSearchData({
-        ...searchData,
-        page: 1,
-      });
-      payload.page = 1;
+      dispatch(fetchMeetingList(payload));
     }
-    // console.log("payload in meetinglist----------34-------", payload);
-
-    dispatch(fetchMeetingList(payload));
-  }
   }, [
     searchData.searchKey,
     searchData.order,
@@ -152,7 +151,10 @@ const MeetingList = () => {
   //   totalOption
   // );
   //const fromDataCount= searchData.page===1?searchData.limit+meetingData.meetingList.length
-  const fromDataCount = meetingData.meetingList?.length===0?0:(searchData.page - 1) * searchData.limit + 1;
+  const fromDataCount =
+    meetingData.meetingList?.length === 0
+      ? 0
+      : (searchData.page - 1) * searchData.limit + 1;
   const toDataCount =
     (searchData.page - 1) * searchData.limit + meetingData.meetingList?.length;
   //searchData.limit+meetingData.meetingList.length
@@ -163,16 +165,21 @@ const MeetingList = () => {
     let yesCount = 0;
     let noCount = 0;
     let pendingCount = 0;
+    let mayBeCount = 0;
 
     attendees.map((item) => {
       item.rsvp === "YES"
         ? (yesCount = yesCount + 1)
         : item.rsvp === "NO"
         ? (noCount = noCount + 1)
+        : item.rsvp === "MAYBE"
+        ? (mayBeCount = mayBeCount + 1)
         : (pendingCount = pendingCount + 1);
     });
 
-    return `${yesCount} Yes, ${noCount} No, ${pendingCount} Awaiting`;
+     const countMessage=`${yesCount} Yes, ${noCount} No, ${mayBeCount} May Be, ${pendingCount} Awaiting`;
+    
+     return countMessage;
   };
 
   const formatDateTimeFormat = (date) => {
@@ -200,7 +207,7 @@ const MeetingList = () => {
       <Header />
       <MeetingHeader />
       <Sidebar />
-      {!accessToken?<Navigate to="/login" />:null} 
+      {!accessToken ? <Navigate to="/login" /> : null}
       <div className="main-content">
         <div className="meeting-page ">
           <div className="meeting-header-text">
@@ -229,17 +236,19 @@ const MeetingList = () => {
           </div>
 
           {filter ? (
-            <FilterComponent setfilter={setfilter} filterData={filterData} />
+            <FilterComponent setfilter={setfilter} filterData={filterData} initData={ searchData.filterData}/>
           ) : null}
         </div>
 
         <div className="mt-2 table-box">
           <div className="tbl-text-search">
             <div className="left-tbl-text">
-              {totalCount>0?( <p>
-                Showing {fromDataCount} to {toDataCount} of {totalCount} entries
-              </p>):null}
-             
+              {totalCount > 0 ? (
+                <p>
+                  Showing {fromDataCount} to {toDataCount} of {totalCount}{" "}
+                  entries
+                </p>
+              ) : null}
             </div>
             <div className="search-box">
               <input
@@ -350,7 +359,7 @@ const MeetingList = () => {
                         data-label="Attendees"
                         className="cursor-pointer"
                         onClick={(e) => {
-                          setModalStatus(true,meeting.attendees);
+                          setModalStatus(true, meeting.attendees);
                         }}
                       >
                         <div className="attendees">
@@ -375,7 +384,7 @@ const MeetingList = () => {
                       <td
                         data-label="RSVP Confirmation"
                         onClick={(e) => {
-                          setRsvpModalStatus(true,meeting.attendees);
+                          setRsvpModalStatus(true, meeting.attendees,checkRsvpCount(meeting.attendees));
                         }}
                       >
                         <p>{meeting.attendees.length} Attendees</p>
@@ -435,13 +444,15 @@ const MeetingList = () => {
                   attendees={attendeesData}
                   setIsModalOpen={setIsModalOpen}
                   loginUserData={loginUserData}
+                
                   // attendeeData={meeting.attendees}
                 />
-                 <AttendeesRsvpModal
+                <AttendeesRsvpModal
                   IsRsvpModalOpen={isRsvpModalOpen}
                   attendees={attendeesData}
                   setIsRsvpModalOpen={setIsRsvpModalOpen}
                   loginUserData={loginUserData}
+                  rsvpCount={rsvpCount}
                   // attendeeData={meeting.attendees}
                 />
               </tbody>
@@ -450,7 +461,8 @@ const MeetingList = () => {
             <div className="mt-2 table-box no-data-img">
               {/* <Alert message="No Data Found !" status={false} /> */}
               <NoDataFound />
-              <Button variant="primary" 
+              <Button
+                variant="primary"
                 onClick={(e) => {
                   setSearchData({
                     ...searchData,
@@ -486,7 +498,7 @@ const MeetingList = () => {
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
                       height="16"
-                      fill="currentColor"
+                      fill="#fff"
                       className="bi bi-chevron-left"
                       viewBox="0 0 16 16"
                     >

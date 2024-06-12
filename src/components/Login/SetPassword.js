@@ -154,6 +154,15 @@ const SetPassword = (props) => {
   const resendOtpAction = (e) => {
     if (authData.email) {
       dispatch(reSendOtp(authData.email));
+      setFormData({
+        ...formData,
+        input1: "",
+        input2: "",
+        input3: "",
+        input4: "",
+        input5: "",
+        input6: "",
+      });
     } else {
       errors.message = constantMessages.emailRequired;
       setErrors(errors);
@@ -167,11 +176,24 @@ const SetPassword = (props) => {
       x.type = "password";
     }
   };
+  const fieldValidationCheck=(e)=>{
+    e.preventDefault();
 
+    const newErrors = validateForm(formData);
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length === 0) {
+      // Form submission logic here
+    
+      console.log("Form submitted successfully!");
+    } else {
+      console.log(`Form submission failed
+       due to validation errors.`);
+    }
+  }
   return (
     <section className="otp-varify set-pswrd">
       {authData.isOtpVerifiedSuccess && authData.isSuccess ? (
-        <Navigate to="/login-by-password" />
+        <Navigate to="/login-by-password"  state={formData} />
       ) : null}
 
       <div className="container-fluid">
@@ -197,6 +219,7 @@ const SetPassword = (props) => {
                           name="input1"
                           maxLength={1}
                           onChange={handleChange}
+                          onBlur={fieldValidationCheck}
                           value={formData.input1}
                           autocomplete="off"
                           id={1}
@@ -209,6 +232,7 @@ const SetPassword = (props) => {
                           name="input2"
                           maxLength={1}
                           onChange={handleChange}
+                          onBlur={fieldValidationCheck}
                           value={formData.input2}
                           autocomplete="off"
                           id={2}
@@ -220,6 +244,7 @@ const SetPassword = (props) => {
                           name="input3"
                           maxLength={1}
                           onChange={handleChange}
+                          onBlur={fieldValidationCheck}
                           value={formData.input3}
                           autocomplete="off"
                           id={3}
@@ -231,6 +256,7 @@ const SetPassword = (props) => {
                           name="input4"
                           maxLength={1}
                           onChange={handleChange}
+                          onBlur={fieldValidationCheck}
                           value={formData.input4}
                           autocomplete="off"
                           id={4}
@@ -242,6 +268,7 @@ const SetPassword = (props) => {
                           name="input5"
                           maxLength={1}
                           onChange={handleChange}
+                          onBlur={fieldValidationCheck}
                           value={formData.input5}
                           autocomplete="off"
                           id={5}
@@ -253,6 +280,7 @@ const SetPassword = (props) => {
                           name="input6"
                           maxLength={1}
                           onChange={handleChange}
+                          onBlur={fieldValidationCheck}
                           value={formData.input6}
                           autocomplete="off"
                           id={6}
@@ -290,6 +318,7 @@ const SetPassword = (props) => {
                         name="password"
                         id="password"
                         onChange={handleChange}
+                        onBlur={fieldValidationCheck}
                         value={formData.password}
                       />
                     </div>
@@ -324,6 +353,7 @@ const SetPassword = (props) => {
                         name="confirmPassword"
                         id="confirmPassword"
                         onChange={handleChange}
+                        onBlur={fieldValidationCheck}
                         value={formData.confirmPassword}
                       />
                     </div>
@@ -387,7 +417,7 @@ const SetPassword = (props) => {
                       {constantMessages.otpCountDownMessage}
                       <Timer
                        
-                        minutes={process.env.CHECK_OTP_VALIDATION_TIME}
+                       minutes={authData.isOtpProcessed && !authData.isSuccess?process.env.REACT_APP_OTP_RESEND_TIME:process.env.REACT_APP_CHECK_OTP_VALIDATION_TIME}
                       />
                     </span>
                   ) : (

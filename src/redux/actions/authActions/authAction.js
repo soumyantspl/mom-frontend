@@ -1,3 +1,4 @@
+import { RememberMe } from "../../../../node_modules/@mui/icons-material/index";
 import {
   OTP_SENT,
   FAIL_REQUEST,
@@ -222,7 +223,7 @@ export const isPasswordSet = (data) => {
   };
 };
 
-export const logInByPassword = (payload) => {
+export const logInByPassword = (payload,rememberMe) => {
   return (dispatch) => {
     dispatch(makeRequest());
     const url = `${process.env.REACT_APP_API_URL}/api/V1/auth/signInByPassword`;
@@ -235,7 +236,9 @@ export const logInByPassword = (payload) => {
           const { token, userData } = resData.data;
           localStorage.setItem("accessToken", token);
           localStorage.setItem("userData", JSON.stringify(userData));
-          
+          if(rememberMe){
+            localStorage.setItem("rememberMe", true);
+          }
           data = {
             ...resData,
             variant: "success",

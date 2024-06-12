@@ -20,8 +20,21 @@
     display: block; /* Show it */
     opacity: 1; /* Make it visible */
     top: 20px; /* Adjust to where you want it to slide in from */
-  }
+    background-color: rgb(194 247 183);
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 31px;
+    min-height: 100px;
+    min-width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   
+  }
+  .alert-primary.show span{
+    font-size: 16px;
+    color: #182a91;
+  }
   .error-message {
     display: block;
   }

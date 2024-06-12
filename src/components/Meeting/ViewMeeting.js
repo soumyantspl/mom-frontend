@@ -8,11 +8,11 @@ import Sidebar from "../Common/Sidebar/Sidebar";
 import "./style/meetings-css.css";
 const ViewMeeting = () => {
   return (
-    <div>
-      <Header />
+    <>
+      {/* <Header />
         <MeetingHeader />
-        <Sidebar />
-        <div className="main-content">
+        <Sidebar /> */}
+       
       <form className="mt-2 details-form details-form-right">
         <div className="form-group mb-2">
           <div className="row">
@@ -191,8 +191,8 @@ const ViewMeeting = () => {
           </div>
         </div>
       </form>
-      </div>
-    </div>
+    
+ </>
   );
 };
 

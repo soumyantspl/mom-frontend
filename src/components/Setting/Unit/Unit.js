@@ -23,7 +23,7 @@ const Unit = () => {
   const [apiResponse, setApiResponse] = useState("");
 
   const [apiResData1, setApiResData1] = useState({
-    isSuccess1: null,
+    isSuccess1: false,
     message1: "",
   });
   console.log("apiResData-->", apiResData1);
@@ -53,16 +53,16 @@ const Unit = () => {
     return isValid;
   };
   useEffect(() => {
-    if (apiResponse) {
+    if (apiResData1.isSuccess1) {
       const alertElement = document.querySelector(".alert-primary");
       if (alertElement) {
         alertElement.classList.add("show");
         setTimeout(() => {
           alertElement.classList.remove("show");
-        }, 3000);
+        }, 100000); // Hide after 3 seconds
       }
     }
-  }, [apiResponse]);
+  }, [apiResData1]);
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
@@ -75,7 +75,8 @@ const Unit = () => {
           },
           {
             headers: {
-              Authorization: `${accessToken}`,
+              "Content-Type": "application/json",
+              Authorization: accessToken,
             },
           }
         );
@@ -145,14 +146,14 @@ const Unit = () => {
               </button>
             </form>
             <div>
-              <div className=" alert-primary" role="alert">
+              <div className="alert-primary" role="alert">
                 {apiResData1.isSuccess1 ? (
                   <span className="error-message">{apiResData1.message1}</span>
                 ) : null}
               </div>
             </div>
           </div>
-
+          {/* ////////////////////////// */}
           <div className="meeting-header-text">
             <h4>Manage Units</h4>
           </div>
@@ -175,7 +176,6 @@ const Unit = () => {
                 </svg>
               </div>
             </div>
-
             <table className="mt-4 table table-bordered">
               <thead>
                 <tr>
