@@ -1,12 +1,5 @@
-import {
-    FAIL_REQUEST,
-    GET_ATTENDEES_LIST,
-    GET_MEETING_LIST,
-    MAKE_REQUEST,
-    MAKE_RSVP_UPDATE_REQUEST,
-    UPDATE_RSVP
-  } from "../actions/meetingActions.js/actionTypes";
-import { FETCH_SINGLE_USER } from "../actions/userAction/actionTypes";
+
+import { FETCH_SINGLE_USER,MAKE_REQUEST,FAIL_REQUEST } from "../actions/userAction/actionTypes";
   
   const initialObject = {
     loading: false,
