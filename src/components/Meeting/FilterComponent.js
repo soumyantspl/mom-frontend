@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-import { fetchAttendeesList } from "../../redux/actions/meetingActions.js/listMeetingAction";
+import { fetchAttendeesList } from "../../redux/actions/meetingActions/listMeetingAction";
 
 // FILTER COMPONENT
 const FilterComponent = (props) => {

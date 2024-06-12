@@ -14,7 +14,7 @@ import "./style/meetings-css.css";
 import {
   fetchMeetingList,
   updateRsvp,
-} from "../../redux/actions/meetingActions.js/listMeetingAction";
+} from "../../redux/actions/meetingActions/listMeetingAction";
 import LoaderButton from "../Common/LoaderButton";
 import Loader from "../Common/Loader";
 import Alert from "../Common/Alert";

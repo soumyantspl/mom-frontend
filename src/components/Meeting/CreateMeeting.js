@@ -7,7 +7,7 @@ import "./style/meetings-css.css";
 
 const CreateMeeting = () => {
   return (
-    <div>
+    <>
       <Header />
       <MeetingHeader />
       <Sidebar />
@@ -700,7 +700,7 @@ const CreateMeeting = () => {
           </div>
         </section>
       </div>
-    </div>
+    </>
 
     //           </div>
 

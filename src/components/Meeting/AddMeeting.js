@@ -4,11 +4,31 @@ import Collapse from "react-bootstrap/Collapse";
 import "./style/CreateMeeting.css";
 import "./style/meetings-css.css";
 import { Margin } from "../../../node_modules/@mui/icons-material/index";
+import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction.js/meetingRoomAction";
+import { useSelector, useDispatch } from "react-redux";
+
 const AddMeeting = (props) => {
+  const accessToken = localStorage.getItem("accessToken");
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const dispatch = useDispatch();
+  const meetingRoomData = useSelector((state) => state.meetingRoom);
+  console.log(meetingRoomData);
   const [numAgenda, setNumAgenda] = useState(0);
   const [attendees, setAttendees] = useState([]);
   const [step, setStep] = useState(1);
   const [selectedOption, setSelectedOption] = useState("prevMeetingRadio");
+  const [isManualLocation, setIsManualLocation] = useState(true);
+  const [formData, setFormData] = useState({
+    title: "",
+    mode: "physical",
+    location: "manual",
+    date: "",
+    link: "",
+    fromTime: "",
+    toTime: "",
+    roomId: null,
+    locationData:""
+  });
 
   const submitMeetingDetails = (e) => {
     console.log("submitMeetingDetails------------------------------");
@@ -35,6 +55,30 @@ const AddMeeting = (props) => {
     agendas.push(<AgendaComponent key={i} number={i} />);
   }
 
+  const handleChange = (e) => {
+    //  setErrors({});
+    //  dispatch(updateOtpProcessed(false));
+    //  console.log("9999999999999999999999999999999999999", authData);
+    const { name, value } = e.target;
+    console.log(name, value);
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
+
+
+    if (value === "meetingroom") {
+      const payload = {
+        limit: 1000,
+        page: 1,
+        order: 1,
+        organizationId: userData.organizationId,
+      };
+      dispatch(getMeetingRoomList(payload, accessToken));
+    }
+  };
+  console.log("formData------------------------", formData);
   return (
     <div className="mt-2 details-form add-meetings">
       {step == 1 ? (
@@ -42,9 +86,15 @@ const AddMeeting = (props) => {
           <div className="inner-detail-form">
             <div className="mb-3">
               <label className="mb-1" for="title">
-                Title
+                Title1
               </label>
-              <input type="text" placeholder="Enter Meeting Title" />
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="Enter Meeting Title"
+              />
             </div>
 
             <div className="mb-3">
@@ -55,8 +105,10 @@ const AddMeeting = (props) => {
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="flexRadioDefault"
-                    id="flexRadioDefault1"
+                    name="mode"
+                    value="virtual"
+                    onChange={handleChange}
+                    checked={formData.mode === "virtual"}
                   />
                   <label className="form-check-label" for="flexRadioDefault1">
                     Virtual Meeting
@@ -67,8 +119,10 @@ const AddMeeting = (props) => {
                     <input
                       className="form-check-input"
                       type="radio"
-                      name="flexRadioDefault"
-                      id="flexRadioDefault1"
+                      name="mode"
+                      value="physical"
+                      onChange={handleChange}
+                      checked={formData.mode === "physical"}
                     />
                     <label className="form-check-label" for="flexRadioDefault1">
                       Physical Meeting
@@ -85,13 +139,15 @@ const AddMeeting = (props) => {
 
               <div className="d-flex w-100">
                 <div className="form-check form-check-inline">
+                  {}
                   <input
-                    className="form-check-input"
-                    checked
-                    value="manually"
-                    type="radio"
-                    name="locationtype"
                     id="flexRadioDefault1"
+                    className="form-check-input"
+                    type="radio"
+                    name="location"
+                    value="manual"
+                    onChange={handleChange}
+                    checked={formData.location === "manual"}
                   />
                   <label className="form-check-label" for="locationtype">
                     Enter Manually
@@ -100,11 +156,13 @@ const AddMeeting = (props) => {
                 <div className="form-check form-check-inline">
                   <div className="form-check">
                     <input
-                      className="form-check-input"
-                      value="meetingroom"
-                      type="radio"
-                      name="locationtype"
                       id="flexRadioDefault1"
+                      className="form-check-input"
+                      type="radio"
+                      name="location"
+                      value="meetingroom"
+                      onChange={handleChange}
+                      checked={formData.location === "meetingroom"}
                     />
                     <label className="form-check-label" for="locationtype">
                       Select A Meeting Room
@@ -112,26 +170,57 @@ const AddMeeting = (props) => {
                   </div>
                 </div>
               </div>
+              {formData.location !== "meetingroom" ? (
+                <textarea
+                  className="mt-1"
+                  placeholder="Enter Location"
+                 
+                  id=""
+                  cols="56"
+                  rows="3"
+                  onChange={handleChange}
+                  name="locationData"
+                  value={formData.locationData}
+                ></textarea>
+              ) : (
+                // <select
+                //   name="roomId"
+                //   onChange={handleChange}
+                //   value={formData.limit}
+                // >
+                //   <option value="">Meeting Room 1</option>
+                //   <option value="">Meeting Room 2</option>
+                //   <option value="">Meeting Room 3</option>
+                // </select>
 
-              <textarea
-                className="mt-1"
-                placeholder="Enter Location"
-                name=""
-                id=""
-                cols="56"
-                rows="3"
-              ></textarea>
-
-              <select>
-                <option value="">Meeting Room 1</option>
-                <option value="">Meeting Room 2</option>
-                <option value="">Meeting Room 3</option>
-              </select>
+                <select
+                  onChange={handleChange}
+                  name="roomId"
+                  value={formData.roomId}
+                >
+                  <option>Select Room</option>
+                  {meetingRoomData?.meetingRoomList.length &&
+                    meetingRoomData?.meetingRoomList.map((room) => {
+                      return (
+                        <option value={room._id}>
+                          {room.title.charAt(0).toUpperCase() +
+                            room.title.slice(1)}
+                        </option>
+                      );
+                    })}
+                </select>
+              )}
             </div>
 
             <div className="mb-3">
               <label className="mb-1">Meeting Link</label>
-              <input type="text" placeholder="Enter Meeting Link" />
+              <input
+                type="text"
+                placeholder="Enter Meeting Link"
+                name="link"
+                value={formData.link}
+                onChange={handleChange}
+              />
             </div>
 
             <div className="mb-3">
@@ -139,7 +228,11 @@ const AddMeeting = (props) => {
                 <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
                   <div className="position-relative">
                     <label className="mb-1 input-date">Date</label>
-                    <input type="date" />
+                    <input type="date"
+                     name="date"
+                     value={formData.date}
+                     onChange={handleChange}
+                    />
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
@@ -157,7 +250,12 @@ const AddMeeting = (props) => {
                 <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
                   <div className="position-relative">
                     <label className="mb-1"> From Time</label>
-                    <input type="time" className="input-time" />
+                    <input type="time" className="input-time"
+                    
+                    name="toTime"
+                    value={formData.toTime}
+                    onChange={handleChange}
+                    />
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -174,7 +272,12 @@ const AddMeeting = (props) => {
                 <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
                   <div className="position-relative">
                     <label className="mb-1">To Time</label>
-                    <input type="time" className="input-time2" />
+                    <input type="time" className="input-time2"
+                    
+                    name="fromTime"
+                    value={formData.fromTime}
+                    onChange={handleChange}
+                    />
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -427,7 +530,10 @@ const AddMeeting = (props) => {
               <div id="inputFields">
                 <div id="children-pane">{agendas}</div>
               </div>
-              <div className="d-flex align-items-center"style={{ marginTop: 20 }}>
+              <div
+                className="d-flex align-items-center"
+                style={{ marginTop: 20 }}
+              >
                 <Button
                   type="button"
                   variant="primary"
@@ -453,7 +559,8 @@ const AgendaComponent = (props) => {
   return (
     <div className="agenda-background">
       <h2>
-        <button className=""
+        <button
+          className=""
           onClick={() => setOpen(!open)}
           aria-controls="example-collapse-text"
           aria-expanded={open}

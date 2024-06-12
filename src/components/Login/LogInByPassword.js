@@ -47,6 +47,7 @@ const LogInByPassword = (props) => {
       // Form submission logic here
       if (isSetPassword) {
         dispatch(sendOtp(formData.email, isSetPassword));
+        setIsSetPassword(false)
       } else {
         dispatch(
           logInByPassword({
@@ -55,6 +56,7 @@ const LogInByPassword = (props) => {
            
           },rememberMe)
         );
+        setIsSetPassword(false)
       }
       console.log("Form submitted successfully!");
     } else {

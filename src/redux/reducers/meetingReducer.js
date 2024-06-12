@@ -5,7 +5,7 @@ import {
   MAKE_REQUEST,
   MAKE_RSVP_UPDATE_REQUEST,
   UPDATE_RSVP
-} from "../actions/meetingActions.js/actionTypes";
+} from "../actions/meetingActions/actionTypes";
 
 const initialObject = {
   loading: false,
