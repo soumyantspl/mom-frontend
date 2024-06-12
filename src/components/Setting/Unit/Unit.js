@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../Common/Header/Header";
 import Sidebar from "../../Common/Sidebar/Sidebar";
 import MeetingHeader from "../../Common/Header/MeetingHeader";
@@ -21,6 +21,13 @@ const Unit = () => {
   const [formValues, setFormValues] = useState({ name: "", address: "" });
   const [errors, setErrors] = useState({ name: "", address: "" });
   const [apiResponse, setApiResponse] = useState("");
+
+  const [apiResData1, setApiResData1] = useState({
+    isSuccess1: null,
+    message1: "",
+  });
+  console.log("apiResData-->", apiResData1);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUnitData({
@@ -45,6 +52,17 @@ const Unit = () => {
     setErrors(errors);
     return isValid;
   };
+  useEffect(() => {
+    if (apiResponse) {
+      const alertElement = document.querySelector(".alert-primary");
+      if (alertElement) {
+        alertElement.classList.add("show");
+        setTimeout(() => {
+          alertElement.classList.remove("show");
+        }, 3000);
+      }
+    }
+  }, [apiResponse]);
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
@@ -61,20 +79,15 @@ const Unit = () => {
             },
           }
         );
-        console.log("Unit created successfully:", response.data);
-        setApiResponse(response.data.message);
+        console.log("Unit created successfully:", response.data.message);
+        setApiResData1({
+          ...apiResData1,
+          isSuccess1: response.data.success,
+          message1: response.data.message,
+        });
       }
     } catch (error) {
-      console.error("Error creating unit:", error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        setApiResponse(error.response.data.message);
-      } else {
-        setApiResponse("Error: Failed to create unit.");
-      }
+      console.error("Error creating unit:", error.response.data.message);
     }
   };
 
@@ -121,15 +134,23 @@ const Unit = () => {
                 {errors.address && (
                   <span className="error-message">{errors.address}</span>
                 )}
+                <br></br>
+                {!apiResData1.isSuccess1 ? (
+                  <span className="error-message">{apiResData1.message1}</span>
+                ) : null}
               </div>
 
               <button className="save Mom-btn" type="submit">
                 <p>Submit</p>
               </button>
-              {apiResponse && (
-                <span className="error-message">{apiResponse}</span>
-              )}
             </form>
+            <div>
+              <div className=" alert-primary" role="alert">
+                {apiResData1.isSuccess1 ? (
+                  <span className="error-message">{apiResData1.message1}</span>
+                ) : null}
+              </div>
+            </div>
           </div>
 
           <div className="meeting-header-text">
