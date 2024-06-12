@@ -4,6 +4,7 @@ import Sidebar from "../../Common/Sidebar/Sidebar";
 import MeetingHeader from "../../Common/Header/MeetingHeader";
 import "../Unit/style/unit.css";
 import axios from "../../../../node_modules/axios/index";
+import Alert from "../Alert/Alert";
 
 const Unit = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -91,7 +92,6 @@ const Unit = () => {
       console.error("Error creating unit:", error.response.data.message);
     }
   };
-  
 
   return (
     <div>
@@ -148,8 +148,14 @@ const Unit = () => {
             </form>
             <div>
               <div className="alert-primary" role="alert">
-                {apiResData1.isSuccess1 ? (
+                {/* {apiResData1.isSuccess1 ? (
                   <span className="error-message">{apiResData1.message1}</span>
+                ) : null} */}
+                {apiResData1 ? (
+                  <Alert
+                    status={apiResData1.isSuccess}
+                    message={apiResData1.message}
+                  />
                 ) : null}
               </div>
             </div>
