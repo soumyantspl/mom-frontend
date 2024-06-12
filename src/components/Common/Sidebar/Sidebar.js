@@ -117,7 +117,7 @@ const Sidebar = () => {
                 </Link>
                 <Link to="/meeting-room" className="link">
                   <li
-                     className={currentPath == "/meetingRoom" ? "active-menu" : ""}
+                     className={currentPath == "/meeting-room" ? "active-menu" : ""}
          
                   >
                     - Meeting Rooms

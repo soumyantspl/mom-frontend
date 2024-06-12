@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import profileImage from "../../../assets/images/profile.png";
 import "./Header.css";
+// @ts-ignore
 import { useNavigate, Navigate, Link } from "react-router-dom";
+// @ts-ignore
 import ButtonGroup from "react-bootstrap/ButtonGroup";
+// @ts-ignore
 import Dropdown from "react-bootstrap/Dropdown";
+// @ts-ignore
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { logOut } from "../../../redux/actions/authActions/authAction";
 import { useSelector, useDispatch } from "react-redux";

@@ -3,9 +3,10 @@ import React from "react";
 import {
   Route,
   BrowserRouter as Router,
+  Outlet,
   Routes,
   Navigate,
-  Outlet,
+  // @ts-ignore
 } from "react-router-dom";
 import Dashboard from "../components/Dashboard/Dashboard";
 import OtpVerify from "../components/Login/OtpVerify";
@@ -17,6 +18,7 @@ import MeetingList from "../components/Meeting/MeetingList";
 import Sidebar from "../components/Common/Sidebar/Sidebar";
 import Navbar from "../../node_modules/react-bootstrap/esm/Navbar";
 import ActionList from "../components/Action/ActionList";
+import ActionDetails from "../components/Action/ActionDetails";
 import Alert from "../components/Setting/Alert/Alert";
 import MeetingRoom from "../components/Setting/MeetingRoom/MeetingRoom";
 import Employee from "../components/Setting/Employee/Employee";
