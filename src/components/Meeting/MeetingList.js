@@ -235,7 +235,7 @@ const MeetingList = () => {
           </div>
 
           {filter ? (
-            <FilterComponent setfilter={setfilter} filterData={filterData} />
+            <FilterComponent setfilter={setfilter} filterData={filterData} initData={ searchData.filterData}/>
           ) : null}
         </div>
 

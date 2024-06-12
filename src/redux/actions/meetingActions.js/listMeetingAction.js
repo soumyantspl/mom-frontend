@@ -74,18 +74,19 @@ export const getMeetingList = (data) => {
   };
 };
 
-export const fetchAttendeesList = (payload) => {
+export const fetchAttendeesList = (payload,token) => {
+  console.log("accessToken------------>>>>>", token);
   return (dispatch) => {
     dispatch(makeRsvpRequest());
     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/listAttendeesFromPreviousMeeting/${payload.organizationId}`;
     const headerObject = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: accessToken,
+        Authorization: token,
       },
     };
     console.log("webApiUrl----------------", webApiUrl);
-    console.log("accessToken------------>>>>>", accessToken);
+
     // axios
     //   .post(webApiUrl, payload)
     const bodyPayload = {
