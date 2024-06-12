@@ -37,7 +37,7 @@ const Header = () => {
     console.log("userData", userData);
     if (userData) {
       setName(userData?.name);
-      dispatch(viewSingleUser(userData.id, accessToken));
+      dispatch(viewSingleUser(userData._id, accessToken));
     } else {
       navigate("/login");
     }

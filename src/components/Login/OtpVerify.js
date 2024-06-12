@@ -17,7 +17,7 @@ import Timer from "../Common/Timer";
 const isLogIn = false;
 
 const OtpVerify = () => {
-  console.log(process.env)
+  console.log(process.env);
   const [errors, setErrors] = useState({});
   const [isResendOtp, setIsResendOtp] = useState(false);
   const [formData, setFormData] = useState({
@@ -47,6 +47,15 @@ const OtpVerify = () => {
     if (authData.email) {
       dispatch(reSendOtp(authData.email));
       setIsResendOtp(false);
+      setFormData({
+        ...formData,
+        input1: "",
+        input2: "",
+        input3: "",
+        input4: "",
+        input5: "",
+        input6: "",
+      });
     } else {
       errors.message = constantMessages.emailRequired;
       setErrors(errors);
@@ -147,22 +156,21 @@ const OtpVerify = () => {
     };
   };
 
-
-  const fieldValidationCheck=(e)=>{
+  const fieldValidationCheck = (e) => {
     e.preventDefault();
 
     const newErrors = validateForm(formData);
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
       // Form submission logic here
-    
+
       console.log("Form submitted successfully!");
     } else {
       console.log(`Form submission failed
        due to validation errors.`);
     }
-  }
-console.log(authData)
+  };
+  console.log(authData);
   return (
     <section className="otp-varify">
       {authData.isOtpVerifiedSuccess ? <Navigate to="/meeting-list" /> : null}
@@ -309,7 +317,7 @@ console.log(authData)
                           dispatch(updateIsSuccess(false));
                         }}
                       >
-                        Back to Sign In 
+                        Back to Sign In
                       </span>
                     </div>
                   </Link>
@@ -318,7 +326,11 @@ console.log(authData)
                       {constantMessages.otpCountDownMessage}
                       <Timer
                         setResendOtp={setResendOtp}
-                        minutes={authData.isOtpProcessed && !authData.isSuccess?process.env.REACT_APP_OTP_RESEND_TIME:process.env.REACT_APP_CHECK_OTP_VALIDATION_TIME}
+                        minutes={
+                          authData.isOtpProcessed && !authData.isSuccess
+                            ? process.env.REACT_APP_OTP_RESEND_TIME
+                            : process.env.REACT_APP_CHECK_OTP_VALIDATION_TIME
+                        }
                       />
                     </span>
                   ) : (

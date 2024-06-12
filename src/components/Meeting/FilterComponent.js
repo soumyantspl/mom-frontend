@@ -5,7 +5,9 @@ import { fetchAttendeesList } from "../../redux/actions/meetingActions.js/listMe
 
 // FILTER COMPONENT
 const FilterComponent = (props) => {
+  console.log(props.initData)
   const dispatch = useDispatch();
+  const accessToken = localStorage.getItem("accessToken");
   const meetingData = useSelector((state) => state.meeting);
   const localStorageData =  JSON.parse(localStorage.getItem("userData"));
   const [searchData, setSearchData] = useState({
@@ -16,10 +18,14 @@ const FilterComponent = (props) => {
   });
 
   useEffect(() => {
+    setSearchData({
+      ...props.initData
+     });
     dispatch(
       fetchAttendeesList({
-        organizationId: localStorageData.organizationId,
-      })
+        organizationId: localStorageData.organizationId
+      },
+      accessToken)
     );
   }, []);
 
@@ -41,6 +47,9 @@ const handleSubmit=(e)=>{
     props.setfilter(false)
 
     props.filterData(searchData)
+    setSearchData({
+     ...searchData
+    });
 
 }
 
@@ -54,7 +63,7 @@ const handleReset=(e)=>{
         meetingStatus:"",
       });
     
-
+      props.filterData(searchData)
 
 }
 

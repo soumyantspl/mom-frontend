@@ -155,6 +155,15 @@ const SetPassword = (props) => {
   const resendOtpAction = (e) => {
     if (authData.email) {
       dispatch(reSendOtp(authData.email));
+      setFormData({
+        ...formData,
+        input1: "",
+        input2: "",
+        input3: "",
+        input4: "",
+        input5: "",
+        input6: "",
+      });
     } else {
       errors.message = constantMessages.emailRequired;
       setErrors(errors);
@@ -185,7 +194,7 @@ const SetPassword = (props) => {
   return (
     <section className="otp-varify set-pswrd">
       {authData.isOtpVerifiedSuccess && authData.isSuccess ? (
-        <Navigate to="/login-by-password" />
+        <Navigate to="/login-by-password"  state={formData} />
       ) : null}
 
       <div className="container-fluid">

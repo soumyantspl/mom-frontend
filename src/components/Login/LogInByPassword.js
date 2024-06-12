@@ -88,7 +88,9 @@ const LogInByPassword = (props) => {
  
   useEffect(() => {
     document.title = "Log In By Password: Meeting Plus";
-    if(stateData.email){
+    console.log(formData)
+    console.log(stateData)
+    if(stateData?.email){
       setFormData({
         ...formData,
        email: stateData.email
