@@ -63,7 +63,12 @@ const handleReset=(e)=>{
         meetingStatus:"",
       });
     
-      props.filterData(searchData)
+      props.filterData({
+        toDate: "",
+        fromDate: "",
+        attendeeId: "",
+        meetingStatus:"",
+      })
 
 }
 
