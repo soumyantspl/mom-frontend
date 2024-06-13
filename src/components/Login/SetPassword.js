@@ -123,6 +123,7 @@ const SetPassword = (props) => {
     } else if (data.password !== data.confirmPassword) {
       errors.confirmPassword = constantMessages.confirmAndMainPasswordMatch;
     }
+
     if (!data.password.trim()) {
       errors.password = constantMessages.passwordRequired;
     } else if (!regularExpression.test(data.password)) {

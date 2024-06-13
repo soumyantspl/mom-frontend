@@ -524,9 +524,7 @@ Link {
   align-items: center;
   margin-top: 20px;
 }
-.meeting-header-text h4{
-font-weight: 600;
-}
+
 .table-box {
   background-color: #fff;
   padding: 16px 16px;
@@ -730,11 +728,11 @@ button.btn.btn-light {
 }
 
 .search-box {
-  border-radius: 20px;
-  border:1px solid #4f2cc8;
+  border-radius: 18px;
+  border: 1px solid #e7e7e7;
   outline: none;
-  padding: 8px 8px;
-  width: 230px;
+  padding: 2px 7px;
+  width: 300px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2004,14 +2002,6 @@ margin-bottom: 18px;
   .modal-footer .Mom-btn{
     border-radius: 30px;
     border: none;
-  }
-  .Action-list-page .form-group{
-   margin-bottom: 20px;
-  }
-  .input-width .form-group input, .Action-list-page textarea{
-   width: 430px !important;
-   display: flex;
-  flex-direction: column;
   }
 
   .attendee-content:nth-child(1n) .attendee-list {

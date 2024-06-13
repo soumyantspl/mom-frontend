@@ -54,20 +54,20 @@ const LoginByOtp = () => {
     }
   };
 
-  const fieldValidationCheck = (e) => {
+  const fieldValidationCheck=(e)=>{
     e.preventDefault();
 
     const newErrors = validateForm(formData);
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
       // Form submission logic here
-
+    
       console.log("Form submitted successfully!");
     } else {
       console.log(`Form submission failed
        due to validation errors.`);
     }
-  };
+  }
 
   const validateForm = (data) => {
     const errors = {};
@@ -79,8 +79,10 @@ const LoginByOtp = () => {
     return errors;
   };
 
+
   return (
     <section className="sign-in login-page">
+     
       {authData.isSuccess && !authData.isSetPassword ? (
         <Navigate to="/otp-verify" />
       ) : null}
@@ -156,7 +158,9 @@ const LoginByOtp = () => {
 
                 <div className="or">or</div>
 
-                <Link to="/login-by-password" state={formData}>
+                <Link to="/login-by-password" state={formData}
+                 
+                >
                   <button
                     className="signin-btn2"
                     onClick={() => {
