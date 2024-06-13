@@ -1945,6 +1945,7 @@ button {
 .error-message {
   font-size: 12px;
   color: red;
+  padding-top: 2px;
 }
 
 .alert {
