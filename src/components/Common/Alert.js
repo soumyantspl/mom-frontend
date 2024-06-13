@@ -4,7 +4,7 @@ const Alert = (props) => {
   return (
     <div>
       {props.status ? (
-        <div
+        <div  
           className="alert alert-success alert-dismissible fade show"
           role="alert"
         >

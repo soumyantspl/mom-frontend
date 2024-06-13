@@ -1,0 +1,78 @@
+.row {
+    margin: 0;
+    padding: 0;
+  }
+  .inner-detail-form {
+    display: block;
+  }
+  .inner-detail-form-headings {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .detail-col {
+    padding-right: 20px;
+    padding-left: 0 !important;
+  }
+  .preview-col {
+    padding-left: 20px;
+    padding-right: 0 !important;
+  }
+  /* .detail-col {
+    border-right: 2px solid rgb(203 203 203);
+  } */
+  
+  
+  /* ---------------------Add Agenda--------------- */
+  
+  .custom-width-input {
+    width: 50px;
+    height: 30px;
+    padding: 0;
+    border: none;
+  }
+  .alert-send-time{
+    border: 1px solid rgb(202, 183, 221);
+    padding: 5px;
+    border-radius: 5px;
+  }
+  
+  .alert-deatil-1 {
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+  }
+  .alert-box-border {
+    border-bottom: 1px solid rgb(222 226 230);
+  }
+  
+  .send-email {
+    background: rgb(13, 55, 180);
+    background: linear-gradient(
+      117deg,
+      rgba(13, 55, 180, 1) 0%,
+      rgba(118, 60, 209, 1) 59%
+    ) !important;
+    /* color: #fff; */
+    /* font-size: 8px !important;
+    padding: 6px 10px;
+    border: none; */
+    /* display: flex;
+    justify-content: center;
+    border-radius: 50px; */
+  }
+  
+  /* .send-email p{
+    font-size : 13px !important;
+  } */
+  
+  .alert-box div {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    gap: 10px;
+  }
+  .details-form label{
+      color: rgb(38 40 149);
+  }
+  
