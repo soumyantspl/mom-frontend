@@ -7,7 +7,7 @@ import "./style/meetings-css.css";
 
 const CreateMeeting = () => {
   return (
-    <div>
+    <>
       <Header />
       <MeetingHeader />
       <Sidebar />
@@ -584,7 +584,7 @@ const CreateMeeting = () => {
                       <h4>Agenda(s)</h4>
                     </label>
 
-                    <div className="mt-3 agenda-box-border">
+                    <div className="mt-3 agenda-box-border ">
                       <div className="form-group">
                         <div className="row">
                           <div className="col-12">
@@ -596,7 +596,7 @@ const CreateMeeting = () => {
                         </div>
                       </div>
 
-                      <div className="p-3">
+                      <div className="p-3 ">
                         <div className="pb-3 form-group">
                           <div className="row">
                             <div className="col-md-4">
@@ -608,7 +608,7 @@ const CreateMeeting = () => {
                           </div>
                         </div>
 
-                        <div className=" pb-3 form-group">
+                        <div className=" pb-3 form-group ">
                           <div className="row">
                             <div className="col-md-4">
                               <label className="mt-2 topic">
@@ -639,7 +639,7 @@ const CreateMeeting = () => {
                       </div>
                     </div>
 
-                    <div className="mt-3 agenda-box-border">
+                    <div className="mt-3 agenda-box-border ">
                       <div className="form-group">
                         <div className="row">
                           <div className="col-12">
@@ -700,7 +700,7 @@ const CreateMeeting = () => {
           </div>
         </section>
       </div>
-    </div>
+    </>
 
     //           </div>
 
