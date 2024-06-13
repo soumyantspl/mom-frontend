@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Common/Header/Header";
 import Sidebar from "../Common/Sidebar/Sidebar";
-// @ts-ignore
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";

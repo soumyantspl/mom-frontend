@@ -3,10 +3,9 @@ import React from "react";
 import {
   Route,
   BrowserRouter as Router,
-  Outlet,
   Routes,
   Navigate,
-  // @ts-ignore
+  Outlet,
 } from "react-router-dom";
 import Dashboard from "../components/Dashboard/Dashboard";
 import OtpVerify from "../components/Login/OtpVerify";
@@ -18,7 +17,6 @@ import MeetingList from "../components/Meeting/MeetingList";
 import Sidebar from "../components/Common/Sidebar/Sidebar";
 import Navbar from "../../node_modules/react-bootstrap/esm/Navbar";
 import ActionList from "../components/Action/ActionList";
-import ActionDetails from "../components/Action/ActionDetails";
 import Alert from "../components/Setting/Alert/Alert";
 import MeetingRoom from "../components/Setting/MeetingRoom/MeetingRoom";
 import Employee from "../components/Setting/Employee/Employee";
@@ -63,7 +61,6 @@ const MainRoute = () => {
             <Route exact path="/dashboard" element={<Dashboard />} />
             <Route exact path="/meeting-list" element={<MeetingList />} />
             <Route exact path="/action-list" element={<ActionList />} />
-            <Route exact path="/action-details" element={<ActionDetails />} />
             <Route exact path="/alerts" element={<Alert />} />
             <Route exact path="/meeting-room" element={<MeetingRoom />} />
             <Route exact path="/employee" element={<Employee />} />
@@ -80,28 +77,28 @@ const MainRoute = () => {
             />
           </Route>
           <Route element={<AuthRoutes />}>
-            <Route exact path="/" element={<LoginByOtp />} />
-            <Route
-              exact
-              path="/login"
-              element={<LoginByOtp />}
-              title="LoginByOtp"
-            />
-            <Route exact path="/otp-verify" element={<OtpVerify />} />
-            <Route
-              exact
-              path="/log-in-by-otp"
-              element={<LoginByOtp />}
-              title="LoginByOtp"
-            />
-            <Route exact path="/otp-verify" element={<OtpVerify />} />
-            <Route
-              exact
-              path="/login-by-password"
-              element={<LogInByPassword />}
-            />
-            <Route exact path="/set-password" element={<SetPassword />} />
-            <Route exact path="/sign-up" element={<SignUp />} />
+          <Route exact path="/" element={<LoginByOtp />} />
+          <Route
+            exact
+            path="/login"
+            element={<LoginByOtp />}
+            title="LoginByOtp"
+          />
+          <Route exact path="/otp-verify" element={<OtpVerify />} />
+          <Route
+            exact
+            path="/log-in-by-otp"
+            element={<LoginByOtp />}
+            title="LoginByOtp"
+          />
+          <Route exact path="/otp-verify" element={<OtpVerify />} />
+          <Route
+            exact
+            path="/login-by-password"
+            element={<LogInByPassword />}
+          />
+          <Route exact path="/set-password" element={<SetPassword />} />
+          <Route exact path="/sign-up" element={<SignUp />} />
           </Route>
         </Routes>
       </Router>

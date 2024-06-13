@@ -1,6 +1,5 @@
 import React from "react";
 import meetingLogo from "../../assets/images/meeting.png";
-
 const LoginImage = () => {
   console.log(meetingLogo);
   return (
