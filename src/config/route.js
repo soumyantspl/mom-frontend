@@ -63,6 +63,7 @@ const MainRoute = () => {
             <Route exact path="/dashboard" element={<Dashboard />} />
             <Route exact path="/meeting-list" element={<MeetingList />} />
             <Route exact path="/action-list" element={<ActionList />} />
+            <Route exact path="/action-details" element={<ActionDetails />} />
             <Route exact path="/alerts" element={<Alert />} />
             <Route exact path="/meeting-room" element={<MeetingRoom />} />
             <Route exact path="/employee" element={<Employee />} />
@@ -79,28 +80,28 @@ const MainRoute = () => {
             />
           </Route>
           <Route element={<AuthRoutes />}>
-          <Route exact path="/" element={<LoginByOtp />} />
-          <Route
-            exact
-            path="/login"
-            element={<LoginByOtp />}
-            title="LoginByOtp"
-          />
-          <Route exact path="/otp-verify" element={<OtpVerify />} />
-          <Route
-            exact
-            path="/log-in-by-otp"
-            element={<LoginByOtp />}
-            title="LoginByOtp"
-          />
-          <Route exact path="/otp-verify" element={<OtpVerify />} />
-          <Route
-            exact
-            path="/login-by-password"
-            element={<LogInByPassword />}
-          />
-          <Route exact path="/set-password" element={<SetPassword />} />
-          <Route exact path="/sign-up" element={<SignUp />} />
+            <Route exact path="/" element={<LoginByOtp />} />
+            <Route
+              exact
+              path="/login"
+              element={<LoginByOtp />}
+              title="LoginByOtp"
+            />
+            <Route exact path="/otp-verify" element={<OtpVerify />} />
+            <Route
+              exact
+              path="/log-in-by-otp"
+              element={<LoginByOtp />}
+              title="LoginByOtp"
+            />
+            <Route exact path="/otp-verify" element={<OtpVerify />} />
+            <Route
+              exact
+              path="/login-by-password"
+              element={<LogInByPassword />}
+            />
+            <Route exact path="/set-password" element={<SetPassword />} />
+            <Route exact path="/sign-up" element={<SignUp />} />
           </Route>
         </Routes>
       </Router>
