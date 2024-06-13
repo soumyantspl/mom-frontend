@@ -14,7 +14,7 @@ import "./style/meetings-css.css";
 import {
   fetchMeetingList,
   updateRsvp,
-} from "../../redux/actions/meetingActions/listMeetingAction";
+} from "../../redux/actions/meetingActions/MeetingAction";
 import LoaderButton from "../Common/LoaderButton";
 import Loader from "../Common/Loader";
 import Alert from "../Common/Alert";
@@ -65,10 +65,10 @@ const MeetingList = () => {
     // setIsUser(isUser)
   };
 
-  const setRsvpModalStatus = (value, attendeesData,rsvpCount) => {
+  const setRsvpModalStatus = (value, attendeesData, rsvpCount) => {
     setIsRsvpModalOpen(value);
     setAttendeesData([...attendeesData]);
-    setRsvpCount(rsvpCount)
+    setRsvpCount(rsvpCount);
     // setIsUser(isUser)
   };
 
@@ -177,9 +177,9 @@ const MeetingList = () => {
         : (pendingCount = pendingCount + 1);
     });
 
-     const countMessage=`${yesCount} Yes, ${noCount} No, ${mayBeCount} May Be, ${pendingCount} Awaiting`;
-    
-     return countMessage;
+    const countMessage = `${yesCount} Yes, ${noCount} No, ${mayBeCount} May Be, ${pendingCount} Awaiting`;
+
+    return countMessage;
   };
 
   const formatDateTimeFormat = (date) => {
@@ -201,7 +201,24 @@ const MeetingList = () => {
     };
   };
 
-  // console.log("repeat------------------------", searchData);
+  const formatTimeFormat = (time) => {
+    console.log(time)
+    const timeArray = time.split(":");
+    console.log(timeArray)
+    let session = "AM";
+    let hour = parseInt(timeArray[0]);
+    let minute = parseInt(timeArray[1]);
+    console.log(hour,minute)
+    if (hour > 12) {
+      session = "PM";
+      hour = hour - 12;
+    }
+    let finalTime = [hour, minute].join(":");
+    const result = `${finalTime} ${session}`;
+    return result;
+  };
+
+   console.log("repeat------------------------", searchData);
   return (
     <div>
       <Header />
@@ -236,7 +253,11 @@ const MeetingList = () => {
           </div>
 
           {filter ? (
-            <FilterComponent setfilter={setfilter} filterData={filterData} initData={ searchData.filterData}/>
+            <FilterComponent
+              setfilter={setfilter}
+              filterData={filterData}
+              initData={searchData.filterData}
+            />
           ) : null}
         </div>
 
@@ -296,6 +317,7 @@ const MeetingList = () => {
                       <td data-label="Meeting Date & Time">
                         {formatDateTimeFormat(meeting.date).formattedDate}
                         <p className="detail-date-time">
+                          {/* {formatTimeFormat(meeting.fromTime)} */}
                           {formatDateTimeFormat(meeting.date).formattedTime}
                         </p>
                       </td>
@@ -384,7 +406,11 @@ const MeetingList = () => {
                       <td
                         data-label="RSVP Confirmation"
                         onClick={(e) => {
-                          setRsvpModalStatus(true, meeting.attendees,checkRsvpCount(meeting.attendees));
+                          setRsvpModalStatus(
+                            true,
+                            meeting.attendees,
+                            checkRsvpCount(meeting.attendees)
+                          );
                         }}
                       >
                         <p>{meeting.attendees.length} Attendees</p>
@@ -397,10 +423,10 @@ const MeetingList = () => {
                           className={
                             meeting.meetingStatus.status === "scheduled" ||
                             meeting.meetingStatus.status === "rescheduled"
-                              ? "badge bg-success bg-opacity-10 text-success"
+                              ? "badge bg-success bg-opacity-10 "
                               : meeting.meetingStatus.status === "closed"
-                              ? "badge bg-primary bg-opacity-10 text-success"
-                              : "badge bg-danger bg-opacity-10 text-success"
+                              ? "badge bg-primary bg-opacity-10 "
+                              : "badge bg-danger bg-opacity-10 "
                           }
                         >
                           {meeting.meetingStatus.status
@@ -444,7 +470,7 @@ const MeetingList = () => {
                   attendees={attendeesData}
                   setIsModalOpen={setIsModalOpen}
                   loginUserData={loginUserData}
-                
+
                   // attendeeData={meeting.attendees}
                 />
                 <AttendeesRsvpModal

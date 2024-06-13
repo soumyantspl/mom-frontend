@@ -134,6 +134,58 @@ const SetPassword = (props) => {
     };
   };
 
+
+  const otpFieldValidationCheck = (e) => {
+    const errors = {};
+    // if (!formData.password) {
+    //   errors.roomId = constantMessages.roomRequired;
+    //   setErrors(errors);
+    // }
+    console.log(e.target.value)
+    if (!e.target.value) {
+      errors.otp = "OTP is required";
+    } else if (isNaN(e.target.value)) {
+      errors.otp = "OTP must be a number";
+    }
+    console.log(errors)
+      setErrors(errors);
+    
+  };
+
+
+
+  const confirmPasswordFieldValidationCheck = (e) => {
+    const errors = {};
+    // if (!formData.password) {
+    //   errors.roomId = constantMessages.roomRequired;
+    //   setErrors(errors);
+    // }
+    if (!formData.confirmPassword.trim()) {
+      errors.confirmPassword = constantMessages.confirmPasswordRequired;
+    } else if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = constantMessages.confirmAndMainPasswordMatch;
+    }
+      setErrors(errors);
+    
+  };
+
+  const passwordFieldValidationCheck = (e) => {
+    const errors = {};
+    // if (!formData.password) {
+    //   errors.roomId = constantMessages.roomRequired;
+    //   setErrors(errors);
+    // }
+    const regularExpression =
+    /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    if (!formData.password.trim()) {
+      errors.password = constantMessages.passwordRequired;
+    } else if (!regularExpression.test(formData.password)) {
+      errors.password = constantMessages.passwordRegex;
+    }
+      setErrors(errors);
+    
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = validateForm(formData);
@@ -190,6 +242,7 @@ const SetPassword = (props) => {
        due to validation errors.`);
     }
   }
+  
   return (
     <section className="otp-varify set-pswrd">
       {authData.isOtpVerifiedSuccess && authData.isSuccess ? (
@@ -219,7 +272,7 @@ const SetPassword = (props) => {
                           name="input1"
                           maxLength={1}
                           onChange={handleChange}
-                          onBlur={fieldValidationCheck}
+                          onBlur={otpFieldValidationCheck}
                           value={formData.input1}
                           autocomplete="off"
                           id={1}
@@ -232,7 +285,7 @@ const SetPassword = (props) => {
                           name="input2"
                           maxLength={1}
                           onChange={handleChange}
-                          onBlur={fieldValidationCheck}
+                          onBlur={otpFieldValidationCheck}
                           value={formData.input2}
                           autocomplete="off"
                           id={2}
@@ -244,7 +297,7 @@ const SetPassword = (props) => {
                           name="input3"
                           maxLength={1}
                           onChange={handleChange}
-                          onBlur={fieldValidationCheck}
+                          onBlur={otpFieldValidationCheck}
                           value={formData.input3}
                           autocomplete="off"
                           id={3}
@@ -256,7 +309,7 @@ const SetPassword = (props) => {
                           name="input4"
                           maxLength={1}
                           onChange={handleChange}
-                          onBlur={fieldValidationCheck}
+                          onBlur={otpFieldValidationCheck}
                           value={formData.input4}
                           autocomplete="off"
                           id={4}
@@ -268,7 +321,7 @@ const SetPassword = (props) => {
                           name="input5"
                           maxLength={1}
                           onChange={handleChange}
-                          onBlur={fieldValidationCheck}
+                          onBlur={otpFieldValidationCheck}
                           value={formData.input5}
                           autocomplete="off"
                           id={5}
@@ -280,7 +333,7 @@ const SetPassword = (props) => {
                           name="input6"
                           maxLength={1}
                           onChange={handleChange}
-                          onBlur={fieldValidationCheck}
+                          onBlur={otpFieldValidationCheck}
                           value={formData.input6}
                           autocomplete="off"
                           id={6}
@@ -318,7 +371,7 @@ const SetPassword = (props) => {
                         name="password"
                         id="password"
                         onChange={handleChange}
-                        onBlur={fieldValidationCheck}
+                        onBlur={passwordFieldValidationCheck}
                         value={formData.password}
                       />
                     </div>
@@ -353,7 +406,7 @@ const SetPassword = (props) => {
                         name="confirmPassword"
                         id="confirmPassword"
                         onChange={handleChange}
-                        onBlur={fieldValidationCheck}
+                        onBlur={confirmPasswordFieldValidationCheck}
                         value={formData.confirmPassword}
                       />
                     </div>

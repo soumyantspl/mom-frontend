@@ -1,11 +1,12 @@
 import axios from "axios";
 import {
+  CREATE_MEETING_RESPONSE,
   FAIL_REQUEST,
   GET_ATTENDEES_LIST,
   GET_MEETING_LIST,
   MAKE_REQUEST,
   MAKE_RSVP_UPDATE_REQUEST,
-  UPDATE_RSVP,
+  UPDATE_RSVP,GET_CREATE_MEETING_STEPS
 } from "./actionTypes";
 const accessToken = localStorage.getItem("accessToken");
 
@@ -74,7 +75,7 @@ export const getMeetingList = (data) => {
   };
 };
 
-export const fetchAttendeesList = (payload,token) => {
+export const fetchAttendeesList = (payload, token) => {
   console.log("accessToken------------>>>>>", token);
   return (dispatch) => {
     dispatch(makeRsvpRequest());
@@ -156,3 +157,75 @@ export const updateRsvpStatus = (data) => {
     payload: data,
   };
 };
+
+export const createMeetingDetails = (payload, accessToken) => {
+  return (dispatch) => {
+    dispatch(makeRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/createMeeting`;
+    const headerObject = {
+      headers: {
+        "Content-Type": "application/json",
+         Authorization: accessToken,
+      },
+    };
+    console.log("webApiUrl----------------", webApiUrl);
+    console.log("accessToken------------>>>>>", accessToken);
+ 
+    axios
+      .post(webApiUrl, payload, headerObject)
+      .then((result) => {
+        console.log("result------------------------->>>>>>>", result);
+        const resData = result.data;
+
+        dispatch(createMeetingResponse(resData));
+      })
+      .catch((err) => {
+        console.log("err------------------------->>>>>>>", err);
+        dispatch(failRequest(err.message));
+      });
+  };
+};
+
+export const createMeetingResponse = (data) => {
+  return {
+    type: CREATE_MEETING_RESPONSE,
+    payload: data,
+  };
+};
+
+
+export const getCreateMeetingStep = (organizationId, accessToken) => {
+  return (dispatch) => {
+    dispatch(makeRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/getCreateMeetingStep/${organizationId}`;
+    const headerObject = {
+      headers: {
+        "Content-Type": "application/json",
+         Authorization: accessToken,
+      },
+    };
+    console.log("webApiUrl----------------", webApiUrl);
+    console.log("accessToken------------>>>>>", accessToken);
+ 
+    axios
+      .get(webApiUrl, headerObject)
+      .then((result) => {
+        console.log("result------------------------->>>>>>>", result);
+        const resData = result.data;
+
+        dispatch(fetchCreateMeetingStep(resData));
+      })
+      .catch((err) => {
+        console.log("err------------------------->>>>>>>", err);
+        dispatch(failRequest(err.message));
+      });
+  };
+};
+
+export const fetchCreateMeetingStep = (data) => {
+  return {
+    type: GET_CREATE_MEETING_STEPS,
+    payload: data,
+  };
+};
+
