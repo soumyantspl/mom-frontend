@@ -14,7 +14,13 @@ const titleRequired="Please enter a title."
 const dateRequired="Please enter a valid date."
 const timeRequired="Please enter a valid time."
 const roomRequired="Please enter a valid room."
+const linkRequired="Please enter a url."
+const invalidLink="Please enter a valid url."
+const locationRequired="Please enter location."
 module.exports = {
+  locationRequired,
+  invalidLink,
+  linkRequired,
   invalidEmail,
   emailRequired,
   confirmPasswordRequired,

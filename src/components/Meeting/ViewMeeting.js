@@ -13,7 +13,7 @@ const ViewMeeting = () => {
         <MeetingHeader />
         <Sidebar /> */}
        
-      <form className="mt-2 details-form details-form-right">
+      <form className="mt-2 details-form details-form-right  col-padding-none">
         <div className="form-group mb-2">
           <div className="row">
             <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">

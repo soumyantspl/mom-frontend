@@ -155,6 +155,22 @@ const OtpVerify = () => {
       otpData,
     };
   };
+  const otpFieldValidationCheck = (e) => {
+    const errors = {};
+    // if (!formData.password) {
+    //   errors.roomId = constantMessages.roomRequired;
+    //   setErrors(errors);
+    // }
+    console.log(e.target.value)
+    if (!e.target.value) {
+      errors.message = "OTP is required";
+    } else if (isNaN(e.target.value)) {
+      errors.message = "OTP must be a number";
+    }
+    console.log(errors)
+      setErrors(errors);
+    
+  };
 
   const fieldValidationCheck = (e) => {
     e.preventDefault();
@@ -202,7 +218,7 @@ const OtpVerify = () => {
                         name="input1"
                         maxLength={1}
                         onChange={handleChange}
-                        onBlur={fieldValidationCheck}
+                        onBlur={otpFieldValidationCheck}
                         value={formData.input1}
                         autocomplete="off"
                         autofocus={true}
@@ -216,7 +232,7 @@ const OtpVerify = () => {
                         name="input2"
                         maxLength={1}
                         onChange={handleChange}
-                        onBlur={fieldValidationCheck}
+                        onBlur={otpFieldValidationCheck}
                         value={formData.input2}
                         autocomplete="off"
                         id={2}
@@ -228,7 +244,7 @@ const OtpVerify = () => {
                         name="input3"
                         maxLength={1}
                         onChange={handleChange}
-                        onBlur={fieldValidationCheck}
+                        onBlur={otpFieldValidationCheck}
                         value={formData.input3}
                         autocomplete="off"
                         id={3}
@@ -240,7 +256,7 @@ const OtpVerify = () => {
                         name="input4"
                         maxLength={1}
                         onChange={handleChange}
-                        onBlur={fieldValidationCheck}
+                        onBlur={otpFieldValidationCheck}
                         value={formData.input4}
                         autocomplete="off"
                         id={4}
@@ -252,7 +268,7 @@ const OtpVerify = () => {
                         name="input5"
                         maxLength={1}
                         onChange={handleChange}
-                        onBlur={fieldValidationCheck}
+                        onBlur={otpFieldValidationCheck}
                         value={formData.input5}
                         autocomplete="off"
                         id={5}
@@ -264,7 +280,7 @@ const OtpVerify = () => {
                         name="input6"
                         maxLength={1}
                         onChange={handleChange}
-                        onBlur={fieldValidationCheck}
+                        onBlur={otpFieldValidationCheck}
                         value={formData.input6}
                         autocomplete="off"
                         id={6}

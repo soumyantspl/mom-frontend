@@ -6,7 +6,7 @@ import {
   GET_MEETING_LIST,
   MAKE_REQUEST,
   MAKE_RSVP_UPDATE_REQUEST,
-  UPDATE_RSVP,
+  UPDATE_RSVP,GET_CREATE_MEETING_STEPS
 } from "./actionTypes";
 const accessToken = localStorage.getItem("accessToken");
 
@@ -193,4 +193,39 @@ export const createMeetingResponse = (data) => {
   };
 };
 
+
+export const getCreateMeetingStep = (organizationId, accessToken) => {
+  return (dispatch) => {
+    dispatch(makeRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/getCreateMeetingStep/${organizationId}`;
+    const headerObject = {
+      headers: {
+        "Content-Type": "application/json",
+         Authorization: accessToken,
+      },
+    };
+    console.log("webApiUrl----------------", webApiUrl);
+    console.log("accessToken------------>>>>>", accessToken);
+ 
+    axios
+      .get(webApiUrl, headerObject)
+      .then((result) => {
+        console.log("result------------------------->>>>>>>", result);
+        const resData = result.data;
+
+        dispatch(fetchCreateMeetingStep(resData));
+      })
+      .catch((err) => {
+        console.log("err------------------------->>>>>>>", err);
+        dispatch(failRequest(err.message));
+      });
+  };
+};
+
+export const fetchCreateMeetingStep = (data) => {
+  return {
+    type: GET_CREATE_MEETING_STEPS,
+    payload: data,
+  };
+};
 

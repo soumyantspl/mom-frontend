@@ -120,20 +120,58 @@ const LogInByPassword = (props) => {
       x.type = "password";
     }
   };
-  const fieldValidationCheck = (e) => {
-    e.preventDefault();
+  // const fieldValidationCheck = (e) => {
+  //   e.preventDefault();
 
-    const newErrors = validateForm(formData);
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length === 0) {
-      // Form submission logic here
+  //   const newErrors = validateForm(formData);
+  //   setErrors(newErrors);
+  //   if (Object.keys(newErrors).length === 0) {
+  //     // Form submission logic here
 
-      console.log("Form submitted successfully!");
-    } else {
-      console.log(`Form submission failed
-       due to validation errors.`);
+  //     console.log("Form submitted successfully!");
+  //   } else {
+  //     console.log(`Form submission failed
+  //      due to validation errors.`);
+  //   }
+  // };
+
+
+  const passwordFieldValidationCheck = (e) => {
+    const errors = {};
+    // if (!formData.password) {
+    //   errors.roomId = constantMessages.roomRequired;
+    //   setErrors(errors);
+    // }
+    if (!isSetPassword) {
+      const regularExpression =
+        /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+      if (!formData.password.trim()) {
+        errors.password = constantMessages.passwordRequired;
+      } else if (!regularExpression.test(formData.password)) {
+        errors.password = constantMessages.passwordRegex;
+      }
+      setErrors(errors);
     }
   };
+
+  
+  const emailFieldValidationCheck = (e) => {
+    const errors = {};
+    // if (!formData.password) {
+    //   errors.roomId = constantMessages.roomRequired;
+    //   setErrors(errors);
+    // }
+    // if (!formData.password) {
+      if (!formData.email.trim()) {
+        errors.email = constantMessages.emailRequired;
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        errors.email = constantMessages.invalidEmail;
+      }
+      setErrors(errors);
+   // }
+  };
+
+
 
   return (
     <section className="sign-in">
@@ -181,7 +219,7 @@ const LogInByPassword = (props) => {
                         value={formData.email}
                         autocomplete="off"
                         onChange={handleChange}
-                        onBlur={fieldValidationCheck}
+                        onBlur={emailFieldValidationCheck}
                         name="email"
                       />
                     </div>
@@ -216,7 +254,7 @@ const LogInByPassword = (props) => {
                         value={formData.password}
                         autocomplete="off"
                         onChange={handleChange}
-                        onBlur={fieldValidationCheck}
+                        onBlur={passwordFieldValidationCheck}
                         name="password"
                         id="password"
                       />
