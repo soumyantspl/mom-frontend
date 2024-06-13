@@ -1,5 +1,6 @@
 import axios from "axios";
 import {
+  CREATE_MEETING_RESPONSE,
   FAIL_REQUEST,
   GET_ATTENDEES_LIST,
   GET_MEETING_LIST,
@@ -74,7 +75,7 @@ export const getMeetingList = (data) => {
   };
 };
 
-export const fetchAttendeesList = (payload,token) => {
+export const fetchAttendeesList = (payload, token) => {
   console.log("accessToken------------>>>>>", token);
   return (dispatch) => {
     dispatch(makeRsvpRequest());
@@ -156,3 +157,40 @@ export const updateRsvpStatus = (data) => {
     payload: data,
   };
 };
+
+export const createMeetingDetails = (payload, accessToken) => {
+  return (dispatch) => {
+    dispatch(makeRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/createMeeting`;
+    const headerObject = {
+      headers: {
+        "Content-Type": "application/json",
+         Authorization: accessToken,
+      },
+    };
+    console.log("webApiUrl----------------", webApiUrl);
+    console.log("accessToken------------>>>>>", accessToken);
+ 
+    axios
+      .post(webApiUrl, payload, headerObject)
+      .then((result) => {
+        console.log("result------------------------->>>>>>>", result);
+        const resData = result.data;
+
+        dispatch(createMeetingResponse(resData));
+      })
+      .catch((err) => {
+        console.log("err------------------------->>>>>>>", err);
+        dispatch(failRequest(err.message));
+      });
+  };
+};
+
+export const createMeetingResponse = (data) => {
+  return {
+    type: CREATE_MEETING_RESPONSE,
+    payload: data,
+  };
+};
+
+

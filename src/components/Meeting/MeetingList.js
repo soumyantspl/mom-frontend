@@ -65,10 +65,10 @@ const MeetingList = () => {
     // setIsUser(isUser)
   };
 
-  const setRsvpModalStatus = (value, attendeesData,rsvpCount) => {
+  const setRsvpModalStatus = (value, attendeesData, rsvpCount) => {
     setIsRsvpModalOpen(value);
     setAttendeesData([...attendeesData]);
-    setRsvpCount(rsvpCount)
+    setRsvpCount(rsvpCount);
     // setIsUser(isUser)
   };
 
@@ -177,9 +177,9 @@ const MeetingList = () => {
         : (pendingCount = pendingCount + 1);
     });
 
-     const countMessage=`${yesCount} Yes, ${noCount} No, ${mayBeCount} May Be, ${pendingCount} Awaiting`;
-    
-     return countMessage;
+    const countMessage = `${yesCount} Yes, ${noCount} No, ${mayBeCount} May Be, ${pendingCount} Awaiting`;
+
+    return countMessage;
   };
 
   const formatDateTimeFormat = (date) => {
@@ -236,7 +236,11 @@ const MeetingList = () => {
           </div>
 
           {filter ? (
-            <FilterComponent setfilter={setfilter} filterData={filterData} initData={ searchData.filterData}/>
+            <FilterComponent
+              setfilter={setfilter}
+              filterData={filterData}
+              initData={searchData.filterData}
+            />
           ) : null}
         </div>
 
@@ -384,7 +388,11 @@ const MeetingList = () => {
                       <td
                         data-label="RSVP Confirmation"
                         onClick={(e) => {
-                          setRsvpModalStatus(true, meeting.attendees,checkRsvpCount(meeting.attendees));
+                          setRsvpModalStatus(
+                            true,
+                            meeting.attendees,
+                            checkRsvpCount(meeting.attendees)
+                          );
                         }}
                       >
                         <p>{meeting.attendees.length} Attendees</p>
@@ -444,7 +452,7 @@ const MeetingList = () => {
                   attendees={attendeesData}
                   setIsModalOpen={setIsModalOpen}
                   loginUserData={loginUserData}
-                
+
                   // attendeeData={meeting.attendees}
                 />
                 <AttendeesRsvpModal

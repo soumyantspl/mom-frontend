@@ -1,4 +1,5 @@
 import {
+  CREATE_MEETING_RESPONSE,
   FAIL_REQUEST,
   GET_ATTENDEES_LIST,
   GET_MEETING_LIST,
@@ -67,6 +68,14 @@ export const meetingReducer = (state = initialObject, action) => {
           message: action.payload.message,
           isRsvpUpdated:action.payload.success,
         };
+        
+        case CREATE_MEETING_RESPONSE:
+          return {
+            ...state,
+             loading: false,
+            message: action.payload.message,
+            isSuccess: action.payload.success,
+          };
     default:
       return state;
   }

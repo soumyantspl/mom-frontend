@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./style/LogInByPassword.css";
 import ntsplLogo from "../../assets/images/ntspl_logo.png";
-import { Navigate, Link,useLocation , UNSAFE_NavigationContext } from "react-router-dom";
+import {
+  Navigate,
+  Link,
+  useLocation,
+  UNSAFE_NavigationContext,
+} from "react-router-dom";
 import LoginImage from "./LoginImage";
 import {
   logInByPassword,
@@ -47,16 +52,18 @@ const LogInByPassword = (props) => {
       // Form submission logic here
       if (isSetPassword) {
         dispatch(sendOtp(formData.email, isSetPassword));
-        setIsSetPassword(false)
+        setIsSetPassword(false);
       } else {
         dispatch(
-          logInByPassword({
-            email: formData.email,
-            password: formData.password,
-           
-          },rememberMe)
+          logInByPassword(
+            {
+              email: formData.email,
+              password: formData.password,
+            },
+            rememberMe
+          )
         );
-        setIsSetPassword(false)
+        setIsSetPassword(false);
       }
       console.log("Form submitted successfully!");
     } else {
@@ -87,22 +94,22 @@ const LogInByPassword = (props) => {
   const dispatch = useDispatch();
 
   const authData = useSelector((state) => state.auth);
- 
+
   useEffect(() => {
     document.title = "Log In By Password: Meeting Plus";
-    console.log(formData)
-    console.log(stateData)
-    if(stateData?.email){
+    console.log(formData);
+    console.log(stateData);
+    if (stateData?.email) {
       setFormData({
         ...formData,
-       email: stateData.email
+        email: stateData.email,
       });
     }
     return () => {
       // Anything in here is fired on component unmount.
-      console.log('component un mount')
+      console.log("component un mount");
       dispatch(updateIsSuccess(false));
-  }
+    };
   }, []);
 
   const showPassword = (id) => {
@@ -113,20 +120,20 @@ const LogInByPassword = (props) => {
       x.type = "password";
     }
   };
-  const fieldValidationCheck=(e)=>{
+  const fieldValidationCheck = (e) => {
     e.preventDefault();
 
     const newErrors = validateForm(formData);
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
       // Form submission logic here
-    
+
       console.log("Form submitted successfully!");
     } else {
       console.log(`Form submission failed
        due to validation errors.`);
     }
-  }
+  };
 
   return (
     <section className="sign-in">
@@ -222,9 +229,10 @@ const LogInByPassword = (props) => {
 
                 <div className="remember-forgot-pwd">
                   <div className="remember">
-                    <input type="checkbox" 
-                    checked={rememberMe}
-                    onChange={() => setRememberMe(!rememberMe)}
+                    <input
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={() => setRememberMe(!rememberMe)}
                     />
                     Remember
                   </div>
