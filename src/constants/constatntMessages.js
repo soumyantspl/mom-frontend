@@ -17,8 +17,16 @@ const roomRequired="Please enter a valid room."
 const linkRequired="Please enter a url."
 const invalidLink="Please enter a valid url."
 const locationRequired="Please enter location."
+const nameRequired="Please enter a name."
+const invalidName="Please enter a valid name."
+const duplicateAttendee="Attendee already added."
+const deleteAttendeeMessage="Do you want to remove ?"
 module.exports = {
+  deleteAttendeeMessage,
+  duplicateAttendee,
+  invalidName,
   locationRequired,
+  nameRequired,
   invalidLink,
   linkRequired,
   invalidEmail,

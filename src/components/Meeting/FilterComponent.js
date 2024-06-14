@@ -8,6 +8,7 @@ const FilterComponent = (props) => {
   console.log(props.initData);
   const dispatch = useDispatch();
   const accessToken = localStorage.getItem("accessToken");
+  const userData = JSON.parse(localStorage.getItem("userData"));
   const meetingData = useSelector((state) => state.meeting);
   const localStorageData = JSON.parse(localStorage.getItem("userData"));
   const [searchData, setSearchData] = useState({
@@ -21,14 +22,7 @@ const FilterComponent = (props) => {
     setSearchData({
       ...props.initData,
     });
-    dispatch(
-      fetchAttendeesList(
-        {
-          organizationId: localStorageData.organizationId,
-        },
-        accessToken
-      )
-    );
+    dispatch(fetchAttendeesList(userData.organizationId, accessToken));
   }, []);
 
   const handleChange = (e) => {

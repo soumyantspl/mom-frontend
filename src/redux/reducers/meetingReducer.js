@@ -6,7 +6,8 @@ import {
   GET_MEETING_LIST,
   MAKE_REQUEST,
   MAKE_RSVP_UPDATE_REQUEST,
-  UPDATE_RSVP,
+  UPDATE_ISCREATE_MEETING_PROCESSED,
+  UPDATE_RSVP,SET_ATTENDEES
 } from "../actions/meetingActions/actionTypes";
 
 const initialObject = {
@@ -20,6 +21,7 @@ const initialObject = {
   isRsvpUpdated: false,
   singleMeetingDetails: null,
   step: 0,
+  isCreateMeetingProcessed: false,
 };
 
 export const meetingReducer = (state = initialObject, action) => {
@@ -36,6 +38,8 @@ export const meetingReducer = (state = initialObject, action) => {
         ...state,
         loading: false,
         message: action.payload.message,
+        isCreateMeetingProcessed: true,
+        isSuccess: action.payload.success,
       };
 
     case GET_MEETING_LIST:
@@ -77,6 +81,8 @@ export const meetingReducer = (state = initialObject, action) => {
         loading: false,
         message: action.payload.message,
         isSuccess: action.payload.success,
+        isCreateMeetingProcessed: true,
+        step: action.payload.success ? 1 : 0,
       };
 
     case GET_CREATE_MEETING_STEPS:
@@ -86,15 +92,25 @@ export const meetingReducer = (state = initialObject, action) => {
         message: action.payload.message,
         isSuccess: action.payload.success,
         singleMeetingDetails: action.payload.data,
-        step: action.payload.data.step,
+        step: action.payload.data ? action.payload.data.step : 0,
       };
 
-    // case UPDATE_STEP:
-    //   return {
-    //     ...state,
-    //     //  loading: false,
-    //    step:action.payload
-    //   };
+    case UPDATE_ISCREATE_MEETING_PROCESSED:
+      return {
+        ...state,
+        //  loading: false,
+        isCreateMeetingProcessed: false,
+      };
+
+    case SET_ATTENDEES:
+      return {
+        ...state,
+        //  loading: false,
+        attendeesList: action.payload.data,
+        message: action.payload.message,
+        isSuccess: action.payload.success,
+      };
+
     default:
       return state;
   }
