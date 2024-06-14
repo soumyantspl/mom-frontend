@@ -194,6 +194,7 @@ const Unit = () => {
                 <Alert
                   status={apiResData1.isSuccess1}
                   message={apiResData1.message1}
+                  timeoutSeconds={0}
                 />
               )}
             </div>

@@ -138,6 +138,7 @@ const LoginByOtp = () => {
                       <Alert
                         status={authData.isSuccess}
                         message={authData.message}
+                        timeoutSeconds={0}
                       />
                     ) : null}
                   </div>

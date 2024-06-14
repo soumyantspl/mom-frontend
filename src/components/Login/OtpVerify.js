@@ -295,11 +295,13 @@ const OtpVerify = () => {
                     <Alert
                       status={authData.isSuccess}
                       message={authData.message}
+                      timeoutSeconds={0}
                     />
                   ) : authData.isOtpProcessed && !authData.isSuccess ? (
                     <Alert
                       status={authData.isSuccess}
                       message={authData.message}
+                      timeoutSeconds={0}
                     />
                   ) : null}
                 </div>
