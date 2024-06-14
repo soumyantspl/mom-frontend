@@ -115,7 +115,7 @@ const Unit = () => {
       console.log("organizationIddd", organizationId);
       const response = await axios.post(
         "http://localhost:8000/api/V1/unit/listUnit",
-        { organizationId, headerObject,bodyData }
+        { organizationId, headerObject, bodyData }
       );
       return response.data;
     } catch (error) {
@@ -134,12 +134,13 @@ const Unit = () => {
       order: order,
     },
   };
+
   useEffect(() => {
     const fetchUnitData = async () => {
       try {
         const bodyData = { organizationId, searchKey };
         // const queryData = { page, limit, order };
-        const data = await fetchUnits(bodyData, headerObject);
+        const data = await fetchUnits(bodyData);
         setUnitData(data.unitData);
         setTotalCount(totalCount);
       } catch (error) {
