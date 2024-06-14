@@ -1,4 +1,4 @@
-import { FETCH_SINGLE_USER, FAIL_REQUEST, MAKE_REQUEST } from "./actionTypes";
+import { FETCH_SINGLE_USER, FAIL_REQUEST, MAKE_REQUEST, SET_EMPLOYEE_LIST } from "./actionTypes";
 import axios from "axios";
 
 export const makeRequest = () => {
@@ -47,4 +47,44 @@ export const viewSingleUser = (userId,accessToken) => {
       });
   };
 };
+
+export const getEmployeeList = (
+  payload,
+  accessToken
+) => {
+  return (dispatch) => {
+    // dispatch(makeRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/employee/listEmployee`;
+    const headerObject = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: accessToken,
+      },
+    };
+    console.log("webApiUrl----------------", webApiUrl);
+    console.log("accessToken------------>>>>>", accessToken);
+
+    axios
+      .post(webApiUrl,payload, headerObject)
+      .then((result) => {
+        console.log("result------------------------->>>>>>>", result);
+        const resData = result.data;
+
+        dispatch(setEmployeeList(resData));
+      })
+      .catch((err) => {
+        console.log("err------------------------->>>>>>>", err);
+        dispatch(failRequest(err.message));
+      });
+  };
+};
+
+export const setEmployeeList = (data) => {
+  return {
+    type: SET_EMPLOYEE_LIST,
+    payload: data,
+  };
+};
+
+
 

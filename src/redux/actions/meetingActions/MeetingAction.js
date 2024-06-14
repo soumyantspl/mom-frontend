@@ -6,9 +6,10 @@ import {
   GET_MEETING_LIST,
   MAKE_REQUEST,
   MAKE_RSVP_UPDATE_REQUEST,
-  UPDATE_RSVP,GET_CREATE_MEETING_STEPS,
+  UPDATE_RSVP,
+  GET_CREATE_MEETING_STEPS,
   UPDATE_ISCREATE_MEETING_PROCESSED,
-  SET_ATTENDEES
+  SET_ATTENDEES,
 } from "./actionTypes";
 const accessToken = localStorage.getItem("accessToken");
 
@@ -77,11 +78,11 @@ export const getMeetingList = (data) => {
   };
 };
 
-export const fetchAttendeesList = (payload, token) => {
+export const fetchAttendeesList = (organizationId, token) => {
   console.log("accessToken------------>>>>>", token);
   return (dispatch) => {
     dispatch(makeRsvpRequest());
-    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/listAttendeesFromPreviousMeeting/${payload.organizationId}`;
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/listAttendeesFromPreviousMeeting/${organizationId}`;
     const headerObject = {
       headers: {
         "Content-Type": "application/json",
@@ -89,12 +90,6 @@ export const fetchAttendeesList = (payload, token) => {
       },
     };
     console.log("webApiUrl----------------", webApiUrl);
-
-    // axios
-    //   .post(webApiUrl, payload)
-    const bodyPayload = {
-      organizationId: payload.organizationId,
-    };
     axios
       .get(webApiUrl, headerObject)
       .then((result) => {
@@ -167,12 +162,12 @@ export const createMeetingDetails = (payload, accessToken) => {
     const headerObject = {
       headers: {
         "Content-Type": "application/json",
-         Authorization: accessToken,
+        Authorization: accessToken,
       },
     };
     console.log("webApiUrl----------------", webApiUrl);
     console.log("accessToken------------>>>>>", accessToken);
- 
+
     axios
       .post(webApiUrl, payload, headerObject)
       .then((result) => {
@@ -195,20 +190,19 @@ export const createMeetingResponse = (data) => {
   };
 };
 
-
 export const getCreateMeetingStep = (organizationId, accessToken) => {
   return (dispatch) => {
-   // dispatch(makeRequest());
+    // dispatch(makeRequest());
     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/getCreateMeetingStep/${organizationId}`;
     const headerObject = {
       headers: {
         "Content-Type": "application/json",
-         Authorization: accessToken,
+        Authorization: accessToken,
       },
     };
     console.log("webApiUrl----------------", webApiUrl);
     console.log("accessToken------------>>>>>", accessToken);
- 
+
     axios
       .get(webApiUrl, headerObject)
       .then((result) => {
@@ -238,40 +232,42 @@ export const updateIsCreateMeetingProcessed = (data) => {
   };
 };
 
+// export const getAttendeesListFromPreviousMeeting = (
+//   organizationId,
+//   accessToken
+// ) => {
+//   return (dispatch) => {
+//     // dispatch(makeRequest());
+//     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/listAttendeesFromPreviousMeeting/${organizationId}`;
+//     const headerObject = {
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: accessToken,
+//       },
+//     };
+//     console.log("webApiUrl----------------", webApiUrl);
+//     console.log("accessToken------------>>>>>", accessToken);
 
+//     axios
+//       .get(webApiUrl, headerObject)
+//       .then((result) => {
+//         console.log("result------------------------->>>>>>>", result);
+//         const resData = result.data;
 
-export const getAttendeesListFromPreviousMeeting = (organizationId, accessToken) => {
-  return (dispatch) => {
-   // dispatch(makeRequest());
-    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/listAttendeesFromPreviousMeeting/${organizationId}`;
-    const headerObject = {
-      headers: {
-        "Content-Type": "application/json",
-         Authorization: accessToken,
-      },
-    };
-    console.log("webApiUrl----------------", webApiUrl);
-    console.log("accessToken------------>>>>>", accessToken);
- 
-    axios
-      .get(webApiUrl, headerObject)
-      .then((result) => {
-        console.log("result------------------------->>>>>>>", result);
-        const resData = result.data;
+//         dispatch(setAttendeesListFromPreviousMeeting(resData));
+//       })
+//       .catch((err) => {
+//         console.log("err------------------------->>>>>>>", err);
+//         dispatch(failRequest(err.message));
+//       });
+//   };
+// };
 
-        dispatch(setAttendeesListFromPreviousMeeting(resData));
-      })
-      .catch((err) => {
-        console.log("err------------------------->>>>>>>", err);
-        dispatch(failRequest(err.message));
-      });
-  };
-};
+// export const setAttendeesListFromPreviousMeeting = (data) => {
+//   return {
+//     type: SET_ATTENDEES,
+//     payload: data,
+//   };
+// };
 
-export const setAttendeesListFromPreviousMeeting = (data) => {
-  return {
-    type: SET_ATTENDEES,
-    payload: data,
-  };
-};
 
