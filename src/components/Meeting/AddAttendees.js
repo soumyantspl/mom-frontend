@@ -358,7 +358,7 @@ const AddAttendees = (props) => {
                 </div>
               </div>
             </div>
-            {formData.attendyType == "fromPreviousMeeting" ? (
+            {formData.attendyType === "fromPreviousMeeting" ? (
               <select
                 className="mb-2"
                 // name="attendeesData"
@@ -382,7 +382,7 @@ const AddAttendees = (props) => {
                     );
                   })}
               </select>
-            ) : formData.attendyType == "fromEmployeeList" ? (
+            ) : formData.attendyType === "fromEmployeeList" ? (
               <select
                 className="mb-2"
                 onChange={handleChange}
@@ -402,7 +402,7 @@ const AddAttendees = (props) => {
                     );
                   })}
               </select>
-            ) : formData.attendyType == "addNewPeople" ? (
+            ) : formData.attendyType === "addNewPeople" ? (
               <div className="form-group">
                 <label className="mb-1">Add New People</label>
                 <div className="row">
