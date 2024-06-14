@@ -261,16 +261,18 @@ const AddAttendees = (props) => {
                     />
                   </svg>
                 </div> */}
-                {attendeesData.map((attendee) => {
+                {attendeesData.map((attendee,index) => {
                   return (
-                    <div
-                      className="people-circle"
+                    <div className="attendee-content" key={index} >
+                    <div className="attendee1 attendee-list sl" 
+                     // className="people-circle"
                       onClick={() => {
                         setIsModalOpen(true);
                         setRemoveAttendeeData(attendee)
                       }}
                     >
                       {customName(attendee.name)}
+                    </div>
                     </div>
                   );
                 })}
