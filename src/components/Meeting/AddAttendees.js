@@ -12,6 +12,7 @@ import {
   getAttendeesListFromPreviousMeeting,
   getAttendeesListfromEmployeeList,
   getCreateMeetingStep,
+  updateMeetingDetails,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import Loader from "../Common/Loader";
 import * as constantMessages from "../../constants/constatntMessages";
@@ -64,18 +65,43 @@ const AddAttendees = (props) => {
     if (formData.attendyType === "fromPreviousMeeting") {
       dispatch(fetchAttendeesList(userData.organizationId, accessToken));
     }
-
+    console.log(employeeData)
+    if (employeeData.isDuplicateUser===false) {
+      const newAttendee = {
+        name: formData.name,
+        email: formData.email,
+        isEmployee: false,
+        organizationId:userData.organizationId
+      };
+      const newAttendeeData = [...attendeesData, newAttendee];
+      setAttendeesData(newAttendeeData);
+      setFormData({
+        ...formData,
+        name: "",
+        email: "",
+      });
+    }
     // dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
     // console.log(meetingData.step);
     // setStep(meetingData.step + 1);
-  }, [meetingData.step]);
+
+   // setAttendeesData(meetingData?.singleMeetingDetails?attendees)
+
+  }, [meetingData.step,employeeData.isDuplicateUser]);
 
   const submitAttendeeDetails = (e) => {
     e.preventDefault();
-    setStep(3);
+    const payload={
+      meetingId: meetingData?.singleMeetingDetails?._id,
+      attendees:attendeesData,
+      organizationId:userData.organizationId,
+      step:meetingData?.singleMeetingDetails?.step+1
+    }
+    dispatch(updateMeetingDetails(payload,accessToken))
+  //  setStep(3);
   };
 
-  const addAttendee = (e) => {
+  const addAttendee = async (e) => {
     // const attenId = e.target.value;
     // const user = userlist.find(u => u.id === userId);
 
@@ -97,30 +123,19 @@ const AddAttendees = (props) => {
           }
         }
 
-        console.log("duplicate");
-     
-          const payload = {
-            organizationId: userData.organizationId,
-            email: formData.email,
-          };
-          dispatch(checkDuplicateUser(payload, accessToken));
-        
+        console.log(
+          "duplicate----------------------------------------------------------------------"
+        );
+
+        const payload = {
+          organizationId: userData.organizationId,
+          email: formData.email,
+        };
+       // await checkDuplicateUser(payload);
+        dispatch(checkDuplicateUser(payload, accessToken));
         console.log(employeeData);
         console.log("duplicate222222222");
-        if (!employeeData.isDuplicateUser) {
-          const newAttendee = {
-            name: formData.name,
-            email: formData.email,
-            isEmployee: false,
-          };
-          const newAttendeeData = [...attendeesData, newAttendee];
-          setAttendeesData(newAttendeeData);
-          setFormData({
-            ...formData,
-            name: "",
-            email: "",
-          });
-        }
+    
       }
       //  addNewPeople();
     } else {
@@ -137,18 +152,20 @@ const AddAttendees = (props) => {
             return errors;
           }
         }
-        const newAttendee = meetingData.attendeesList.find(
+        let newAttendee = meetingData.attendeesList.find(
           (u) => u._id === formData.attendeeId
-        );
-
-        console.log(newAttendee);
+        )
+        newAttendee.isEmployee=true;
+        console.log(newAttendee)
         //  const newAttendee = e.target.value;
         const newAttendeeData = [...attendeesData, newAttendee];
         setAttendeesData(newAttendeeData);
       }
     }
   };
-
+  // const checkDuplicateUser = async (payload) => {
+  //   return dispatch(checkDuplicateUser(payload, accessToken));
+  // };
   const addNewPeople = (e) => {
     // const newErrors = validateForm(formData);
     // setErrors(newErrors);
@@ -231,7 +248,7 @@ const AddAttendees = (props) => {
       errors.email = constantMessages.emailRequired;
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       errors.email = constantMessages.invalidEmail;
-    } 
+    }
 
     setErrors(errors);
     // }
@@ -247,7 +264,7 @@ const AddAttendees = (props) => {
     setIsModalOpen(false);
   };
 
-  console.log(attendeesData, formData, employeeData);
+  console.log(attendeesData, formData, meetingData.singleMeetingDetails);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -496,7 +513,7 @@ const AddAttendees = (props) => {
               alignItems: "center",
             }}
           >
-            {employeeData.isDuplicateUser ? (
+            {employeeData.isDuplicateUser===true ? (
               <div className="mb-3 col-padding-none">
                 <div className="row">
                   <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
@@ -504,7 +521,7 @@ const AddAttendees = (props) => {
                       <Alert
                         status={employeeData.isSuccess ? false : true}
                         message={employeeData.message}
-                        timeoutSeconds={3000}
+                        timeoutSeconds={5000}
                       />
                     </div>
                   </div>

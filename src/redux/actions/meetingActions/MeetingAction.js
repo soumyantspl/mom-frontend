@@ -10,6 +10,7 @@ import {
   GET_CREATE_MEETING_STEPS,
   UPDATE_ISCREATE_MEETING_PROCESSED,
   SET_ATTENDEES,
+  UPDATE_MEETING_RESPONSE,
 } from "./actionTypes";
 const accessToken = localStorage.getItem("accessToken");
 
@@ -232,6 +233,46 @@ export const updateIsCreateMeetingProcessed = (data) => {
   };
 };
 
+export const updateMeetingDetails = (payload, accessToken) => {
+  return (dispatch) => {
+    // dispatch(makeRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/updateMeeting/${payload.meetingId}`;
+    const headerObject = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: accessToken,
+      },
+    };
+    console.log("webApiUrl----------------", webApiUrl);
+    console.log("accessToken------------>>>>>", accessToken);
+
+    const bodyPayload = {
+      organizationId: payload.organizationId,
+      attendees: payload.attendees,
+      step:payload.step
+    };
+    axios
+      .put(webApiUrl, bodyPayload, headerObject)
+      .then((result) => {
+        console.log("result------------------------->>>>>>>", result);
+        const resData = result.data;
+
+        dispatch(updateMeetingResponse(resData));
+      })
+      .catch((err) => {
+        console.log("err------------------------->>>>>>>", err);
+        dispatch(failRequest(err.message));
+      });
+  };
+};
+
+export const updateMeetingResponse = (data) => {
+  return {
+    type: UPDATE_MEETING_RESPONSE,
+    payload: data,
+  };
+};
+
 // export const getAttendeesListFromPreviousMeeting = (
 //   organizationId,
 //   accessToken
@@ -269,5 +310,3 @@ export const updateIsCreateMeetingProcessed = (data) => {
 //     payload: data,
 //   };
 // };
-
-

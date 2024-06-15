@@ -13,7 +13,7 @@ const initialObject = {
   isSuccess: false,
   userData: null,
   employeeList: [],
-  isDuplicateUser: false,
+  isDuplicateUser: "null",
 };
 
 export const userReducer = (state = initialObject, action) => {
@@ -23,7 +23,7 @@ export const userReducer = (state = initialObject, action) => {
       return {
         ...state,
         loading: true,
-        isDuplicateUser:false
+        isDuplicateUser: "null",
         // meetingList: []
       };
     case FAIL_REQUEST:
