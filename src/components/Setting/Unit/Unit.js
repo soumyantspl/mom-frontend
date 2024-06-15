@@ -21,16 +21,17 @@ const Unit = () => {
   });
   console.log("organizationIdfffffff", organizationId);
   console.log("unitData--", unitData);
+
   const [formValues, setFormValues] = useState({ name: "", address: "" });
   const [errors, setErrors] = useState({ name: "", address: "" });
   const [units, setUnits] = useState([]);
-  // console.log("Units->", units);
+  console.log("Units--->", units);
   const [totalCount, setTotalCount] = useState(0);
   const [searchKey, setSearchKey] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [order, setOrder] = useState(1);
-
+  const [isGetApiRes, setIsGetApiRes] = useState(false);
   const [apiResData, setApiResData] = useState({
     isSuccess: false,
     message: "",
@@ -75,6 +76,7 @@ const Unit = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
+      setIsGetApiRes(false);
       if (validate()) {
         console.log("Form submitted", formValues);
         const response = await axios.post(
@@ -91,6 +93,9 @@ const Unit = () => {
           }
         );
         console.log("Unit created successfully:", response.data.message);
+        if (response) {
+          setIsGetApiRes(true);
+        }
         if (response.data.success) {
           setFormValues({ ...formValues, name: "", address: "" });
         }
@@ -112,33 +117,43 @@ const Unit = () => {
 
   const fetchUnits = async (bodyData) => {
     try {
+      const headerObject = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: accessToken,
+        },
+        params: {
+          limit: limit,
+          page: page,
+          order: order,
+        },
+      };
       console.log("organizationIddd", organizationId);
       const response = await axios.post(
         "http://localhost:8000/api/V1/unit/listUnit",
-        { organizationId, headerObject, bodyData }
+        bodyData,
+        headerObject
       );
+
+      const data1 = response.data;
+      const data2 = data1.data;
+      console.log("Response DATA-->", data2.unitData);
       return response.data;
     } catch (error) {
       console.log("Error while Fetching Unit:", error);
       throw error;
     }
   };
-  const headerObject = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: accessToken,
-    },
-    params: {
-      limit: limit,
-      page: page,
-      order: order,
-    },
-  };
 
   useEffect(() => {
     const fetchUnitData = async () => {
       try {
-        const bodyData = { organizationId, searchKey };
+        let searchKey;
+
+        let bodyData = searchKey
+          ? { searchKey: searchKey, organizationId: organizationId }
+          : { organizationId: organizationId };
+
         // const queryData = { page, limit, order };
         const data = await fetchUnits(bodyData);
         setUnitData(data.unitData);
@@ -173,6 +188,7 @@ const Unit = () => {
                 <input
                   type="text"
                   name="name"
+                  autoComplete="off"
                   placeholder="Enter Unit Name"
                   onChange={handleChange}
                   value={formValues.name}
@@ -204,13 +220,13 @@ const Unit = () => {
               </button>
             </form>
             <div>
-              {apiResData && apiResData.message && (
+              {isGetApiRes ? (
                 <Alert
                   status={apiResData.isSuccess}
                   message={apiResData.message}
-                  timeoutSeconds={3000}
+                  timeoutSeconds={40000}
                 />
-              )}
+              ) : null}
             </div>
           </div>
           {/* ////////////////////////// */}
@@ -254,10 +270,10 @@ const Unit = () => {
                 </tr>
               </thead>
               <tbody>
-                {units.map((unit, index) => (
+                {units.map((units, index) => (
                   <tr key={index}>
-                    <td>{unit.name}</td>
-                    <td>{unit.address}</td>
+                    <td>{units.name}</td>
+                    <td>{units.address}</td>
                     <td data-label="Action">
                       <div className="d-inline-block menu-dropdown custom-dropdown">
                         <Dropdown.Toggle
