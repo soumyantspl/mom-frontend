@@ -65,13 +65,13 @@ const AddAttendees = (props) => {
     if (formData.attendyType === "fromPreviousMeeting") {
       dispatch(fetchAttendeesList(userData.organizationId, accessToken));
     }
-    console.log(employeeData)
-    if (employeeData.isDuplicateUser===false) {
+    console.log(employeeData);
+    if (employeeData.isDuplicateUser === false) {
       const newAttendee = {
         name: formData.name,
         email: formData.email,
         isEmployee: false,
-        organizationId:userData.organizationId
+        organizationId: userData.organizationId,
       };
       const newAttendeeData = [...attendeesData, newAttendee];
       setAttendeesData(newAttendeeData);
@@ -85,20 +85,19 @@ const AddAttendees = (props) => {
     // console.log(meetingData.step);
     // setStep(meetingData.step + 1);
 
-   // setAttendeesData(meetingData?.singleMeetingDetails?attendees)
-
-  }, [meetingData.step,employeeData.isDuplicateUser]);
+    // setAttendeesData(meetingData?.singleMeetingDetails?attendees)
+  }, [meetingData.step, employeeData.isDuplicateUser]);
 
   const submitAttendeeDetails = (e) => {
     e.preventDefault();
-    const payload={
+    const payload = {
       meetingId: meetingData?.singleMeetingDetails?._id,
-      attendees:attendeesData,
-      organizationId:userData.organizationId,
-      step:meetingData?.singleMeetingDetails?.step+1
-    }
-    dispatch(updateMeetingDetails(payload,accessToken))
-  //  setStep(3);
+      attendees: attendeesData,
+      organizationId: userData.organizationId,
+      step: meetingData?.singleMeetingDetails?.step + 1,
+    };
+    dispatch(updateMeetingDetails(payload, accessToken));
+    //  setStep(3);
   };
 
   const addAttendee = async (e) => {
@@ -131,11 +130,10 @@ const AddAttendees = (props) => {
           organizationId: userData.organizationId,
           email: formData.email,
         };
-       // await checkDuplicateUser(payload);
+        // await checkDuplicateUser(payload);
         dispatch(checkDuplicateUser(payload, accessToken));
         console.log(employeeData);
         console.log("duplicate222222222");
-    
       }
       //  addNewPeople();
     } else {
@@ -154,9 +152,9 @@ const AddAttendees = (props) => {
         }
         let newAttendee = meetingData.attendeesList.find(
           (u) => u._id === formData.attendeeId
-        )
-        newAttendee.isEmployee=true;
-        console.log(newAttendee)
+        );
+        newAttendee.isEmployee = true;
+        console.log(newAttendee);
         //  const newAttendee = e.target.value;
         const newAttendeeData = [...attendeesData, newAttendee];
         setAttendeesData(newAttendeeData);
@@ -264,7 +262,7 @@ const AddAttendees = (props) => {
     setIsModalOpen(false);
   };
 
-  console.log(attendeesData, formData, meetingData.singleMeetingDetails);
+  console.log(attendeesData, formData, meetingData.singleMeetingDetails,employeeData);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -513,7 +511,7 @@ const AddAttendees = (props) => {
               alignItems: "center",
             }}
           >
-            {employeeData.isDuplicateUser===true ? (
+            {employeeData.isDuplicateUser === true ? (
               <div className="mb-3 col-padding-none">
                 <div className="row">
                   <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">

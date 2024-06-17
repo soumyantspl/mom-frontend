@@ -17,6 +17,7 @@ import "../Login/style/Login.css";
 import LoaderButton from "../Common/LoaderButton";
 import AddAttendees from "./AddAttendees";
 import Alert from "../Common/Alert";
+import AddAgendas from "./AddAgendas";
 
 const AddMeeting = (props) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -91,21 +92,9 @@ const AddMeeting = (props) => {
   };
 
   console.log(step);
-  const agendas = [];
-
-  const onAddAgenda = () => {
-    setNumAgenda(numAgenda + 1);
-  };
-  const onRemoveAgenda = () => {
-    setNumAgenda(numAgenda - 1);
-  };
-
-  for (var i = 0; i < numAgenda; i += 1) {
-    agendas.push(<AgendaComponent key={i} number={i} />);
-  }
 
   const handleChange = (e) => {
-    dispatch(updateIsCreateMeetingProcessed(false))
+    dispatch(updateIsCreateMeetingProcessed(false));
     setErrors({});
     //  dispatch(updateOtpProcessed(false));
     //  console.log("9999999999999999999999999999999999999", authData);
@@ -139,9 +128,47 @@ const AddMeeting = (props) => {
     }
     if (!data.fromTime.trim()) {
       errors.fromTime = constantMessages.timeRequired;
+    } else if (formData.toTime.trim()) {
+      console.log(formData);
+      const fromTimeArray = formData.fromTime.split(":");
+      const fromTimeHour = fromTimeArray[0];
+      const fromTimeMinute = fromTimeArray[1];
+      const toTimeArray = formData.toTime.split(":");
+      const toTimeHour = toTimeArray[0];
+      const toTimeMinute = toTimeArray[1];
+
+      console.log(fromTimeHour);
+      console.log(fromTimeMinute);
+      console.log(toTimeHour);
+      console.log(toTimeMinute);
+      if (fromTimeHour > toTimeHour) {
+        errors.fromTime = constantMessages.invalidFromHour;
+      } else if (fromTimeHour === toTimeHour && fromTimeMinute > toTimeMinute) {
+        errors.fromTime = constantMessages.invalidFromMinute;
+      }
     }
     if (!data.toTime.trim()) {
       errors.toTime = constantMessages.timeRequired;
+    } else if (formData.fromTime.trim()) {
+      console.log(formData);
+      const fromTimeArray = formData.fromTime.split(":");
+      const fromTimeHour = fromTimeArray[0];
+      const fromTimeMinute = fromTimeArray[1];
+      const toTimeArray = formData.toTime.split(":");
+      const toTimeHour = toTimeArray[0];
+      const toTimeMinute = toTimeArray[1];
+      console.log(fromTimeHour);
+      console.log(fromTimeMinute);
+      console.log(toTimeHour);
+      console.log(toTimeMinute);
+      if (fromTimeHour > toTimeHour) {
+        errors.toTime = constantMessages.invalidToHour;
+      } else if (
+        fromTimeHour === toTimeHour &&
+        fromTimeMinute >= toTimeMinute
+      ) {
+        errors.toTime = constantMessages.invalidToMinute;
+      }
     }
 
     if (data.location === "meetingroom") {
@@ -169,8 +196,29 @@ const AddMeeting = (props) => {
     const errors = {};
     if (!formData.fromTime.trim()) {
       errors.fromTime = constantMessages.timeRequired;
-      setErrors(errors);
+    } else if (formData.toTime.trim()) {
+      console.log(formData);
+      const fromTimeArray = formData.fromTime.split(":");
+      const fromTimeHour = fromTimeArray[0];
+      const fromTimeMinute = fromTimeArray[1];
+      const toTimeArray = formData.toTime.split(":");
+      const toTimeHour = toTimeArray[0];
+      const toTimeMinute = toTimeArray[1];
+
+      console.log(fromTimeHour);
+      console.log(fromTimeMinute);
+      console.log(toTimeHour);
+      console.log(toTimeMinute);
+      if (fromTimeHour > toTimeHour) {
+        errors.fromTime = constantMessages.invalidFromHour;
+      } else if (
+        fromTimeHour === toTimeHour &&
+        fromTimeMinute >= toTimeMinute
+      ) {
+        errors.fromTime = constantMessages.invalidFromMinute;
+      }
     }
+    setErrors(errors);
   };
 
   const locationDetailsFieldValidationCheck = (e) => {
@@ -184,8 +232,28 @@ const AddMeeting = (props) => {
     const errors = {};
     if (!formData.toTime.trim()) {
       errors.toTime = constantMessages.timeRequired;
-      setErrors(errors);
+    } else if (formData.fromTime.trim()) {
+      console.log(formData);
+      const fromTimeArray = formData.fromTime.split(":");
+      const fromTimeHour = fromTimeArray[0];
+      const fromTimeMinute = fromTimeArray[1];
+      const toTimeArray = formData.toTime.split(":");
+      const toTimeHour = toTimeArray[0];
+      const toTimeMinute = toTimeArray[1];
+      console.log(fromTimeHour);
+      console.log(fromTimeMinute);
+      console.log(toTimeHour);
+      console.log(toTimeMinute);
+      if (fromTimeHour > toTimeHour) {
+        errors.toTime = constantMessages.invalidToHour;
+      } else if (
+        fromTimeHour === toTimeHour &&
+        fromTimeMinute >= toTimeMinute
+      ) {
+        errors.toTime = constantMessages.invalidToMinute;
+      }
     }
+    setErrors(errors);
   };
 
   const dateFieldValidationCheck = (e) => {
@@ -360,16 +428,6 @@ const AddMeeting = (props) => {
                   onBlur={locationDetailsFieldValidationCheck}
                 ></textarea>
               ) : (
-                // <select
-                //   name="roomId"
-                //   onChange={handleChange}
-                //   value={formData.limit}
-                // >
-                //   <option value="">Meeting Room 1</option>
-                //   <option value="">Meeting Room 2</option>
-                //   <option value="">Meeting Room 3</option>
-                // </select>
-
                 <select
                   onChange={handleChange}
                   name="roomId"
@@ -550,85 +608,9 @@ const AddMeeting = (props) => {
           <AddAttendees />
         </>
       ) : (
-        <form
-          className="mt-2 details-form"
-          onSubmit={() => submitMeetingDetails}
-        >
-          <div className="inner-detail-form">
-            <div className="form-group mt-3 agenda">
-              <label className="mb-1">Agenda Item</label>
-              <div className="mt-2 mb-3 plus pointer">
-                <button type="button" onClick={onAddAgenda}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="23"
-                    height="23"
-                    fill="#0564f3"
-                    className="bi bi-plus-circle pointer"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                  </svg>
-                </button>
-                <div>Create Agenda Item</div>
-                {agendas.length > 0 ? (
-                  <button type="button" onClick={onRemoveAgenda}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="23"
-                      height="23"
-                      fill="#0564f3"
-                      className="bi-minus-circle bi bi-dash-circle"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                      <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
-                    </svg>
-                    {/* <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="23"
-                      height="23"
-                      fill="#0564f3"
-                      className="bi bi-minus-circle pointer"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                      <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                    </svg> */}
-                  </button>
-                ) : null}
-                {/* <div>Remove Agenda Item</div> */}
-              </div>
-            </div>
-
-            <div>
-              <div id="inputFields">
-                <div id="children-pane">{agendas}</div>
-              </div>
-              <div
-                className="d-flex align-items-center"
-                style={{ marginTop: 20 }}
-              >
-                {/* <Button
-                  type="button"
-                  variant="primary"
-                  onClick={() => setStep(2)}
-                >
-                  Back
-                </Button> */}
-                <Button
-                  variant="primary"
-                  type="submit"
-                  style={{ margin: 20 }}
-                  onClick={(e) => setStep(3)}
-                >
-                  Submit
-                </Button>
-              </div>
-            </div>
-          </div>
-        </form>
+        <>
+          <AddAgendas />
+        </>
       )}
       {/* </>
       ) : (
@@ -639,84 +621,6 @@ const AddMeeting = (props) => {
           <Loader />
         </div>
       )} */}
-    </div>
-  );
-};
-
-const AgendaComponent = (props) => {
-  const [open, setOpen] = useState(false);
-  console.log("open---------------------------------", open);
-  return (
-    <div className="agenda-background">
-      <h2>
-        <button
-          className=""
-          onClick={() => setOpen(!open)}
-          aria-controls="example-collapse-text"
-          aria-expanded={open}
-          type="button"
-        >
-          Agenda {props.number + 1}
-        </button>
-      </h2>
-      <div className="open-div">
-        <Collapse in={open}>
-          <div>
-            <div className="form-group">
-              <div className="row">
-                <div className="col-md-4">
-                  <label className="mb-1">Agenda Title</label>
-                </div>
-                <div className="col-md-8">
-                  <input type="text" placeholder="Enter agenda title here" />
-                </div>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <div className="row">
-                <div className="col-md-4">
-                  <label className="mb-1">
-                    What are the topic to discuss ?
-                  </label>
-                </div>
-                <div className="col-md-8">
-                  <textarea
-                    name=""
-                    placeholder="Enter issue to discuss..."
-                    id=""
-                    cols="56"
-                    rows="4"
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-
-            <div className="form-group m-0">
-              <div className="row">
-                <div className="col-md-4">
-                  <label className="mb-1">
-                    How long will this agenda item take to discuss?
-                  </label>
-                </div>
-                <div className="col-md-8">
-                  <div className="time-taken">
-                    <input
-                      max="360"
-                      min="0"
-                      value="15.00"
-                      required="required"
-                      type="number"
-                      autocomplete="off"
-                    />
-                    <div className="minute_box">mins</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Collapse>
-      </div>
     </div>
   );
 };
