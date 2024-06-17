@@ -9,16 +9,16 @@ const AgendaComponent = (props) => {
     title: "",
     topic: "",
     time: 0,
-    index: props.number,
+   index: props.agenda.index,
   });
 //  console.log("open---------------------------------", open);
 
-  console.log("formData---------------------------------", formData);
+
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
-
+    console.log("formData---------------------------------", formData);
     props.agendaData(formData);
-  }, []);
+  }, [props.index]);
 
   const handleChange = (e,index) => {
     // dispatch(updateIsCreateMeetingProcessed(false));
@@ -29,7 +29,7 @@ const AgendaComponent = (props) => {
     console.log(name, value);
     setFormData({
       ...formData,
-      index: props.number ,
+      index: props.index ,
       [name]: value,
     });
     // props.agendaData(formData)
@@ -50,9 +50,9 @@ const AgendaComponent = (props) => {
     // props.agendaData(formData);
   };
 
-  const onRemoveAgenda=(index,uid)=>{
+  const onRemoveAgenda=(index)=>{
     console.log(props)
-    props.onRemoveAgenda(index,uid)
+    props.onRemoveAgenda(index)
     //  setFormData({
     //   ...formData,
     //   title: "",
@@ -64,7 +64,7 @@ const AgendaComponent = (props) => {
   
 
   return (
-    <div className="agenda-background" >
+    <div className="agenda-background">
       <h2>
         <button
           className=""
@@ -73,10 +73,10 @@ const AgendaComponent = (props) => {
           aria-expanded={open}
           type="button"
         >
-          Agenda {props.number + 1}
+          Agenda {props.agenda.index}
         </button>
         <button type="button"
-                  onClick={()=>onRemoveAgenda(props.number,props.uid)}
+                 onClick={()=>onRemoveAgenda(props.agenda.index)}
                    >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -123,7 +123,7 @@ const AgendaComponent = (props) => {
                     }}
                     autoComplete="off"
                   />
-                   {props.errorData.index===props.number && props.errorData.title && ( 
+                   {props.errorData.index===props.agenda.index && props.errorData.title && ( 
                   <span className="error-message">
                     {props.errorData.title}
                   </span>
@@ -184,7 +184,13 @@ const AgendaComponent = (props) => {
                     <div className="minute_box">mins</div>
                     
                   </div>
-                  {props.errorData.index===props.number && props.errorData.time && ( 
+                  {/* {props.errorData.index===props.number && props.errorData.time && ( 
+                  <span className="error-message">
+                    {props.errorData.time}
+                  </span>
+                 )} */}
+
+{props.errorData.index===props.agenda.index && props.errorData.time && ( 
                   <span className="error-message">
                     {props.errorData.time}
                   </span>
