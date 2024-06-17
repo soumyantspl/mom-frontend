@@ -5,7 +5,8 @@ import MeetingHeader from "../../Common/Header/MeetingHeader";
 import "../Unit/style/unit.css";
 import axios from "../../../../node_modules/axios/index";
 import Alert from "../../Common/Alert";
-import { Modal, Button, Table, Dropdown } from "react-bootstrap";
+import LoaderButton from "../../Common/LoaderButton";
+import { Modal, Button, Table, Dropdown, Form } from "react-bootstrap";
 
 const Unit = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -28,14 +29,21 @@ const Unit = () => {
   console.log("Units--->", units);
   const [totalCount, setTotalCount] = useState(0);
   const [searchKey, setSearchKey] = useState("");
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState();
+  const [limit, setLimit] = useState();
   const [order, setOrder] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const [isGetApiRes, setIsGetApiRes] = useState(false);
   const [apiResData, setApiResData] = useState({
     isSuccess: false,
     message: "",
   });
+
+  //Edit Unit
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedUnit, setSelectedUnit] = useState(null);
+  const [unitName, setUnitName] = useState("");
+  const [unitAddress, setUnitAddress] = useState("");
 
   // const [showAlert, setShowAlert] = useState(false);
 
@@ -77,6 +85,7 @@ const Unit = () => {
     try {
       e.preventDefault();
       setIsGetApiRes(false);
+      setIsLoading(true);
       if (validate()) {
         console.log("Form submitted", formValues);
         const response = await axios.post(
@@ -95,6 +104,7 @@ const Unit = () => {
         console.log("Unit created successfully:", response.data.message);
         if (response) {
           setIsGetApiRes(true);
+          setIsLoading(false);
         }
         if (response.data.success) {
           setFormValues({ ...formValues, name: "", address: "" });
@@ -138,6 +148,11 @@ const Unit = () => {
       const data1 = response.data;
       const data2 = data1.data;
       console.log("Response DATA-->", data2.unitData);
+      setUnits(data2.unitData);
+      // setOrder(data2.order);
+      // setPage(data2.page);
+      // setLimit(data2.limit);
+      setTotalCount(data2.totalCount);
       return response.data;
     } catch (error) {
       console.log("Error while Fetching Unit:", error);
@@ -157,9 +172,10 @@ const Unit = () => {
         // const queryData = { page, limit, order };
         const data = await fetchUnits(bodyData);
         setUnitData(data.unitData);
-        setTotalCount(totalCount);
+        // setTotalCount(data.totalCount);
+        // setPage(data.page);
       } catch (error) {
-        console.log("Error while fetching Units:", error);
+        throw error;
       }
     };
     fetchUnitData();
@@ -169,6 +185,22 @@ const Unit = () => {
     setSearchKey(event.target.value);
   };
 
+  //Edit Unit
+  const handleEditClick = (unit) => {
+    setSelectedUnit(unit);
+    setUnitName(unit.name);
+    setUnitAddress(unit.address);
+    setShowEditModal(true);
+  };
+  const handleEditSave = async () => {
+    try {
+      const updatedUnit = {
+        ...selectedUnit,
+        name: unitName,
+        address: unitAddress,
+      };
+    } catch (error) {}
+  };
   return (
     <div>
       <Header />
@@ -215,8 +247,12 @@ const Unit = () => {
                 )}
               </div>
 
-              <button className="save Mom-btn" type="submit">
-                <p>Submit</p>
+              <button
+                className="save Mom-btn"
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? <LoaderButton /> : <p>Submit</p>}
               </button>
             </form>
             <div>
@@ -224,7 +260,7 @@ const Unit = () => {
                 <Alert
                   status={apiResData.isSuccess}
                   message={apiResData.message}
-                  timeoutSeconds={40000}
+                  timeoutSeconds={3000}
                 />
               ) : null}
             </div>
@@ -270,78 +306,84 @@ const Unit = () => {
                 </tr>
               </thead>
               <tbody>
-                {units.map((units, index) => (
-                  <tr key={index}>
-                    <td>{units.name}</td>
-                    <td>{units.address}</td>
-                    <td data-label="Action">
-                      <div className="d-inline-block menu-dropdown custom-dropdown">
-                        <Dropdown.Toggle
-                          variant="outline-primary"
-                          id="dropdown-basic"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="#000"
-                            className="bi bi-three-dots-vertical"
-                            viewBox="0 0 16 16"
-                          >
-                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                          </svg>
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                          <Dropdown.Item onClick={handleShow}>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="17"
-                              height="17"
-                              fill="currentColor"
-                              className="bi bi-eye me-2"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
-                              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
-                            </svg>
-                            View
-                          </Dropdown.Item>
-                          <Dropdown.Item>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              fill="currentColor"
-                              className="me-2 bi bi-pencil-square"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                              <path
-                                fillRule="evenodd"
-                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-                              />
-                            </svg>
-                            Edit
-                          </Dropdown.Item>
-                          <Dropdown.Item>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              fill="currentColor"
-                              className="me-2 bi bi-trash3"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
-                            </svg>
-                            Delete
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </div>
-                    </td>
+                {units.length === 0 ? (
+                  <tr>
+                    <td colSpan="3">No data available</td>
                   </tr>
-                ))}
+                ) : (
+                  units.map((units, index) => (
+                    <tr key={index}>
+                      <td>{units.name}</td>
+                      <td>{units.address}</td>
+                      <td data-label="Action">
+                        <Dropdown>
+                          <Dropdown.Toggle
+                            variant="outline-primary"
+                            id="dropdown-basic"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="#000"
+                              className="bi bi-three-dots-vertical"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                            </svg>
+                          </Dropdown.Toggle>
+
+                          <Dropdown.Menu>
+                            <Dropdown.Item onClick={handleShow}>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="17"
+                                height="17"
+                                fill="currentColor"
+                                className="bi bi-eye me-2"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                              </svg>
+                              View
+                            </Dropdown.Item>
+                            <Dropdown.Item>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                className="me-2 bi bi-pencil-square"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                <path
+                                  fillRule="evenodd"
+                                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                                />
+                              </svg>
+                              Edit
+                            </Dropdown.Item>
+                            <Dropdown.Item>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                className="me-2 bi bi-trash3"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
+                              </svg>
+                              Delete
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </Table>
 
@@ -405,6 +447,40 @@ const Unit = () => {
                 Close
               </Button>
               <Button variant="primary" onClick={handleClose}>
+                Save Changes
+              </Button>
+            </Modal.Footer>
+            <Modal.Header closeButton>
+              <Modal.Title>Edit Unit</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group controlId="unitName">
+                  <Form.Label>Unit Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={unitName}
+                    onChange={(e) => setUnitName(e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="unitAddress" className="mt-3">
+                  <Form.Label>Unit Address</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={unitAddress}
+                    onChange={(e) => setUnitAddress(e.target.value)}
+                  />
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant="secondary"
+                onClick={() => setShowEditModal(false)}
+              >
+                Close
+              </Button>
+              <Button variant="primary" onClick={handleEditSave}>
                 Save Changes
               </Button>
             </Modal.Footer>
