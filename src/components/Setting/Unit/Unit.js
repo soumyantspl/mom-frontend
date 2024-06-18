@@ -189,18 +189,21 @@ const Unit = () => {
   };
 
   const formatDateTimeFormat = (date) => {
-    //  console.log(date);
+    console.log(date);
     const sourceDate = new Date(date).toDateString();
     const sourceTime = new Date(date).toLocaleTimeString();
+    console.log("sourceTime-->", sourceTime)
     // The above yields e.g. 'Mon Jan 06 2020'
 
     const [, month, day, year] = sourceDate.split(" ");
     const formattedDate = [day, month, year].join(" ");
-    // console.log(formattedDate);
+
 
     const [hour, minute, second] = sourceTime.split(" ")[0].split(":");
     const formattedTime =
       [hour, minute].join(":") + " " + sourceTime.split(" ")[1];
+    console.log("formattedDate", formattedDate);
+    console.log("formattedTime", formattedTime)
     return {
       formattedTime,
       formattedDate,
@@ -233,11 +236,11 @@ const Unit = () => {
           }
         }
       );
-      setUnits((prevUnits) =>
-        prevUnits.map((unit) => {
-          unit.id === selectedUnit.id ? { ...unit, ...updatedUnit } : unit
-        })
-      )
+      // setUnits((prevUnits) =>
+      //   prevUnits.map((unit) => {
+      //     unit.id === selectedUnit.id ? { ...unit, ...updatedUnit } : unit
+      //   })
+      // )
       setShowEditModal(false)
     } catch (error) {
       console.log("Error while updating units:", error)
