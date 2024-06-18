@@ -9,6 +9,7 @@ import CreateMeeting from "./CreateMeeting";
 import {
   createMeetingDetails,
   getCreateMeetingStep,
+  loadCreateMeeting,
   updateIsCreateMeetingProcessed,
   updateMeetingDetails,
 } from "../../redux/actions/meetingActions/MeetingAction";
@@ -141,6 +142,8 @@ const AddAgendas = () => {
     if (!formData.timeLine) {
       errors.timeLine = constantMessages.timeRequired;
       // errors.index = formData.index;
+    } else if (formData.timeLine > 365 || formData.timeLine < 1) {
+      errors.timeLine = constantMessages.invalidTime;
     }
 
     return errors;
@@ -230,9 +233,11 @@ const AddAgendas = () => {
   const validateAgendaTime = () => {
     console.log(formData);
     const errors = {};
-    if (!formData.timeLine) {
+    if (!formData.timeLine.trim()) {
       errors.timeLine = constantMessages.timeRequired;
       //  errors.index = formData.index;
+    } else if (formData.timeLine > 365 || formData.timeLine < 1) {
+      errors.timeLine = constantMessages.invalidTime;
     }
     setErrors(errors);
   };
@@ -562,8 +567,8 @@ const AddAgendas = () => {
             </div>
           </div>
           {errors.addAgenda ? (
-              <span className="error-message">{errors.addAgenda}</span>
-            ) : null}
+            <span className="error-message">{errors.addAgenda}</span>
+          ) : null}
           <div className="d-flex align-items-center" style={{ marginTop: 20 }}>
             {/* <Button
             type="button"
@@ -581,26 +586,37 @@ const AddAgendas = () => {
                       <Alert
                         status={meetingData.isSuccess}
                         message={meetingData.message}
-                        timeoutSeconds={3000}
+                        timeoutSeconds={0}
                       />
                     </div>
                   </div>
                 </div>
               </div>
             ) : null}
-           
-            {!meetingData.loading ? (
-              <Button
+            <div className="button-outer">
+             
+              {!meetingData.loading ? (
+                <Button
+                  variant="primary"
+                   class="btn-primary"
+                  type="submit"
+                  style={{ margin: 20 }}
+                 // onClick={(e) => dispatch(loadCreateMeeting(1))}
+                >
+                  Submit
+                </Button>
+              ) : (
+                <LoaderButton />
+              )}
+               {/* <Button
                 variant="primary"
-                type="submit"
-                style={{ margin: 20 }}
-                //  onClick={(e) => setStep(3)}
+                class="btn-primary"
+                onClick={(e) => dispatch(loadCreateMeeting(1))}
               >
-                Submit
-              </Button>
-            ) : (
-              <LoaderButton />
-            )}
+                Back
+              </Button> */}
+            </div>
+            
           </div>
         </div>
       </div>

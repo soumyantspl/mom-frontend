@@ -12,6 +12,7 @@ import {
   getAttendeesListFromPreviousMeeting,
   getAttendeesListfromEmployeeList,
   getCreateMeetingStep,
+  loadCreateMeeting,
   updateMeetingDetails,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import Loader from "../Common/Loader";
@@ -81,7 +82,7 @@ const AddAttendees = (props) => {
         email: "",
       });
     }
-    // dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
+     dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
     // console.log(meetingData.step);
     // setStep(meetingData.step + 1);
 
@@ -90,13 +91,28 @@ const AddAttendees = (props) => {
 
   const submitAttendeeDetails = (e) => {
     e.preventDefault();
-    const meetingId = meetingData?.singleMeetingDetails?._id;
-    const payload = {
-      attendees: attendeesData,
-      organizationId: userData.organizationId,
-      step: meetingData?.singleMeetingDetails?.step + 1,
-    };
-    dispatch(updateMeetingDetails(meetingId, payload, accessToken));
+    console.log("sssssssssssssss", attendeesData);
+    if (attendeesData.length === 0) {
+      const newErrors = validateForm(formData);
+      console.log(newErrors);
+      setErrors(newErrors);
+
+      if (Object.keys(newErrors).length === 0) {
+        console.log("uuuuuuuuuuu");
+        const errors = {};
+        errors.addAttendee = constantMessages.addAttendee;
+        //  errors.index = formData.index;
+        setErrors(errors);
+      }
+    } else {
+      const meetingId = meetingData?.singleMeetingDetails?._id;
+      const payload = {
+        attendees: attendeesData,
+        organizationId: userData.organizationId,
+        step: meetingData?.singleMeetingDetails?.step + 1,
+      };
+      dispatch(updateMeetingDetails(meetingId, payload, accessToken));
+    }
     //  setStep(3);
   };
 
@@ -178,19 +194,20 @@ const AddAttendees = (props) => {
 
   const validateForm = (data) => {
     const errors = {};
-    const regularExpression = /^[A-Za-z\s]+$/; //returns true if matched, vaidates for a-z and A-Z and white space
-    if (!formData.name.trim()) {
-      errors.name = constantMessages.nameRequired;
-    } else if (!regularExpression.test(formData.name)) {
-      errors.name = constantMessages.invalidName;
-    }
+    if (formData.attendyType === "addNewPeople") {
+      const regularExpression = /^[A-Za-z\s]+$/; //returns true if matched, vaidates for a-z and A-Z and white space
+      if (!formData.name.trim()) {
+        errors.name = constantMessages.nameRequired;
+      } else if (!regularExpression.test(formData.name)) {
+        errors.name = constantMessages.invalidName;
+      }
 
-    if (!formData.email.trim()) {
-      errors.email = constantMessages.emailRequired;
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = constantMessages.invalidEmail;
+      if (!formData.email.trim()) {
+        errors.email = constantMessages.emailRequired;
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        errors.email = constantMessages.invalidEmail;
+      }
     }
-
     return errors;
   };
 
@@ -265,14 +282,14 @@ const AddAttendees = (props) => {
   console.log(
     attendeesData,
     formData,
-    meetingData.singleMeetingDetails,
+    meetingData,
     employeeData
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <>
-      <form className="mt-0 p-0 details-form" onSubmit={submitAttendeeDetails}>
+      <form className="m-0 p-0 details-form" onSubmit={submitAttendeeDetails}>
         <CommonModal
           message={constantMessages.deleteAttendeeMessage}
           title={"Remove"}
@@ -337,10 +354,10 @@ const AddAttendees = (props) => {
           </div>
 
           <div className="add-people-box show">
-            <div className="pt-3 pb-3 border-bottom">
+            <div className="pt-3 pb-3">
               <label className="mb-2">Select People</label>
 
-              <div className="d-flex w-100">
+              <div className="w-100">
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"
@@ -484,7 +501,7 @@ const AddAttendees = (props) => {
             {errors.duplicateAttendee && (
               <span className="error-message">{errors.duplicateAttendee}</span>
             )}
-            <div className="form-group d-flex ">
+            <div className="form-group d-flex atd-button">
               {!employeeData.loading ? (
                 <button
                   type="button"
@@ -508,14 +525,6 @@ const AddAttendees = (props) => {
                 <LoaderButton />
               )}
             </div>
-          </div>
-          <div
-            style={{
-              marginTop: 20,
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
             {employeeData.isDuplicateUser === true ? (
               <div className="mb-3 col-padding-none">
                 <div className="row">
@@ -524,7 +533,7 @@ const AddAttendees = (props) => {
                       <Alert
                         status={employeeData.isSuccess ? false : true}
                         message={employeeData.message}
-                        timeoutSeconds={5000}
+                        timeoutSeconds={0}
                       />
                     </div>
                   </div>
@@ -539,22 +548,22 @@ const AddAttendees = (props) => {
                       <Alert
                         status={meetingData.isSuccess}
                         message={meetingData.message}
-                        timeoutSeconds={3000}
+                        timeoutSeconds={0}
                       />
                     </div>
                   </div>
                 </div>
               </div>
             ) : null}
-            {/* <Button
-                variant="primary"
-                onClick={(e) => setStep(1)}
-                style={{ margin: 10 }}
-              >
-                Back
-              </Button> */}
-
-            {!meetingData.loading ? (
+          </div>
+          <div className="button-outer"
+          
+          >
+          {errors.addAttendee && (
+            <span className="error-message">{errors.addAttendee}</span>
+          )}
+          {!meetingData.loading ? (
+            <>
               <Button
                 variant="primary"
                 type="submit"
@@ -563,19 +572,18 @@ const AddAttendees = (props) => {
               >
                 Next
               </Button>
-            ) : (
-              <LoaderButton />
-            )}
-
-            {/* <Button
-              variant="primary"
-              type="submit"
-              class="btn-primary"
-              onClick={(e) => setStep(2)}
-            >
-              Next
-            </Button> */}
-          </div>
+            </>
+          ) : (
+            <LoaderButton />
+          )}
+          {/* <Button
+            variant="primary"
+            class="btn-primary"
+            onClick={(e) => dispatch(loadCreateMeeting(0))}
+          >
+            Back
+          </Button> */}
+        </div>
         </div>
       </form>
     </>

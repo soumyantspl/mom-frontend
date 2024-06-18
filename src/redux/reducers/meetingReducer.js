@@ -7,8 +7,10 @@ import {
   MAKE_REQUEST,
   MAKE_RSVP_UPDATE_REQUEST,
   UPDATE_ISCREATE_MEETING_PROCESSED,
-  UPDATE_RSVP,SET_ATTENDEES,
-  UPDATE_MEETING_RESPONSE
+  UPDATE_RSVP,
+  SET_ATTENDEES,
+  UPDATE_MEETING_RESPONSE,
+  LOAD_PREVIOUS_STEP,
 } from "../actions/meetingActions/actionTypes";
 
 const initialObject = {
@@ -23,6 +25,8 @@ const initialObject = {
   singleMeetingDetails: null,
   step: 0,
   isCreateMeetingProcessed: false,
+  apiProcessed: false,
+  checkStep:true
 };
 
 export const meetingReducer = (state = initialObject, action) => {
@@ -111,20 +115,22 @@ export const meetingReducer = (state = initialObject, action) => {
         message: action.payload.message,
         isSuccess: action.payload.success,
       };
-      
 
-
-      case UPDATE_MEETING_RESPONSE:
-        return {
-          ...state,
-          loading: false,
-          message: action.payload.message,
-          isSuccess: action.payload.success,
-          step: action.payload.data ? action.payload.data.step : 0,
-          isCreateMeetingProcessed:true
-        };
-  
-      
+    case UPDATE_MEETING_RESPONSE:
+      return {
+        ...state,
+        loading: false,
+        message: action.payload.message,
+        isSuccess: action.payload.success,
+        step:action.payload.success ? state.step+1 : state.step,
+        isCreateMeetingProcessed: true,
+      };
+    case LOAD_PREVIOUS_STEP:
+      return {
+        ...state,
+        step: action.payload,
+        checkStep:false
+      };
     default:
       return state;
   }

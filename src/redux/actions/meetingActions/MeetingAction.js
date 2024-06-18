@@ -11,6 +11,7 @@ import {
   UPDATE_ISCREATE_MEETING_PROCESSED,
   SET_ATTENDEES,
   UPDATE_MEETING_RESPONSE,
+  LOAD_PREVIOUS_STEP
 } from "./actionTypes";
 const accessToken = localStorage.getItem("accessToken");
 
@@ -193,7 +194,7 @@ export const createMeetingResponse = (data) => {
 
 export const getCreateMeetingStep = (organizationId, accessToken) => {
   return (dispatch) => {
-    // dispatch(makeRequest());
+     dispatch(makeRequest());
     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/getCreateMeetingStep/${organizationId}`;
     const headerObject = {
       headers: {
@@ -310,3 +311,11 @@ export const updateMeetingResponse = (data) => {
 //     payload: data,
 //   };
 // };
+
+
+export const loadCreateMeeting = (data) => {
+  return {
+    type: LOAD_PREVIOUS_STEP,
+    payload: data,
+  };
+};

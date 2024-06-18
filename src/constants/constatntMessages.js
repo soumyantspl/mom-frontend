@@ -27,7 +27,11 @@ const invalidFromMinute = "Invali from minute.";
 const invalidToMinute = "Invali to minute.";
 const invalidDate="Invalid Date."
 const addAgenda="Please add agenda."
+const addAttendee="Please add attendee."
+const invalidTime="Please enter valid time."
 module.exports = {
+  addAttendee,
+  invalidTime,
   addAgenda,
   invalidDate,
   invalidFromHour,
