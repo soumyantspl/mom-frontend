@@ -5,46 +5,57 @@ import MeetingHeader from "../../Common/Header/MeetingHeader";
 import "../Unit/style/unit.css";
 import axios from "../../../../node_modules/axios/index";
 import Alert from "../../Common/Alert";
-import { Modal, Button, Table, Dropdown } from "react-bootstrap";
+import LoaderButton from "../../Common/LoaderButton";
+import { Modal, Button, Table, Dropdown, Form } from "react-bootstrap";
 
 const Unit = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const userId = userData.id;
   const organizationId = userData.organizationId;
+  console.log("organizationIdfffffff", organizationId);
   const accessToken = localStorage.getItem("accessToken");
   console.log("UserData-->>", userData);
   console.log("accessToken--->>", accessToken);
   const [unitData, setUnitData] = useState({
     name: "",
     address: "",
-    organizationId,
   });
+  console.log("organizationIdfffffff", organizationId);
   console.log("unitData--", unitData);
+
   const [formValues, setFormValues] = useState({ name: "", address: "" });
   const [errors, setErrors] = useState({ name: "", address: "" });
   const [units, setUnits] = useState([]);
-  console.log("Units->", units);
+  console.log("Units--->", units);
   const [totalCount, setTotalCount] = useState(0);
   const [searchKey, setSearchKey] = useState("");
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState();
+  const [limit, setLimit] = useState();
   const [order, setOrder] = useState(1);
-
-  const [apiResData1, setApiResData1] = useState({
-    isSuccess1: false,
-    message1: "",
+  const [isLoading, setIsLoading] = useState(false);
+  const [isGetApiRes, setIsGetApiRes] = useState(false);
+  const [apiResData, setApiResData] = useState({
+    isSuccess: false,
+    message: "",
   });
 
-  const [showAlert, setShowAlert] = useState(false);
-  useEffect(() => {
-    if (apiResData1) {
-      setShowAlert(true);
-      const timer = setTimeout(() => {
-        setShowAlert(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [apiResData1]);
+  //Edit Unit
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedUnit, setSelectedUnit] = useState(null);
+  const [unitName, setUnitName] = useState("");
+  const [unitAddress, setUnitAddress] = useState("");
+
+  // const [showAlert, setShowAlert] = useState(false);
+
+  // useEffect(() => {
+  //   if (apiResData1) {
+  //     setShowAlert(true);
+  //     const timer = setTimeout(() => {
+  //       setShowAlert(false);
+  //     }, 3000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [apiResData1]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUnitData({
@@ -73,12 +84,15 @@ const Unit = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
+      setIsGetApiRes(false);
+      setIsLoading(true);
       if (validate()) {
         console.log("Form submitted", formValues);
         const response = await axios.post(
-          "http://localhost:8000/api/V1/unit/createUnit",
+          `${process.env.REACT_APP_API_URL}/api/V1/unit/createUnit`,
           {
             ...unitData,
+            organizationId,
           },
           {
             headers: {
@@ -88,11 +102,20 @@ const Unit = () => {
           }
         );
         console.log("Unit created successfully:", response.data.message);
-        setApiResData1({
-          ...apiResData1,
-          isSuccess1: response.data.success,
-          message1: response.data.message,
+        if (response) {
+          setIsGetApiRes(true);
+          setIsLoading(false);
+        }
+        if (response.data.success) {
+          setFormValues({ ...formValues, name: "", address: "" });
+        }
+        setApiResData({
+          ...apiResData,
+          isSuccess: response.data.success,
+          message: response.data.message,
         });
+      } else {
+        setIsLoading(false)
       }
     } catch (error) {
       console.error("Error creating unit:", error.response.data.message);
@@ -104,34 +127,58 @@ const Unit = () => {
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
 
-  const fetchUnits = async (bodyData, queryData) => {
+  const fetchUnits = async (bodyData) => {
     try {
+      const headerObject = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: accessToken,
+        },
+        params: {
+          limit: limit,
+          page: page,
+          order: order,
+        },
+      };
+      console.log("organizationIddd", organizationId);
       const response = await axios.post(
-        "http://localhost:8000/api/V1/department/listDepartment",
-        { bodyData, queryData },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: accessToken,
-          },
-        }
+        `${process.env.REACT_APP_API_URL}/api/V1/unit/listUnit`,
+        bodyData,
+        headerObject
       );
+
+      const data1 = response.data;
+      const data2 = data1.data;
+      console.log("Response DATA-->", data2.unitData);
+      setUnits(data2.unitData);
+      // setOrder(data2.order);
+      // setPage(data2.page);
+      // setLimit(data2.limit);
+      setTotalCount(data2.totalCount);
       return response.data;
     } catch (error) {
       console.log("Error while Fetching Unit:", error);
       throw error;
     }
   };
+
   useEffect(() => {
     const fetchUnitData = async () => {
       try {
-        const bodyData = { organizationId: organizationId, searchKey };
-        const queryData = { page, limit, order };
-        const data = await fetchUnitData(bodyData, queryData);
-        setUnitData(data);
-        setTotalCount(totalCount);
+        let searchKey;
+
+        let bodyData = searchKey
+          ? { searchKey: searchKey, organizationId: organizationId }
+          : { organizationId: organizationId };
+
+        // const queryData = { page, limit, order };
+        const data = await fetchUnits(bodyData);
+        setUnitData(data.unitData);
+        // setTotalCount(data.totalCount);
+        // setPage(data.page);
       } catch (error) {
-        console.log("Error while fetching Units:", error);
+        console.log("Error while fetching units:", error)
+        throw error;
       }
     };
     fetchUnitData();
@@ -139,6 +186,66 @@ const Unit = () => {
 
   const handleSearch = (event) => {
     setSearchKey(event.target.value);
+  };
+
+  const formatDateTimeFormat = (date) => {
+    console.log(date);
+    const sourceDate = new Date(date).toDateString();
+    const sourceTime = new Date(date).toLocaleTimeString();
+    console.log("sourceTime-->", sourceTime)
+    // The above yields e.g. 'Mon Jan 06 2020'
+
+    const [, month, day, year] = sourceDate.split(" ");
+    const formattedDate = [day, month, year].join(" ");
+
+
+    const [hour, minute, second] = sourceTime.split(" ")[0].split(":");
+    const formattedTime =
+      [hour, minute].join(":") + " " + sourceTime.split(" ")[1];
+    console.log("formattedDate", formattedDate);
+    console.log("formattedTime", formattedTime)
+    return {
+      formattedTime,
+      formattedDate,
+    };
+  };
+  //Edit Unit
+  const handleEditClick = (unit) => {
+    setSelectedUnit(unit);
+    setUnitName(unit.name);
+    setUnitAddress(unit.address);
+    setShowEditModal(true);
+  };
+  const handleEditSave = async () => {
+    try {
+      const updatedUnit = {
+        ...selectedUnit,
+        name: unitName,
+        address: unitAddress,
+      };
+      await axios.put(`http://localhost:8000/api/V1/department/updateDepartment/${selectedUnit._id}`,
+        {
+          userId,
+          id: selectedUnit.id,
+          data: updatedUnit
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: accessToken,
+          }
+        }
+      );
+      // setUnits((prevUnits) =>
+      //   prevUnits.map((unit) => {
+      //     unit.id === selectedUnit.id ? { ...unit, ...updatedUnit } : unit
+      //   })
+      // )
+      setShowEditModal(false)
+    } catch (error) {
+      console.log("Error while updating units:", error)
+      throw error
+    }
   };
   return (
     <div>
@@ -159,6 +266,7 @@ const Unit = () => {
                 <input
                   type="text"
                   name="name"
+                  autoComplete="off"
                   placeholder="Enter Unit Name"
                   onChange={handleChange}
                   value={formValues.name}
@@ -185,18 +293,24 @@ const Unit = () => {
                 )}
               </div>
 
-              <button className="save Mom-btn" type="submit">
-                <p>Submit</p>
+              <button
+                className="save Mom-btn"
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? <LoaderButton /> : <p>Submit</p>}
               </button>
             </form>
             <div>
-              {showAlert && apiResData1 && apiResData1.message1 && (
-                <Alert
-                  status={apiResData1.isSuccess1}
-                  message={apiResData1.message1}
-                  timeoutSeconds={0}
-                />
-              )}
+              {isGetApiRes ? (
+                <div className="alertwidth">
+                  <Alert
+                    status={apiResData.isSuccess}
+                    message={apiResData.message}
+                    timeoutSeconds={3000}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
           {/* ////////////////////////// */}
@@ -212,7 +326,12 @@ const Unit = () => {
                 </p>
               </div>
               <div className="search-box">
-                <input type="search" placeholder="search" />
+                <input
+                  type="search"
+                  placeholder="search"
+                  value={searchKey}
+                  onChange={handleSearch}
+                />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -231,81 +350,81 @@ const Unit = () => {
                 <tr>
                   <th>Unit Name</th>
                   <th>Unit Address</th>
+                  <th>Updated At</th>
                   <th className="action-col">Action</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Nexus Technoware Solution Pvt. Ltd.</td>
-                  <td>DLF Cyber City,BBSR</td>
-                  <td>
-                    <Dropdown>
-                      <Dropdown.Toggle
-                        variant="outline-primary"
-                        id="dropdown-basic"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="#000"
-                          className="bi bi-three-dots-vertical"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                        </svg>
-                      </Dropdown.Toggle>
+                {units.length === 0 ? (
+                  <tr>
+                    <td colSpan="3">No data available</td>
+                  </tr>
+                ) : (
+                  units.map((units, index) => (
+                    <tr key={index}>
+                      <td>{units.name}</td>
+                      <td>{units.address}</td>
+                      <td key={units.address}>{formatDateTimeFormat(units.updatedAt).formattedDate}
+                        <p className="detail-date-time">
+                          {/* {formatTimeFormat(meeting.fromTime)} */}
+                          {formatDateTimeFormat(units.updatedAt).formattedTime}
+                        </p></td>
+                      <td data-label="Action">
+                        <Dropdown>
+                          <Dropdown.Toggle
+                            variant="outline-primary"
+                            id="dropdown-basic"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="#000"
+                              className="bi bi-three-dots-vertical"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                            </svg>
+                          </Dropdown.Toggle>
 
-                      <Dropdown.Menu>
-                        <Dropdown.Item onClick={handleShow}>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="17"
-                            height="17"
-                            fill="currentColor"
-                            className="bi bi-eye me-2"
-                            viewBox="0 0 16 16"
-                          >
-                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
-                            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
-                          </svg>
-                          View
-                        </Dropdown.Item>
-                        <Dropdown.Item>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            className="me-2 bi bi-pencil-square"
-                            viewBox="0 0 16 16"
-                          >
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                            <path
-                              fillRule="evenodd"
-                              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-                            />
-                          </svg>
-                          Edit
-                        </Dropdown.Item>
-                        <Dropdown.Item>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            className="me-2 bi bi-trash3"
-                            viewBox="0 0 16 16"
-                          >
-                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
-                          </svg>
-                          Delete
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </td>
-                </tr>
-                ;
+                          <Dropdown.Menu>
+                            <Dropdown.Item onClick={handleShow}>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                className="me-2 bi bi-pencil-square"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                <path
+                                  fillRule="evenodd"
+                                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                                />
+                              </svg>
+                              Edit
+                            </Dropdown.Item>
+                            <Dropdown.Item>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                className="me-2 bi bi-trash3"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
+                              </svg>
+                              Delete
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </td>
+
+                    </tr>
+                  ))
+                )}
               </tbody>
             </Table>
 
@@ -361,14 +480,36 @@ const Unit = () => {
 
           <Modal show={showModal} onHide={handleClose}>
             <Modal.Header closeButton>
-              <Modal.Title>View Details</Modal.Title>
+              <Modal.Title>Edit Unit</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Unit details go here...</Modal.Body>
+            <Modal.Body>
+              <Form>
+                <Form.Group controlId="unitName">
+                  <Form.Label>Unit Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={unitName}
+                    onChange={(e) => setUnitName(e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="unitAddress" className="mt-3">
+                  <Form.Label>Unit Address</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={unitAddress}
+                    onChange={(e) => setUnitAddress(e.target.value)}
+                  />
+                </Form.Group>
+              </Form>
+            </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
+              <Button
+                variant="secondary"
+                onClick={() => setShowEditModal(false)}
+              >
                 Close
               </Button>
-              <Button variant="primary" onClick={handleClose}>
+              <Button variant="primary" onClick={handleEditSave}>
                 Save Changes
               </Button>
             </Modal.Footer>
