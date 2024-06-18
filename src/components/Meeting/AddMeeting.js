@@ -125,7 +125,19 @@ const AddMeeting = (props) => {
 
     if (!data.date.trim()) {
       errors.date = constantMessages.dateRequired;
+    
+  } else if (data.date.trim()) {
+    const currentDate = new Date();
+    const inputDate = new Date(data.date);
+    let differenceInTime = inputDate.getTime() - currentDate.getTime();
+    let differenceInDays = Math.round(
+      differenceInTime / (1000 * 3600 * 24)
+    );
+    if(differenceInDays<0){
+      errors.date = constantMessages.invalidDate;
     }
+  }
+  setErrors(errors);
     if (!data.fromTime.trim()) {
       errors.fromTime = constantMessages.timeRequired;
     } else if (formData.toTime.trim()) {
@@ -260,8 +272,19 @@ const AddMeeting = (props) => {
     const errors = {};
     if (!formData.date.trim()) {
       errors.date = constantMessages.dateRequired;
-      setErrors(errors);
+     
+    } else if (formData.date.trim()) {
+      const currentDate = new Date();
+      const inputDate = new Date(formData.date);
+      let differenceInTime = inputDate.getTime() - currentDate.getTime();
+      let differenceInDays = Math.round(
+        differenceInTime / (1000 * 3600 * 24)
+      );
+      if(differenceInDays<0){
+        errors.date = constantMessages.invalidDate;
+      }
     }
+    setErrors(errors);
   };
 
   const titleFieldValidationCheck = (e) => {
@@ -574,7 +597,8 @@ const AddMeeting = (props) => {
               //   </Button>
               <>
                 <div className="create-meeting-button create-meet-btn">
-                  {meetingData.isCreateMeetingProcessed ? (
+                  {meetingData.isCreateMeetingProcessed &&
+                  meetingData.step === 1 ? (
                     <div className="mb-3 col-padding-none">
                       <div className="row">
                         <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
