@@ -2,8 +2,12 @@ import React, { useState } from "react";
 
 const Alert = (props) => {
   const [show, setShow] = useState(true);
-  setTimeout(() => setShow(false), props.timeoutSeconds);
-  console.log(show)
+  if (props.timeoutSeconds !== 0) {
+    console.log('inside time out-------',props.timeoutSeconds)
+    setTimeout(() => setShow(false), props.timeoutSeconds);
+  }
+  console.log('outside time out-------',props.timeoutSeconds)
+  console.log(show);
   return (
     <>
       {show ? (

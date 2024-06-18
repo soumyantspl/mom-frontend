@@ -297,7 +297,7 @@ const LogInByPassword = (props) => {
                   <Alert
                     status={authData.isSuccess}
                     message={authData.message}
-                    timeoutSeconds={0}
+                     timeoutSeconds={0}
                   />
                 ) : null} */}
                 {/* <a href="/meeting/meeting-list">

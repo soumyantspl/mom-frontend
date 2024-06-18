@@ -1,7 +1,7 @@
 
 import React,{ useState, useEffect } from 'react';
 import { updateTimer } from '../../redux/actions/authActions/authAction';
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const Timer = (props) => {
  //   console.log(props)

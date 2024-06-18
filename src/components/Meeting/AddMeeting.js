@@ -9,11 +9,15 @@ import CreateMeeting from "./CreateMeeting";
 import {
   createMeetingDetails,
   getCreateMeetingStep,
+  updateIsCreateMeetingProcessed,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import Loader from "../Common/Loader";
 import * as constantMessages from "../../constants/constatntMessages";
 import "../Login/style/Login.css";
 import LoaderButton from "../Common/LoaderButton";
+import AddAttendees from "./AddAttendees";
+import Alert from "../Common/Alert";
+import AddAgendas from "./AddAgendas";
 
 const AddMeeting = (props) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -87,26 +91,10 @@ const AddMeeting = (props) => {
     }
   };
 
-  const submitAttendeeDetails = (e) => {
-    e.preventDefault();
-    setStep(3);
-  };
-
   console.log(step);
-  const agendas = [];
-
-  const onAddAgenda = () => {
-    setNumAgenda(numAgenda + 1);
-  };
-  const onRemoveAgenda = () => {
-    setNumAgenda(numAgenda - 1);
-  };
-
-  for (var i = 0; i < numAgenda; i += 1) {
-    agendas.push(<AgendaComponent key={i} number={i} />);
-  }
 
   const handleChange = (e) => {
+    dispatch(updateIsCreateMeetingProcessed(false));
     setErrors({});
     //  dispatch(updateOtpProcessed(false));
     //  console.log("9999999999999999999999999999999999999", authData);
@@ -137,12 +125,62 @@ const AddMeeting = (props) => {
 
     if (!data.date.trim()) {
       errors.date = constantMessages.dateRequired;
+    
+  } else if (data.date.trim()) {
+    const currentDate = new Date();
+    const inputDate = new Date(data.date);
+    let differenceInTime = inputDate.getTime() - currentDate.getTime();
+    let differenceInDays = Math.round(
+      differenceInTime / (1000 * 3600 * 24)
+    );
+    if(differenceInDays<0){
+      errors.date = constantMessages.invalidDate;
     }
+  }
+  setErrors(errors);
     if (!data.fromTime.trim()) {
       errors.fromTime = constantMessages.timeRequired;
+    } else if (formData.toTime.trim()) {
+      console.log(formData);
+      const fromTimeArray = formData.fromTime.split(":");
+      const fromTimeHour = fromTimeArray[0];
+      const fromTimeMinute = fromTimeArray[1];
+      const toTimeArray = formData.toTime.split(":");
+      const toTimeHour = toTimeArray[0];
+      const toTimeMinute = toTimeArray[1];
+
+      console.log(fromTimeHour);
+      console.log(fromTimeMinute);
+      console.log(toTimeHour);
+      console.log(toTimeMinute);
+      if (fromTimeHour > toTimeHour) {
+        errors.fromTime = constantMessages.invalidFromHour;
+      } else if (fromTimeHour === toTimeHour && fromTimeMinute > toTimeMinute) {
+        errors.fromTime = constantMessages.invalidFromMinute;
+      }
     }
     if (!data.toTime.trim()) {
       errors.toTime = constantMessages.timeRequired;
+    } else if (formData.fromTime.trim()) {
+      console.log(formData);
+      const fromTimeArray = formData.fromTime.split(":");
+      const fromTimeHour = fromTimeArray[0];
+      const fromTimeMinute = fromTimeArray[1];
+      const toTimeArray = formData.toTime.split(":");
+      const toTimeHour = toTimeArray[0];
+      const toTimeMinute = toTimeArray[1];
+      console.log(fromTimeHour);
+      console.log(fromTimeMinute);
+      console.log(toTimeHour);
+      console.log(toTimeMinute);
+      if (fromTimeHour > toTimeHour) {
+        errors.toTime = constantMessages.invalidToHour;
+      } else if (
+        fromTimeHour === toTimeHour &&
+        fromTimeMinute >= toTimeMinute
+      ) {
+        errors.toTime = constantMessages.invalidToMinute;
+      }
     }
 
     if (data.location === "meetingroom") {
@@ -157,10 +195,10 @@ const AddMeeting = (props) => {
 
     const regexp =
       /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
-    if (!formData.link.trim()) {
-      errors.link = constantMessages.linkRequired;
-    } else if (!regexp.test(formData.link.trim())) {
-      errors.link = constantMessages.invalidLink;
+    if (formData.link.trim()) {
+      if (!regexp.test(formData.link.trim())) {
+        errors.link = constantMessages.invalidLink;
+      }
     }
 
     return errors;
@@ -170,8 +208,29 @@ const AddMeeting = (props) => {
     const errors = {};
     if (!formData.fromTime.trim()) {
       errors.fromTime = constantMessages.timeRequired;
-      setErrors(errors);
+    } else if (formData.toTime.trim()) {
+      console.log(formData);
+      const fromTimeArray = formData.fromTime.split(":");
+      const fromTimeHour = fromTimeArray[0];
+      const fromTimeMinute = fromTimeArray[1];
+      const toTimeArray = formData.toTime.split(":");
+      const toTimeHour = toTimeArray[0];
+      const toTimeMinute = toTimeArray[1];
+
+      console.log(fromTimeHour);
+      console.log(fromTimeMinute);
+      console.log(toTimeHour);
+      console.log(toTimeMinute);
+      if (fromTimeHour > toTimeHour) {
+        errors.fromTime = constantMessages.invalidFromHour;
+      } else if (
+        fromTimeHour === toTimeHour &&
+        fromTimeMinute >= toTimeMinute
+      ) {
+        errors.fromTime = constantMessages.invalidFromMinute;
+      }
     }
+    setErrors(errors);
   };
 
   const locationDetailsFieldValidationCheck = (e) => {
@@ -185,16 +244,47 @@ const AddMeeting = (props) => {
     const errors = {};
     if (!formData.toTime.trim()) {
       errors.toTime = constantMessages.timeRequired;
-      setErrors(errors);
+    } else if (formData.fromTime.trim()) {
+      console.log(formData);
+      const fromTimeArray = formData.fromTime.split(":");
+      const fromTimeHour = fromTimeArray[0];
+      const fromTimeMinute = fromTimeArray[1];
+      const toTimeArray = formData.toTime.split(":");
+      const toTimeHour = toTimeArray[0];
+      const toTimeMinute = toTimeArray[1];
+      console.log(fromTimeHour);
+      console.log(fromTimeMinute);
+      console.log(toTimeHour);
+      console.log(toTimeMinute);
+      if (fromTimeHour > toTimeHour) {
+        errors.toTime = constantMessages.invalidToHour;
+      } else if (
+        fromTimeHour === toTimeHour &&
+        fromTimeMinute >= toTimeMinute
+      ) {
+        errors.toTime = constantMessages.invalidToMinute;
+      }
     }
+    setErrors(errors);
   };
 
   const dateFieldValidationCheck = (e) => {
     const errors = {};
     if (!formData.date.trim()) {
       errors.date = constantMessages.dateRequired;
-      setErrors(errors);
+     
+    } else if (formData.date.trim()) {
+      const currentDate = new Date();
+      const inputDate = new Date(formData.date);
+      let differenceInTime = inputDate.getTime() - currentDate.getTime();
+      let differenceInDays = Math.round(
+        differenceInTime / (1000 * 3600 * 24)
+      );
+      if(differenceInDays<0){
+        errors.date = constantMessages.invalidDate;
+      }
     }
+    setErrors(errors);
   };
 
   const titleFieldValidationCheck = (e) => {
@@ -217,12 +307,11 @@ const AddMeeting = (props) => {
     const errors = {};
     var regexp =
       /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
-    if (!formData.link.trim()) {
-      errors.link = constantMessages.linkRequired;
-      setErrors(errors);
-    } else if (!regexp.test(formData.link.trim())) {
-      errors.link = constantMessages.invalidLink;
-      setErrors(errors);
+    if (formData.link.trim()) {
+      if (!regexp.test(formData.link.trim())) {
+        errors.link = constantMessages.invalidLink;
+        setErrors(errors);
+      }
     }
   };
 
@@ -242,7 +331,7 @@ const AddMeeting = (props) => {
   // };
 
   console.log("formData------------------------", formData);
-  console.log(meetingData.step);
+  console.log(meetingData);
   return (
     <div className="mt-2 details-form add-meetings">
       <CommonStepper step={meetingData.step} />
@@ -362,16 +451,6 @@ const AddMeeting = (props) => {
                   onBlur={locationDetailsFieldValidationCheck}
                 ></textarea>
               ) : (
-                // <select
-                //   name="roomId"
-                //   onChange={handleChange}
-                //   value={formData.limit}
-                // >
-                //   <option value="">Meeting Room 1</option>
-                //   <option value="">Meeting Room 2</option>
-                //   <option value="">Meeting Room 3</option>
-                // </select>
-
                 <select
                   onChange={handleChange}
                   name="roomId"
@@ -392,7 +471,7 @@ const AddMeeting = (props) => {
               {errors.roomId && (
                 <span className="error-message">{errors.roomId}</span>
               )}
-               {errors.locationData && (
+              {errors.locationData && (
                 <span className="error-message">{errors.locationData}</span>
               )}
             </div>
@@ -516,13 +595,32 @@ const AddMeeting = (props) => {
               //   >
               //     Next
               //   </Button>
-             <div className="create-meeting-button create-meet-btn">
-       
-              <button className="create-meeting-button Mom-btn" type="submit">
-                <p>Next</p>
-              </button>
-       
-              </div>
+              <>
+                <div className="create-meeting-button create-meet-btn">
+                  {meetingData.isCreateMeetingProcessed &&
+                  meetingData.step === 1 ? (
+                    <div className="mb-3 col-padding-none">
+                      <div className="row">
+                        <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
+                          <div className="position-relative ">
+                            <Alert
+                              status={meetingData.isSuccess}
+                              message={meetingData.message}
+                              timeoutSeconds={0}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
+                  <button
+                    className="create-meeting-button Mom-btn"
+                    type="submit"
+                  >
+                    <p>Next</p>
+                  </button>
+                </div>
+              </>
             ) : (
               // </div>
               <LoaderButton />
@@ -530,270 +628,13 @@ const AddMeeting = (props) => {
           </div>
         </form>
       ) : meetingData.step + 1 === 2 ? (
-        <form
-          className="mt-0 p-0 details-form"
-          onSubmit={submitAttendeeDetails}
-        >
-          <div className="inner-detail-form">
-            <label className="mb-1 people">Attendee(s)</label>
-            <div className="d-flex people ">
-              {attendees.length > 0 ? (
-                <div className="people-circle-add Mom-btn pointer">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    fill="#fff"
-                    className="bi bi-plus-lg"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
-                    />
-                  </svg>
-                </div>
-              ) : null}
-              <div className="people-circle">PK</div>
-              <div className="people-circle-add Mom-btn pointer">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  fill="#fff"
-                  className="bi bi-plus-lg"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            <div className="add-people-box show">
-              <div className="pt-3 pb-3 border-bottom">
-                <label className="mb-2">Select People</label>
-
-                <div className="d-flex w-100">
-                  <div className="form-check form-check-inline">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="flexRadioDefault"
-                      id="flexRadioDefault1"
-                      value="prevMeetingRadio"
-                      onChange={() => setSelectedOption("prevMeetingRadio")}
-                      checked
-                    />
-                    <label
-                      className="mb-2 form-check-label"
-                      for="flexRadioDefault1"
-                    >
-                      Select From Previous Meetings
-                    </label>
-                  </div>
-
-                  <div className="form-check-inline">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="radio"
-                        name="flexRadioDefault"
-                        id="flexRadioDefault1"
-                        value="fromEmployeegRadio"
-                        onChange={() => setSelectedOption("fromEmployeegRadio")}
-                      />
-                      <label
-                        className=" mb-2 form-check-label"
-                        for="flexRadioDefault1"
-                      >
-                        Select From Employees
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="form-check-inline">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="radio"
-                        name="flexRadioDefault"
-                        id="flexRadioDefault1"
-                        value="fromEmployeegRadio"
-                        // checked={this.state.value === 1}
-                        onChange={() => setSelectedOption("addNewPeople")}
-                      />
-                      <label
-                        className=" mb-2 form-check-label"
-                        for="flexRadioDefault1"
-                      >
-                        Add New People
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {selectedOption == "prevMeetingRadio" ? (
-                <select className="mb-2">
-                  <option value="" disabled selected>
-                    {" "}
-                    Name / Email Address
-                  </option>
-                  <option value="prabhas@example.com">Prabhas Khamari</option>
-                  <option value="debasis@example.com">Debasis Behera</option>
-                  <option value="rakesh@example.com">Rakesh Baral</option>
-                </select>
-              ) : selectedOption == "fromEmployeegRadio" ? (
-                <select className="mb-2">
-                  <option value="" disabled selected>
-                    {" "}
-                    Name / Employee ID
-                  </option>
-                  <option value="prabhas@example.com">Prabhas Khamari</option>
-                  <option value="debasis@example.com">Debasis Behera</option>
-                  <option value="rakesh@example.com">Rakesh Baral</option>
-                </select>
-              ) : (
-                <div className="form-group">
-                  <label className="mb-1">Add New People</label>
-                  <div className="row">
-                    <div className="col-xl-6">
-                      <input type="text" className="mb-2" placeholder="Email" />
-                    </div>
-                    <div className="col-xl-6">
-                      <input type="text" placeholder="Name" />
-                    </div>
-                  </div>
-
-                  <div className="form-group d-flex ">
-                    <button
-                      type="button"
-                      className="btn rounded-pill add-btn Mom-btn d-flex align-items-center justify-content-center "
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        fill="#fff"
-                        className="bi bi-plus-circle pointer me-2"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                      </svg>
-                      <p> Add </p>
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div
-              style={{
-                marginTop: 20,
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              {/* <Button
-                variant="primary"
-                onClick={(e) => setStep(1)}
-                style={{ margin: 10 }}
-              >
-                Back
-              </Button> */}
-              <Button
-                variant="primary"
-                type="submit"
-                class="btn-primary"
-                onClick={(e) => setStep(2)}
-              >
-                Next
-              </Button>
-            </div>
-          </div>
-        </form>
+        <>
+          <AddAttendees />
+        </>
       ) : (
-        <form
-          className="mt-2 details-form"
-          onSubmit={() => submitMeetingDetails}
-        >
-          <div className="inner-detail-form">
-            <div className="form-group mt-3 agenda">
-              <label className="mb-1">Agenda Item</label>
-              <div className="mt-2 mb-3 plus pointer">
-                <button type="button" onClick={onAddAgenda}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="23"
-                    height="23"
-                    fill="#0564f3"
-                    className="bi bi-plus-circle pointer"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                  </svg>
-                </button>
-                <div>Create Agenda Item</div>
-                {agendas.length > 0 ? (
-                  <button type="button" onClick={onRemoveAgenda}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="23"
-                      height="23"
-                      fill="#0564f3"
-                      className="bi-minus-circle bi bi-dash-circle"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                      <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
-                    </svg>
-                    {/* <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="23"
-                      height="23"
-                      fill="#0564f3"
-                      className="bi bi-minus-circle pointer"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                      <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                    </svg> */}
-                  </button>
-                ) : null}
-                {/* <div>Remove Agenda Item</div> */}
-              </div>
-            </div>
-
-            <div>
-              <div id="inputFields">
-                <div id="children-pane">{agendas}</div>
-              </div>
-              <div
-                className="d-flex align-items-center"
-                style={{ marginTop: 20 }}
-              >
-                {/* <Button
-                  type="button"
-                  variant="primary"
-                  onClick={() => setStep(2)}
-                >
-                  Back
-                </Button> */}
-                <Button
-                  variant="primary"
-                  type="submit"
-                  style={{ margin: 20 }}
-                  onClick={(e) => setStep(3)}
-                >
-                  Submit
-                </Button>
-              </div>
-            </div>
-          </div>
-        </form>
+        <>
+          <AddAgendas />
+        </>
       )}
       {/* </>
       ) : (
@@ -804,84 +645,6 @@ const AddMeeting = (props) => {
           <Loader />
         </div>
       )} */}
-    </div>
-  );
-};
-
-const AgendaComponent = (props) => {
-  const [open, setOpen] = useState(false);
-  console.log("open---------------------------------", open);
-  return (
-    <div className="agenda-background">
-      <h2>
-        <button
-          className=""
-          onClick={() => setOpen(!open)}
-          aria-controls="example-collapse-text"
-          aria-expanded={open}
-          type="button"
-        >
-          Agenda {props.number + 1}
-        </button>
-      </h2>
-      <div className="open-div">
-        <Collapse in={open}>
-          <div>
-            <div className="form-group">
-              <div className="row">
-                <div className="col-md-4">
-                  <label className="mb-1">Agenda Title</label>
-                </div>
-                <div className="col-md-8">
-                  <input type="text" placeholder="Enter agenda title here" />
-                </div>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <div className="row">
-                <div className="col-md-4">
-                  <label className="mb-1">
-                    What are the topic to discuss ?
-                  </label>
-                </div>
-                <div className="col-md-8">
-                  <textarea
-                    name=""
-                    placeholder="Enter issue to discuss..."
-                    id=""
-                    cols="56"
-                    rows="4"
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-
-            <div className="form-group m-0">
-              <div className="row">
-                <div className="col-md-4">
-                  <label className="mb-1">
-                    How long will this agenda item take to discuss?
-                  </label>
-                </div>
-                <div className="col-md-8">
-                  <div className="time-taken">
-                    <input
-                      max="360"
-                      min="0"
-                      value="15.00"
-                      required="required"
-                      type="number"
-                      autocomplete="off"
-                    />
-                    <div className="minute_box">mins</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Collapse>
-      </div>
     </div>
   );
 };
