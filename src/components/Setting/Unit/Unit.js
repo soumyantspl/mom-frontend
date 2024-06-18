@@ -188,6 +188,24 @@ const Unit = () => {
     setSearchKey(event.target.value);
   };
 
+  const formatDateTimeFormat = (date) => {
+    //  console.log(date);
+    const sourceDate = new Date(date).toDateString();
+    const sourceTime = new Date(date).toLocaleTimeString();
+    // The above yields e.g. 'Mon Jan 06 2020'
+
+    const [, month, day, year] = sourceDate.split(" ");
+    const formattedDate = [day, month, year].join(" ");
+    // console.log(formattedDate);
+
+    const [hour, minute, second] = sourceTime.split(" ")[0].split(":");
+    const formattedTime =
+      [hour, minute].join(":") + " " + sourceTime.split(" ")[1];
+    return {
+      formattedTime,
+      formattedDate,
+    };
+  };
   //Edit Unit
   const handleEditClick = (unit) => {
     setSelectedUnit(unit);
@@ -205,7 +223,7 @@ const Unit = () => {
       await axios.put(`http://localhost:8000/api/V1/department/updateDepartment/${selectedUnit._id}`,
         {
           userId,
-          id: selectedUnit._id,
+          id: selectedUnit.id,
           data: updatedUnit
         },
         {
@@ -217,7 +235,7 @@ const Unit = () => {
       );
       setUnits((prevUnits) =>
         prevUnits.map((unit) => {
-          unit._id === selectedUnit._id ? { ...unit, ...updatedUnit } : unit
+          unit.id === selectedUnit.id ? { ...unit, ...updatedUnit } : unit
         })
       )
       setShowEditModal(false)
@@ -329,6 +347,7 @@ const Unit = () => {
                 <tr>
                   <th>Unit Name</th>
                   <th>Unit Address</th>
+                  <th>Updated At</th>
                   <th className="action-col">Action</th>
                 </tr>
               </thead>
@@ -342,6 +361,11 @@ const Unit = () => {
                     <tr key={index}>
                       <td>{units.name}</td>
                       <td>{units.address}</td>
+                      <td key={units.address}>{formatDateTimeFormat(units.updatedAt).formattedDate}
+                        <p className="detail-date-time">
+                          {/* {formatTimeFormat(meeting.fromTime)} */}
+                          {formatDateTimeFormat(units.updatedAt).formattedTime}
+                        </p></td>
                       <td data-label="Action">
                         <Dropdown>
                           <Dropdown.Toggle
@@ -394,6 +418,7 @@ const Unit = () => {
                           </Dropdown.Menu>
                         </Dropdown>
                       </td>
+
                     </tr>
                   ))
                 )}
