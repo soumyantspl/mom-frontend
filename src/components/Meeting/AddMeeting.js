@@ -55,7 +55,7 @@ const AddMeeting = (props) => {
 
     // console.log(meetingData.step);
     setStep(meetingData.step + 1);
-    if (meetingData.singleMeetingDetails) {
+    if (meetingData.singleMeetingDetails && meetingData.checkStep) {
       setFormData({
         ...formData,
         title: meetingData.singleMeetingDetails.title,

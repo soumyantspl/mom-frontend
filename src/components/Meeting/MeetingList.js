@@ -183,11 +183,11 @@ const MeetingList = () => {
   };
 
   const formatDateTimeFormat = (date) => {
-    //  console.log(date);
+      console.log(date);
     const sourceDate = new Date(date).toDateString();
     const sourceTime = new Date(date).toLocaleTimeString();
     // The above yields e.g. 'Mon Jan 06 2020'
-
+    console.log(sourceTime);
     const [, month, day, year] = sourceDate.split(" ");
     const formattedDate = [day, month, year].join(" ");
     // console.log(formattedDate);
