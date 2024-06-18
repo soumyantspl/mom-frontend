@@ -110,7 +110,7 @@ const NewAgenda = (props) => {
                     placeholder="Enter agenda title here"
                     name="title"
                     value={formData.title}
-                    onChange={this.props.handleChange}
+                    onChange={props.handleChange}
                     onBlur={
                       validateAgendaTitle
                     }
@@ -135,7 +135,7 @@ const NewAgenda = (props) => {
                   <textarea
                     name="topic"
                     value={formData.topic}
-                    onChange={handleChange}
+                    onChange={props.handleChange}
                     // onBlur={() => {
                     //   props.agendaData(formData);
                     // }}
@@ -163,7 +163,7 @@ const NewAgenda = (props) => {
                       min="0"
                       name="time"
                       value={formData.time}
-                      onChange={handleChange}
+                      onChange={props.handleChange}
                       onBlur={
                         validateAgendaTime
                       }
