@@ -13,7 +13,20 @@ const NewAgenda = (props) => {
     // index: props.agenda.index,
   });
 
-
+  const handleChange = (e) => {
+    // dispatch(updateIsCreateMeetingProcessed(false));
+    setErrors({});
+    //  dispatch(updateOtpProcessed(false));
+    //  console.log("9999999999999999999999999999999999999", authData);
+    const { name, value } = e.target;
+    console.log(name, value);
+    setFormData({
+      ...formData,
+      //   index: props.index ,
+      [name]: value,
+    });
+     props.agendaData(formData)
+  };
 
 
 
@@ -110,7 +123,7 @@ const NewAgenda = (props) => {
                     placeholder="Enter agenda title here"
                     name="title"
                     value={formData.title}
-                    onChange={props.handleChange}
+                    onChange={handleChange}
                     onBlur={
                       validateAgendaTitle
                     }
@@ -135,7 +148,7 @@ const NewAgenda = (props) => {
                   <textarea
                     name="topic"
                     value={formData.topic}
-                    onChange={props.handleChange}
+                    onChange={handleChange}
                     // onBlur={() => {
                     //   props.agendaData(formData);
                     // }}
@@ -163,7 +176,7 @@ const NewAgenda = (props) => {
                       min="0"
                       name="time"
                       value={formData.time}
-                      onChange={props.handleChange}
+                      onChange={handleChange}
                       onBlur={
                         validateAgendaTime
                       }

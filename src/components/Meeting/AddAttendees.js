@@ -90,13 +90,13 @@ const AddAttendees = (props) => {
 
   const submitAttendeeDetails = (e) => {
     e.preventDefault();
+    const meetingId = meetingData?.singleMeetingDetails?._id;
     const payload = {
-      meetingId: meetingData?.singleMeetingDetails?._id,
       attendees: attendeesData,
       organizationId: userData.organizationId,
       step: meetingData?.singleMeetingDetails?.step + 1,
     };
-    dispatch(updateMeetingDetails(payload, accessToken));
+    dispatch(updateMeetingDetails(meetingId, payload, accessToken));
     //  setStep(3);
   };
 
@@ -262,7 +262,12 @@ const AddAttendees = (props) => {
     setIsModalOpen(false);
   };
 
-  console.log(attendeesData, formData, meetingData.singleMeetingDetails,employeeData);
+  console.log(
+    attendeesData,
+    formData,
+    meetingData.singleMeetingDetails,
+    employeeData
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -525,7 +530,8 @@ const AddAttendees = (props) => {
                   </div>
                 </div>
               </div>
-            ) : meetingData.isCreateMeetingProcessed ? (
+            ) : meetingData.isCreateMeetingProcessed &&
+              meetingData.step == 2 ? (
               <div className="mb-3 col-padding-none">
                 <div className="row">
                   <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
@@ -547,14 +553,28 @@ const AddAttendees = (props) => {
               >
                 Back
               </Button> */}
-            <Button
+
+            {!meetingData.loading ? (
+              <Button
+                variant="primary"
+                type="submit"
+                class="btn-primary"
+                onClick={(e) => setStep(2)}
+              >
+                Next
+              </Button>
+            ) : (
+              <LoaderButton />
+            )}
+
+            {/* <Button
               variant="primary"
               type="submit"
               class="btn-primary"
               onClick={(e) => setStep(2)}
             >
               Next
-            </Button>
+            </Button> */}
           </div>
         </div>
       </form>

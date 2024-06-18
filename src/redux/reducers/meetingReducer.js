@@ -121,6 +121,7 @@ export const meetingReducer = (state = initialObject, action) => {
           message: action.payload.message,
           isSuccess: action.payload.success,
           step: action.payload.data ? action.payload.data.step : 0,
+          isCreateMeetingProcessed:true
         };
   
       

@@ -233,10 +233,10 @@ export const updateIsCreateMeetingProcessed = (data) => {
   };
 };
 
-export const updateMeetingDetails = (payload, accessToken) => {
+export const updateMeetingDetails = (meetingId,bodyPayload, accessToken) => {
   return (dispatch) => {
-    // dispatch(makeRequest());
-    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/updateMeeting/${payload.meetingId}`;
+     dispatch(makeRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/updateMeeting/${meetingId}`;
     const headerObject = {
       headers: {
         "Content-Type": "application/json",
@@ -246,11 +246,11 @@ export const updateMeetingDetails = (payload, accessToken) => {
     console.log("webApiUrl----------------", webApiUrl);
     console.log("accessToken------------>>>>>", accessToken);
 
-    const bodyPayload = {
-      organizationId: payload.organizationId,
-      attendees: payload.attendees,
-      step:payload.step
-    };
+    // const bodyPayload = {
+    //   organizationId: payload.organizationId,
+    //   attendees: payload.attendees,
+    //   step:payload.step
+    // };
     axios
       .put(webApiUrl, bodyPayload, headerObject)
       .then((result) => {
