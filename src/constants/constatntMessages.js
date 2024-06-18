@@ -9,19 +9,27 @@ const passwordRequired = "Password is required.";
 const passwordRegex =
   "Your password must be at least eight characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.";
 const otpCountDownMessage = "Resend OTP in :";
-const logOutMessage="Do you want to logout from the application ?";
-const titleRequired="Please enter a title."
-const dateRequired="Please enter a valid date."
-const timeRequired="Please enter a valid time."
-const roomRequired="Please enter a valid room."
-const linkRequired="Please enter a url."
-const invalidLink="Please enter a valid url."
-const locationRequired="Please enter location."
-const nameRequired="Please enter a name."
-const invalidName="Please enter a valid name."
-const duplicateAttendee="Attendee already added."
-const deleteAttendeeMessage="Do you want to remove ?"
+const logOutMessage = "Do you want to logout from the application ?";
+const titleRequired = "Please enter a title.";
+const dateRequired = "Please enter a valid date.";
+const timeRequired = "Please enter a valid time.";
+const roomRequired = "Please enter a valid room.";
+const linkRequired = "Please enter a url.";
+const invalidLink = "Please enter a valid url.";
+const locationRequired = "Please enter location.";
+const nameRequired = "Please enter a name.";
+const invalidName = "Please enter a valid name.";
+const duplicateAttendee = "Attendee already added.";
+const deleteAttendeeMessage = "Do you want to remove ?";
+const invalidFromHour = "Invali from hour.";
+const invalidToHour = "Invali to hour.";
+const invalidFromMinute = "Invali from minute.";
+const invalidToMinute = "Invali to minute.";
 module.exports = {
+  invalidFromHour,
+  invalidToHour,
+  invalidFromMinute,
+  invalidToMinute,
   deleteAttendeeMessage,
   duplicateAttendee,
   invalidName,
@@ -42,5 +50,5 @@ module.exports = {
   titleRequired,
   dateRequired,
   timeRequired,
-  roomRequired
+  roomRequired,
 };

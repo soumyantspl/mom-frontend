@@ -1,4 +1,4 @@
-import { FETCH_SINGLE_USER, FAIL_REQUEST, MAKE_REQUEST, SET_EMPLOYEE_LIST } from "./actionTypes";
+import { FETCH_SINGLE_USER, FAIL_REQUEST, MAKE_REQUEST, SET_EMPLOYEE_LIST, SET_DUPLICATE_USER_STATUS } from "./actionTypes";
 import axios from "axios";
 
 export const makeRequest = () => {
@@ -85,6 +85,42 @@ export const setEmployeeList = (data) => {
     payload: data,
   };
 };
+
+export const checkDuplicateUser = (payload,accessToken) => {
+  return (dispatch) => {
+    dispatch(makeRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/employee/checkDuplicateUser`;
+    const headerObject = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: accessToken,
+      },
+    };
+    console.log("webApiUrl----------------", webApiUrl);
+    console.log("accessToken------------>>>>>", accessToken);
+
+    axios
+      .post(webApiUrl, payload, headerObject)
+      .then((result) => {
+        console.log("result------------------------->>>>>>>", result);
+        const resData = result.data;
+
+        dispatch(setDuplicateUserStatus(resData));
+      })
+      .catch((err) => {
+        console.log("err------------------------->>>>>>>", err);
+       // dispatch(failRequest(err.message));
+      });
+  };
+};
+
+export const setDuplicateUserStatus = (data) => {
+  return {
+    type: SET_DUPLICATE_USER_STATUS,
+    payload: data,
+  };
+};
+
 
 
 

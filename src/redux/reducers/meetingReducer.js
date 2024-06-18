@@ -7,7 +7,8 @@ import {
   MAKE_REQUEST,
   MAKE_RSVP_UPDATE_REQUEST,
   UPDATE_ISCREATE_MEETING_PROCESSED,
-  UPDATE_RSVP,SET_ATTENDEES
+  UPDATE_RSVP,SET_ATTENDEES,
+  UPDATE_MEETING_RESPONSE
 } from "../actions/meetingActions/actionTypes";
 
 const initialObject = {
@@ -110,7 +111,19 @@ export const meetingReducer = (state = initialObject, action) => {
         message: action.payload.message,
         isSuccess: action.payload.success,
       };
+      
 
+
+      case UPDATE_MEETING_RESPONSE:
+        return {
+          ...state,
+          loading: false,
+          message: action.payload.message,
+          isSuccess: action.payload.success,
+          step: action.payload.data ? action.payload.data.step : 0,
+        };
+  
+      
     default:
       return state;
   }

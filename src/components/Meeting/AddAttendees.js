@@ -12,14 +12,19 @@ import {
   getAttendeesListFromPreviousMeeting,
   getAttendeesListfromEmployeeList,
   getCreateMeetingStep,
+  updateMeetingDetails,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import Loader from "../Common/Loader";
 import * as constantMessages from "../../constants/constatntMessages";
 import "../Login/style/Login.css";
 import LoaderButton from "../Common/LoaderButton";
-import { getEmployeeList } from "../../redux/actions/userAction/userAction";
+import {
+  checkDuplicateUser,
+  getEmployeeList,
+} from "../../redux/actions/userAction/userAction";
 import { customName } from "../../helpers/commonHelpers";
 import CommonModal from "../Common/CommonModal";
+import Alert from "../Common/Alert";
 
 const AddAttendees = (props) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -34,7 +39,7 @@ const AddAttendees = (props) => {
   const [step, setStep] = useState(0);
   const [selectedOption, setSelectedOption] = useState("prevMeetingRadio");
   const [isManualLocation, setIsManualLocation] = useState(true);
-  
+
   const [removeAttendeeData, setRemoveAttendeeData] = useState({});
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -60,18 +65,42 @@ const AddAttendees = (props) => {
     if (formData.attendyType === "fromPreviousMeeting") {
       dispatch(fetchAttendeesList(userData.organizationId, accessToken));
     }
-
+    console.log(employeeData);
+    if (employeeData.isDuplicateUser === false) {
+      const newAttendee = {
+        name: formData.name,
+        email: formData.email,
+        isEmployee: false,
+        organizationId: userData.organizationId,
+      };
+      const newAttendeeData = [...attendeesData, newAttendee];
+      setAttendeesData(newAttendeeData);
+      setFormData({
+        ...formData,
+        name: "",
+        email: "",
+      });
+    }
     // dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
     // console.log(meetingData.step);
     // setStep(meetingData.step + 1);
-  }, [meetingData.step]);
+
+    // setAttendeesData(meetingData?.singleMeetingDetails?attendees)
+  }, [meetingData.step, employeeData.isDuplicateUser]);
 
   const submitAttendeeDetails = (e) => {
     e.preventDefault();
-    setStep(3);
+    const payload = {
+      meetingId: meetingData?.singleMeetingDetails?._id,
+      attendees: attendeesData,
+      organizationId: userData.organizationId,
+      step: meetingData?.singleMeetingDetails?.step + 1,
+    };
+    dispatch(updateMeetingDetails(payload, accessToken));
+    //  setStep(3);
   };
 
-  const addAttendee = (e) => {
+  const addAttendee = async (e) => {
     // const attenId = e.target.value;
     // const user = userlist.find(u => u.id === userId);
 
@@ -93,55 +122,58 @@ const AddAttendees = (props) => {
           }
         }
 
-        const newAttendee = {
-          name: formData.name,
+        console.log(
+          "duplicate----------------------------------------------------------------------"
+        );
+
+        const payload = {
+          organizationId: userData.organizationId,
           email: formData.email,
-          isEmployee: false,
         };
-        const newAttendeeData = [...attendeesData, newAttendee];
-        setAttendeesData(newAttendeeData);
-        setFormData({
-          ...formData,
-          name: "",
-          email: "",
-        });
+        // await checkDuplicateUser(payload);
+        dispatch(checkDuplicateUser(payload, accessToken));
+        console.log(employeeData);
+        console.log("duplicate222222222");
       }
+      //  addNewPeople();
     } else {
-      if (attendeesData.length > 0) {
-        const attendeeFound = attendeesData.find(
+      if (formData.attendeeId) {
+        if (attendeesData.length > 0) {
+          const attendeeFound = attendeesData.find(
+            (u) => u._id === formData.attendeeId
+          );
+          console.log(attendeeFound);
+          if (attendeeFound) {
+            const errors = {};
+            errors.duplicateAttendee = constantMessages.duplicateAttendee;
+            setErrors(errors);
+            return errors;
+          }
+        }
+        let newAttendee = meetingData.attendeesList.find(
           (u) => u._id === formData.attendeeId
         );
-        console.log(attendeeFound);
-        if (attendeeFound) {
-          const errors = {};
-          errors.duplicateAttendee = constantMessages.duplicateAttendee;
-          setErrors(errors);
-          return errors;
-        }
+        newAttendee.isEmployee = true;
+        console.log(newAttendee);
+        //  const newAttendee = e.target.value;
+        const newAttendeeData = [...attendeesData, newAttendee];
+        setAttendeesData(newAttendeeData);
       }
-      const newAttendee = meetingData.attendeesList.find(
-        (u) => u._id === formData.attendeeId
-      );
-
-      console.log(newAttendee);
-      //  const newAttendee = e.target.value;
-      const newAttendeeData = [...attendeesData, newAttendee];
-      setAttendeesData(newAttendeeData);
     }
   };
-
+  // const checkDuplicateUser = async (payload) => {
+  //   return dispatch(checkDuplicateUser(payload, accessToken));
+  // };
   const addNewPeople = (e) => {
-    const newErrors = validateForm(formData);
-    setErrors(newErrors);
-
-    if (Object.keys(newErrors).length === 0) {
-      // Form submission logic here
-
-      console.log("Form submitted successfully!");
-    } else {
-      console.log(`Form submission failed
-       due to validation errors.`);
-    }
+    // const newErrors = validateForm(formData);
+    // setErrors(newErrors);
+    // if (Object.keys(newErrors).length === 0) {
+    //   // Form submission logic here
+    //   console.log("Form submitted successfully!");
+    // } else {
+    //   console.log(`Form submission failed
+    //    due to validation errors.`);
+    // }
   };
 
   const validateForm = (data) => {
@@ -215,19 +247,22 @@ const AddAttendees = (props) => {
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       errors.email = constantMessages.invalidEmail;
     }
+
     setErrors(errors);
     // }
   };
 
   const removeAttendee = (e) => {
-    console.log(removeAttendeeData)
-    const filteredAttendees = attendeesData.filter((item) => item.email !== removeAttendeeData.email);
-    console.log(filteredAttendees)
+    console.log(removeAttendeeData);
+    const filteredAttendees = attendeesData.filter(
+      (item) => item.email !== removeAttendeeData.email
+    );
+    console.log(filteredAttendees);
     setAttendeesData(filteredAttendees);
     setIsModalOpen(false);
   };
 
-  console.log(attendeesData, formData);
+  console.log(attendeesData, formData, meetingData.singleMeetingDetails,employeeData);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -261,18 +296,19 @@ const AddAttendees = (props) => {
                     />
                   </svg>
                 </div> */}
-                {attendeesData.map((attendee,index) => {
+                {attendeesData.map((attendee, index) => {
                   return (
-                    <div className="attendee-content" key={index} >
-                    <div className="attendee1 attendee-list sl" 
-                     // className="people-circle"
-                      onClick={() => {
-                        setIsModalOpen(true);
-                        setRemoveAttendeeData(attendee)
-                      }}
-                    >
-                      {customName(attendee.name)}
-                    </div>
+                    <div className="attendee-content" key={index}>
+                      <div
+                        className="attendee1 attendee-list sl"
+                        // className="people-circle"
+                        onClick={() => {
+                          setIsModalOpen(true);
+                          setRemoveAttendeeData(attendee);
+                        }}
+                      >
+                        {customName(attendee.name)}
+                      </div>
                     </div>
                   );
                 })}
@@ -444,24 +480,28 @@ const AddAttendees = (props) => {
               <span className="error-message">{errors.duplicateAttendee}</span>
             )}
             <div className="form-group d-flex ">
-              <button
-                type="button"
-                className="btn rounded-pill add-btn Mom-btn d-flex align-items-center justify-content-center "
-                onClick={addAttendee}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  fill="#fff"
-                  className="bi bi-plus-circle pointer me-2"
-                  viewBox="0 0 16 16"
+              {!employeeData.loading ? (
+                <button
+                  type="button"
+                  className="btn rounded-pill add-btn Mom-btn d-flex align-items-center justify-content-center "
+                  onClick={addAttendee}
                 >
-                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                </svg>
-                <p> Add </p>
-              </button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="#fff"
+                    className="bi bi-plus-circle pointer me-2"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                  </svg>
+                  <p> Add </p>
+                </button>
+              ) : (
+                <LoaderButton />
+              )}
             </div>
           </div>
           <div
@@ -471,6 +511,35 @@ const AddAttendees = (props) => {
               alignItems: "center",
             }}
           >
+            {employeeData.isDuplicateUser === true ? (
+              <div className="mb-3 col-padding-none">
+                <div className="row">
+                  <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
+                    <div className="position-relative ">
+                      <Alert
+                        status={employeeData.isSuccess ? false : true}
+                        message={employeeData.message}
+                        timeoutSeconds={5000}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : meetingData.isCreateMeetingProcessed ? (
+              <div className="mb-3 col-padding-none">
+                <div className="row">
+                  <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
+                    <div className="position-relative ">
+                      <Alert
+                        status={meetingData.isSuccess}
+                        message={meetingData.message}
+                        timeoutSeconds={3000}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
             {/* <Button
                 variant="primary"
                 onClick={(e) => setStep(1)}
