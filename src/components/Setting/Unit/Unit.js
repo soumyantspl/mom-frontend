@@ -89,7 +89,7 @@ const Unit = () => {
       if (validate()) {
         console.log("Form submitted", formValues);
         const response = await axios.post(
-          "http://localhost:8000/api/V1/unit/createUnit",
+          `${process.env.REACT_APP_API_URL}/api/V1/unit/createUnit`,
           {
             ...unitData,
             organizationId,
@@ -114,6 +114,8 @@ const Unit = () => {
           isSuccess: response.data.success,
           message: response.data.message,
         });
+      } else {
+        setIsLoading(false)
       }
     } catch (error) {
       console.error("Error creating unit:", error.response.data.message);
@@ -140,7 +142,7 @@ const Unit = () => {
       };
       console.log("organizationIddd", organizationId);
       const response = await axios.post(
-        "http://localhost:8000/api/V1/unit/listUnit",
+        `${process.env.REACT_APP_API_URL}/api/V1/unit/listUnit`,
         bodyData,
         headerObject
       );
@@ -175,6 +177,7 @@ const Unit = () => {
         // setTotalCount(data.totalCount);
         // setPage(data.page);
       } catch (error) {
+        console.log("Error while fetching units:", error)
         throw error;
       }
     };
@@ -199,7 +202,29 @@ const Unit = () => {
         name: unitName,
         address: unitAddress,
       };
-    } catch (error) {}
+      await axios.put(`http://localhost:8000/api/V1/department/updateDepartment/${selectedUnit._id}`,
+        {
+          userId,
+          id: selectedUnit._id,
+          data: updatedUnit
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: accessToken,
+          }
+        }
+      );
+      setUnits((prevUnits) =>
+        prevUnits.map((unit) => {
+          // unit._id === selectedUnit._id ? { ...unit, ...updatedUnit } : unit
+        })
+      )
+      setShowEditModal(false)
+    } catch (error) {
+      console.log("Error while updating units:", error)
+      throw error
+    }
   };
   return (
     <div>
@@ -257,11 +282,13 @@ const Unit = () => {
             </form>
             <div>
               {isGetApiRes ? (
-                <Alert
-                  status={apiResData.isSuccess}
-                  message={apiResData.message}
-                  timeoutSeconds={3000}
-                />
+                <div className="alertwidth">
+                  <Alert
+                    status={apiResData.isSuccess}
+                    message={apiResData.message}
+                    timeoutSeconds={3000}
+                  />
+                </div>
               ) : null}
             </div>
           </div>
@@ -439,18 +466,6 @@ const Unit = () => {
 
           <Modal show={showModal} onHide={handleClose}>
             <Modal.Header closeButton>
-              <Modal.Title>View Details</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>Unit details go here...</Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
-                Close
-              </Button>
-              <Button variant="primary" onClick={handleClose}>
-                Save Changes
-              </Button>
-            </Modal.Footer>
-            <Modal.Header closeButton>
               <Modal.Title>Edit Unit</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -481,6 +496,20 @@ const Unit = () => {
                 Close
               </Button>
               <Button variant="primary" onClick={handleEditSave}>
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          <Modal show={showModal} onHide={handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>View Details</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Unit details go here...</Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
+              <Button variant="primary" onClick={handleClose}>
                 Save Changes
               </Button>
             </Modal.Footer>
