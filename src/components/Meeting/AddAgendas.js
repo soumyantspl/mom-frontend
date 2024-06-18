@@ -19,6 +19,7 @@ import AddAttendees from "./AddAttendees";
 import Alert from "../Common/Alert";
 import AgendaComponent from "./AddAgendaComp";
 import AddAgendaComp from "./AddAgendaComp";
+import NewAgenda from "./NewAgenda";
 
 const AddAgendas = () => {
   const accessToken = localStorage.getItem("accessToken");
@@ -153,28 +154,45 @@ const AddAgendas = () => {
 
   const getAgendaData = (data) => {
     console.log(data);
-    // setAgendaData([...agendaData, data]);
-    setFormData({
-      ...formData,
-      title: data.title,
-      topic: data.topic,
-      time: data.time,
-      index: data.index,
-    });
+     setAgendaData([...agendaData, data]);
+    // setFormData({
+    //   ...formData,
+    //   title: data.title,
+    //   topic: data.topic,
+    //   time: data.time,
+    //   index: data.index,
+    // });
   };
 
-  for (var i = 0; i < numAgenda; i += 1) {
-    agendas.push(
-      <AgendaComponent
-        key={i}
-        number={i}
-        agendaData={getAgendaData}
-        errorData={errors}
-        onRemoveAgenda={onRemoveAgenda}
-        uid={Math.floor(100000 + Math.random() * 900000)}
-      />
-    );
-  }
+  // for (var i = 0; i < numAgenda; i += 1) {
+  //   agendas.push(
+  //     <AgendaComponent
+  //       key={i}
+  //       number={i}
+  //       agendaData={getAgendaData}
+  //       errorData={errors}
+  //       onRemoveAgenda={onRemoveAgenda}
+  //       uid={Math.floor(100000 + Math.random() * 900000)}
+  //     />
+  //   );
+  // }
+  const handleChange = (e) => {
+    // dispatch(updateIsCreateMeetingProcessed(false));
+    setErrors({});
+    //  dispatch(updateOtpProcessed(false));
+    //  console.log("9999999999999999999999999999999999999", authData);
+    const { name, value } = e.target;
+    console.log(name, value);
+    setFormData({
+      ...formData,
+      //   index: props.index ,
+      [name]: value,
+    });
+    // props.agendaData(formData)
+  };
+
+
+
   console.log(agendaData);
   //console.log(agendas);
   return (
@@ -203,18 +221,19 @@ const AddAgendas = () => {
         <div>
           <div id="inputFields">
             <div id="children-pane">
-              {agendaData.map((agenda, i) => {
+            <NewAgenda  agendaData={getAgendaData}  handleChange = {handleChange}/>
+              {/* {agendaData.map((agenda, i) => {
                 return (
                   <AgendaComponent
                     key={i}
                     agenda={agenda}
                     index={i}
-                    agendaData={getAgendaData}
-                    errorData={errors}
-                    onRemoveAgenda={onRemoveAgenda}
+                    // agendaData={getAgendaData}
+                    // errorData={errors}
+                    // onRemoveAgenda={onRemoveAgenda}
                   />
                 );
-              })}
+              })} */}
             </div>
           </div>
           <div className="d-flex align-items-center" style={{ marginTop: 20 }}>
