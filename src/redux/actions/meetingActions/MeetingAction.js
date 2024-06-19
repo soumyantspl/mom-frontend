@@ -11,7 +11,7 @@ import {
   UPDATE_ISCREATE_MEETING_PROCESSED,
   SET_ATTENDEES,
   UPDATE_MEETING_RESPONSE,
-  LOAD_PREVIOUS_STEP,
+  LOAD_PREVIOUS_STEP,SET_SINGLE_MEETING_DETAILS
 } from "./actionTypes";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
@@ -330,43 +330,43 @@ export const updateMeetingResponse = (data) => {
   };
 };
 
-// export const getAttendeesListFromPreviousMeeting = (
-//   organizationId,
-//   accessToken
-// ) => {
-//   return (dispatch) => {
-//     // dispatch(makeRequest());
-//     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/listAttendeesFromPreviousMeeting/${organizationId}`;
-//     const headerObject = {
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: accessToken,
-//       },
-//     };
-//     console.log("webApiUrl----------------", webApiUrl);
-//     console.log("accessToken------------>>>>>", accessToken);
+export const getSingleMeetingDetails = (
+  meetingId,
+  accessToken
+) => {
+  return (dispatch) => {
+     dispatch(makeRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/viewMeeting/${meetingId}`;
+    const headerObject = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: accessToken,
+      },
+    };
+    console.log("webApiUrl----------------", webApiUrl);
+    console.log("accessToken------------>>>>>", accessToken);
 
-//     axios
-//       .get(webApiUrl, headerObject)
-//       .then((result) => {
-//         console.log("result------------------------->>>>>>>", result);
-//         const resData = result.data;
+    axios
+      .get(webApiUrl, headerObject)
+      .then((result) => {
+        console.log("result------------------------->>>>>>>", result);
+        const resData = result.data;
 
-//         dispatch(setAttendeesListFromPreviousMeeting(resData));
-//       })
-//       .catch((err) => {
-//         console.log("err------------------------->>>>>>>", err);
-//         dispatch(failRequest(err.message));
-//       });
-//   };
-// };
+        dispatch(setSingleMeetingDetails(resData));
+      })
+      .catch((err) => {
+        console.log("err------------------------->>>>>>>", err);
+        dispatch(failRequest(err.message));
+      });
+  };
+};
 
-// export const setAttendeesListFromPreviousMeeting = (data) => {
-//   return {
-//     type: SET_ATTENDEES,
-//     payload: data,
-//   };
-// };
+export const setSingleMeetingDetails = (data) => {
+  return {
+    type: SET_SINGLE_MEETING_DETAILS,
+    payload: data,
+  };
+};
 
 export const loadCreateMeeting = (data) => {
   return {

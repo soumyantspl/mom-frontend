@@ -9,6 +9,7 @@ import CreateMeeting from "./CreateMeeting";
 import {
   createMeetingDetails,
   getCreateMeetingStep,
+  getSingleMeetingDetails,
   updateIsCreateMeetingProcessed,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import Loader from "../Common/Loader";
@@ -19,12 +20,25 @@ import AddAttendees from "./AddAttendees";
 import Alert from "../Common/Alert";
 import AddAgendas from "./AddAgendas";
 import NoDataFound from "../Common/NoDataFound";
+import { formatDateTimeFormat, getTimeSession } from "../../helpers/commonHelpers";
 const ViewMeeting = (props) => {
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
   const dispatch = useDispatch();
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const meetingData = useSelector((state) => state.meeting);
+  console.log(meetingData.step);
+  useEffect(() => {
+   // document.title = "View Meeting: Meeting Plus";
+    console.log("is dispatched->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    // if (meetingData.singleMeetingDetails?._id) {
+    //   console.log("is dispatched->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>in>")
+    //   dispatch(getSingleMeetingDetails(meetingData.singleMeetingDetails._id, accessToken));
+    // }
+   
+   
+  },[meetingData.step]);
+  console.log(meetingData.step);
   return (
     <>
       {/* <Header />
@@ -49,7 +63,7 @@ const ViewMeeting = (props) => {
                 <label className="mb-1">Title</label>
               </div>
               <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                <p>Tuesday Morning Meeting</p>
+                <p>{meetingData.singleMeetingDetails.title}</p>
               </div>
             </div>
           </div>
@@ -60,7 +74,7 @@ const ViewMeeting = (props) => {
                 <label className="mb-1">Meeting Mode</label>
               </div>
               <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                <p>Physical Meeting</p>
+                <p>{meetingData.singleMeetingDetails.mode}</p>
               </div>
             </div>
           </div>
@@ -71,7 +85,12 @@ const ViewMeeting = (props) => {
                 <label className="mb-1">Location</label>
               </div>
               <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                <p>NTSPL, 5th Floor, Conference room</p>
+                 <p>{meetingData.singleMeetingDetails.locationDetails.isMeetingRoom
+                 ?
+                 meetingData.singleMeetingDetails.locationDetails.roomDetail.location
+                 :
+                 meetingData.singleMeetingDetails.locationDetails.location
+                 }</p> 
               </div>
             </div>
           </div>
@@ -82,7 +101,7 @@ const ViewMeeting = (props) => {
                 <label className="mb-1">Meeting Link</label>
               </div>
               <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                <p>https://meet.google.com/hkv-hxsf-whf</p>
+                <p>{meetingData.singleMeetingDetails.link?meetingData.singleMeetingDetails.link:"NA"}</p>
               </div>
             </div>
           </div>
@@ -93,11 +112,16 @@ const ViewMeeting = (props) => {
                 <label className="mb-1">Date & Time</label>
               </div>
               <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                <p>03 Jan 2024 , 5:40 PM to 7:00 PM</p>
+                <p>{formatDateTimeFormat(meetingData.singleMeetingDetails.date).formattedDate} , 
+                   {meetingData.singleMeetingDetails.fromTime} {getTimeSession(meetingData.singleMeetingDetails.fromTime)}{" "} 
+                     to 
+                     {" "}
+                    {meetingData.singleMeetingDetails.toTime} {getTimeSession(meetingData.singleMeetingDetails.toTime)} 
+                    </p>
               </div>
             </div>
           </div>
-
+          {meetingData.singleMeetingDetails.attendees.length>0?(
           <div className="form-group mb-2">
             <div className="row align-items-center">
               <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
@@ -115,7 +139,9 @@ const ViewMeeting = (props) => {
               </div>
             </div>
           </div>
-
+          ):
+          null}
+  {meetingData.singleMeetingDetails.attendees.length>0?(
           <div className="form-group agenda">
             <label className="mt-3 mb-3">
               <h4>Agenda(s)</h4>
@@ -219,6 +245,7 @@ const ViewMeeting = (props) => {
               </div>
             </div>
           </div>
+  ):null}
         </form>
       ) : (
         <form className="mt-2 details-form details-form-right">

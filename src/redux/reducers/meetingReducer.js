@@ -11,6 +11,7 @@ import {
   SET_ATTENDEES,
   UPDATE_MEETING_RESPONSE,
   LOAD_PREVIOUS_STEP,
+  SET_SINGLE_MEETING_DETAILS,
 } from "../actions/meetingActions/actionTypes";
 
 const initialObject = {
@@ -132,6 +133,14 @@ export const meetingReducer = (state = initialObject, action) => {
         step: action.payload,
         checkStep:false
       };
+      case SET_SINGLE_MEETING_DETAILS:
+        return {
+          ...state,
+          loading: false,
+          message: action.payload.message,
+          isSuccess: action.payload.success,
+          singleMeetingDetails: action.payload.data
+        };
     default:
       return state;
   }
