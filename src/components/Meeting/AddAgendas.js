@@ -244,9 +244,9 @@ const AddAgendas = () => {
   console.log(agendaData);
   //console.log(agendas);
   return (
-    <form className="mt-2 details-form" onSubmit={submitAgendasDetails}>
+    <form className="mt-2 details-form no-padding-2" onSubmit={submitAgendasDetails}>
       <div className="inner-detail-form">
-        <div className="form-group mt-3 agenda">
+        <div className="form-group agenda">
           <label className="mb-1">Agenda Item</label>
           <div className="mt-2 mb-3 plus pointer">
             <button type="button" onClick={onAddAgenda}>
@@ -593,14 +593,14 @@ const AddAgendas = () => {
                 </div>
               </div>
             ) : null} */}
-            <div className="button-outer">
+            <div>
              
               {!meetingData.loading ? (
                 <Button
                   variant="primary"
                    class="btn-primary"
                   type="submit"
-                  style={{ margin: 20 }}
+                 
                  // onClick={(e) => dispatch(loadCreateMeeting(1))}
                 >
                   Submit

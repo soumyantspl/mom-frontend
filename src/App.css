@@ -1245,7 +1245,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border-top: 1px solid #cbcbcb;
   border-top-style: dashed;
   padding-top: 20px;
-  margin-top: 25px;
   margin-bottom: 0 !important;
 }
 
@@ -1331,7 +1330,6 @@ textarea {
   padding: 20px;
   min-height: 300px;
   background-color: #fff;
-  margin-bottom: 20px;
   overflow: hidden;
 }
 
@@ -1864,7 +1862,7 @@ th.action-col {
 }
 
 /* ------------------------------------------ */
-.inner-detail-form button {
+.agenda-background h2 button {
   padding: 1rem;
 }
 .button-outer{
@@ -2078,9 +2076,16 @@ input[type="number"] {
 .modal-margin .attendee-content:last-child {
   padding-bottom: 0;
 }
-.col-padding-none .col-12 {
-  padding: 0 !important;
-}
+
 .create-meet-btn button {
   padding: 5px 18px;
+}
+.no-padding-2{
+  padding:0px;
+}
+
+.agenda-background h2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
