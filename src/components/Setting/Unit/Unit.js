@@ -7,6 +7,7 @@ import axios from "../../../../node_modules/axios/index";
 import Alert from "../../Common/Alert";
 import LoaderButton from "../../Common/LoaderButton";
 import { Modal, Button, Table, Dropdown, Form } from "react-bootstrap";
+import Loader from "../../Common/Loader";
 
 const Unit = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -29,8 +30,8 @@ const Unit = () => {
   console.log("Units--->", units);
   const [totalCount, setTotalCount] = useState(0);
   const [searchKey, setSearchKey] = useState("");
-  const [page, setPage] = useState();
-  const [limit, setLimit] = useState();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
   const [order, setOrder] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isGetApiRes, setIsGetApiRes] = useState(false);
@@ -45,8 +46,8 @@ const Unit = () => {
   const [unitName, setUnitName] = useState("");
   const [unitAddress, setUnitAddress] = useState("");
 
-  // const [showAlert, setShowAlert] = useState(false);
 
+  // const [showAlert, setShowAlert] = useState(false);
   // useEffect(() => {
   //   if (apiResData1) {
   //     setShowAlert(true);
@@ -148,8 +149,7 @@ const Unit = () => {
       );
 
       const data1 = response.data;
-      const data2 = data1.data;
-      console.log("Response DATA-->", data2.unitData);
+      const data2 = data1.data ? data1.data : 0;
       setUnits(data2.unitData);
       // setOrder(data2.order);
       // setPage(data2.page);
@@ -186,6 +186,7 @@ const Unit = () => {
 
   const handleSearch = (event) => {
     setSearchKey(event.target.value);
+    setPage(1)
   };
 
   const formatDateTimeFormat = (date) => {
@@ -236,11 +237,11 @@ const Unit = () => {
           }
         }
       );
-      // setUnits((prevUnits) =>
-      //   prevUnits.map((unit) => {
-      //     unit.id === selectedUnit.id ? { ...unit, ...updatedUnit } : unit
-      //   })
-      // )
+      setUnits((prevUnits) =>
+        prevUnits.map((unit) => {
+          return unit._id === selectedUnit._id ? { ...unit, ...updatedUnit } : unit
+        })
+      )
       setShowEditModal(false)
     } catch (error) {
       console.log("Error while updating units:", error)
@@ -356,9 +357,15 @@ const Unit = () => {
               </thead>
               <tbody>
                 {units.length === 0 ? (
-                  <tr>
-                    <td colSpan="3">No data available</td>
-                  </tr>
+                  // <tr>
+                  //   <td colSpan="3">No data available</td>
+                  // </tr>
+                  <div
+                    className="meeting-page "
+                    style={{ textAlign: "center", paddingTop: 20 }}
+                  >
+                    <Loader />
+                  </div>
                 ) : (
                   units.map((units, index) => (
                     <tr key={index}>
