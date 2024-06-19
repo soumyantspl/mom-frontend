@@ -7,7 +7,6 @@ import axios from "../../../../node_modules/axios/index";
 import Alert from "../../Common/Alert";
 import LoaderButton from "../../Common/LoaderButton";
 import { Modal, Button, Table, Dropdown, Form } from "react-bootstrap";
-import Loader from "../../Common/Loader";
 
 const Unit = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -150,7 +149,7 @@ const Unit = () => {
 
       const data1 = response.data;
       const data2 = data1.data ? data1.data : 0;
-      setUnits(data2.unitData);
+      setUnits(data2.unitData || []);
       // setOrder(data2.order);
       // setPage(data2.page);
       // setLimit(data2.limit);
@@ -356,17 +355,7 @@ const Unit = () => {
                 </tr>
               </thead>
               <tbody>
-                {units.length === 0 ? (
-                  // <tr>
-                  //   <td colSpan="3">No data available</td>
-                  // </tr>
-                  <div
-                    className="meeting-page "
-                    style={{ textAlign: "center", paddingTop: 20 }}
-                  >
-                    <Loader />
-                  </div>
-                ) : (
+                {units.length > 0 ? (
                   units.map((units, index) => (
                     <tr key={index}>
                       <td>{units.name}</td>
@@ -431,13 +420,18 @@ const Unit = () => {
 
                     </tr>
                   ))
+                ) : (
+                  <tr>
+                    <td colSpan="3">No data available</td>
+                  </tr>
                 )}
               </tbody>
             </Table>
 
             <div className="tbl-bottom">
               <div className="left-tbl-bottom">
-                <button className="left-arrow">
+
+                <button className="left-arrow" onClick={() => setPage(page > 1 ? page - 1 : 1)} disabled={page === 1} >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -453,10 +447,9 @@ const Unit = () => {
                   </svg>
                 </button>
                 <ul>
-                  <li>1</li>
-                  <li>2</li>
+                  <li>{page}</li>
                 </ul>
-                <button className="right-arrow">
+                <button className="right-arrow" onClick={() => setPage(page * limit < totalCount ? page + 1 : page)} disabled={page * limit >= totalCount}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -522,8 +515,8 @@ const Unit = () => {
             </Modal.Footer>
           </Modal>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 
