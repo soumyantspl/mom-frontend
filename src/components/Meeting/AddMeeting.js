@@ -610,7 +610,7 @@ const AddMeeting = (props) => {
                 </div>
 
                 <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
-                  <div className="position-relative ms-3">
+                  <div className="position-relative ">
                     <label className="mb-1">To Time</label>
                     <input
                       type="time"
