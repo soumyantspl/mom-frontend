@@ -19,6 +19,8 @@ import LoaderButton from "../Common/LoaderButton";
 import AddAttendees from "./AddAttendees";
 import Alert from "../Common/Alert";
 import AddAgendas from "./AddAgendas";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 
 const AddMeeting = (props) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -56,6 +58,7 @@ const AddMeeting = (props) => {
     // console.log(meetingData.step);
     setStep(meetingData.step + 1);
     if (meetingData.singleMeetingDetails && meetingData.checkStep) {
+      console.log("in------------444",meetingData)
       setFormData({
         ...formData,
         title: meetingData.singleMeetingDetails.title,
@@ -119,7 +122,7 @@ const AddMeeting = (props) => {
           step: 1
         };
         console.log(payload);
-        dispatch(updateMeetingDetails(meetingId, payload, accessToken));
+        dispatch(updateMeetingDetails(meetingId, payload, accessToken,"updateMeeting"));
       } else {
         const payload = {
           date: new Date(formData.date),
@@ -376,6 +379,20 @@ const AddMeeting = (props) => {
   //      due to validation errors.`);
   //   }
   // };
+  // if(meetingData.step === 1){
+  //   console.log("in--------------------------")
+  //   toast(meetingData.message, {
+  //     position: "bottom-right",
+  //     autoClose: 5000,
+  //     hideProgressBar: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //     theme: "light",
+  //    // transition: Bounce,
+  //     })
+  // } 
 
   console.log("formData------------------------", formData);
   console.log(meetingData);
@@ -643,6 +660,9 @@ const AddMeeting = (props) => {
               //     Next
               //   </Button>
               <>
+             <>
+
+             </>
                 <div className="create-meeting-button create-meet-btn">
                   {meetingData.isCreateMeetingProcessed &&
                   meetingData.step === 1 ? (
@@ -693,6 +713,8 @@ const AddMeeting = (props) => {
           <Loader />
         </div>
       )} */}
+      
+       <ToastContainer />
     </div>
   );
 };

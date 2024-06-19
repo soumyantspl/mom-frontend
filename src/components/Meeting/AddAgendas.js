@@ -78,7 +78,7 @@ const AddAgendas = () => {
         step: 3,
       };
       console.log(payload);
-      dispatch(updateMeetingDetails(meetingId, payload, accessToken));
+      dispatch(updateMeetingDetails(meetingId, payload, accessToken,"addAgenda"));
       //setStep(3);
     }
   };
@@ -578,7 +578,7 @@ const AddAgendas = () => {
             Back
           </Button> */}
 
-            {meetingData.isCreateMeetingProcessed && meetingData.step === 3 ? (
+            {/* {meetingData.isCreateMeetingProcessed && meetingData.step === 3 ? (
               <div className="mb-3 col-padding-none">
                 <div className="row">
                   <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
@@ -592,7 +592,7 @@ const AddAgendas = () => {
                   </div>
                 </div>
               </div>
-            ) : null}
+            ) : null} */}
             <div className="button-outer">
              
               {!meetingData.loading ? (

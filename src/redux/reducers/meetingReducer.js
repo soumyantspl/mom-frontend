@@ -26,7 +26,7 @@ const initialObject = {
   step: 0,
   isCreateMeetingProcessed: false,
   apiProcessed: false,
-  checkStep:true
+  checkStep:null
 };
 
 export const meetingReducer = (state = initialObject, action) => {
@@ -124,6 +124,7 @@ export const meetingReducer = (state = initialObject, action) => {
         isSuccess: action.payload.success,
         step:action.payload.success ? state.step+1 : state.step,
         isCreateMeetingProcessed: true,
+        checkStep:false
       };
     case LOAD_PREVIOUS_STEP:
       return {

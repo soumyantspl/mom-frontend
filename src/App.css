@@ -891,11 +891,11 @@ button.btn.btn-light {
   align-items: center;
   position: relative;
 }
- /* .filter-date::-webkit-calendar-picker-indicator {
+ .filter-date::-webkit-calendar-picker-indicator {
   background-color: rgb(11, 68, 238);
-  background: url(assets/images/calender.png);
+  /* background: url(assets/images/calender.png); */
   padding: 12px 12px;
- }  */
+ } 
 .filter-inputIcon {
   position: absolute;
   bottom: 11px;
@@ -912,9 +912,14 @@ button.btn.btn-light {
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-  background-color:#6382f3 ;
+  background: rgb(13, 55, 180);
+  background: linear-gradient(
+    117deg,
+    rgba(13, 55, 180, 1) 0%,
+    rgba(118, 60, 209, 1) 59%
+    
+  );
   padding: 11px 12px;
-  /* filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(180deg) brightness(100%) contrast(100%); */
 }
 input[type="time"]::-webkit-calendar-picker-indicator {
   background: rgb(13, 55, 180);
@@ -963,9 +968,9 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   background-color: #6a76ff;
   padding: 11px 12px;
 } */
-/* .followonDate::-webkit-calendar-picker-indicator {
+.followonDate::-webkit-calendar-picker-indicator {
   display: none !important;
-} */
+}
 .followon-poupText h6 {
   font-size: 17px;
   font-weight: 500;
@@ -1192,15 +1197,14 @@ textarea::placeholder,
 select option {
   font-size: 14px;
 }
-/* input[type="date"]::-webkit-calendar-picker-indicator {
-  background: url(assets/images/calender.png);
+input[type="date"]::-webkit-calendar-picker-indicator {
   background: linear-gradient(
     117deg,
     rgba(13, 55, 180, 1) 0%,
     rgba(118, 60, 209, 1) 59%
   );
   padding: 11px 12px;
-} */
+}
 
 .input-date {
   position: relative;

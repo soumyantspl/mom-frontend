@@ -82,12 +82,17 @@ const AddAttendees = (props) => {
         email: "",
       });
     }
-     dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
+    // if(!employeeData.isDuplicateUser){
+    //   dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
+    // }
+   
     // console.log(meetingData.step);
     // setStep(meetingData.step + 1);
 
     // setAttendeesData(meetingData?.singleMeetingDetails?attendees)
-  }, [meetingData.step, employeeData.isDuplicateUser]);
+  }, [meetingData.step,
+     employeeData.isDuplicateUser
+    ]);
 
   const submitAttendeeDetails = (e) => {
     e.preventDefault();
@@ -111,7 +116,7 @@ const AddAttendees = (props) => {
         organizationId: userData.organizationId,
         step: meetingData?.singleMeetingDetails?.step + 1,
       };
-      dispatch(updateMeetingDetails(meetingId, payload, accessToken));
+      dispatch(updateMeetingDetails(meetingId, payload, accessToken,"addAttendee"));
     }
     //  setStep(3);
   };

@@ -11,8 +11,11 @@ import {
   UPDATE_ISCREATE_MEETING_PROCESSED,
   SET_ATTENDEES,
   UPDATE_MEETING_RESPONSE,
-  LOAD_PREVIOUS_STEP
+  LOAD_PREVIOUS_STEP,
 } from "./actionTypes";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
+
 const accessToken = localStorage.getItem("accessToken");
 
 // axios.defaults.headers = {
@@ -175,8 +178,34 @@ export const createMeetingDetails = (payload, accessToken) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
-
-        dispatch(createMeetingResponse(resData));
+        if (resData.success) {
+          toast.success(resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
+          dispatch(createMeetingResponse(resData));
+        }
+        else{
+          toast.error(resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
+        }
+       
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
@@ -194,7 +223,7 @@ export const createMeetingResponse = (data) => {
 
 export const getCreateMeetingStep = (organizationId, accessToken) => {
   return (dispatch) => {
-     dispatch(makeRequest());
+    dispatch(makeRequest());
     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/getCreateMeetingStep/${organizationId}`;
     const headerObject = {
       headers: {
@@ -234,9 +263,9 @@ export const updateIsCreateMeetingProcessed = (data) => {
   };
 };
 
-export const updateMeetingDetails = (meetingId,bodyPayload, accessToken) => {
+export const updateMeetingDetails = (meetingId, bodyPayload, accessToken,isFrom) => {
   return (dispatch) => {
-     dispatch(makeRequest());
+    dispatch(makeRequest());
     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/updateMeeting/${meetingId}`;
     const headerObject = {
       headers: {
@@ -257,8 +286,35 @@ export const updateMeetingDetails = (meetingId,bodyPayload, accessToken) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
-
-        dispatch(updateMeetingResponse(resData));
+        const message=isFrom==="addAttendee"?"Attendees added successfully":isFrom==="addAgenda"?"Agendas added successfully":resData.message
+        if (resData.success) {
+          toast.success(message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
+          dispatch(updateMeetingResponse(resData));
+        }
+        else{
+          toast.error(resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
+        }
+       
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
@@ -311,7 +367,6 @@ export const updateMeetingResponse = (data) => {
 //     payload: data,
 //   };
 // };
-
 
 export const loadCreateMeeting = (data) => {
   return {

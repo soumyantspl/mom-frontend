@@ -1,5 +1,7 @@
 import { FETCH_SINGLE_USER, FAIL_REQUEST, MAKE_REQUEST, SET_EMPLOYEE_LIST, SET_DUPLICATE_USER_STATUS } from "./actionTypes";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 
 export const makeRequest = () => {
   return {
@@ -104,8 +106,35 @@ export const checkDuplicateUser = (payload,accessToken) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
-
+        if (resData.success) {
+          toast.error(resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
+          
+        }
+        // else{
+        //   toast.success("", {
+        //     position: "bottom-left",
+        //     autoClose: 3000,
+        //     hideProgressBar: false,
+        //     closeOnClick: true,
+        //     pauseOnHover: true,
+        //     draggable: true,
+        //     progress: undefined,
+        //     theme: "light",
+        //     // transition: Bounce,
+        //   });
+        // }
         dispatch(setDuplicateUserStatus(resData));
+       
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
