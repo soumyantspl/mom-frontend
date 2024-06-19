@@ -10,6 +10,7 @@ import {
   createMeetingDetails,
   getCreateMeetingStep,
   updateIsCreateMeetingProcessed,
+  updateMeetingDetails,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import Loader from "../Common/Loader";
 import * as constantMessages from "../../constants/constatntMessages";
@@ -46,12 +47,46 @@ const AddMeeting = (props) => {
 
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
+    console.log(meetingData.checkStep)
+   // if (meetingData.checkStep) {
+      console.log(meetingData.checkStep)
+      dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
+   // }
 
-    dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
-    console.log(meetingData.step);
+    // console.log(meetingData.step);
     setStep(meetingData.step + 1);
-  }, [meetingData.step]);
+    if (meetingData.singleMeetingDetails && meetingData.checkStep) {
+      setFormData({
+        ...formData,
+        title: meetingData.singleMeetingDetails.title,
+        mode: meetingData.singleMeetingDetails.mode.toLowerCase(),
+        location: meetingData.singleMeetingDetails.locationDetails.isMeetingRoom
+          ? "meetingroom"
+          : "manual",
+        date: new Date(meetingData.singleMeetingDetails.date)
+          .toISOString()
+          .slice(0, 10),
+        link: meetingData.singleMeetingDetails.link?meetingData.singleMeetingDetails.link:"",
+        fromTime: meetingData.singleMeetingDetails.fromTime,
+        toTime: meetingData.singleMeetingDetails.toTime,
+        roomId: meetingData.singleMeetingDetails.locationDetails.roomId,
+        locationData:
+          meetingData.singleMeetingDetails.locationDetails.location?meetingData.singleMeetingDetails.locationDetails.location:"",
+      });
+      if (meetingData.singleMeetingDetails.locationDetails.isMeetingRoom) {
+        const payload = {
+          limit: 1000,
+          page: 1,
+          order: 1,
+          organizationId: userData.organizationId,
+        };
 
+        dispatch(getMeetingRoomList(payload, accessToken));
+      }
+    }
+  }, [meetingData.step]);
+  var todayDate = new Date().toISOString().slice(0, 10);
+  console.log(todayDate);
   console.log(step);
 
   const submitMeetingDetails = (e) => {
@@ -70,17 +105,35 @@ const AddMeeting = (props) => {
         locationDetails["location"] = formData.locationData;
       }
 
-      const payload = {
-        date: new Date(formData.date),
-        locationDetails,
-        organizationId: userData.organizationId,
-        mode: formData.mode.toUpperCase(),
-        fromTime: formData.fromTime,
-        toTime: formData.toTime,
-        title: formData.title,
-      };
-      console.log(payload);
-      dispatch(createMeetingDetails(payload, accessToken));
+    
+      if (meetingData.singleMeetingDetails) {
+        const meetingId = meetingData?.singleMeetingDetails?._id;
+        const payload = {
+          date: new Date(formData.date),
+          locationDetails,
+          organizationId: userData.organizationId,
+          mode: formData.mode.toUpperCase(),
+          fromTime: formData.fromTime,
+          toTime: formData.toTime,
+          title: formData.title,
+          step: 1
+        };
+        console.log(payload);
+        dispatch(updateMeetingDetails(meetingId, payload, accessToken));
+      } else {
+        const payload = {
+          date: new Date(formData.date),
+          locationDetails,
+          organizationId: userData.organizationId,
+          mode: formData.mode.toUpperCase(),
+          fromTime: formData.fromTime,
+          toTime: formData.toTime,
+          title: formData.title,
+        };
+        console.log(payload);
+        dispatch(createMeetingDetails(payload, accessToken));
+      }
+
       if (meetingData.isSuccess) {
         setStep(2);
       }
@@ -125,19 +178,16 @@ const AddMeeting = (props) => {
 
     if (!data.date.trim()) {
       errors.date = constantMessages.dateRequired;
-    
-  } else if (data.date.trim()) {
-    const currentDate = new Date();
-    const inputDate = new Date(data.date);
-    let differenceInTime = inputDate.getTime() - currentDate.getTime();
-    let differenceInDays = Math.round(
-      differenceInTime / (1000 * 3600 * 24)
-    );
-    if(differenceInDays<0){
-      errors.date = constantMessages.invalidDate;
+    } else if (data.date.trim()) {
+      const currentDate = new Date();
+      const inputDate = new Date(data.date);
+      let differenceInTime = inputDate.getTime() - currentDate.getTime();
+      let differenceInDays = Math.round(differenceInTime / (1000 * 3600 * 24));
+      if (differenceInDays < 0) {
+        errors.date = constantMessages.invalidDate;
+      }
     }
-  }
-  setErrors(errors);
+    setErrors(errors);
     if (!data.fromTime.trim()) {
       errors.fromTime = constantMessages.timeRequired;
     } else if (formData.toTime.trim()) {
@@ -272,15 +322,12 @@ const AddMeeting = (props) => {
     const errors = {};
     if (!formData.date.trim()) {
       errors.date = constantMessages.dateRequired;
-     
     } else if (formData.date.trim()) {
       const currentDate = new Date();
       const inputDate = new Date(formData.date);
       let differenceInTime = inputDate.getTime() - currentDate.getTime();
-      let differenceInDays = Math.round(
-        differenceInTime / (1000 * 3600 * 24)
-      );
-      if(differenceInDays<0){
+      let differenceInDays = Math.round(differenceInTime / (1000 * 3600 * 24));
+      if (differenceInDays < 0) {
         errors.date = constantMessages.invalidDate;
       }
     }
@@ -613,6 +660,7 @@ const AddMeeting = (props) => {
                       </div>
                     </div>
                   ) : null}
+
                   <button
                     className="create-meeting-button Mom-btn"
                     type="submit"

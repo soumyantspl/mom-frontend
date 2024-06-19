@@ -4,13 +4,27 @@ import Sidebar from "../Common/Sidebar/Sidebar";
 import AddMeeting from "./AddMeeting";
 import "./style/CreateMeeting.css";
 import ViewMeeting from "./ViewMeeting";
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { useNavigate, Navigate, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import "./style/meetings-css.css";
+import { getCreateMeetingStep } from "../../redux/actions/meetingActions/MeetingAction";
 const MeetingPage = () => {
+  const accessToken = localStorage.getItem("accessToken");
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const meetingData = useSelector((state) => state.meeting);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    document.title = "Create Meeting: Meeting Plus";
+    if (meetingData.checkStep) {
+      dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
+    }
+   
+    console.log(meetingData.step);
+  }, []);
   return (
     <>
       <Header />
