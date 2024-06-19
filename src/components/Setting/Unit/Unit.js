@@ -223,14 +223,13 @@ const Unit = () => {
         name: unitName,
         address: unitAddress,
       };
-      await axios.put(`http://localhost:8000/api/V1/department/updateDepartment/${selectedUnit._id}`,
+      await axios.put(`${process.env.REACT_APP_API_URL}api/V1/unit/editUnit/${selectedUnit._id}`,
         {
           userId,
-          id: selectedUnit.id,
-          data: updatedUnit
-        },
-        {
-          headers: {
+          data: updatedUnit,
+          params: {
+            id: selectedUnit.id,
+          }, headers: {
             "Content-Type": "application/json",
             Authorization: accessToken,
           }
@@ -384,7 +383,7 @@ const Unit = () => {
                           </Dropdown.Toggle>
 
                           <Dropdown.Menu>
-                            <Dropdown.Item onClick={handleShow}>
+                            <Dropdown.Item onClick={() => handleEditClick(units)}>
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
@@ -401,7 +400,7 @@ const Unit = () => {
                               </svg>
                               Edit
                             </Dropdown.Item>
-                            <Dropdown.Item>
+                            <Dropdown.Item onClick={() => console.log("Delete")}>
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
@@ -478,7 +477,7 @@ const Unit = () => {
             </div>
           </div>
 
-          <Modal show={showModal} onHide={handleClose}>
+          <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
             <Modal.Header closeButton>
               <Modal.Title>Edit Unit</Modal.Title>
             </Modal.Header>
@@ -488,6 +487,7 @@ const Unit = () => {
                   <Form.Label>Unit Name</Form.Label>
                   <Form.Control
                     type="text"
+                    placeholder="Enter Unit Name"
                     value={unitName}
                     onChange={(e) => setUnitName(e.target.value)}
                   />
@@ -496,6 +496,7 @@ const Unit = () => {
                   <Form.Label>Unit Address</Form.Label>
                   <Form.Control
                     type="text"
+                    placeholder="Enter Unit Address"
                     value={unitAddress}
                     onChange={(e) => setUnitAddress(e.target.value)}
                   />
