@@ -12,6 +12,7 @@ import {
   UPDATE_MEETING_RESPONSE,
   LOAD_PREVIOUS_STEP,
   SET_SINGLE_MEETING_DETAILS,
+  SET_MEETING_VIEW_PAGE
 } from "../actions/meetingActions/actionTypes";
 
 const initialObject = {
@@ -27,7 +28,9 @@ const initialObject = {
   step: 0,
   isCreateMeetingProcessed: false,
   apiProcessed: false,
-  checkStep:null
+  checkStep:null,
+  meetingId:null,
+  isViewMeetingPage:false
 };
 
 export const meetingReducer = (state = initialObject, action) => {
@@ -99,6 +102,7 @@ export const meetingReducer = (state = initialObject, action) => {
         isSuccess: action.payload.success,
         singleMeetingDetails: action.payload.data,
         step: action.payload.data ? action.payload.data.step : 0,
+        meetingId: action.payload.data._id
       };
 
     case UPDATE_ISCREATE_MEETING_PROCESSED:
@@ -141,6 +145,12 @@ export const meetingReducer = (state = initialObject, action) => {
           isSuccess: action.payload.success,
           singleMeetingDetails: action.payload.data
         };
+        case SET_MEETING_VIEW_PAGE:
+          return {
+            ...state,
+            meetingId:action.payload.meetingId,
+            isViewMeetingPage:true
+          };
     default:
       return state;
   }

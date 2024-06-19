@@ -19,9 +19,9 @@ const MeetingPage = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
-    if (meetingData.checkStep) {
-      dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
-    }
+    // if (meetingData.checkStep) {
+    //   dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
+    // }
    
     console.log(meetingData.step);
   }, []);

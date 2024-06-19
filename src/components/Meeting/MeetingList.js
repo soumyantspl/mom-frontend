@@ -396,7 +396,6 @@ const MeetingList = () => {
                                 );
                               })}
                         </div>
-
                         <p className="plus-more-text m-0">
                           {meeting.attendees.length > 5
                             ? `+${meeting.attendees.length - 5} More`
@@ -446,7 +445,7 @@ const MeetingList = () => {
                       <td data-label="Action">
                         <div className="d-inline-block menu-dropdown custom-dropdown">
                           <Dropdown>
-                            <MeetingDropDown
+                            <MeetingDropDown meetingId={meeting._id}
                               status={meeting.meetingStatus.status}
                             />
                           </Dropdown>

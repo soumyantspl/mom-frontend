@@ -95,7 +95,7 @@ textarea {
 }
 form input[type="date"],
 form input[type="time"] {
-  padding: 10px 0 10px 0px;
+  padding: 10px 5px 10px 0px;
 }
 table th,
 table td {
@@ -891,11 +891,10 @@ button.btn.btn-light {
   align-items: center;
   position: relative;
 }
- .filter-date::-webkit-calendar-picker-indicator {
+ /* .filter-date::-webkit-calendar-picker-indicator {
   background-color: rgb(11, 68, 238);
-  /* background: url(assets/images/calender.png); */
   padding: 12px 12px;
- } 
+ }  */
 .filter-inputIcon {
   position: absolute;
   bottom: 11px;
@@ -911,7 +910,7 @@ button.btn.btn-light {
   font-size: 16px;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
+/* input[type="date"]::-webkit-calendar-picker-indicator {
   background: rgb(13, 55, 180);
   background: linear-gradient(
     117deg,
@@ -920,8 +919,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     
   );
   padding: 11px 12px;
-}
-input[type="time"]::-webkit-calendar-picker-indicator {
+} */
+/* input[type="time"]::-webkit-calendar-picker-indicator {
   background: rgb(13, 55, 180);
   background: linear-gradient(
     117deg,
@@ -930,7 +929,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     
   );
   padding: 11px 12px;
-}
+} */
 .fltr-opt {
   outline: none !important;
   padding: 5px 0;
@@ -969,7 +968,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   padding: 11px 12px;
 } */
 .followonDate::-webkit-calendar-picker-indicator {
-  display: none !important;
+  display:block;
 }
 .followon-poupText h6 {
   font-size: 17px;
@@ -1197,14 +1196,14 @@ textarea::placeholder,
 select option {
   font-size: 14px;
 }
-input[type="date"]::-webkit-calendar-picker-indicator {
+/* input[type="date"]::-webkit-calendar-picker-indicator {
   background: linear-gradient(
     117deg,
     rgba(13, 55, 180, 1) 0%,
     rgba(118, 60, 209, 1) 59%
   );
   padding: 11px 12px;
-}
+} */
 
 .input-date {
   position: relative;
@@ -2078,9 +2077,9 @@ input[type="number"] {
 .modal-margin .attendee-content:last-child {
   padding-bottom: 0;
 }
-.col-padding-none .col-12 {
+/* .col-padding-none .col-12 {
   padding: 0 !important;
-}
+} */
 .create-meet-btn button {
   padding: 5px 18px;
 }

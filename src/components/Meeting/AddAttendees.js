@@ -111,6 +111,8 @@ const AddAttendees = (props) => {
       }
     } else {
       const meetingId = meetingData?.singleMeetingDetails?._id;
+      console.log(attendeesData)
+  
       const payload = {
         attendees: attendeesData,
         organizationId: userData.organizationId,
@@ -175,6 +177,9 @@ const AddAttendees = (props) => {
           (u) => u._id === formData.attendeeId
         );
         newAttendee.isEmployee = true;
+        newAttendee.id=newAttendee._id
+        delete newAttendee._id
+      
         console.log(newAttendee);
         //  const newAttendee = e.target.value;
         const newAttendeeData = [...attendeesData, newAttendee];

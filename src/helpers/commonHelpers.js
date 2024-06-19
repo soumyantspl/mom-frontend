@@ -1,4 +1,5 @@
 const customName = (fullname) => {
+  console.log(fullname)
   const nameArray = fullname.split(" ");
   // console.log(
   //   "nameArray=================================================",

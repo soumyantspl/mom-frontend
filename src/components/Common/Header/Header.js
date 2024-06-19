@@ -73,7 +73,7 @@ const Header = () => {
 
           <div className="top-right-svg">
             <div className="create-meeting-button">
-              <Link to="/create-meeting" style={{ textDecoration: "none" }}>
+              <Link to="/create-meeting" stateData={{isViewMeetingPage:false}}style={{ textDecoration: "none" }}>
                 <button className="Mom-btn">
                   <p>Create Meeting</p>
                 </button>

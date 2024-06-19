@@ -25,6 +25,7 @@ const MeetingDropDown = (props) => {
         <Dropdown.Item href="#/action-2">
           <Link
             to="/view-meeting-details"
+            state={{ meetingId: props.meetingId,isViewMeetingPage:true}}
             style={{
               textDecoration: "none",
               color: "black",
