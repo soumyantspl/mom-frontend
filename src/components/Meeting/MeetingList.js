@@ -183,7 +183,7 @@ const MeetingList = () => {
   };
 
   const formatDateTimeFormat = (date) => {
-      console.log(date);
+    console.log(date);
     const sourceDate = new Date(date).toDateString();
     const sourceTime = new Date(date).toLocaleTimeString();
     // The above yields e.g. 'Mon Jan 06 2020'
@@ -202,13 +202,13 @@ const MeetingList = () => {
   };
 
   const formatTimeFormat = (time) => {
-    console.log(time)
+    console.log(time);
     const timeArray = time.split(":");
-    console.log(timeArray)
+    console.log(timeArray);
     let session = "AM";
     let hour = parseInt(timeArray[0]);
     let minute = parseInt(timeArray[1]);
-    console.log(hour,minute)
+    console.log(hour, minute);
     if (hour > 12) {
       session = "PM";
       hour = hour - 12;
@@ -218,7 +218,7 @@ const MeetingList = () => {
     return result;
   };
 
-   console.log("repeat------------------------", searchData);
+  console.log("repeat------------------------", searchData);
   return (
     <div>
       <Header />
@@ -323,60 +323,61 @@ const MeetingList = () => {
                       </td>
                       <td data-label="Meeting Title">
                         {meeting.title}
-{meeting.attendees.length!==0 && !userData.isMeetingOrganiser?(
-                        <div className="respond-button">
-                          {meeting.rsvp === "YES" ? (
-                            <button disabled className="respond-action">
-                              {" "}
-                              <>&#x2713; </>Yes
-                            </button>
-                          ) : (
-                            <button
-                              className="respond-action"
-                              onClick={() => {
-                                dispatch(updateRsvp("YES", meeting._id));
-                              }}
-                            >
-                              {" "}
-                              Yes
-                            </button>
-                          )}
+                        {meeting.attendees.length !== 0 &&
+                        !userData.isMeetingOrganiser ? (
+                          <div className="respond-button">
+                            {meeting.rsvp === "YES" ? (
+                              <button disabled className="respond-action">
+                                {" "}
+                                <>&#x2713; </>Yes
+                              </button>
+                            ) : (
+                              <button
+                                className="respond-action"
+                                onClick={() => {
+                                  dispatch(updateRsvp("YES", meeting._id));
+                                }}
+                              >
+                                {" "}
+                                Yes
+                              </button>
+                            )}
 
-                          {meeting.rsvp === "NO" ? (
-                            <button disabled className="respond-action">
-                              {" "}
-                              <>&#x2713; </>No
-                            </button>
-                          ) : (
-                            <button
-                              className="respond-action"
-                              onClick={() => {
-                                dispatch(updateRsvp("NO", meeting._id));
-                              }}
-                            >
-                              {" "}
-                              No
-                            </button>
-                          )}
+                            {meeting.rsvp === "NO" ? (
+                              <button disabled className="respond-action">
+                                {" "}
+                                <>&#x2713; </>No
+                              </button>
+                            ) : (
+                              <button
+                                className="respond-action"
+                                onClick={() => {
+                                  dispatch(updateRsvp("NO", meeting._id));
+                                }}
+                              >
+                                {" "}
+                                No
+                              </button>
+                            )}
 
-                          {meeting.rsvp === "MAYBE" ? (
-                            <button disabled className="respond-action">
-                              {" "}
-                              <>&#x2713; </>May Be
-                            </button>
-                          ) : (
-                            <button
-                              className="respond-action"
-                              onClick={() => {
-                                dispatch(updateRsvp("MAYBE", meeting._id));
-                              }}
-                            >
-                              {" "}
-                              May Be
-                            </button>
-                          )}
-                        </div>
-):null}
+                            {meeting.rsvp === "MAYBE" ? (
+                              <button disabled className="respond-action">
+                                {" "}
+                                <>&#x2713; </>May Be
+                              </button>
+                            ) : (
+                              <button
+                                className="respond-action"
+                                onClick={() => {
+                                  dispatch(updateRsvp("MAYBE", meeting._id));
+                                }}
+                              >
+                                {" "}
+                                May Be
+                              </button>
+                            )}
+                          </div>
+                        ) : null}
                       </td>
                       <td
                         data-label="Attendees"
@@ -446,7 +447,8 @@ const MeetingList = () => {
                       <td data-label="Action">
                         <div className="d-inline-block menu-dropdown custom-dropdown">
                           <Dropdown>
-                            <MeetingDropDown meetingId={meeting._id}
+                            <MeetingDropDown
+                              meetingId={meeting._id}
                               status={meeting.meetingStatus.status}
                             />
                           </Dropdown>

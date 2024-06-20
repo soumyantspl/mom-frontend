@@ -1,41 +1,17 @@
+
 import React, { useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
-import Collapse from "react-bootstrap/Collapse";
-import { Margin } from "../../../node_modules/@mui/icons-material/index";
-import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction.js/meetingRoomAction";
+import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import CommonStepper from "../Common/CommonStepper";
-import CreateMeeting from "./CreateMeeting";
-import {
-  createMeetingDetails,
-  getCreateMeetingStep,
-  getSingleMeetingDetails,
-  setMeetingViewPage,
-  updateIsCreateMeetingProcessed,
-} from "../../redux/actions/meetingActions/MeetingAction";
-import Loader from "../Common/Loader";
-import * as constantMessages from "../../constants/constatntMessages";
-import "../Login/style/Login.css";
-import LoaderButton from "../Common/LoaderButton";
-import AddAttendees from "./AddAttendees";
-import Alert from "../Common/Alert";
-import AddAgendas from "./AddAgendas";
-import NoDataFound from "../Common/NoDataFound";
-import {
-  customName,
-  formatDateTimeFormat,
-  getTimeSession,
-} from "../../helpers/commonHelpers";
+import { getSingleMeetingDetails } from "../../redux/actions/meetingActions/MeetingAction";
 import Header from "../Common/Header/Header";
 import MeetingHeader from "../Common/Header/MeetingHeader";
 import Sidebar from "../Common/Sidebar/Sidebar";
 import {
-  Navigate,
-  Link,
-  useLocation,
-  UNSAFE_NavigationContext,
-} from "react-router-dom";
-
+    customName,
+    formatDateTimeFormat,
+    getTimeSession,
+  } from "../../helpers/commonHelpers";
+import AttendeesDetails from "./AttendeesDetails";
 
 const ViewMeetingDetails = () => {
     const location = useLocation();
@@ -49,32 +25,22 @@ const ViewMeetingDetails = () => {
     const [isViewMeetingPage, setIsViewMeetingPage] = useState(false);
     console.log(meetingData);
     useEffect(() => {
-        console.log(stateData);
-        dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
+        console.log("use effect------------------------------------")
+         console.log(stateData);
+         dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
       }, []);
-      return (
-        <>
-          {/* {isViewMeetingPage ? (
-            <> */}
-          <Header />
-              <MeetingHeader />
-              <Sidebar />
-              <div className="main-content">
-        <div className="meeting-page ">
-          <div className="meeting-header-text">
-            <div>
-              <h4>Meetings Details</h4>
+  return (
+    <>
+      <Header />
+      <MeetingHeader />
+      <Sidebar />
+      <div className="main-content">
+        <div className="row">
+          <div className="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 detail-col">
+            <div className="meeting-header-text">
+              <h4>Meeting Details</h4>
             </div>
-            </div>
-          {!meetingData.isLoading && !meetingData.singleMeetingDetails?(
-             <form className="mt-2 details-form details-form-right">
-             <div className="form-group mb-2 loader-icon">
-               <div className="row">
-                 <Loader />
-               </div>
-             </div>
-           </form>
-          ) : (
+
             <form className="mt-2 details-form details-form-right">
               <div className="form-group mb-2">
                 <div className="row">
@@ -86,7 +52,7 @@ const ViewMeetingDetails = () => {
                   </div>
                 </div>
               </div>
-    
+
               <div className="form-group mb-2">
                 <div className="row">
                   <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
@@ -97,7 +63,7 @@ const ViewMeetingDetails = () => {
                   </div>
                 </div>
               </div>
-    
+
               <div className="form-group mb-2">
                 <div className="row">
                   <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
@@ -107,13 +73,15 @@ const ViewMeetingDetails = () => {
                     <p>
                       {meetingData.singleMeetingDetails.locationDetails
                         .isMeetingRoom === true
-                        ? meetingData.singleMeetingDetails.roomDetail[0].location
-                        : meetingData.singleMeetingDetails.locationDetails.location}
+                        ? meetingData.singleMeetingDetails.roomDetail[0]
+                            .location
+                        : meetingData.singleMeetingDetails.locationDetails
+                            .location}
                     </p>
                   </div>
                 </div>
               </div>
-    
+
               <div className="form-group mb-2">
                 <div className="row">
                   <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
@@ -128,7 +96,7 @@ const ViewMeetingDetails = () => {
                   </div>
                 </div>
               </div>
-    
+
               <div className="form-group mb-2">
                 <div className="row">
                   <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
@@ -137,17 +105,22 @@ const ViewMeetingDetails = () => {
                   <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
                     <p>
                       {
-                        formatDateTimeFormat(meetingData.singleMeetingDetails.date)
-                          .formattedDate
+                        formatDateTimeFormat(
+                          meetingData.singleMeetingDetails.date
+                        ).formattedDate
                       }{" "}
                       ,{meetingData.singleMeetingDetails.fromTime}{" "}
-                      {getTimeSession(meetingData.singleMeetingDetails.fromTime)} to{" "}
-                      {meetingData.singleMeetingDetails.toTime}{" "}
+                      {getTimeSession(
+                        meetingData.singleMeetingDetails.fromTime
+                      )}{" "}
+                      to {meetingData.singleMeetingDetails.toTime}{" "}
                       {getTimeSession(meetingData.singleMeetingDetails.toTime)}
                     </p>
                   </div>
                 </div>
               </div>
+
+
               {meetingData.singleMeetingDetails.attendees.length > 0 ? (
                 <div className="form-group mb-2">
                   <div className="row align-items-center">
@@ -173,89 +146,102 @@ const ViewMeetingDetails = () => {
                         <p className="m-0">
                           {meetingData.singleMeetingDetails.attendees.length > 5
                             ? `+${
-                                meetingData.singleMeetingDetails.attendees.length -
-                                5
+                                meetingData.singleMeetingDetails.attendees
+                                  .length - 5
                               } More`
                             : null}
                         </p>
                       </div>
                     </div>
                   </div>
+                  <AttendeesDetails attendeesData={meetingData.singleMeetingDetails}/>
                 </div>
               ) : null}
-               {meetingData.singleMeetingDetails.agendasDetail.length !== 0 ?(
-              <div className="form-group agenda">
-                      <label className="mt-3 mb-3">
-                        <h4>Agenda(s)</h4>
-                      </label>
-              {meetingData.singleMeetingDetails.agendasDetail.length !== 0 &&
-                meetingData.singleMeetingDetails.agendasDetail.map((agenda,index) => {
-                  return (
-                    
-    
-                      <div className="mt-3 agenda-box-border">
-                        <div className="form-group">
-                          <div className="row">
-                            <div className="col-12">
-                              <label className="mt-1 p-3 topic-head">
-                                {" "}
-                                Agenda {index+1}
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-    
-                        <div className="p-3">
-                          <div className="pb-3 form-group">
-                            <div className="row">
-                              <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                                <label className="mt-1 mb-1">Agenda Title</label>
-                              </div>
-                              <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                                <p> {agenda.title}</p>
-                              </div>
-                            </div>
-                          </div>
-    
-                          <div className=" pb-3 form-group">
-                            <div className="row">
-                              <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                                <label className="mt-2 topic">
-                                  Topic to Discuss
-                                </label>
-                              </div>
-                              <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                                <p className="mb-2">
-                                {agenda.topic}{" "}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-    
-                          <div className=" form-group">
-                            <div className="row">
-                              <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                                <label className="mt-1 mb-1">Timeline</label>
-                              </div>
-                              <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                                <p> {agenda.timeLine} Mins</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                   
-                  );
-                })}
-                 </div>
-               ):null}
+
+
             </form>
-          )}
           </div>
+          <div className="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 detail-col">
+            <div className="meeting-header-text">
+              <h4>Agenda Details</h4>
+            </div>
+
+            <form className="mt-2 details-form details-form-right">
+             
+              {meetingData.singleMeetingDetails.agendasDetail.length !== 0 ? (
+                <div className="form-group agenda">
+                  <label className="mt-3 mb-3">
+                    <h4>Agenda(s)</h4>
+                  </label>
+                  {meetingData.singleMeetingDetails.agendasDetail.length !==
+                    0 &&
+                    meetingData.singleMeetingDetails.agendasDetail.map(
+                      (agenda, index) => {
+                        return (
+                          <div className="mt-3 agenda-box-border">
+                            <div className="form-group">
+                              <div className="row">
+                                <div className="col-12">
+                                  <label className="mt-1 p-3 topic-head">
+                                    {" "}
+                                    Agenda {index + 1}
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="p-3">
+                              <div className="pb-3 form-group">
+                                <div className="row">
+                                  <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                                    <label className="mt-1 mb-1">
+                                      Agenda Title
+                                    </label>
+                                  </div>
+                                  <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+                                    <p> {agenda.title}</p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className=" pb-3 form-group">
+                                <div className="row">
+                                  <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                                    <label className="mt-2 topic">
+                                      Topic to Discuss
+                                    </label>
+                                  </div>
+                                  <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+                                    <p className="mb-2">{agenda.topic} </p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className=" form-group">
+                                <div className="row">
+                                  <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                                    <label className="mt-1 mb-1">
+                                      Timeline
+                                    </label>
+                                  </div>
+                                  <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+                                    <p> {agenda.timeLine} Mins</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+                    )}
+                </div>
+              ) : null}
+            </form>
           </div>
-         
-        </>
-      );
-    };
+        </div>
+      </div>
+    </>
+  )
+}
 
 export default ViewMeetingDetails
