@@ -12,7 +12,8 @@ import {
   UPDATE_MEETING_RESPONSE,
   LOAD_PREVIOUS_STEP,
   SET_SINGLE_MEETING_DETAILS,
-  SET_MEETING_VIEW_PAGE
+  SET_MEETING_VIEW_PAGE,
+  SET_CREATE_NEW_MEETING_PAGE
 } from "../actions/meetingActions/actionTypes";
 
 const initialObject = {
@@ -30,7 +31,8 @@ const initialObject = {
   apiProcessed: false,
   checkStep:null,
   meetingId:null,
-  isViewMeetingPage:false
+  isViewMeetingPage:false,
+  isNewMeetingPage:false
 };
 
 export const meetingReducer = (state = initialObject, action) => {
@@ -92,6 +94,7 @@ export const meetingReducer = (state = initialObject, action) => {
         isSuccess: action.payload.success,
         isCreateMeetingProcessed: true,
         step: action.payload.success ? 1 : 0,
+        isNewMeetingPage:false
       };
 
     case GET_CREATE_MEETING_STEPS:
@@ -129,7 +132,8 @@ export const meetingReducer = (state = initialObject, action) => {
         isSuccess: action.payload.success,
         step:action.payload.success ? state.step+1 : state.step,
         isCreateMeetingProcessed: true,
-        checkStep:false
+        checkStep:false,
+        isNewMeetingPage:action.payload.data.step===3?true:false
       };
     case LOAD_PREVIOUS_STEP:
       return {
@@ -151,6 +155,14 @@ export const meetingReducer = (state = initialObject, action) => {
             meetingId:action.payload.meetingId,
             isViewMeetingPage:true
           };
+          case SET_CREATE_NEW_MEETING_PAGE:
+            return {
+              ...state,
+             // meetingId:action.payload.meetingId,
+              isNewMeetingPage:action.payload,
+              singleMeetingDetails:null,
+              isCreateMeetingProcessed:false
+            };
     default:
       return state;
   }

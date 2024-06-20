@@ -49,18 +49,17 @@ const ViewMeeting = (props) => {
   console.log(meetingData);
   useEffect(() => {
     console.log(stateData);
-    if (stateData?.isViewMeetingPage) {
-      setIsViewMeetingPage(stateData.isViewMeetingPage);
-      // setFormData({
-      //   ...formData,
-      //   isViewMeetingPage: isViewMeetingPage,
-      // });
-      console.log("is dispatched->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-      dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
-    }
-   
+    // if (stateData?.isViewMeetingPage) {
+    //   setIsViewMeetingPage(stateData.isViewMeetingPage);
+    //   // setFormData({
+    //   //   ...formData,
+    //   //   isViewMeetingPage: isViewMeetingPage,
+    //   // });
+    //   console.log("is dispatched->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    //   dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
+    // }
 
-  //  dispatch(setMeetingViewPage(true, meetingData.meetingId));
+    //  dispatch(setMeetingViewPage(true, meetingData.meetingId));
     // document.title = "View Meeting: Meeting Plus";
     console.log("is dispatched->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     // if (meetingData.meetingId) {
@@ -69,23 +68,22 @@ const ViewMeeting = (props) => {
     //   );
     //   dispatch(getSingleMeetingDetails(meetingData.meetingId, accessToken));
     // }
-     return () => {
+    return () => {
       // Anything in here is fired on component unmount.
       console.log("component un mount");
-     // dispatch(updateIsSuccess(false));
+      // dispatch(updateIsSuccess(false));
     };
   }, [meetingData.meetingId, meetingData.step]);
   console.log(meetingData);
   return (
     <>
-      {isViewMeetingPage ? (
-        <>
-          <Header />
+      {/* {isViewMeetingPage ? (
+        <> */}
+      {/* <Header />
           <MeetingHeader />
-          <Sidebar />
-          <div className="main-content">
-          <div className="meeting-page ">
-          {!meetingData.isLoading && !meetingData.singleMeetingDetails ? (
+          <Sidebar /> */}
+
+      {!meetingData.isLoading && meetingData.isNewMeetingPage ? (
         <form className="mt-2 details-form details-form-right">
           <div className="form-group mb-2">
             <div className="row">
@@ -93,7 +91,7 @@ const ViewMeeting = (props) => {
             </div>
           </div>
         </form>
-      ) : !meetingData.isLoading && meetingData.singleMeetingDetails ? (
+      ) : !meetingData.isLoading && meetingData.singleMeetingDetails  && !meetingData.isNewMeetingPage  ? (
         <form className="mt-2 details-form details-form-right">
           <div className="form-group mb-2">
             <div className="row">
@@ -125,248 +123,8 @@ const ViewMeeting = (props) => {
               <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
                 <p>
                   {meetingData.singleMeetingDetails.locationDetails
-                    .isMeetingRoom
-                    ? meetingData.singleMeetingDetails.locationDetails
-                        .roomDetail.location
-                    : meetingData.singleMeetingDetails.locationDetails.location}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="form-group mb-2">
-            <div className="row">
-              <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                <label className="mb-1">Meeting Link</label>
-              </div>
-              <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                <p>
-                  {meetingData.singleMeetingDetails.link
-                    ? meetingData.singleMeetingDetails.link
-                    : "NA"}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="form-group mb-2">
-            <div className="row">
-              <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                <label className="mb-1">Date & Time</label>
-              </div>
-              <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                <p>
-                  {
-                    formatDateTimeFormat(meetingData.singleMeetingDetails.date)
-                      .formattedDate
-                  }{" "}
-                  ,{meetingData.singleMeetingDetails.fromTime}{" "}
-                  {getTimeSession(meetingData.singleMeetingDetails.fromTime)} to{" "}
-                  {meetingData.singleMeetingDetails.toTime}{" "}
-                  {getTimeSession(meetingData.singleMeetingDetails.toTime)}
-                </p>
-              </div>
-            </div>
-          </div>
-          {meetingData.singleMeetingDetails.attendees.length > 0 ? (
-            <div className="form-group mb-2">
-              <div className="row align-items-center">
-                <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                  <label className="pb-1"> Attendee(s) </label>
-                </div>
-                <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                  <div className="attendees">
-                    {meetingData.singleMeetingDetails.attendees.map(
-                      (attendee) => {
-                        return (
-                          // <div > {customName(attendee.name)}</div>
-                          <>
-                            {/* <div>{customName(attendee)}</div>  */}
-                            <div className="attendee-list">{attendee.name}</div>
-                          </>
-                        );
-                      }
-                    )}
-                    {/* <p className="m-0">+5 More</p> */}
-                    <p className="m-0">
-                      {meetingData.singleMeetingDetails.attendees.length > 5
-                        ? `+${
-                            meetingData.singleMeetingDetails.attendees.length -
-                            5
-                          } More`
-                        : null}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : null}
-          {/* {meetingData.singleMeetingDetails.agendasDetail.length > 0 ? ( */}
-          <div className="form-group agenda">
-            <label className="mt-3 mb-3">
-              <h4>Agenda(s)</h4>
-            </label>
-
-            <div className="mt-3 agenda-box-border">
-              <div className="form-group">
-                <div className="row">
-                  <div className="col-12">
-                    <label className="mt-1 p-3 topic-head"> Agenda 1</label>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-3">
-                <div className="pb-3 form-group">
-                  <div className="row">
-                    <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                      <label className="mt-1 mb-1">Agenda Title</label>
-                    </div>
-                    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                      <p> Agenda Item 1</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className=" pb-3 form-group">
-                  <div className="row">
-                    <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                      <label className="mt-2 topic">Topic to Discuss</label>
-                    </div>
-                    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                      <p className="mb-2">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing
-                        elit. Modi molestiae architecto tempora quibusdam magni
-                        illum numquam quae, quidem omnis consectetur.{" "}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className=" form-group">
-                  <div className="row">
-                    <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                      <label className="mt-1 mb-1">Timeline</label>
-                    </div>
-                    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                      <p> 30 Min</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-3 agenda-box-border">
-              <div className="form-group">
-                <div className="row">
-                  <div className="col-12">
-                    <label className="mt-1 p-3 topic-head"> Agenda 2</label>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-3">
-                <div className="pb-3 form-group">
-                  <div className="row">
-                    <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                      <label className="mt-1 mb-1">Agenda Title</label>
-                    </div>
-                    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                      <p> Agenda Item 2</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className=" pb-3 form-group">
-                  <div className="row">
-                    <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                      <label className="mt-2 topic">Topic to Discuss</label>
-                    </div>
-                    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                      <p className="mb-2">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing
-                        elit. Modi molestiae architecto tempora quibusdam magni
-                        illum numquam quae, quidem omnis consectetur.{" "}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className=" form-group">
-                  <div className="row">
-                    <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                      <label className="mt-1 mb-1">Timeline</label>
-                    </div>
-                    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                      <p> 30 Min</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* ) : null} */}
-        </form>
-      ) : (
-        <form className="mt-2 details-form details-form-right">
-          <div className="form-group mb-2 loader-icon">
-            <div className="row">
-              <Loader />
-            </div>
-          </div>
-        </form>
-      )}
-
-            </div>
-            </div>
-        </>
-      ) : (
-
-    <>
-
-      {!meetingData.isLoading && !meetingData.singleMeetingDetails ? (
-        <form className="mt-2 details-form details-form-right">
-          <div className="form-group mb-2">
-            <div className="row">
-              <NoDataFound />
-            </div>
-          </div>
-        </form>
-      ) : !meetingData.isLoading && meetingData.singleMeetingDetails ? (
-        <form className="mt-2 details-form details-form-right">
-          <div className="form-group mb-2">
-            <div className="row">
-              <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                <label className="mb-1">Title</label>
-              </div>
-              <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                <p>{meetingData.singleMeetingDetails.title}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="form-group mb-2">
-            <div className="row">
-              <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                <label className="mb-1">Meeting Mode</label>
-              </div>
-              <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                <p>{meetingData.singleMeetingDetails.mode}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="form-group mb-2">
-            <div className="row">
-              <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                <label className="mb-1">Location</label>
-              </div>
-              <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                <p>
-                  {meetingData.singleMeetingDetails.locationDetails
-                    .isMeetingRoom===true
-                    ? meetingData.singleMeetingDetails
-                        .roomDetail[0].location
+                    .isMeetingRoom === true
+                    ? meetingData.singleMeetingDetails.roomDetail[0].location
                     : meetingData.singleMeetingDetails.locationDetails.location}
                 </p>
               </div>
@@ -421,7 +179,9 @@ const ViewMeeting = (props) => {
                           // <div > {customName(attendee.name)}</div>
                           <>
                             {/* <div>{customName(attendee)}</div> */}
-                            <div className="attendee-list">{attendee.name}</div>
+                            <div className="attendee-list">
+                              {customName(attendee.name)}
+                            </div>
                           </>
                         );
                       }
@@ -440,113 +200,74 @@ const ViewMeeting = (props) => {
               </div>
             </div>
           ) : null}
-          {/* {meetingData.singleMeetingDetails.agendasDetail.length > 0 ? ( */}
+           {meetingData.singleMeetingDetails.agendasDetail.length !== 0 ?(
           <div className="form-group agenda">
-            <label className="mt-3 mb-3">
-              <h4>Agenda(s)</h4>
-            </label>
+                  <label className="mt-3 mb-3">
+                    <h4>Agenda(s)</h4>
+                  </label>
+          {meetingData.singleMeetingDetails.agendasDetail.length !== 0 &&
+            meetingData.singleMeetingDetails.agendasDetail.map((agenda,index) => {
+              return (
+                
 
-            <div className="mt-3 agenda-box-border">
-              <div className="form-group">
-                <div className="row">
-                  <div className="col-12">
-                    <label className="mt-1 p-3 topic-head"> Agenda 1</label>
-                  </div>
-                </div>
-              </div>
+                  <div className="mt-3 agenda-box-border">
+                    <div className="form-group">
+                      <div className="row">
+                        <div className="col-12">
+                          <label className="mt-1 p-3 topic-head">
+                            {" "}
+                            Agenda {index+1}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
 
-              <div className="p-3">
-                <div className="pb-3 form-group">
-                  <div className="row">
-                    <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                      <label className="mt-1 mb-1">Agenda Title</label>
-                    </div>
-                    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                      <p> Agenda Item 1</p>
-                    </div>
-                  </div>
-                </div>
+                    <div className="p-3">
+                      <div className="pb-3 form-group">
+                        <div className="row">
+                          <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                            <label className="mt-1 mb-1">Agenda Title</label>
+                          </div>
+                          <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+                            <p> {agenda.title}</p>
+                          </div>
+                        </div>
+                      </div>
 
-                <div className=" pb-3 form-group">
-                  <div className="row">
-                    <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                      <label className="mt-2 topic">Topic to Discuss</label>
-                    </div>
-                    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                      <p className="mb-2">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing
-                        elit. Modi molestiae architecto tempora quibusdam magni
-                        illum numquam quae, quidem omnis consectetur.{" "}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                      <div className=" pb-3 form-group">
+                        <div className="row">
+                          <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                            <label className="mt-2 topic">
+                              Topic to Discuss
+                            </label>
+                          </div>
+                          <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+                            <p className="mb-2">
+                            {agenda.topic}{" "}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
 
-                <div className=" form-group">
-                  <div className="row">
-                    <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                      <label className="mt-1 mb-1">Timeline</label>
-                    </div>
-                    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                      <p> 30 Min</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-3 agenda-box-border">
-              <div className="form-group">
-                <div className="row">
-                  <div className="col-12">
-                    <label className="mt-1 p-3 topic-head"> Agenda 2</label>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-3">
-                <div className="pb-3 form-group">
-                  <div className="row">
-                    <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                      <label className="mt-1 mb-1">Agenda Title</label>
-                    </div>
-                    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                      <p> Agenda Item 2</p>
+                      <div className=" form-group">
+                        <div className="row">
+                          <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                            <label className="mt-1 mb-1">Timeline</label>
+                          </div>
+                          <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+                            <p> {agenda.timeLine} Min</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-
-                <div className=" pb-3 form-group">
-                  <div className="row">
-                    <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                      <label className="mt-2 topic">Topic to Discuss</label>
-                    </div>
-                    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                      <p className="mb-2">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing
-                        elit. Modi molestiae architecto tempora quibusdam magni
-                        illum numquam quae, quidem omnis consectetur.{" "}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className=" form-group">
-                  <div className="row">
-                    <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                      <label className="mt-1 mb-1">Timeline</label>
-                    </div>
-                    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                      <p> 30 Min</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* ) : null} */}
+               
+              );
+            })}
+             </div>
+           ):null}
         </form>
-      ) : (
+      ) : meetingData.isLoading  ? (
         <form className="mt-2 details-form details-form-right">
           <div className="form-group mb-2 loader-icon">
             <div className="row">
@@ -554,14 +275,14 @@ const ViewMeeting = (props) => {
             </div>
           </div>
         </form>
-      )}
-      </>
-    )
-  }
-   
+      ):null}
     </>
-    
   );
 };
+
+//   </>
+
+// );
+//};
 
 export default ViewMeeting;

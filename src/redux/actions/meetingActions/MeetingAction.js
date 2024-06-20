@@ -14,6 +14,7 @@ import {
   LOAD_PREVIOUS_STEP,
   SET_SINGLE_MEETING_DETAILS,
   SET_MEETING_VIEW_PAGE,
+  SET_CREATE_NEW_MEETING_PAGE,
 } from "./actionTypes";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -322,6 +323,7 @@ export const updateMeetingDetails = (
             theme: "light",
             // transition: Bounce,
           });
+          dispatch(failRequest(resData.message));
         }
       })
       .catch((err) => {
@@ -382,6 +384,15 @@ export const loadCreateMeeting = (data) => {
 export const setMeetingViewPage = (data) => {
   return {
     type: SET_MEETING_VIEW_PAGE,
+    payload: data,
+  };
+};
+
+
+
+export const setCreateNewMeetingPage = (data) => {
+  return {
+    type: SET_CREATE_NEW_MEETING_PAGE,
     payload: data,
   };
 };

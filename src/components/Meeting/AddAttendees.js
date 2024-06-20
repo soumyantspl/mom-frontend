@@ -26,6 +26,7 @@ import {
 import { customName } from "../../helpers/commonHelpers";
 import CommonModal from "../Common/CommonModal";
 import Alert from "../Common/Alert";
+import RemoveAttendeesModal from "./RemoveAttendeesModal";
 
 const AddAttendees = (props) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -162,8 +163,9 @@ const AddAttendees = (props) => {
     } else {
       if (formData.attendeeId) {
         if (attendeesData.length > 0) {
+          console.log(attendeesData);
           const attendeeFound = attendeesData.find(
-            (u) => u._id === formData.attendeeId
+            (u) => u.id === formData.attendeeId
           );
           console.log(attendeeFound);
           if (attendeeFound) {
@@ -176,6 +178,7 @@ const AddAttendees = (props) => {
         let newAttendee = meetingData.attendeesList.find(
           (u) => u._id === formData.attendeeId
         );
+        console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
         newAttendee.isEmployee = true;
         newAttendee.id=newAttendee._id
         delete newAttendee._id
@@ -300,13 +303,14 @@ const AddAttendees = (props) => {
   return (
     <>
       <form className="m-0 p-0 details-form" onSubmit={submitAttendeeDetails}>
-        <CommonModal
+        <RemoveAttendeesModal
           message={constantMessages.deleteAttendeeMessage}
           title={"Remove"}
           setIsModalOpen={setIsModalOpen}
           isModalOpen={isModalOpen}
           handleSubmit={removeAttendee}
           buttonName={"Remove"}
+          attendee={removeAttendeeData}
         />
         <div className="inner-detail-form">
           <label className="mb-1 people">Attendee(s)</label>

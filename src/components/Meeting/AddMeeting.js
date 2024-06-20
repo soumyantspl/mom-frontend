@@ -6,6 +6,7 @@ import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction.js/mee
 import { useSelector, useDispatch } from "react-redux";
 import CommonStepper from "../Common/CommonStepper";
 import CreateMeeting from "./CreateMeeting";
+import { Navigate, Link, useLocation } from "react-router-dom";
 import {
   createMeetingDetails,
   getCreateMeetingStep,
@@ -19,8 +20,8 @@ import LoaderButton from "../Common/LoaderButton";
 import AddAttendees from "./AddAttendees";
 import Alert from "../Common/Alert";
 import AddAgendas from "./AddAgendas";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddMeeting = (props) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -34,6 +35,7 @@ const AddMeeting = (props) => {
   const [step, setStep] = useState(0);
   const [selectedOption, setSelectedOption] = useState("prevMeetingRadio");
   const [isManualLocation, setIsManualLocation] = useState(true);
+  const [isNewMeeting, setIsNewMeeting] = useState(false);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     title: "",
@@ -46,19 +48,26 @@ const AddMeeting = (props) => {
     roomId: null,
     locationData: "",
   });
-
+  const location = useLocation();
+  console.log(location);
+  const stateData = location.state;
+  console.log(stateData);
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
-    console.log(meetingData.checkStep)
-   // if (meetingData.checkStep) {
-      console.log(meetingData.checkStep)
+
+    console.log(meetingData.checkStep);
+    // if (meetingData.checkStep) {
+    console.log(meetingData.checkStep);
+    if (!meetingData.isNewMeetingPage) {
       dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
-   // }
+    }
+
+    // }
 
     // console.log(meetingData.step);
     setStep(meetingData.step + 1);
     if (meetingData.singleMeetingDetails && meetingData.checkStep) {
-      console.log("in------------444",meetingData)
+      console.log("in------------444", meetingData);
       setFormData({
         ...formData,
         title: meetingData.singleMeetingDetails.title,
@@ -69,12 +78,15 @@ const AddMeeting = (props) => {
         date: new Date(meetingData.singleMeetingDetails.date)
           .toISOString()
           .slice(0, 10),
-        link: meetingData.singleMeetingDetails.link?meetingData.singleMeetingDetails.link:"",
+        link: meetingData.singleMeetingDetails.link
+          ? meetingData.singleMeetingDetails.link
+          : "",
         fromTime: meetingData.singleMeetingDetails.fromTime,
         toTime: meetingData.singleMeetingDetails.toTime,
         roomId: meetingData.singleMeetingDetails.locationDetails.roomId,
-        locationData:
-          meetingData.singleMeetingDetails.locationDetails.location?meetingData.singleMeetingDetails.locationDetails.location:"",
+        locationData: meetingData.singleMeetingDetails.locationDetails.location
+          ? meetingData.singleMeetingDetails.locationDetails.location
+          : "",
       });
       if (meetingData.singleMeetingDetails.locationDetails.isMeetingRoom) {
         const payload = {
@@ -105,7 +117,6 @@ const AddMeeting = (props) => {
         locationDetails["location"] = formData.locationData;
       }
 
-    
       if (meetingData.singleMeetingDetails) {
         const meetingId = meetingData?.singleMeetingDetails?._id;
         const payload = {
@@ -119,7 +130,9 @@ const AddMeeting = (props) => {
           step: 1
         };
         console.log(payload);
-        dispatch(updateMeetingDetails(meetingId, payload, accessToken,"updateMeeting"));
+        dispatch(
+          updateMeetingDetails(meetingId, payload, accessToken, "updateMeeting")
+        );
       } else {
         const payload = {
           date: new Date(formData.date),
@@ -129,9 +142,22 @@ const AddMeeting = (props) => {
           fromTime: formData.fromTime,
           toTime: formData.toTime,
           title: formData.title,
+          meetingStatus:"draft"
         };
         console.log(payload);
         dispatch(createMeetingDetails(payload, accessToken));
+        setFormData({
+          ...formData,
+          title: "",
+          mode: "physical",
+          location: "manual",
+          date: "",
+          link: "",
+          fromTime: "",
+          toTime: "",
+          roomId: null,
+          locationData: ""
+        });
       }
 
       if (meetingData.isSuccess) {
@@ -389,17 +415,20 @@ const AddMeeting = (props) => {
   //     theme: "light",
   //    // transition: Bounce,
   //     })
-  // } 
+  // }
 
-  console.log("formData------------------------", formData);
+  console.log("stateData------------------------", stateData);
   console.log(meetingData);
   return (
     <div className="mt-2 details-form add-meetings">
+      {meetingData.step === 3 && !meetingData.isNewMeetingPage ? (
+        <Navigate to="/meeting-list" />
+      ) : null}
       <CommonStepper step={meetingData.step} />
       <br></br>
       {/* {!meetingData.loading ? (
         <> */}
-      {meetingData.step + 1 == 1 ? (
+      {meetingData.step + 1 == 1 || meetingData.isNewMeetingPage === true ? (
         <form className="mt-0 p-0 details-form" onSubmit={submitMeetingDetails}>
           <div className="inner-detail-form">
             <div className="mb-3">
@@ -657,9 +686,7 @@ const AddMeeting = (props) => {
               //     Next
               //   </Button>
               <>
-             <>
-
-             </>
+                <></>
                 <div className="create-meeting-button create-meet-btn">
                   {meetingData.isCreateMeetingProcessed &&
                   meetingData.step === 1 ? (
@@ -692,15 +719,15 @@ const AddMeeting = (props) => {
             )}
           </div>
         </form>
-      ) : meetingData.step + 1 === 2 ? (
+      ) : meetingData.step + 1 === 2 && !meetingData.isNewMeetingPage ? (
         <>
           <AddAttendees />
         </>
-      ) : (
+      ) : meetingData.step + 1 === 3 && !meetingData.isNewMeetingPage ? (
         <>
           <AddAgendas />
         </>
-      )}
+      ) : null}
       {/* </>
       ) : (
         <div
@@ -710,8 +737,8 @@ const AddMeeting = (props) => {
           <Loader />
         </div>
       )} */}
-      
-       <ToastContainer />
+
+      <ToastContainer />
     </div>
   );
 };

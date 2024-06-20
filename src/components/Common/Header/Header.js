@@ -17,6 +17,7 @@ import {
 } from "../../../redux/actions/userAction/userAction";
 import CommonModal from "../CommonModal";
 import { logOutMessage } from "../../../constants/constatntMessages";
+import { setCreateNewMeetingPage } from "../../../redux/actions/meetingActions/MeetingAction";
 
 const Header = () => {
   const [name, setName] = useState("");
@@ -73,8 +74,8 @@ const Header = () => {
 
           <div className="top-right-svg">
             <div className="create-meeting-button">
-              <Link to="/create-meeting" stateData={{isViewMeetingPage:false}}style={{ textDecoration: "none" }}>
-                <button className="Mom-btn">
+              <Link to="/create-meeting" state={{isNewMeeting:true}}style={{ textDecoration: "none" }}>
+                <button className="Mom-btn" onClick={()=>{dispatch(setCreateNewMeetingPage(true))}}>
                   <p>Create Meeting</p>
                 </button>
               </Link>
