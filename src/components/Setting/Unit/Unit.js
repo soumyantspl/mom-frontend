@@ -12,21 +12,11 @@ const Unit = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const userId = userData.id;
   const organizationId = userData.organizationId;
-  console.log("organizationIdfffffff", organizationId);
   const accessToken = localStorage.getItem("accessToken");
-  console.log("UserData-->>", userData);
-  console.log("accessToken--->>", accessToken);
-  const [unitData, setUnitData] = useState({
-    name: "",
-    address: "",
-  });
-  console.log("organizationIdfffffff", organizationId);
-  console.log("unitData--", unitData);
-
+  const [unitData, setUnitData] = useState({ name: "", address: "" });
   const [formValues, setFormValues] = useState({ name: "", address: "" });
   const [errors, setErrors] = useState({ name: "", address: "" });
   const [units, setUnits] = useState([]);
-  console.log("Units--->", units);
   const [totalCount, setTotalCount] = useState(0);
   const [searchKey, setSearchKey] = useState("");
   const [page, setPage] = useState(1);
@@ -39,23 +29,12 @@ const Unit = () => {
     message: "",
   });
 
-  //Edit Unit
+  // Edit Unit
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [unitName, setUnitName] = useState("");
   const [unitAddress, setUnitAddress] = useState("");
 
-
-  // const [showAlert, setShowAlert] = useState(false);
-  // useEffect(() => {
-  //   if (apiResData1) {
-  //     setShowAlert(true);
-  //     const timer = setTimeout(() => {
-  //       setShowAlert(false);
-  //     }, 3000);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [apiResData1]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUnitData({
@@ -82,18 +61,14 @@ const Unit = () => {
   };
 
   const handleSubmit = async (e) => {
-    try {
-      e.preventDefault();
-      setIsGetApiRes(false);
-      setIsLoading(true);
-      if (validate()) {
-        console.log("Form submitted", formValues);
+    e.preventDefault();
+    setIsGetApiRes(false);
+    setIsLoading(true);
+    if (validate()) {
+      try {
         const response = await axios.post(
           `${process.env.REACT_APP_API_URL}/api/V1/unit/createUnit`,
-          {
-            ...unitData,
-            organizationId,
-          },
+          { ...unitData, organizationId },
           {
             headers: {
               "Content-Type": "application/json",
@@ -101,31 +76,20 @@ const Unit = () => {
             },
           }
         );
-        console.log("Unit created successfully:", response.data.message);
-        if (response) {
-          setIsGetApiRes(true);
-          setIsLoading(false);
-        }
         if (response.data.success) {
-          setFormValues({ ...formValues, name: "", address: "" });
+          setFormValues({ name: "", address: "" });
         }
         setApiResData({
-          ...apiResData,
           isSuccess: response.data.success,
           message: response.data.message,
         });
-      } else {
-        setIsLoading(false)
+        setIsGetApiRes(true);
+      } catch (error) {
+        console.error("Error creating unit:", error.response.data.message);
       }
-    } catch (error) {
-      console.error("Error creating unit:", error.response.data.message);
     }
+    setIsLoading(false);
   };
-
-  //List Unit
-  const [showModal, setShowModal] = useState(false);
-  const handleClose = () => setShowModal(false);
-  const handleShow = () => setShowModal(true);
 
   const fetchUnits = async (bodyData) => {
     try {
@@ -134,116 +98,78 @@ const Unit = () => {
           "Content-Type": "application/json",
           Authorization: accessToken,
         },
-        params: {
-          limit: limit,
-          page: page,
-          order: order,
-        },
+        params: { limit, page, order },
       };
-      console.log("organizationIddd", organizationId);
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/V1/unit/listUnit`,
         bodyData,
         headerObject
       );
-
-      const data1 = response.data;
-      const data2 = data1.data ? data1.data : 0;
-      setUnits(data2.unitData || []);
-      // setOrder(data2.order);
-      // setPage(data2.page);
-      // setLimit(data2.limit);
-      setTotalCount(data2.totalCount);
-      return response.data;
+      const data = response.data.data || {};
+      setUnits(data.unitData || []);
+      setTotalCount(data.totalCount || 0);
     } catch (error) {
       console.log("Error while Fetching Unit:", error);
-      throw error;
     }
   };
 
   useEffect(() => {
     const fetchUnitData = async () => {
-      try {
-        let searchKey;
-
-        let bodyData = searchKey
-          ? { searchKey: searchKey, organizationId: organizationId }
-          : { organizationId: organizationId };
-
-        // const queryData = { page, limit, order };
-        const data = await fetchUnits(bodyData);
-        setUnitData(data.unitData);
-        // setTotalCount(data.totalCount);
-        // setPage(data.page);
-      } catch (error) {
-        console.log("Error while fetching units:", error)
-        throw error;
-      }
+      const bodyData = searchKey
+        ? { searchKey, organizationId }
+        : { organizationId };
+      await fetchUnits(bodyData);
     };
     fetchUnitData();
   }, [searchKey, page, limit, order]);
 
   const handleSearch = (event) => {
     setSearchKey(event.target.value);
-    setPage(1)
+    setPage(1);
   };
 
   const formatDateTimeFormat = (date) => {
-    console.log(date);
     const sourceDate = new Date(date).toDateString();
     const sourceTime = new Date(date).toLocaleTimeString();
-    console.log("sourceTime-->", sourceTime)
-    // The above yields e.g. 'Mon Jan 06 2020'
-
     const [, month, day, year] = sourceDate.split(" ");
     const formattedDate = [day, month, year].join(" ");
-
-
-    const [hour, minute, second] = sourceTime.split(" ")[0].split(":");
-    const formattedTime =
-      [hour, minute].join(":") + " " + sourceTime.split(" ")[1];
-    console.log("formattedDate", formattedDate);
-    console.log("formattedTime", formattedTime)
-    return {
-      formattedTime,
-      formattedDate,
-    };
+    const [hour, minute] = sourceTime.split(":");
+    const formattedTime = `${hour}:${minute} ${sourceTime.split(" ")[1]}`;
+    return { formattedTime, formattedDate };
   };
-  //Edit Unit
-  const handleEditClick = (unit) => {
-    setSelectedUnit(unit);
-    setUnitName(unit.name);
-    setUnitAddress(unit.address);
+
+  const handleEditClick = (units) => {
+    setSelectedUnit(units);
+    setUnitName(units.name);
+    setUnitAddress(units.address);
     setShowEditModal(true);
   };
+
   const handleEditSave = async () => {
     try {
       const updatedUnit = {
-        ...selectedUnit,
         name: unitName,
         address: unitAddress,
+        organizationId,
       };
-      await axios.put(`${process.env.REACT_APP_API_URL}api/V1/unit/editUnit/${selectedUnit._id}`,
+      await axios.put(
+        `${process.env.REACT_APP_API_URL}/api/V1/unit/editUnit/${selectedUnit._id}`,
+        updatedUnit,
         {
-          userId,
-          data: updatedUnit,
-          params: {
-            id: selectedUnit.id,
-          }, headers: {
+          headers: {
             "Content-Type": "application/json",
             Authorization: accessToken,
-          }
+          },
         }
       );
       setUnits((prevUnits) =>
-        prevUnits.map((unit) => {
-          return unit._id === selectedUnit._id ? { ...unit, ...updatedUnit } : unit
-        })
-      )
-      setShowEditModal(false)
+        prevUnits.map((unit) =>
+          unit._id === selectedUnit._id ? { ...unit, ...updatedUnit } : unit
+        )
+      );
+      setShowEditModal(false);
     } catch (error) {
-      console.log("Error while updating units:", error)
-      throw error
+      console.log("Error while updating units:", error);
     }
   };
   return (
@@ -327,7 +253,7 @@ const Unit = () => {
               <div className="search-box">
                 <input
                   type="search"
-                  placeholder="search"
+                  placeholder="Search By Unit Name"
                   value={searchKey}
                   onChange={handleSearch}
                 />
@@ -359,11 +285,13 @@ const Unit = () => {
                     <tr key={index}>
                       <td>{units.name}</td>
                       <td>{units.address}</td>
-                      <td key={units.address}>{formatDateTimeFormat(units.updatedAt).formattedDate}
+                      <td key={units.address}>
+                        {formatDateTimeFormat(units.updatedAt).formattedDate}
                         <p className="detail-date-time">
                           {/* {formatTimeFormat(meeting.fromTime)} */}
                           {formatDateTimeFormat(units.updatedAt).formattedTime}
-                        </p></td>
+                        </p>
+                      </td>
                       <td data-label="Action">
                         <Dropdown>
                           <Dropdown.Toggle
@@ -383,7 +311,9 @@ const Unit = () => {
                           </Dropdown.Toggle>
 
                           <Dropdown.Menu>
-                            <Dropdown.Item onClick={() => handleEditClick(units)}>
+                            <Dropdown.Item
+                              onClick={() => handleEditClick(units)}
+                            >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
@@ -400,7 +330,9 @@ const Unit = () => {
                               </svg>
                               Edit
                             </Dropdown.Item>
-                            <Dropdown.Item onClick={() => console.log("Delete")}>
+                            <Dropdown.Item
+                              onClick={() => console.log("Delete")}
+                            >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
@@ -416,7 +348,6 @@ const Unit = () => {
                           </Dropdown.Menu>
                         </Dropdown>
                       </td>
-
                     </tr>
                   ))
                 ) : (
@@ -429,8 +360,11 @@ const Unit = () => {
 
             <div className="tbl-bottom">
               <div className="left-tbl-bottom">
-
-                <button className="left-arrow" onClick={() => setPage(page > 1 ? page - 1 : 1)} disabled={page === 1} >
+                <button
+                  className="left-arrow"
+                  onClick={() => setPage(page > 1 ? page - 1 : 1)}
+                  disabled={page === 1}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -448,7 +382,13 @@ const Unit = () => {
                 <ul>
                   <li>{page}</li>
                 </ul>
-                <button className="right-arrow" onClick={() => setPage(page * limit < totalCount ? page + 1 : page)} disabled={page * limit >= totalCount}>
+                <button
+                  className="right-arrow"
+                  onClick={() =>
+                    setPage(page * limit < totalCount ? page + 1 : page)
+                  }
+                  disabled={page * limit >= totalCount}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -516,8 +456,8 @@ const Unit = () => {
             </Modal.Footer>
           </Modal>
         </div>
-      </div >
-    </div >
+      </div>
+    </div>
   );
 };
 
