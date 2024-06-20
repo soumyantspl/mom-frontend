@@ -47,7 +47,7 @@ const MeetingList = () => {
     searchKey: "",
     page: 1,
     limit: 5,
-    order: 1,
+    order: -1,
     filterData: {},
   });
 
@@ -323,7 +323,7 @@ const MeetingList = () => {
                       </td>
                       <td data-label="Meeting Title">
                         {meeting.title}
-
+{meeting.attendees.length!==0 && !userData.isMeetingOrganiser?(
                         <div className="respond-button">
                           {meeting.rsvp === "YES" ? (
                             <button disabled className="respond-action">
@@ -376,6 +376,7 @@ const MeetingList = () => {
                             </button>
                           )}
                         </div>
+):null}
                       </td>
                       <td
                         data-label="Attendees"

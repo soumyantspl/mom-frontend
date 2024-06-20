@@ -8,7 +8,7 @@ const MeetingHeader = () => {
         <div className="topbar2-content">
             <ul>
                 <li>
-                    <div className="home"><Link to="/meetingList" style={{textDecoration: "none",color:"black"}}>
+                    <div className="home"><Link to="/meeting-list" style={{textDecoration: "none",color:"black"}}>
                             <div className="home-svg">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                     className="bi bi-house-door" viewBox="0 0 16 16">

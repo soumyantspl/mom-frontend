@@ -72,7 +72,7 @@ const MeetingDropDown = (props) => {
             </Link>
           </Dropdown.Item>
         ) : null}
-        {props.status === "scheduled"||props.status === "rescheduled" ? (
+        {props.status === "scheduled"||props.status === "rescheduled"||props.status === "draft" ? (
           <Dropdown.Item href="#/action-3">
             <Link
               to="/edit-minutes"

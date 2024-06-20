@@ -195,6 +195,7 @@ export const createMeetingDetails = (payload, accessToken) => {
           });
           dispatch(createMeetingResponse(resData));
         } else {
+          dispatch(failRequest(resData.message));
           toast.error(resData.message, {
             position: "bottom-left",
             autoClose: 3000,
@@ -211,6 +212,17 @@ export const createMeetingDetails = (payload, accessToken) => {
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
+        toast.error(err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };

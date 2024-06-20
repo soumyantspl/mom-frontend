@@ -45,7 +45,7 @@ const AddMeeting = (props) => {
     link: "",
     fromTime: "",
     toTime: "",
-    roomId: null,
+    roomId: "",
     locationData: "",
   });
   const location = useLocation();
@@ -61,7 +61,20 @@ const AddMeeting = (props) => {
     if (!meetingData.isNewMeetingPage) {
       dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
     }
-
+if(meetingData.isSuccess){
+  setFormData({
+    ...formData,
+    title: "",
+    mode: "physical",
+    location: "manual",
+    date: "",
+    link: "",
+    fromTime: "",
+    toTime: "",
+    roomId: "",
+    locationData: ""
+  });
+}
     // }
 
     // console.log(meetingData.step);
@@ -127,7 +140,8 @@ const AddMeeting = (props) => {
           fromTime: formData.fromTime,
           toTime: formData.toTime,
           title: formData.title,
-          step: 1
+          step: 1,
+         
         };
         console.log(payload);
         dispatch(
@@ -141,23 +155,11 @@ const AddMeeting = (props) => {
           mode: formData.mode.toUpperCase(),
           fromTime: formData.fromTime,
           toTime: formData.toTime,
-          title: formData.title,
-          meetingStatus:"draft"
+          title: formData.title
         };
         console.log(payload);
         dispatch(createMeetingDetails(payload, accessToken));
-        setFormData({
-          ...formData,
-          title: "",
-          mode: "physical",
-          location: "manual",
-          date: "",
-          link: "",
-          fromTime: "",
-          toTime: "",
-          roomId: null,
-          locationData: ""
-        });
+       
       }
 
       if (meetingData.isSuccess) {
@@ -197,6 +199,7 @@ const AddMeeting = (props) => {
   };
 
   const validateForm = (data) => {
+    console.error(data)
     const errors = {};
     if (!data.title.trim()) {
       errors.title = constantMessages.titleRequired;
@@ -529,6 +532,7 @@ const AddMeeting = (props) => {
                 </div>
               </div>
               {formData.location !== "meetingroom" ? (
+                <>
                 <textarea
                   className="mt-1"
                   placeholder="Enter Location"
@@ -540,6 +544,10 @@ const AddMeeting = (props) => {
                   value={formData.locationData}
                   onBlur={locationDetailsFieldValidationCheck}
                 ></textarea>
+                {errors.locationData && (
+                  <span className="error-message">{errors.locationData}</span>
+                )}
+                </>
               ) : (
                 <select
                   onChange={handleChange}
@@ -561,9 +569,7 @@ const AddMeeting = (props) => {
               {errors.roomId && (
                 <span className="error-message">{errors.roomId}</span>
               )}
-              {errors.locationData && (
-                <span className="error-message">{errors.locationData}</span>
-              )}
+             
             </div>
 
             <div className="mb-3">
@@ -688,7 +694,7 @@ const AddMeeting = (props) => {
               <>
                 <></>
                 <div className="create-meeting-button create-meet-btn">
-                  {meetingData.isCreateMeetingProcessed &&
+                  {/* {meetingData.isCreateMeetingProcessed &&
                   meetingData.step === 1 ? (
                     <div className="mb-3">
                       <div className="row">
@@ -703,7 +709,7 @@ const AddMeeting = (props) => {
                         </div>
                       </div>
                     </div>
-                  ) : null}
+                  ) : null} */}
 
                   <button
                     className="create-meeting-button Mom-btn"

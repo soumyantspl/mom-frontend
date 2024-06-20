@@ -118,6 +118,7 @@ const AddAttendees = (props) => {
         attendees: attendeesData,
         organizationId: userData.organizationId,
         step: meetingData?.singleMeetingDetails?.step + 1,
+        meetingStatus:meetingData?.singleMeetingDetails?.meetingStatus.status
       };
       dispatch(updateMeetingDetails(meetingId, payload, accessToken,"addAttendee"));
     }
@@ -385,6 +386,7 @@ const AddAttendees = (props) => {
                   <label
                     className="mb-2 form-check-label"
                     for="flexRadioDefault1"
+                     id="flexRadioDefault1"
                   >
                     Select From Previous Meetings
                   </label>
@@ -397,13 +399,14 @@ const AddAttendees = (props) => {
                       type="radio"
                       name="attendyType"
                       value="fromEmployeeList"
-                      id="flexRadioDefault1"
+                      id="flexRadioDefault2"
                       onChange={handleChange}
                       checked={formData.attendyType === "fromEmployeeList"}
                     />
                     <label
                       className=" mb-2 form-check-label"
-                      for="flexRadioDefault1"
+                      for="flexRadioDefault2"
+                       id="flexRadioDefault2"
                     >
                       Select From Employees
                     </label>
@@ -417,14 +420,15 @@ const AddAttendees = (props) => {
                       type="radio"
                       name="attendyType"
                       value="addNewPeople"
-                      id="flexRadioDefault1"
+                      id="flexRadioDefault3"
                       checked={formData.attendyType === "addNewPeople"}
                       // checked={this.state.value === 1}
                       onChange={handleChange}
                     />
                     <label
                       className=" mb-2 form-check-label"
-                      for="flexRadioDefault1"
+                      for="flexRadioDefault3"
+                       id="flexRadioDefault3"
                     >
                       Add New People
                     </label>
@@ -434,7 +438,7 @@ const AddAttendees = (props) => {
             </div>
             {formData.attendyType === "fromPreviousMeeting" ? (
               <select
-                className="mb-2"
+                className=""
                 // name="attendeesData"
                 // onChange={handleAttendeeChange}
                 // value={attendeeId}
@@ -539,7 +543,7 @@ const AddAttendees = (props) => {
                 <LoaderButton />
               )}
             </div>
-            {employeeData.isDuplicateUser === true ? (
+            {/* {employeeData.isDuplicateUser === true ? (
               <div className="mb-3 col-padding-none">
                 <div className="row">
                   <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
@@ -568,24 +572,31 @@ const AddAttendees = (props) => {
                   </div>
                 </div>
               </div>
-            ) : null}
+            ) : null} */}
+              {errors.addAttendee && (
+            <span className="error-message">{errors.addAttendee}</span>
+          )}
           </div>
           <div className="button-outer"
           
           >
-          {errors.addAttendee && (
-            <span className="error-message">{errors.addAttendee}</span>
-          )}
+        
           {!meetingData.loading ? (
             <>
-              <Button
-                variant="primary"
+              {/* <Button
+                
                 type="submit"
-                class="btn-primary"
+                className="create-meeting-button Mom-btn"
                 onClick={(e) => setStep(2)}
               >
                 Next
-              </Button>
+              </Button> */}
+              <button
+                    className="create-meeting-button Mom-btn"
+                    type="submit"
+                  >
+                    <p>Next</p>
+                  </button>
             </>
           ) : (
             <LoaderButton />

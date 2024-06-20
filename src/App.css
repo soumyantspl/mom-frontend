@@ -1909,9 +1909,9 @@ th.action-col {
 .cpwd-group {
   margin: 25px 0;
 }
-.add-meetings .form-group {
+/* .add-meetings .form-group {
   margin-bottom: 15px;
-}
+} */
 .btn-primary {
   border-radius: 40px !important;
   padding: 6px 17px !important;
@@ -2087,3 +2087,4 @@ input[type="number"] {
   justify-content: space-between;
   align-items: center;
 }
+
