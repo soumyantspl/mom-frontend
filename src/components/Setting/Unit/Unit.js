@@ -10,7 +10,8 @@ import { Modal, Button, Table, Dropdown, Form } from "react-bootstrap";
 
 const Unit = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
-  const userId = userData.id;
+  const userId = userData._id;
+  console.log("userId====", userId);
   const organizationId = userData.organizationId;
   const accessToken = localStorage.getItem("accessToken");
   const [unitData, setUnitData] = useState({ name: "", address: "" });
@@ -138,10 +139,10 @@ const Unit = () => {
     return { formattedTime, formattedDate };
   };
 
-  const handleEditClick = (units) => {
-    setSelectedUnit(units);
-    setUnitName(units.name);
-    setUnitAddress(units.address);
+  const handleEditClick = (unit) => {
+    setSelectedUnit(unit);
+    setUnitName(unit.name);
+    setUnitAddress(unit.address);
     setShowEditModal(true);
   };
 
@@ -171,6 +172,12 @@ const Unit = () => {
     } catch (error) {
       console.log("Error while updating units:", error);
     }
+  };
+
+  //Row per page
+  const handleRowsPerPageChange = (e) => {
+    setLimit(parseInt(e.target.value, 10));
+    setPage(1);
   };
   return (
     <div>
@@ -405,13 +412,17 @@ const Unit = () => {
                 </button>
               </div>
 
-              <div className="right-tbl-bottom">
+              <div
+                className="right-tbl-bottom"
+                value={limit}
+                onChange={handleRowsPerPageChange}
+              >
                 <p>Rows Per Page</p>
                 <select className="no-opt-box">
+                  <option>5</option>
+                  <option>10</option>
+                  <option>15</option>
                   <option>20</option>
-                  <option>30</option>
-                  <option>40</option>
-                  <option>50</option>
                 </select>
               </div>
             </div>
