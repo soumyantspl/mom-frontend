@@ -236,7 +236,7 @@ export const createMeetingResponse = (data) => {
 
 export const getCreateMeetingStep = (organizationId, accessToken) => {
   return (dispatch) => {
-    dispatch(makeRequest());
+   // dispatch(makeRequest());
     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/getCreateMeetingStep/${organizationId}`;
     const headerObject = {
       headers: {
@@ -371,7 +371,7 @@ export const getSingleMeetingDetails = (meetingId, accessToken) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
 
-        dispatch(setSingleMeetingDetails(resData));
+        dispatch(setSingleMeetingDetails({data:resData.data,meetingId}));
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
@@ -384,6 +384,13 @@ export const setSingleMeetingDetails = (data) => {
   return {
     type: SET_SINGLE_MEETING_DETAILS,
     payload: data,
+  };
+};
+
+export const unSetSingleMeetingDetails = () => {
+  return {
+    type: SET_SINGLE_MEETING_DETAILS,
+   // payload: data,
   };
 };
 

@@ -32,9 +32,9 @@
 /* .form-group {
     margin: 0 !important;
 } */
-.form-group span{
+/* .form-group span{
     color: red;
-}
+} */
 .inner-group{
     display: flex;
     align-items: center;

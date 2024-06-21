@@ -13,7 +13,8 @@ import {
   LOAD_PREVIOUS_STEP,
   SET_SINGLE_MEETING_DETAILS,
   SET_MEETING_VIEW_PAGE,
-  SET_CREATE_NEW_MEETING_PAGE
+  SET_CREATE_NEW_MEETING_PAGE,
+  UNSET_SINGLE_MEETING_DETAILS
 } from "../actions/meetingActions/actionTypes";
 
 const initialObject = {
@@ -133,7 +134,8 @@ export const meetingReducer = (state = initialObject, action) => {
         step:action.payload.success ? state.step+1 : state.step,
         isCreateMeetingProcessed: true,
         checkStep:false,
-        isNewMeetingPage:action.payload.data.step===3?true:false
+        isNewMeetingPage:action.payload.data.step===3 ?true:false
+        
       };
     case LOAD_PREVIOUS_STEP:
       return {
@@ -147,7 +149,8 @@ export const meetingReducer = (state = initialObject, action) => {
           loading: false,
           message: action.payload.message,
           isSuccess: action.payload.success,
-          singleMeetingDetails: action.payload.data
+          singleMeetingDetails: action.payload.data,
+          meetingId:action.payload.meetingId,
         };
         case SET_MEETING_VIEW_PAGE:
           return {
@@ -163,6 +166,15 @@ export const meetingReducer = (state = initialObject, action) => {
               singleMeetingDetails:null,
               isCreateMeetingProcessed:false
             };
+            case UNSET_SINGLE_MEETING_DETAILS:
+              return {
+                ...state,
+                loading: false,
+                // message: action.payload.message,
+                // isSuccess: action.payload.success,
+                singleMeetingDetails: null,
+                meetingId:null,
+              };
     default:
       return state;
   }

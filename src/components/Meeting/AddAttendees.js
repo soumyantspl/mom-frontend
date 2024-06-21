@@ -176,10 +176,11 @@ const AddAttendees = (props) => {
             return errors;
           }
         }
+        console.log(meetingData.attendeesList)
         let newAttendee = meetingData.attendeesList.find(
           (u) => u._id === formData.attendeeId
         );
-        console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+        console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",attendeesData,formData.attendeeId)
         newAttendee.isEmployee = true;
         newAttendee.id=newAttendee._id
         delete newAttendee._id
@@ -291,6 +292,9 @@ const AddAttendees = (props) => {
     console.log(filteredAttendees);
     setAttendeesData(filteredAttendees);
     setIsModalOpen(false);
+    setFormData({
+      ...formData,attendeeId:null
+    })
   };
 
   console.log(
@@ -447,7 +451,7 @@ const AddAttendees = (props) => {
                 name="attendeeId"
                 value={formData.attendeeId}
               >
-                <option value="" disabled selected>
+                <option value="" disabled selected={true}>
                   {" "}
                   Name / Email Address
                 </option>

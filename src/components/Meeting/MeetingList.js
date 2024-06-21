@@ -60,9 +60,11 @@ const MeetingList = () => {
   };
 
   const setModalStatus = (value, attendeesData) => {
+    if(attendeesData.length!==0){
     setIsModalOpen(value);
     setAttendeesData([...attendeesData]);
     // setIsUser(isUser)
+    }
   };
 
   const setRsvpModalStatus = (value, attendeesData, rsvpCount) => {
@@ -427,7 +429,9 @@ const MeetingList = () => {
                               ? "badge bg-success bg-opacity-10 "
                               : meeting.meetingStatus.status === "closed"
                               ? "badge bg-primary bg-opacity-10 "
-                              : "badge bg-danger bg-opacity-10 "
+                               : meeting.meetingStatus.status === "draft"
+                               ?"badge bg-secondary bg-opacity-10 ": "badge bg-danger bg-opacity-10 "
+                              
                           }
                         >
                           {meeting.meetingStatus.status

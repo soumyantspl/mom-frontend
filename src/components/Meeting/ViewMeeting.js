@@ -33,7 +33,7 @@ import {
   Navigate,
   Link,
   useLocation,
-  UNSAFE_NavigationContext,
+  useNavigate 
 } from "react-router-dom";
 
 const ViewMeeting = (props) => {
@@ -47,6 +47,7 @@ const ViewMeeting = (props) => {
   const meetingData = useSelector((state) => state.meeting);
   const [isViewMeetingPage, setIsViewMeetingPage] = useState(false);
   console.log(meetingData);
+  const navigate = useNavigate();
   useEffect(() => {
     console.log(stateData);
     // if (stateData?.isViewMeetingPage) {
@@ -75,6 +76,7 @@ const ViewMeeting = (props) => {
     };
   }, [meetingData.meetingId, meetingData.step]);
   console.log(meetingData);
+
   return (
     <>
       {/* {isViewMeetingPage ? (

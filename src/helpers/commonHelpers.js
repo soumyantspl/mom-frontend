@@ -51,8 +51,48 @@ const getTimeSession = (time) => {
   return "AM";
 };
 
+
+
+const checkRsvpCount = (attendees) => {
+  let yesCount = 0;
+  let noCount = 0;
+  let pendingCount = 0;
+  let mayBeCount = 0;
+
+  attendees.map((item) => {
+    item.rsvp === "YES"
+      ? (yesCount = yesCount + 1)
+      : item.rsvp === "NO"
+      ? (noCount = noCount + 1)
+      : item.rsvp === "MAYBE"
+      ? (mayBeCount = mayBeCount + 1)
+      : (pendingCount = pendingCount + 1);
+  });
+
+  const countMessage = `${yesCount} Yes, ${noCount} No, ${mayBeCount} May Be, ${pendingCount} Awaiting`;
+
+  return {
+    yesCount,noCount,mayBeCount,pendingCount,countMessage
+  };
+};
+
+const convertFirstLetterToCapital=(text)=>{
+  return text.charAt(0).toUpperCase() + text.toLowerCase().slice(1)
+}
+const convertFirstLetterOfFullNameToCapital=(textData)=>{
+  const textArray=textData.split(" ")
+  const convertedTextArray=textArray.map((text)=>{
+    return text.charAt(0).toUpperCase() + text.toLowerCase().slice(1)
+  })
+  return convertedTextArray.join(" ");
+}
+
+
 module.exports = {
   customName,
   formatDateTimeFormat,
-  getTimeSession
+  getTimeSession,
+  checkRsvpCount,
+  convertFirstLetterToCapital,
+  convertFirstLetterOfFullNameToCapital
 };
