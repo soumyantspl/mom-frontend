@@ -6,56 +6,41 @@ import "../Unit/style/unit.css";
 import axios from "../../../../node_modules/axios/index";
 import Alert from "../../Common/Alert";
 import LoaderButton from "../../Common/LoaderButton";
+import Loader from "../../Common/Loader";
 import { Modal, Button, Table, Dropdown, Form } from "react-bootstrap";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Unit = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
-  const userId = userData.id;
+  const userId = userData._id;
+  console.log("userId====", userId);
   const organizationId = userData.organizationId;
-  console.log("organizationIdfffffff", organizationId);
   const accessToken = localStorage.getItem("accessToken");
-  console.log("UserData-->>", userData);
-  console.log("accessToken--->>", accessToken);
-  const [unitData, setUnitData] = useState({
-    name: "",
-    address: "",
-  });
-  console.log("organizationIdfffffff", organizationId);
-  console.log("unitData--", unitData);
-
+  const [unitData, setUnitData] = useState({ name: "", address: "" });
   const [formValues, setFormValues] = useState({ name: "", address: "" });
   const [errors, setErrors] = useState({ name: "", address: "" });
   const [units, setUnits] = useState([]);
-  console.log("Units--->", units);
   const [totalCount, setTotalCount] = useState(0);
   const [searchKey, setSearchKey] = useState("");
-  const [page, setPage] = useState();
-  const [limit, setLimit] = useState();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
   const [order, setOrder] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [isFetching, setIsFetching] = useState(false);
   const [isGetApiRes, setIsGetApiRes] = useState(false);
   const [apiResData, setApiResData] = useState({
     isSuccess: false,
     message: "",
   });
 
-  //Edit Unit
+  // Edit Unit
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [unitName, setUnitName] = useState("");
   const [unitAddress, setUnitAddress] = useState("");
 
-  // const [showAlert, setShowAlert] = useState(false);
-
-  // useEffect(() => {
-  //   if (apiResData1) {
-  //     setShowAlert(true);
-  //     const timer = setTimeout(() => {
-  //       setShowAlert(false);
-  //     }, 3000);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [apiResData1]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUnitData({
@@ -82,18 +67,14 @@ const Unit = () => {
   };
 
   const handleSubmit = async (e) => {
-    try {
-      e.preventDefault();
-      setIsGetApiRes(false);
-      setIsLoading(true);
-      if (validate()) {
-        console.log("Form submitted", formValues);
+    e.preventDefault();
+    setIsGetApiRes(false);
+    setIsLoading(true);
+    if (validate()) {
+      try {
         const response = await axios.post(
           `${process.env.REACT_APP_API_URL}/api/V1/unit/createUnit`,
-          {
-            ...unitData,
-            organizationId,
-          },
+          { ...unitData, organizationId },
           {
             headers: {
               "Content-Type": "application/json",
@@ -101,151 +82,131 @@ const Unit = () => {
             },
           }
         );
-        console.log("Unit created successfully:", response.data.message);
-        if (response) {
-          setIsGetApiRes(true);
-          setIsLoading(false);
-        }
         if (response.data.success) {
-          setFormValues({ ...formValues, name: "", address: "" });
+          setFormValues({ name: "", address: "" });
+          toast.success(response.data.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Slide,
+          });
         }
         setApiResData({
-          ...apiResData,
           isSuccess: response.data.success,
           message: response.data.message,
         });
-      } else {
-        setIsLoading(false)
+        setIsGetApiRes(true);
+      } catch (error) {
+        toast.error(error.message, {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: 0,
+          theme: "light",
+          // transition: Slide,
+        });
+        console.error("Error creating unit:", error.response.data.message);
       }
-    } catch (error) {
-      console.error("Error creating unit:", error.response.data.message);
     }
+    setIsLoading(false);
   };
-
-  //List Unit
-  const [showModal, setShowModal] = useState(false);
-  const handleClose = () => setShowModal(false);
-  const handleShow = () => setShowModal(true);
 
   const fetchUnits = async (bodyData) => {
     try {
+      setIsFetching(true);
       const headerObject = {
         headers: {
           "Content-Type": "application/json",
           Authorization: accessToken,
         },
-        params: {
-          limit: limit,
-          page: page,
-          order: order,
-        },
+        params: { limit, page, order },
       };
-      console.log("organizationIddd", organizationId);
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/V1/unit/listUnit`,
         bodyData,
         headerObject
       );
-
-      const data1 = response.data;
-      const data2 = data1.data;
-      console.log("Response DATA-->", data2.unitData);
-      setUnits(data2.unitData);
-      // setOrder(data2.order);
-      // setPage(data2.page);
-      // setLimit(data2.limit);
-      setTotalCount(data2.totalCount);
-      return response.data;
+      const data = response.data.data || {};
+      setUnits(data.unitData || []);
+      setTotalCount(data.totalCount || 0);
+      setIsFetching(false);
     } catch (error) {
       console.log("Error while Fetching Unit:", error);
-      throw error;
     }
   };
 
   useEffect(() => {
     const fetchUnitData = async () => {
-      try {
-        let searchKey;
-
-        let bodyData = searchKey
-          ? { searchKey: searchKey, organizationId: organizationId }
-          : { organizationId: organizationId };
-
-        // const queryData = { page, limit, order };
-        const data = await fetchUnits(bodyData);
-        setUnitData(data.unitData);
-        // setTotalCount(data.totalCount);
-        // setPage(data.page);
-      } catch (error) {
-        console.log("Error while fetching units:", error)
-        throw error;
-      }
+      const bodyData = searchKey
+        ? { searchKey, organizationId }
+        : { organizationId };
+      await fetchUnits(bodyData);
     };
     fetchUnitData();
   }, [searchKey, page, limit, order]);
 
   const handleSearch = (event) => {
     setSearchKey(event.target.value);
+    setPage(1);
   };
 
   const formatDateTimeFormat = (date) => {
-    console.log(date);
     const sourceDate = new Date(date).toDateString();
     const sourceTime = new Date(date).toLocaleTimeString();
-    console.log("sourceTime-->", sourceTime)
-    // The above yields e.g. 'Mon Jan 06 2020'
-
     const [, month, day, year] = sourceDate.split(" ");
     const formattedDate = [day, month, year].join(" ");
-
-
-    const [hour, minute, second] = sourceTime.split(" ")[0].split(":");
-    const formattedTime =
-      [hour, minute].join(":") + " " + sourceTime.split(" ")[1];
-    console.log("formattedDate", formattedDate);
-    console.log("formattedTime", formattedTime)
-    return {
-      formattedTime,
-      formattedDate,
-    };
+    const [hour, minute] = sourceTime.split(":");
+    const formattedTime = `${hour}:${minute} ${sourceTime.split(" ")[1]}`;
+    return { formattedTime, formattedDate };
   };
-  //Edit Unit
+
   const handleEditClick = (unit) => {
     setSelectedUnit(unit);
     setUnitName(unit.name);
     setUnitAddress(unit.address);
     setShowEditModal(true);
   };
+
   const handleEditSave = async () => {
     try {
       const updatedUnit = {
-        ...selectedUnit,
         name: unitName,
         address: unitAddress,
+        organizationId,
       };
-      await axios.put(`http://localhost:8000/api/V1/department/updateDepartment/${selectedUnit._id}`,
-        {
-          userId,
-          id: selectedUnit.id,
-          data: updatedUnit
-        },
+      await axios.put(
+        `${process.env.REACT_APP_API_URL}/api/V1/unit/editUnit/${selectedUnit._id}`,
+        updatedUnit,
         {
           headers: {
             "Content-Type": "application/json",
             Authorization: accessToken,
-          }
+          },
         }
       );
-      // setUnits((prevUnits) =>
-      //   prevUnits.map((unit) => {
-      //     unit.id === selectedUnit.id ? { ...unit, ...updatedUnit } : unit
-      //   })
-      // )
-      setShowEditModal(false)
+      setUnits((prevUnits) =>
+        prevUnits.map((unit) =>
+          unit._id === selectedUnit._id ? { ...unit, ...updatedUnit } : unit
+        )
+      );
+      setShowEditModal(false);
     } catch (error) {
-      console.log("Error while updating units:", error)
-      throw error
+      console.log("Error while updating units:", error);
     }
+  };
+
+  //Row per page
+  const handleRowsPerPageChange = (e) => {
+    setLimit(parseInt(e.target.value, 10));
+    setPage(1);
   };
   return (
     <div>
@@ -328,7 +289,8 @@ const Unit = () => {
               <div className="search-box">
                 <input
                   type="search"
-                  placeholder="search"
+                  autoComplete="off"
+                  placeholder="Search By Unit Name"
                   value={searchKey}
                   onChange={handleSearch}
                 />
@@ -355,26 +317,29 @@ const Unit = () => {
                 </tr>
               </thead>
               <tbody>
-                {units.length === 0 ? (
-                  <tr>
-                    <td colSpan="3">No data available</td>
-                  </tr>
-                ) : (
-                  units.map((units, index) => (
+                {isFetching ? (
+                  <div
+                    className="meeting-page "
+                    style={{ textAlign: "center", paddingTop: 20 }}
+                  >
+                    <Loader />
+                  </div>
+                ) : units.length > 0 ? (
+                  units.map((unit, index) => (
                     <tr key={index}>
-                      <td>{units.name}</td>
-                      <td>{units.address}</td>
-                      <td key={units.address}>{formatDateTimeFormat(units.updatedAt).formattedDate}
+                      <td>{unit.name}</td>
+                      <td>{unit.address}</td>
+                      <td>
+                        {formatDateTimeFormat(unit.updatedAt).formattedDate}
                         <p className="detail-date-time">
-                          {/* {formatTimeFormat(meeting.fromTime)} */}
-                          {formatDateTimeFormat(units.updatedAt).formattedTime}
-                        </p></td>
+                          {formatDateTimeFormat(unit.updatedAt).formattedTime}
+                        </p>
+                      </td>
                       <td data-label="Action">
                         <Dropdown>
-                          <Dropdown.Toggle
-                            variant="outline-primary"
-                            id="dropdown-basic"
-                          >
+                        <div className="d-inline-block menu-dropdown custom-dropdown">
+
+                          <Dropdown.Toggle id="dropdown-basic">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="16"
@@ -388,7 +353,9 @@ const Unit = () => {
                           </Dropdown.Toggle>
 
                           <Dropdown.Menu>
-                            <Dropdown.Item onClick={handleShow}>
+                            <Dropdown.Item
+                              onClick={() => handleEditClick(unit)}
+                            >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
@@ -405,7 +372,9 @@ const Unit = () => {
                               </svg>
                               Edit
                             </Dropdown.Item>
-                            <Dropdown.Item>
+                            <Dropdown.Item
+                              onClick={() => console.log("Delete")}
+                            >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
@@ -419,18 +388,31 @@ const Unit = () => {
                               Delete
                             </Dropdown.Item>
                           </Dropdown.Menu>
+                          </div>
                         </Dropdown>
                       </td>
-
                     </tr>
                   ))
+                ) : (
+                  <tr>
+                    <td colSpan="3">No data available</td>
+                  </tr>
                 )}
+                {/* {units.length > 0 ? (
+                 
+                ) : (
+                  
+                )} */}
               </tbody>
             </Table>
 
             <div className="tbl-bottom">
               <div className="left-tbl-bottom">
-                <button className="left-arrow">
+                <button
+                  className="left-arrow"
+                  onClick={() => setPage(page > 1 ? page - 1 : 1)}
+                  disabled={page === 1}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -446,10 +428,15 @@ const Unit = () => {
                   </svg>
                 </button>
                 <ul>
-                  <li>1</li>
-                  <li>2</li>
+                  <li>{page}</li>
                 </ul>
-                <button className="right-arrow">
+                <button
+                  className="right-arrow"
+                  onClick={() =>
+                    setPage(page * limit < totalCount ? page + 1 : page)
+                  }
+                  disabled={page * limit >= totalCount}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -466,19 +453,23 @@ const Unit = () => {
                 </button>
               </div>
 
-              <div className="right-tbl-bottom">
+              <div
+                className="right-tbl-bottom"
+                value={limit}
+                onChange={handleRowsPerPageChange}
+              >
                 <p>Rows Per Page</p>
                 <select className="no-opt-box">
+                  <option>5</option>
+                  <option>10</option>
+                  <option>15</option>
                   <option>20</option>
-                  <option>30</option>
-                  <option>40</option>
-                  <option>50</option>
                 </select>
               </div>
             </div>
           </div>
 
-          <Modal show={showModal} onHide={handleClose}>
+          <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
             <Modal.Header closeButton>
               <Modal.Title>Edit Unit</Modal.Title>
             </Modal.Header>
@@ -488,7 +479,9 @@ const Unit = () => {
                   <Form.Label>Unit Name</Form.Label>
                   <Form.Control
                     type="text"
+                    placeholder="Enter Unit Name"
                     value={unitName}
+                    autoComplete="off"
                     onChange={(e) => setUnitName(e.target.value)}
                   />
                 </Form.Group>
@@ -496,7 +489,9 @@ const Unit = () => {
                   <Form.Label>Unit Address</Form.Label>
                   <Form.Control
                     type="text"
+                    placeholder="Enter Unit Address"
                     value={unitAddress}
+                    autoComplete="off"
                     onChange={(e) => setUnitAddress(e.target.value)}
                   />
                 </Form.Group>
@@ -516,6 +511,7 @@ const Unit = () => {
           </Modal>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
