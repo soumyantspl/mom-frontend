@@ -25,11 +25,8 @@ const NewAgenda = (props) => {
       //   index: props.index ,
       [name]: value,
     });
-     props.agendaData(formData)
+    props.agendaData(formData);
   };
-
-
-
 
   const validateForm = () => {
     //  console.log(formData.title);
@@ -37,37 +34,37 @@ const NewAgenda = (props) => {
 
     if (!formData?.title.trim()) {
       errors.title = constantMessages.titleRequired;
-    //  errors.index = formData.index;
+      //  errors.index = formData.index;
     }
 
     if (!formData.time) {
       errors.time = constantMessages.timeRequired;
-    //  errors.index = formData.index;
+      //  errors.index = formData.index;
     }
 
     return errors;
   };
 
   const validateAgendaTitle = () => {
-    console.log(formData)
+    console.log(formData);
     const errors = {};
     if (!formData?.title.trim()) {
-        console.log(formData)
+      console.log(formData);
       errors.title = constantMessages.titleRequired;
       // errors.index = formData.index;
     }
     setErrors(errors);
   };
-  const validateAgendaTime=()=>{
-    console.log(formData)
+  const validateAgendaTime = () => {
+    console.log(formData);
     const errors = {};
     if (!formData.time) {
-        errors.time = constantMessages.timeRequired;
+      errors.time = constantMessages.timeRequired;
       //  errors.index = formData.index;
-      }
-      setErrors(errors);
-  }
-  console.log(errors)
+    }
+    setErrors(errors);
+  };
+  console.log(errors);
   return (
     <div className="agenda-background">
       <h2>
@@ -124,15 +121,13 @@ const NewAgenda = (props) => {
                     name="title"
                     value={formData.title}
                     onChange={handleChange}
-                    onBlur={
-                      validateAgendaTitle
-                    }
+                    onBlur={validateAgendaTitle}
                     autoComplete="off"
                   />
-               
-                   {errors.title ? (
-                      <span className="error-message">{errors.title}</span>
-                    ):null}
+
+                  {errors.title ? (
+                    <span className="error-message">{errors.title}</span>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -177,9 +172,7 @@ const NewAgenda = (props) => {
                       name="time"
                       value={formData.time}
                       onChange={handleChange}
-                      onBlur={
-                        validateAgendaTime
-                      }
+                      onBlur={validateAgendaTime}
                       // autoComplete="off"
                       required="required"
                       type="number"
@@ -187,11 +180,9 @@ const NewAgenda = (props) => {
                     />
                     <div className="minute_box">mins</div>
                   </div>
-                  {errors.time && ( 
-                  <span className="error-message">
-                    {errors.time}
-                  </span>
-                 )}
+                  {errors.time && (
+                    <span className="error-message">{errors.time}</span>
+                  )}
 
                   {/* {props.errorData.index===props.agenda.index && props.errorData.time && ( 
                   <span className="error-message">

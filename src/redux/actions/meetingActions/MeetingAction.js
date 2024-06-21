@@ -12,9 +12,12 @@ import {
   SET_ATTENDEES,
   UPDATE_MEETING_RESPONSE,
   LOAD_PREVIOUS_STEP,
+  SET_SINGLE_MEETING_DETAILS,
+  SET_MEETING_VIEW_PAGE,
+  SET_CREATE_NEW_MEETING_PAGE,
 } from "./actionTypes";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const accessToken = localStorage.getItem("accessToken");
 
@@ -191,8 +194,8 @@ export const createMeetingDetails = (payload, accessToken) => {
             // transition: Bounce,
           });
           dispatch(createMeetingResponse(resData));
-        }
-        else{
+        } else {
+          dispatch(failRequest(resData.message));
           toast.error(resData.message, {
             position: "bottom-left",
             autoClose: 3000,
@@ -205,11 +208,21 @@ export const createMeetingDetails = (payload, accessToken) => {
             // transition: Bounce,
           });
         }
-       
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
+        toast.error(err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -223,7 +236,7 @@ export const createMeetingResponse = (data) => {
 
 export const getCreateMeetingStep = (organizationId, accessToken) => {
   return (dispatch) => {
-    dispatch(makeRequest());
+   // dispatch(makeRequest());
     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/getCreateMeetingStep/${organizationId}`;
     const headerObject = {
       headers: {
@@ -263,7 +276,12 @@ export const updateIsCreateMeetingProcessed = (data) => {
   };
 };
 
-export const updateMeetingDetails = (meetingId, bodyPayload, accessToken,isFrom) => {
+export const updateMeetingDetails = (
+  meetingId,
+  bodyPayload,
+  accessToken,
+  isFrom
+) => {
   return (dispatch) => {
     dispatch(makeRequest());
     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/updateMeeting/${meetingId}`;
@@ -286,7 +304,12 @@ export const updateMeetingDetails = (meetingId, bodyPayload, accessToken,isFrom)
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
-        const message=isFrom==="addAttendee"?"Attendees added successfully":isFrom==="addAgenda"?"Agendas added successfully":resData.message
+        const message =
+          isFrom === "addAttendee"
+            ? "Attendees added successfully"
+            : isFrom === "addAgenda"
+            ? "Agendas added successfully"
+            : resData.message;
         if (resData.success) {
           toast.success(message, {
             position: "bottom-left",
@@ -300,8 +323,7 @@ export const updateMeetingDetails = (meetingId, bodyPayload, accessToken,isFrom)
             // transition: Bounce,
           });
           dispatch(updateMeetingResponse(resData));
-        }
-        else{
+        } else {
           toast.error(resData.message, {
             position: "bottom-left",
             autoClose: 3000,
@@ -313,8 +335,8 @@ export const updateMeetingDetails = (meetingId, bodyPayload, accessToken,isFrom)
             theme: "light",
             // transition: Bounce,
           });
+          dispatch(failRequest(resData.message));
         }
-       
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
@@ -330,47 +352,66 @@ export const updateMeetingResponse = (data) => {
   };
 };
 
-// export const getAttendeesListFromPreviousMeeting = (
-//   organizationId,
-//   accessToken
-// ) => {
-//   return (dispatch) => {
-//     // dispatch(makeRequest());
-//     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/listAttendeesFromPreviousMeeting/${organizationId}`;
-//     const headerObject = {
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: accessToken,
-//       },
-//     };
-//     console.log("webApiUrl----------------", webApiUrl);
-//     console.log("accessToken------------>>>>>", accessToken);
+export const getSingleMeetingDetails = (meetingId, accessToken) => {
+  return (dispatch) => {
+    dispatch(makeRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/viewMeeting/${meetingId}`;
+    const headerObject = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: accessToken,
+      },
+    };
+    console.log("webApiUrl----------------", webApiUrl);
+    console.log("accessToken------------>>>>>", accessToken);
 
-//     axios
-//       .get(webApiUrl, headerObject)
-//       .then((result) => {
-//         console.log("result------------------------->>>>>>>", result);
-//         const resData = result.data;
+    axios
+      .get(webApiUrl, headerObject)
+      .then((result) => {
+        console.log("result------------------------->>>>>>>", result);
+        const resData = result.data;
 
-//         dispatch(setAttendeesListFromPreviousMeeting(resData));
-//       })
-//       .catch((err) => {
-//         console.log("err------------------------->>>>>>>", err);
-//         dispatch(failRequest(err.message));
-//       });
-//   };
-// };
+        dispatch(setSingleMeetingDetails({data:resData.data,meetingId}));
+      })
+      .catch((err) => {
+        console.log("err------------------------->>>>>>>", err);
+        dispatch(failRequest(err.message));
+      });
+  };
+};
 
-// export const setAttendeesListFromPreviousMeeting = (data) => {
-//   return {
-//     type: SET_ATTENDEES,
-//     payload: data,
-//   };
-// };
+export const setSingleMeetingDetails = (data) => {
+  return {
+    type: SET_SINGLE_MEETING_DETAILS,
+    payload: data,
+  };
+};
+
+export const unSetSingleMeetingDetails = () => {
+  return {
+    type: SET_SINGLE_MEETING_DETAILS,
+   // payload: data,
+  };
+};
 
 export const loadCreateMeeting = (data) => {
   return {
     type: LOAD_PREVIOUS_STEP,
+    payload: data,
+  };
+};
+export const setMeetingViewPage = (data) => {
+  return {
+    type: SET_MEETING_VIEW_PAGE,
+    payload: data,
+  };
+};
+
+
+
+export const setCreateNewMeetingPage = (data) => {
+  return {
+    type: SET_CREATE_NEW_MEETING_PAGE,
     payload: data,
   };
 };

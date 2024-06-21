@@ -11,6 +11,10 @@ import {
   SET_ATTENDEES,
   UPDATE_MEETING_RESPONSE,
   LOAD_PREVIOUS_STEP,
+  SET_SINGLE_MEETING_DETAILS,
+  SET_MEETING_VIEW_PAGE,
+  SET_CREATE_NEW_MEETING_PAGE,
+  UNSET_SINGLE_MEETING_DETAILS
 } from "../actions/meetingActions/actionTypes";
 
 const initialObject = {
@@ -19,14 +23,17 @@ const initialObject = {
   message: "",
   totalCount: 0,
   isSuccess: false,
-  statusData: ["closed", "scheduled", "rescheduled", "cancelled"],
+  statusData: ["closed", "scheduled", "rescheduled", "cancelled","draft"],
   attendeesList: [],
   isRsvpUpdated: false,
   singleMeetingDetails: null,
   step: 0,
   isCreateMeetingProcessed: false,
   apiProcessed: false,
-  checkStep:null
+  checkStep:null,
+  meetingId:null,
+  isViewMeetingPage:false,
+  isNewMeetingPage:false
 };
 
 export const meetingReducer = (state = initialObject, action) => {
@@ -88,6 +95,7 @@ export const meetingReducer = (state = initialObject, action) => {
         isSuccess: action.payload.success,
         isCreateMeetingProcessed: true,
         step: action.payload.success ? 1 : 0,
+        isNewMeetingPage:false
       };
 
     case GET_CREATE_MEETING_STEPS:
@@ -98,6 +106,7 @@ export const meetingReducer = (state = initialObject, action) => {
         isSuccess: action.payload.success,
         singleMeetingDetails: action.payload.data,
         step: action.payload.data ? action.payload.data.step : 0,
+        meetingId: action.payload.data._id
       };
 
     case UPDATE_ISCREATE_MEETING_PROCESSED:
@@ -124,7 +133,9 @@ export const meetingReducer = (state = initialObject, action) => {
         isSuccess: action.payload.success,
         step:action.payload.success ? state.step+1 : state.step,
         isCreateMeetingProcessed: true,
-        checkStep:false
+        checkStep:false,
+        isNewMeetingPage:action.payload.data.step===3 ?true:false
+        
       };
     case LOAD_PREVIOUS_STEP:
       return {
@@ -132,6 +143,38 @@ export const meetingReducer = (state = initialObject, action) => {
         step: action.payload,
         checkStep:false
       };
+      case SET_SINGLE_MEETING_DETAILS:
+        return {
+          ...state,
+          loading: false,
+          message: action.payload.message,
+          isSuccess: action.payload.success,
+          singleMeetingDetails: action.payload.data,
+          meetingId:action.payload.meetingId,
+        };
+        case SET_MEETING_VIEW_PAGE:
+          return {
+            ...state,
+            meetingId:action.payload.meetingId,
+            isViewMeetingPage:true
+          };
+          case SET_CREATE_NEW_MEETING_PAGE:
+            return {
+              ...state,
+             // meetingId:action.payload.meetingId,
+              isNewMeetingPage:action.payload,
+              singleMeetingDetails:null,
+              isCreateMeetingProcessed:false
+            };
+            case UNSET_SINGLE_MEETING_DETAILS:
+              return {
+                ...state,
+                loading: false,
+                // message: action.payload.message,
+                // isSuccess: action.payload.success,
+                singleMeetingDetails: null,
+                meetingId:null,
+              };
     default:
       return state;
   }

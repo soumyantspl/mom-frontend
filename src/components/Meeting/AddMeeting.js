@@ -6,6 +6,7 @@ import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction.js/mee
 import { useSelector, useDispatch } from "react-redux";
 import CommonStepper from "../Common/CommonStepper";
 import CreateMeeting from "./CreateMeeting";
+import { Navigate, Link, useLocation } from "react-router-dom";
 import {
   createMeetingDetails,
   getCreateMeetingStep,
@@ -19,8 +20,8 @@ import LoaderButton from "../Common/LoaderButton";
 import AddAttendees from "./AddAttendees";
 import Alert from "../Common/Alert";
 import AddAgendas from "./AddAgendas";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddMeeting = (props) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -34,6 +35,7 @@ const AddMeeting = (props) => {
   const [step, setStep] = useState(0);
   const [selectedOption, setSelectedOption] = useState("prevMeetingRadio");
   const [isManualLocation, setIsManualLocation] = useState(true);
+  const [isNewMeeting, setIsNewMeeting] = useState(false);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     title: "",
@@ -43,22 +45,42 @@ const AddMeeting = (props) => {
     link: "",
     fromTime: "",
     toTime: "",
-    roomId: null,
+    roomId: "",
     locationData: "",
   });
-
+  const location = useLocation();
+  console.log(location);
+  const stateData = location.state;
+  console.log(stateData);
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
-    console.log(meetingData.checkStep)
-   // if (meetingData.checkStep) {
-      console.log(meetingData.checkStep)
+
+    console.log(meetingData.checkStep);
+    // if (meetingData.checkStep) {
+    console.log(meetingData.checkStep);
+    if (!meetingData.isNewMeetingPage) {
       dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
-   // }
+    }
+if(meetingData.isSuccess){
+  setFormData({
+    ...formData,
+    title: "",
+    mode: "physical",
+    location: "manual",
+    date: "",
+    link: "",
+    fromTime: "",
+    toTime: "",
+    roomId: "",
+    locationData: ""
+  });
+}
+    // }
 
     // console.log(meetingData.step);
     setStep(meetingData.step + 1);
     if (meetingData.singleMeetingDetails && meetingData.checkStep) {
-      console.log("in------------444",meetingData)
+      console.log("in------------444", meetingData);
       setFormData({
         ...formData,
         title: meetingData.singleMeetingDetails.title,
@@ -69,12 +91,15 @@ const AddMeeting = (props) => {
         date: new Date(meetingData.singleMeetingDetails.date)
           .toISOString()
           .slice(0, 10),
-        link: meetingData.singleMeetingDetails.link?meetingData.singleMeetingDetails.link:"",
+        link: meetingData.singleMeetingDetails.link
+          ? meetingData.singleMeetingDetails.link
+          : "",
         fromTime: meetingData.singleMeetingDetails.fromTime,
         toTime: meetingData.singleMeetingDetails.toTime,
         roomId: meetingData.singleMeetingDetails.locationDetails.roomId,
-        locationData:
-          meetingData.singleMeetingDetails.locationDetails.location?meetingData.singleMeetingDetails.locationDetails.location:"",
+        locationData: meetingData.singleMeetingDetails.locationDetails.location
+          ? meetingData.singleMeetingDetails.locationDetails.location
+          : "",
       });
       if (meetingData.singleMeetingDetails.locationDetails.isMeetingRoom) {
         const payload = {
@@ -88,9 +113,6 @@ const AddMeeting = (props) => {
       }
     }
   }, [meetingData.step]);
-  var todayDate = new Date().toISOString().slice(0, 10);
-  console.log(todayDate);
-  console.log(step);
 
   const submitMeetingDetails = (e) => {
     console.log("submitMeetingDetails------------------------------");
@@ -108,7 +130,6 @@ const AddMeeting = (props) => {
         locationDetails["location"] = formData.locationData;
       }
 
-    
       if (meetingData.singleMeetingDetails) {
         const meetingId = meetingData?.singleMeetingDetails?._id;
         const payload = {
@@ -119,10 +140,13 @@ const AddMeeting = (props) => {
           fromTime: formData.fromTime,
           toTime: formData.toTime,
           title: formData.title,
-          step: 1
+          step: 1,
+         
         };
         console.log(payload);
-        dispatch(updateMeetingDetails(meetingId, payload, accessToken,"updateMeeting"));
+        dispatch(
+          updateMeetingDetails(meetingId, payload, accessToken, "updateMeeting")
+        );
       } else {
         const payload = {
           date: new Date(formData.date),
@@ -131,10 +155,11 @@ const AddMeeting = (props) => {
           mode: formData.mode.toUpperCase(),
           fromTime: formData.fromTime,
           toTime: formData.toTime,
-          title: formData.title,
+          title: formData.title
         };
         console.log(payload);
         dispatch(createMeetingDetails(payload, accessToken));
+       
       }
 
       if (meetingData.isSuccess) {
@@ -174,6 +199,7 @@ const AddMeeting = (props) => {
   };
 
   const validateForm = (data) => {
+    console.error(data)
     const errors = {};
     if (!data.title.trim()) {
       errors.title = constantMessages.titleRequired;
@@ -392,17 +418,20 @@ const AddMeeting = (props) => {
   //     theme: "light",
   //    // transition: Bounce,
   //     })
-  // } 
+  // }
 
-  console.log("formData------------------------", formData);
+  console.log("stateData------------------------", stateData);
   console.log(meetingData);
   return (
     <div className="mt-2 details-form add-meetings">
-      <CommonStepper step={meetingData.step} />
+      {meetingData.step === 3 && !meetingData.isNewMeetingPage ? (
+        <Navigate to="/meeting-list" />
+      ) : null}
+      <CommonStepper step={meetingData.isNewMeetingPage?1:meetingData.step} />
       <br></br>
       {/* {!meetingData.loading ? (
         <> */}
-      {meetingData.step + 1 == 1 ? (
+      {meetingData.step + 1 == 1 || meetingData.isNewMeetingPage === true ? (
         <form className="mt-0 p-0 details-form" onSubmit={submitMeetingDetails}>
           <div className="inner-detail-form">
             <div className="mb-3">
@@ -503,6 +532,7 @@ const AddMeeting = (props) => {
                 </div>
               </div>
               {formData.location !== "meetingroom" ? (
+                <>
                 <textarea
                   className="mt-1"
                   placeholder="Enter Location"
@@ -514,6 +544,10 @@ const AddMeeting = (props) => {
                   value={formData.locationData}
                   onBlur={locationDetailsFieldValidationCheck}
                 ></textarea>
+                {errors.locationData && (
+                  <span className="error-message">{errors.locationData}</span>
+                )}
+                </>
               ) : (
                 <select
                   onChange={handleChange}
@@ -535,9 +569,7 @@ const AddMeeting = (props) => {
               {errors.roomId && (
                 <span className="error-message">{errors.roomId}</span>
               )}
-              {errors.locationData && (
-                <span className="error-message">{errors.locationData}</span>
-              )}
+             
             </div>
 
             <div className="mb-3">
@@ -556,7 +588,7 @@ const AddMeeting = (props) => {
               )}
             </div>
 
-            <div className="mb-3 col-padding-none">
+            <div className="mb-3">
               <div className="row">
                 <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
                   <div className="position-relative ">
@@ -568,7 +600,7 @@ const AddMeeting = (props) => {
                       onChange={handleChange}
                       onBlur={dateFieldValidationCheck}
                     />
-                    <svg
+                    {/* <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
                       height="16"
@@ -578,7 +610,7 @@ const AddMeeting = (props) => {
                     >
                       <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z" />
                       <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
-                    </svg>
+                    </svg> */}
                   </div>
                   {errors.date && (
                     <span className="error-message">{errors.date}</span>
@@ -586,7 +618,7 @@ const AddMeeting = (props) => {
                 </div>
 
                 <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
-                  <div className="position-relative ms-3">
+                  <div className="position-relative">
                     <label className="mb-1"> From Time</label>
                     <input
                       type="time"
@@ -596,7 +628,7 @@ const AddMeeting = (props) => {
                       onChange={handleChange}
                       onBlur={fromDateFieldValidationCheck}
                     />
-                    <svg
+                    {/* <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
                       height="18"
@@ -605,7 +637,7 @@ const AddMeeting = (props) => {
                       viewBox="0 0 16 16"
                     >
                       <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07A7.001 7.001 0 0 0 8 16a7 7 0 0 0 5.29-11.584l.013-.012.354-.354.353.354a.5.5 0 1 0 .707-.707l-1.414-1.415a.5.5 0 1 0-.707.707l.354.354-.354.354-.012.012A6.97 6.97 0 0 0 9 2.071V1h.5a.5.5 0 0 0 0-1zm2 5.6V9a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1 0-1h3V5.6a.5.5 0 1 1 1 0" />
-                    </svg>
+                    </svg> */}
                   </div>
                   {errors.fromTime && (
                     <span className="error-message">{errors.fromTime}</span>
@@ -613,7 +645,7 @@ const AddMeeting = (props) => {
                 </div>
 
                 <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
-                  <div className="position-relative ms-3">
+                  <div className="position-relative ">
                     <label className="mb-1">To Time</label>
                     <input
                       type="time"
@@ -623,7 +655,7 @@ const AddMeeting = (props) => {
                       onChange={handleChange}
                       onBlur={toDateFieldValidationCheck}
                     />
-                    <svg
+                    {/* <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
                       height="18"
@@ -632,7 +664,7 @@ const AddMeeting = (props) => {
                       viewBox="0 0 16 16"
                     >
                       <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07A7.001 7.001 0 0 0 8 16a7 7 0 0 0 5.29-11.584l.013-.012.354-.354.353.354a.5.5 0 1 0 .707-.707l-1.414-1.415a.5.5 0 1 0-.707.707l.354.354-.354.354-.012.012A6.97 6.97 0 0 0 9 2.071V1h.5a.5.5 0 0 0 0-1zm2 5.6V9a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1 0-1h3V5.6a.5.5 0 1 1 1 0" />
-                    </svg>
+                    </svg> */}
                   </div>
                   {errors.toTime && (
                     <span className="error-message">{errors.toTime}</span>
@@ -660,13 +692,11 @@ const AddMeeting = (props) => {
               //     Next
               //   </Button>
               <>
-             <>
-
-             </>
+                <></>
                 <div className="create-meeting-button create-meet-btn">
-                  {meetingData.isCreateMeetingProcessed &&
+                  {/* {meetingData.isCreateMeetingProcessed &&
                   meetingData.step === 1 ? (
-                    <div className="mb-3 col-padding-none">
+                    <div className="mb-3">
                       <div className="row">
                         <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
                           <div className="position-relative ">
@@ -679,7 +709,7 @@ const AddMeeting = (props) => {
                         </div>
                       </div>
                     </div>
-                  ) : null}
+                  ) : null} */}
 
                   <button
                     className="create-meeting-button Mom-btn"
@@ -695,15 +725,15 @@ const AddMeeting = (props) => {
             )}
           </div>
         </form>
-      ) : meetingData.step + 1 === 2 ? (
+      ) : meetingData.step + 1 === 2 && !meetingData.isNewMeetingPage ? (
         <>
           <AddAttendees />
         </>
-      ) : (
+      ) : meetingData.step + 1 === 3 && !meetingData.isNewMeetingPage ? (
         <>
           <AddAgendas />
         </>
-      )}
+      ) : null}
       {/* </>
       ) : (
         <div
@@ -713,8 +743,8 @@ const AddMeeting = (props) => {
           <Loader />
         </div>
       )} */}
-      
-       <ToastContainer />
+
+      <ToastContainer />
     </div>
   );
 };

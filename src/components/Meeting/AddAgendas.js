@@ -10,6 +10,7 @@ import {
   createMeetingDetails,
   getCreateMeetingStep,
   loadCreateMeeting,
+  setCreateNewMeetingPage,
   updateIsCreateMeetingProcessed,
   updateMeetingDetails,
 } from "../../redux/actions/meetingActions/MeetingAction";
@@ -42,12 +43,13 @@ const AddAgendas = () => {
   const [formData, setFormData] = useState({
     title: " ",
     topic: "",
-    timeLine: 0,
+    timeLine:"0",
     index: 0,
   });
   const [agendaData, setAgendaData] = useState([]);
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
+   // dispatch(setCreateNewMeetingPage(true))
   }, []);
 
   const submitAgendasDetails = (e) => {
@@ -76,6 +78,7 @@ const AddAgendas = () => {
         agendas: newAgendaData,
         organizationId: userData.organizationId,
         step: 3,
+        meetingStatus:"scheduled"
       };
       console.log(payload);
       dispatch(updateMeetingDetails(meetingId, payload, accessToken,"addAgenda"));
@@ -118,7 +121,7 @@ const AddAgendas = () => {
         ...formData,
         title: " ",
         topic: "",
-        timeLine: 0,
+        timeLine:"0",
         index: 0,
       });
 
@@ -139,10 +142,7 @@ const AddAgendas = () => {
       // errors.index = formData.index;
     }
 
-    if (!formData.timeLine) {
-      errors.timeLine = constantMessages.timeRequired;
-      // errors.index = formData.index;
-    } else if (formData.timeLine > 365 || formData.timeLine < 1) {
+    if (formData.timeLine > 365 || formData.timeLine < 0) {
       errors.timeLine = constantMessages.invalidTime;
     }
 
@@ -233,10 +233,9 @@ const AddAgendas = () => {
   const validateAgendaTime = () => {
     console.log(formData);
     const errors = {};
-    if (!formData.timeLine.trim()) {
-      errors.timeLine = constantMessages.timeRequired;
-      //  errors.index = formData.index;
-    } else if (formData.timeLine > 365 || formData.timeLine < 1) {
+ 
+      
+    if (formData.timeLine > 365 || formData.timeLine < 0) {
       errors.timeLine = constantMessages.invalidTime;
     }
     setErrors(errors);
@@ -248,22 +247,7 @@ const AddAgendas = () => {
       <div className="inner-detail-form">
         <div className="form-group agenda">
           <label className="mb-1">Agenda Item</label>
-          <div className="mt-2 mb-3 plus pointer">
-            <button type="button" onClick={onAddAgenda}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="23"
-                height="23"
-                fill="#0564f3"
-                className="bi bi-plus-circle pointer"
-                viewBox="0 0 16 16"
-              >
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-              </svg>
-            </button>
-            <div>Create Agenda Item</div>
-          </div>
+         
         </div>
 
         <div>
@@ -285,7 +269,7 @@ const AddAgendas = () => {
                     type="button"
                     //onClick={()=>onRemoveAgenda(props.agenda.index)}
                   >
-                    <svg
+                    {/* <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="23"
                       height="23"
@@ -295,7 +279,7 @@ const AddAgendas = () => {
                     >
                       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
                       <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
-                    </svg>
+                    </svg> */}
                     {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="23"
@@ -313,6 +297,7 @@ const AddAgendas = () => {
                   <Collapse in={open}>
                     <div>
                       <div className="form-group">
+                        <div className="mb-2">
                         <div className="row">
                           <div className="col-md-4">
                             <label className="mb-1">Agenda Title</label>
@@ -335,6 +320,8 @@ const AddAgendas = () => {
                             ) : null}
                           </div>
                         </div>
+                        </div>
+                       
                       </div>
 
                       <div className="form-group">
@@ -390,15 +377,42 @@ const AddAgendas = () => {
                                 {errors.timeLine}
                               </span>
                             )}
-
+ 
                             {/* {props.errorData.index===props.agenda.index && props.errorData.time && ( 
                   <span className="error-message">
                     {props.errorData.time}
                   </span>
                  )} */}
+                 
                           </div>
+                          
                         </div>
+                        
+
+
+                       
+        
+
+            <div className="mt-2 mb-3 plus pointer">
+            <button type="button" onClick={onAddAgenda}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="23"
+                height="23"
+                fill="#0564f3"
+                className="bi bi-plus-circle pointer"
+                viewBox="0 0 16 16"
+              >
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+              </svg>
+            </button>
+            <div>Add Item</div>
+          </div>
+            
+
                       </div>
+                      
                     </div>
                   </Collapse>
                 </div>
@@ -596,15 +610,21 @@ const AddAgendas = () => {
             <div>
              
               {!meetingData.loading ? (
-                <Button
-                  variant="primary"
-                   class="btn-primary"
-                  type="submit"
+                // <Button
+                //   variant="primary"
+                //    class="btn-primary"
+                //   type="submit"
                  
-                 // onClick={(e) => dispatch(loadCreateMeeting(1))}
-                >
-                  Submit
-                </Button>
+                //  // onClick={(e) => dispatch(loadCreateMeeting(1))}
+                // >
+                //   Submit
+                // </Button>
+                 <button
+                 className="create-meeting-button Mom-btn"
+                 type="submit"
+               >
+                 <p>Submit</p>
+                 </button>
               ) : (
                 <LoaderButton />
               )}

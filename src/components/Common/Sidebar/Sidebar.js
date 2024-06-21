@@ -28,7 +28,7 @@ const Sidebar = () => {
     <div>
       <div className="sidebar">
         <div className="mt-4 top-logo">
-          <Link to="/meeting/meeting-list">
+          <Link to="/meeting-list">
             <div className="ntspl-logo">
               <img src={ntsplWhiteLogo} />
             </div>

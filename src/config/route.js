@@ -31,6 +31,8 @@ import CreateMeeting from "../components/Meeting/CreateMeeting";
 import MeetingPage from "../components/Meeting/MeetingPage";
 import ViewMeeting from "../components/Meeting/ViewMeeting";
 import { ToastContainer, toast } from "react-toastify";
+import ViewMeetingDetails from "../components/Meeting/ViewMeetingDetails";
+import EditMeetingPage from "../components/Meeting/EditMeetingPage";
 
 const PrivateRoutes = () => {
   let accessToken = localStorage.getItem("accessToken");
@@ -73,10 +75,12 @@ const MainRoute = () => {
             <Route exact path="/department" element={<Department />} />
             <Route exact path="/designation" element={<Designation />} />
             <Route exact path="/create-meeting" element={<MeetingPage />} />
+            <Route exact path="/edit-meeting" element={<EditMeetingPage />} />
+            
             <Route
               exact
               path="/view-meeting-details"
-              element={<ViewMeeting />}
+              element={<ViewMeetingDetails />}
             />
           </Route>
           <Route element={<AuthRoutes />}>
@@ -105,7 +109,7 @@ const MainRoute = () => {
           </Route>
         </Routes>
       </Router>
-      <ToastContainer className="toast-position" position="bottom-right" />
+      <ToastContainer  />
     </div>
   );
 };
