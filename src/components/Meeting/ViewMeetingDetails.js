@@ -177,17 +177,15 @@ const ViewMeetingDetails = () => {
                   </div>
                 ) : (
                   <>
-                  <Alert
-                        status={false}
-                        message={"No Attendee Added"}
-                        timeoutSeconds={0}
-                      />
-                 <div className="mt-3 agenda-box-border no-data-img">
-                 
-                 
-                  <NoDataFound />
-                </div>
-                </>
+                    <Alert
+                      status={false}
+                      message={"No Attendee Added"}
+                      timeoutSeconds={0}
+                    />
+                    <div className="mt-3 agenda-box-border no-data-img">
+                      <NoDataFound />
+                    </div>
+                  </>
                 )}
               </form>
             </div>
@@ -267,18 +265,15 @@ const ViewMeetingDetails = () => {
                   </div>
                 ) : (
                   <>
-                      
-                  <Alert
-                        status={false}
-                        message={"No Agenda Added"}
-                        timeoutSeconds={0}
-                      />
-                 <div className="mt-3 agenda-box-border no-data-img">
-                 
-                  <NoDataFound />
-                </div>
-                </>
-                  
+                    <Alert
+                      status={false}
+                      message={"No Agenda Added"}
+                      timeoutSeconds={0}
+                    />
+                    <div className="mt-3 agenda-box-border no-data-img">
+                      <NoDataFound />
+                    </div>
+                  </>
                 )}
               </form>
             </div>

@@ -147,6 +147,7 @@ const MeetingList = () => {
   const totalOption = Math.round(meetingData.totalCount / 5 + 0.5);
   const totalPage = Math.round(meetingData.totalCount / searchData.limit + 0.5);
   const totalPageArray = Array(totalPage).fill();
+  console.log(totalPageArray)
   // console.log(
   //   "totalOption-------------------->",
   //   meetingData.totalCount / searchData.limit + 0.5,
@@ -459,12 +460,12 @@ const MeetingList = () => {
 
                           {/* {buttonStatus ? <VariantsExample /> : null} */}
 
-                          <div
+                          {/* <div
                             aria-labelledby="dropdownBasic1"
                             className="list-dropdown"
                           >
                             <div className="dropdown-divider"></div>
-                          </div>
+                          </div> */}
                         </div>
                       </td>
                     </tr>

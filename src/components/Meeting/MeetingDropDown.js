@@ -75,7 +75,8 @@ const MeetingDropDown = (props) => {
         {props.status === "scheduled"||props.status === "rescheduled"||props.status === "draft" ? (
           <Dropdown.Item href="#/action-3">
             <Link
-              to="/edit-minutes"
+              to="/edit-meeting"
+              state={{ meetingId: props.meetingId}}
               style={{
                 textDecoration: "none",
                 color: "black",

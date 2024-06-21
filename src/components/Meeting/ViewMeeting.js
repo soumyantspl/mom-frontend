@@ -29,12 +29,7 @@ import {
 import Header from "../Common/Header/Header";
 import MeetingHeader from "../Common/Header/MeetingHeader";
 import Sidebar from "../Common/Sidebar/Sidebar";
-import {
-  Navigate,
-  Link,
-  useLocation,
-  useNavigate 
-} from "react-router-dom";
+import { Navigate, Link, useLocation, useNavigate } from "react-router-dom";
 
 const ViewMeeting = (props) => {
   const location = useLocation();
@@ -84,8 +79,8 @@ const ViewMeeting = (props) => {
       {/* <Header />
           <MeetingHeader />
           <Sidebar /> */}
- {meetingData.step + 1 == 1 || meetingData.isNewMeetingPage === true ? (
-      // {!meetingData.isLoading && meetingData.isNewMeetingPage ? (
+      {meetingData.step + 1 == 1 || meetingData.isNewMeetingPage === true ? (
+        // {!meetingData.isLoading && meetingData.isNewMeetingPage ? (
         <form className="mt-2 details-form details-form-right">
           <div className="form-group mb-2">
             <div className="row">
@@ -93,7 +88,9 @@ const ViewMeeting = (props) => {
             </div>
           </div>
         </form>
-      ) : !meetingData.isLoading && meetingData.singleMeetingDetails  && !meetingData.isNewMeetingPage  ? (
+      ) : !meetingData.isLoading &&
+        meetingData.singleMeetingDetails &&
+        !meetingData.isNewMeetingPage ? (
         <form className="mt-2 details-form details-form-right">
           <div className="form-group mb-2">
             <div className="row">
@@ -202,74 +199,73 @@ const ViewMeeting = (props) => {
               </div>
             </div>
           ) : null}
-           {meetingData.singleMeetingDetails.agendasDetail.length !== 0 ?(
-          <div className="form-group agenda">
-                  <label className="mt-3 mb-3">
-                    <h4>Agenda(s)</h4>
-                  </label>
-          {meetingData.singleMeetingDetails.agendasDetail.length !== 0 &&
-            meetingData.singleMeetingDetails.agendasDetail.map((agenda,index) => {
-              return (
-                
-
-                  <div className="mt-3 agenda-box-border">
-                    <div className="form-group">
-                      <div className="row">
-                        <div className="col-12">
-                          <label className="mt-1 p-3 topic-head">
-                            {" "}
-                            Agenda {index+1}
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-3">
-                      <div className="pb-3 form-group">
-                        <div className="row">
-                          <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                            <label className="mt-1 mb-1">Agenda Title</label>
-                          </div>
-                          <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                            <p> {agenda.title}</p>
+          {meetingData.singleMeetingDetails.agendasDetail.length !== 0 ? (
+            <div className="form-group agenda">
+              <label className="mt-3 mb-3">
+                <h4>Agenda(s)</h4>
+              </label>
+              {meetingData.singleMeetingDetails.agendasDetail.length !== 0 &&
+                meetingData.singleMeetingDetails.agendasDetail.map(
+                  (agenda, index) => {
+                    return (
+                      <div className="mt-3 agenda-box-border">
+                        <div className="form-group">
+                          <div className="row">
+                            <div className="col-12">
+                              <label className="mt-1 p-3 topic-head">
+                                {" "}
+                                Agenda {index + 1}
+                              </label>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div className=" pb-3 form-group">
-                        <div className="row">
-                          <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                            <label className="mt-2 topic">
-                              Topic to Discuss
-                            </label>
+                        <div className="p-3">
+                          <div className="pb-3 form-group">
+                            <div className="row">
+                              <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                                <label className="mt-1 mb-1">
+                                  Agenda Title
+                                </label>
+                              </div>
+                              <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+                                <p> {agenda.title}</p>
+                              </div>
+                            </div>
                           </div>
-                          <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                            <p className="mb-2">
-                            {agenda.topic}{" "}
-                            </p>
+
+                          <div className=" pb-3 form-group">
+                            <div className="row">
+                              <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                                <label className="mt-2 topic">
+                                  Topic to Discuss
+                                </label>
+                              </div>
+                              <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+                                <p className="mb-2">{agenda.topic} </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className=" form-group">
+                            <div className="row">
+                              <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                                <label className="mt-1 mb-1">Timeline</label>
+                              </div>
+                              <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
+                                <p> {agenda.timeLine} Min</p>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-
-                      <div className=" form-group">
-                        <div className="row">
-                          <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                            <label className="mt-1 mb-1">Timeline</label>
-                          </div>
-                          <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                            <p> {agenda.timeLine} Min</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-               
-              );
-            })}
-             </div>
-           ):null}
+                    );
+                  }
+                )}
+            </div>
+          ) : null}
         </form>
-      ) : meetingData.isLoading  ? (
+      ) : meetingData.isLoading ? (
         <form className="mt-2 details-form details-form-right">
           <div className="form-group mb-2 loader-icon">
             <div className="row">
@@ -277,7 +273,7 @@ const ViewMeeting = (props) => {
             </div>
           </div>
         </form>
-      ):null}
+      ) : null}
     </>
   );
 };
