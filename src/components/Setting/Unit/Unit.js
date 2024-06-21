@@ -6,6 +6,7 @@ import "../Unit/style/unit.css";
 import axios from "../../../../node_modules/axios/index";
 import Alert from "../../Common/Alert";
 import LoaderButton from "../../Common/LoaderButton";
+import Loader from "../../Common/Loader";
 import { Modal, Button, Table, Dropdown, Form } from "react-bootstrap";
 
 const Unit = () => {
@@ -24,6 +25,8 @@ const Unit = () => {
   const [limit, setLimit] = useState(5);
   const [order, setOrder] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [isFetching, setIsFetching] = useState(false);
   const [isGetApiRes, setIsGetApiRes] = useState(false);
   const [apiResData, setApiResData] = useState({
     isSuccess: false,
@@ -94,6 +97,7 @@ const Unit = () => {
 
   const fetchUnits = async (bodyData) => {
     try {
+      setIsFetching(true);
       const headerObject = {
         headers: {
           "Content-Type": "application/json",
@@ -109,6 +113,7 @@ const Unit = () => {
       const data = response.data.data || {};
       setUnits(data.unitData || []);
       setTotalCount(data.totalCount || 0);
+      setIsFetching(false);
     } catch (error) {
       console.log("Error while Fetching Unit:", error);
     }
@@ -287,16 +292,22 @@ const Unit = () => {
                 </tr>
               </thead>
               <tbody>
-                {units.length > 0 ? (
-                  units.map((units, index) => (
+                {isFetching ? (
+                  <div
+                    className="meeting-page "
+                    style={{ textAlign: "center", paddingTop: 20 }}
+                  >
+                    <Loader />
+                  </div>
+                ) : units.length > 0 ? (
+                  units.map((unit, index) => (
                     <tr key={index}>
-                      <td>{units.name}</td>
-                      <td>{units.address}</td>
-                      <td key={units.address}>
-                        {formatDateTimeFormat(units.updatedAt).formattedDate}
+                      <td>{unit.name}</td>
+                      <td>{unit.address}</td>
+                      <td>
+                        {formatDateTimeFormat(unit.updatedAt).formattedDate}
                         <p className="detail-date-time">
-                          {/* {formatTimeFormat(meeting.fromTime)} */}
-                          {formatDateTimeFormat(units.updatedAt).formattedTime}
+                          {formatDateTimeFormat(unit.updatedAt).formattedTime}
                         </p>
                       </td>
                       <td data-label="Action">
@@ -319,7 +330,7 @@ const Unit = () => {
 
                           <Dropdown.Menu>
                             <Dropdown.Item
-                              onClick={() => handleEditClick(units)}
+                              onClick={() => handleEditClick(unit)}
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -362,6 +373,11 @@ const Unit = () => {
                     <td colSpan="3">No data available</td>
                   </tr>
                 )}
+                {/* {units.length > 0 ? (
+                 
+                ) : (
+                  
+                )} */}
               </tbody>
             </Table>
 
