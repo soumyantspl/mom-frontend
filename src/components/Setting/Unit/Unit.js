@@ -8,6 +8,8 @@ import Alert from "../../Common/Alert";
 import LoaderButton from "../../Common/LoaderButton";
 import Loader from "../../Common/Loader";
 import { Modal, Button, Table, Dropdown, Form } from "react-bootstrap";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Unit = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -82,6 +84,17 @@ const Unit = () => {
         );
         if (response.data.success) {
           setFormValues({ name: "", address: "" });
+          toast.success(response.data.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Slide,
+          });
         }
         setApiResData({
           isSuccess: response.data.success,
@@ -89,6 +102,17 @@ const Unit = () => {
         });
         setIsGetApiRes(true);
       } catch (error) {
+        toast.error(error.message, {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: 0,
+          theme: "light",
+          // transition: Slide,
+        });
         console.error("Error creating unit:", error.response.data.message);
       }
     }
@@ -265,6 +289,7 @@ const Unit = () => {
               <div className="search-box">
                 <input
                   type="search"
+                  autoComplete="off"
                   placeholder="Search By Unit Name"
                   value={searchKey}
                   onChange={handleSearch}
@@ -312,10 +337,9 @@ const Unit = () => {
                       </td>
                       <td data-label="Action">
                         <Dropdown>
-                          <Dropdown.Toggle
-                            variant="outline-primary"
-                            id="dropdown-basic"
-                          >
+                        <div className="d-inline-block menu-dropdown custom-dropdown">
+
+                          <Dropdown.Toggle id="dropdown-basic">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="16"
@@ -364,6 +388,7 @@ const Unit = () => {
                               Delete
                             </Dropdown.Item>
                           </Dropdown.Menu>
+                          </div>
                         </Dropdown>
                       </td>
                     </tr>
@@ -456,6 +481,7 @@ const Unit = () => {
                     type="text"
                     placeholder="Enter Unit Name"
                     value={unitName}
+                    autoComplete="off"
                     onChange={(e) => setUnitName(e.target.value)}
                   />
                 </Form.Group>
@@ -465,6 +491,7 @@ const Unit = () => {
                     type="text"
                     placeholder="Enter Unit Address"
                     value={unitAddress}
+                    autoComplete="off"
                     onChange={(e) => setUnitAddress(e.target.value)}
                   />
                 </Form.Group>
@@ -484,6 +511,7 @@ const Unit = () => {
           </Modal>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
