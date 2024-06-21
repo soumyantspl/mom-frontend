@@ -84,8 +84,8 @@ const ViewMeeting = (props) => {
       {/* <Header />
           <MeetingHeader />
           <Sidebar /> */}
-
-      {!meetingData.isLoading && meetingData.isNewMeetingPage ? (
+ {meetingData.step + 1 == 1 || meetingData.isNewMeetingPage === true ? (
+      // {!meetingData.isLoading && meetingData.isNewMeetingPage ? (
         <form className="mt-2 details-form details-form-right">
           <div className="form-group mb-2">
             <div className="row">

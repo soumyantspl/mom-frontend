@@ -427,7 +427,7 @@ if(meetingData.isSuccess){
       {meetingData.step === 3 && !meetingData.isNewMeetingPage ? (
         <Navigate to="/meeting-list" />
       ) : null}
-      <CommonStepper step={meetingData.step} />
+      <CommonStepper step={meetingData.isNewMeetingPage?1:meetingData.step} />
       <br></br>
       {/* {!meetingData.loading ? (
         <> */}

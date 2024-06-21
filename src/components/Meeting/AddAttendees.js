@@ -61,6 +61,8 @@ const AddAttendees = (props) => {
     //  attendeesData:[]
   });
   const [attendeesData, setAttendeesData] = useState([]);
+ 
+
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
 
@@ -94,7 +96,7 @@ const AddAttendees = (props) => {
   }, [meetingData.step,
      employeeData.isDuplicateUser
     ]);
-
+console.log(meetingData)
   const submitAttendeeDetails = (e) => {
     e.preventDefault();
     console.log("sssssssssssssss", attendeesData);
@@ -128,7 +130,24 @@ const AddAttendees = (props) => {
   const addAttendee = async (e) => {
     // const attenId = e.target.value;
     // const user = userlist.find(u => u.id === userId);
-
+    console.log(employeeData.employeeList)
+    console.log(meetingData.attendeeList)
+    let attendeeList=[]
+    if(employeeData.employeeList){
+      const newEmpList=employeeData.employeeList.map((item)=>{
+        return {
+          _id:item._id,
+          name:item.name,
+          email:item.email
+        }
+      })
+      attendeeList=[...attendeeList,...newEmpList]
+    }
+    if(meetingData.attendeesList){
+      attendeeList=[...attendeeList,...meetingData.attendeesList]
+    }
+   // const attendeeList=[...employeeData.employeeList,...meetingData?.attendeeList]
+    console.log(attendeeList)
     if (formData.attendyType === "addNewPeople") {
       const newErrors = validateForm(formData);
       setErrors(newErrors);
@@ -163,10 +182,11 @@ const AddAttendees = (props) => {
       //  addNewPeople();
     } else {
       if (formData.attendeeId) {
+        console.log(formData.attendeeId )
         if (attendeesData.length > 0) {
           console.log(attendeesData);
           const attendeeFound = attendeesData.find(
-            (u) => u.id === formData.attendeeId
+            (u) => u._id === formData.attendeeId 
           );
           console.log(attendeeFound);
           if (attendeeFound) {
@@ -177,13 +197,13 @@ const AddAttendees = (props) => {
           }
         }
         console.log(meetingData.attendeesList)
-        let newAttendee = meetingData.attendeesList.find(
-          (u) => u._id === formData.attendeeId
+        let newAttendee = attendeeList.find(
+          (u) => u._id === formData.attendeeId 
         );
         console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",attendeesData,formData.attendeeId)
         newAttendee.isEmployee = true;
-        newAttendee.id=newAttendee._id
-        delete newAttendee._id
+       // newAttendee.id=newAttendee._id
+      //  delete newAttendee._id
       
         console.log(newAttendee);
         //  const newAttendee = e.target.value;
@@ -191,20 +211,6 @@ const AddAttendees = (props) => {
         setAttendeesData(newAttendeeData);
       }
     }
-  };
-  // const checkDuplicateUser = async (payload) => {
-  //   return dispatch(checkDuplicateUser(payload, accessToken));
-  // };
-  const addNewPeople = (e) => {
-    // const newErrors = validateForm(formData);
-    // setErrors(newErrors);
-    // if (Object.keys(newErrors).length === 0) {
-    //   // Form submission logic here
-    //   console.log("Form submitted successfully!");
-    // } else {
-    //   console.log(`Form submission failed
-    //    due to validation errors.`);
-    // }
   };
 
   const validateForm = (data) => {
