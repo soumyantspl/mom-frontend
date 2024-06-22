@@ -15,6 +15,8 @@ import {
   SET_SINGLE_MEETING_DETAILS,
   SET_MEETING_VIEW_PAGE,
   SET_CREATE_NEW_MEETING_PAGE,
+  UNSET_SINGLE_MEETING_DETAILS,
+  UPDATE_STEP
 } from "./actionTypes";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -389,8 +391,14 @@ export const setSingleMeetingDetails = (data) => {
 
 export const unSetSingleMeetingDetails = () => {
   return {
-    type: SET_SINGLE_MEETING_DETAILS,
+    type: UNSET_SINGLE_MEETING_DETAILS,
    // payload: data,
+  };
+};
+export const updateStep = (step) => {
+  return {
+    type:UPDATE_STEP,
+   payload: step,
   };
 };
 

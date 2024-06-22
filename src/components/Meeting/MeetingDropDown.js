@@ -76,7 +76,7 @@ const MeetingDropDown = (props) => {
           <Dropdown.Item href="#/action-3">
             <Link
               to="/edit-meeting"
-              state={{ meetingId: props.meetingId}}
+              state={{ meetingId: props.meetingId,isMeetingDataUpdate:true,step:props.step}}
               style={{
                 textDecoration: "none",
                 color: "black",

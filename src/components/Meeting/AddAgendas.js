@@ -4,6 +4,7 @@ import Collapse from "react-bootstrap/Collapse";
 import { Margin } from "../../../node_modules/@mui/icons-material/index";
 import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction.js/meetingRoomAction";
 import { useSelector, useDispatch } from "react-redux";
+import { Navigate, Link, useLocation } from "react-router-dom";
 import CommonStepper from "../Common/CommonStepper";
 import CreateMeeting from "./CreateMeeting";
 import {
@@ -13,6 +14,7 @@ import {
   setCreateNewMeetingPage,
   updateIsCreateMeetingProcessed,
   updateMeetingDetails,
+  updateStep,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import Loader from "../Common/Loader";
 import * as constantMessages from "../../constants/constatntMessages";
@@ -37,7 +39,10 @@ const AddAgendas = () => {
   const [step, setStep] = useState(0);
   const [selectedOption, setSelectedOption] = useState("prevMeetingRadio");
   const [isManualLocation, setIsManualLocation] = useState(true);
-
+  const location = useLocation();
+  console.log(location);
+  const stateData = location.state;
+  console.log(meetingData);
   const [removeAttendeeData, setRemoveAttendeeData] = useState({});
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -49,6 +54,14 @@ const AddAgendas = () => {
   const [agendaData, setAgendaData] = useState([]);
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
+    if(stateData.isMeetingDataUpdate){
+      document.title = "Update Meeting: Meeting Plus";
+      setAgendaData(meetingData.singleMeetingDetails.agendasDetail.map((item)=>{
+        item.uid = Math.floor(100000 + Math.random() * 900000);
+        return item
+      })
+      );
+    }
    // dispatch(setCreateNewMeetingPage(true))
   }, []);
 
@@ -70,7 +83,7 @@ const AddAgendas = () => {
         return {
           topic: item.topic,
           title: item.title,
-          timeLine: item.timeLine,
+          timeLine: item.timeLine.toString()
         };
       });
       const meetingId = meetingData?.singleMeetingDetails?._id;
@@ -86,7 +99,7 @@ const AddAgendas = () => {
     }
   };
 
-  const agendas = [];
+
 
   const onAddAgenda = () => {
     console.log(formData);
@@ -625,6 +638,9 @@ const AddAgendas = () => {
                >
                  <p>Submit</p>
                  </button>
+
+
+
               ) : (
                 <LoaderButton />
               )}
@@ -635,6 +651,12 @@ const AddAgendas = () => {
               >
                 Back
               </Button> */}
+               <button
+                    className="create-meeting-button Mom-btn"
+                    onClick={(e) => dispatch(updateStep(1))}
+                  >
+                    <p>Back</p>
+                  </button>
             </div>
             
           </div>

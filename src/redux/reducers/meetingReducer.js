@@ -14,7 +14,8 @@ import {
   SET_SINGLE_MEETING_DETAILS,
   SET_MEETING_VIEW_PAGE,
   SET_CREATE_NEW_MEETING_PAGE,
-  UNSET_SINGLE_MEETING_DETAILS
+  UNSET_SINGLE_MEETING_DETAILS,
+  UPDATE_STEP
 } from "../actions/meetingActions/actionTypes";
 
 const initialObject = {
@@ -151,6 +152,7 @@ export const meetingReducer = (state = initialObject, action) => {
           isSuccess: action.payload.success,
           singleMeetingDetails: action.payload.data,
           meetingId:action.payload.meetingId,
+          step: action.payload.data.step
         };
         case SET_MEETING_VIEW_PAGE:
           return {
@@ -175,6 +177,11 @@ export const meetingReducer = (state = initialObject, action) => {
                 singleMeetingDetails: null,
                 meetingId:null,
               };
+              case UPDATE_STEP:
+                return {
+                ...state,
+                step:action.payload
+              }
     default:
       return state;
   }

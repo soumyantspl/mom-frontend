@@ -14,6 +14,7 @@ import {
   getCreateMeetingStep,
   loadCreateMeeting,
   updateMeetingDetails,
+  updateStep,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import Loader from "../Common/Loader";
 import * as constantMessages from "../../constants/constatntMessages";
@@ -27,6 +28,7 @@ import { customName } from "../../helpers/commonHelpers";
 import CommonModal from "../Common/CommonModal";
 import Alert from "../Common/Alert";
 import RemoveAttendeesModal from "./RemoveAttendeesModal";
+import { Navigate, Link, useLocation } from "react-router-dom";
 
 const AddAttendees = (props) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -36,6 +38,11 @@ const AddAttendees = (props) => {
   const meetingData = useSelector((state) => state.meeting);
   const employeeData = useSelector((state) => state.user);
   console.log(meetingRoomData);
+  const location = useLocation();
+  console.log(location);
+  const stateData = location.state;
+  console.log(meetingData);
+  console.log(stateData);
   const [numAgenda, setNumAgenda] = useState(0);
   const [attendees, setAttendees] = useState([]);
   const [step, setStep] = useState(0);
@@ -65,7 +72,11 @@ const AddAttendees = (props) => {
 
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
+if(stateData.isMeetingDataUpdate){
+  document.title = "Update Meeting: Meeting Plus";
 
+  setAttendeesData(meetingData.singleMeetingDetails.attendees.map(({rsvp,...keepAttrs}) => keepAttrs));
+}
     if (formData.attendyType === "fromPreviousMeeting") {
       dispatch(fetchAttendeesList(userData.organizationId, accessToken));
     }
@@ -462,9 +473,9 @@ console.log(meetingData)
                   Name / Email Address
                 </option>
                 {meetingData.attendeesList &&
-                  meetingData.attendeesList.map((attendee) => {
+                  meetingData.attendeesList.map((attendee,index) => {
                     return (
-                      <option value={attendee._id}>
+                      <option key={index} value={attendee._id}>
                         {attendee.name} / {attendee.email}
                       </option>
                     );
@@ -482,9 +493,9 @@ console.log(meetingData)
                   Name / Employee ID
                 </option>
                 {employeeData.employeeList &&
-                  employeeData.employeeList.map((employee) => {
+                  employeeData.employeeList.map((employee,index) => {
                     return (
-                      <option value={employee._id}>
+                      <option value={employee._id} key={index}>
                         {employee.name} / {employee.empId}
                       </option>
                     );
@@ -601,9 +612,21 @@ console.log(meetingData)
               >
                 Next
               </Button> */}
-              <button
+                <button
+                    className="create-meeting-button Mom-btn"
+                    onClick={(e) => dispatch(updateStep(0))}
+                  >
+                    <p>Back</p>
+                  </button>
+               <button
                     className="create-meeting-button Mom-btn"
                     type="submit"
+                  >
+                    <p>Update</p>
+                  </button>
+              <button
+                    className="create-meeting-button Mom-btn"
+                    onClick={(e) => dispatch(updateStep(2))}
                   >
                     <p>Next</p>
                   </button>
