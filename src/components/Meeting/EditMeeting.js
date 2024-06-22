@@ -56,6 +56,7 @@ const AddMeeting = (props) => {
   console.log(stateData);
   console.log(stateData.isMeetingDataUpdate)
   useEffect(() => {
+    console.log(" useeffect--------------->>>>>>>>>>>>>>1");
     if(stateData.isMeetingDataUpdate){
       document.title = "Update Meeting: Meeting Plus";
     
@@ -67,20 +68,20 @@ const AddMeeting = (props) => {
     // if (!meetingData.isNewMeetingPage && !stateData.isMeetingDataUpdate) {
     //   dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
     // }
-if(meetingData.isSuccess){
-  setFormData({
-    ...formData,
-    title: "",
-    mode: "physical",
-    location: "manual",
-    date: "",
-    link: "",
-    fromTime: "",
-    toTime: "",
-    roomId: "",
-    locationData: ""
-  });
-}
+// if(meetingData.isSuccess){
+//   setFormData({
+//     ...formData,
+//     title: "",
+//     mode: "physical",
+//     location: "manual",
+//     date: "",
+//     link: "",
+//     fromTime: "",
+//     toTime: "",
+//     roomId: "",
+//     locationData: ""
+//   });
+// }
     // }
 
     // console.log(meetingData.step);
@@ -135,7 +136,7 @@ if(meetingData.isSuccess){
       locationData: ""
     });
   }
-  }, [meetingData.step,meetingData.singleMeetingDetails]);
+  }, [meetingData.step,meetingData.singleMeetingDetails,meetingData.isSuccess]);
 
   const submitMeetingDetails = (e) => {
     console.log("submitMeetingDetails------------------------------");
@@ -163,8 +164,8 @@ if(meetingData.isSuccess){
           fromTime: formData.fromTime,
           toTime: formData.toTime,
           title: formData.title,
-          step: 1,
-         
+          step:1,
+          isUpdate:stateData.isMeetingDataUpdate && meetingData.singleMeetingDetails.step===3?true:false,
         };
         console.log(payload);
         dispatch(
@@ -683,12 +684,7 @@ if(meetingData.isSuccess){
                 </div>
               </div>
             </div>
-            <button
-                    className="create-meeting-button Mom-btn"
-                    onClick={(e) => dispatch(updateStep(1))}
-                  >
-                    <p>Next</p>
-                  </button>
+          
             {/* <Button
                   variant="primary"
                   type="submit"
@@ -697,8 +693,8 @@ if(meetingData.isSuccess){
                 >
                   Next
                 </Button> */}
-
-            {!meetingData.loading ? (
+  <div className="button-outer">
+  {!meetingData.loading && stateData.isMeetingDataUpdate  ? (
               // <div className="create-meeting-button">
               //   <Button
               //     variant="primary"
@@ -710,7 +706,7 @@ if(meetingData.isSuccess){
               //   </Button>
               <>
                 <></>
-                <div className="create-meeting-button create-meet-btn">
+              
                   {/* {meetingData.isCreateMeetingProcessed &&
                   meetingData.step === 1 ? (
                     <div className="mb-3">
@@ -727,19 +723,41 @@ if(meetingData.isSuccess){
                       </div>
                     </div>
                   ) : null} */}
-
+ 
                   <button
                     className="create-meeting-button Mom-btn"
                     type="submit"
                   >
                     <p>Update</p>
                   </button>
-                </div>
+               
               </>
-            ) : (
+            ) :  (
               // </div>
               <LoaderButton />
             )}
+            
+            {!meetingData.loading && stateData.isMeetingDataUpdate  ? (
+             <button
+                    className="create-meeting-button Mom-btn"
+                    onClick={(e) => dispatch(updateStep(1))}
+                  >
+                    <p>Update Next</p>
+                  </button>
+            ):!meetingData.loading && !stateData.isMeetingDataUpdate  ?(
+              <button
+              className="create-meeting-button Mom-btn"
+              type="submit"
+            >
+              <p>Submit Next</p>
+            </button>
+            ):(
+              <LoaderButton />
+            )
+            
+            
+            }
+                  </div>
           </div>
         </form>
       ) : meetingData.step + 1 === 2 && !meetingData.isNewMeetingPage ? (

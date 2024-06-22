@@ -184,6 +184,9 @@ export const createMeetingDetails = (payload, accessToken) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
         if (resData.success) {
+         
+            dispatch(getSingleMeetingDetails(resData.data._id, accessToken));
+          
           toast.success(resData.message, {
             position: "bottom-left",
             autoClose: 3000,
@@ -324,6 +327,7 @@ export const updateMeetingDetails = (
             theme: "light",
             // transition: Bounce,
           });
+          dispatch(getSingleMeetingDetails(meetingId, accessToken));
           dispatch(updateMeetingResponse(resData));
         } else {
           toast.error(resData.message, {

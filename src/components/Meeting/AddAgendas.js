@@ -90,8 +90,9 @@ const AddAgendas = () => {
       const payload = {
         agendas: newAgendaData,
         organizationId: userData.organizationId,
-        step: 3,
-        meetingStatus:"scheduled"
+        step:3,
+        meetingStatus:"scheduled",
+        isUpdate:stateData.isMeetingDataUpdate && meetingData.singleMeetingDetails.step===3?true:false,
       };
       console.log(payload);
       dispatch(updateMeetingDetails(meetingId, payload, accessToken,"addAgenda"));
@@ -211,16 +212,12 @@ const AddAgendas = () => {
     //  console.log("9999999999999999999999999999999999999", authData);
     const { name, value } = e.target;
     console.log(name, value);
-    setFormData({
-      ...formData,
-      //   index: props.index ,
-      [name]: value,
-    });
+  
     // props.agendaData(formData)
-
+    console.log(agendaData);
     if (uid) {
       const modifiedAgendas = agendaData.map((obj) => {
-        const fieldName = name;
+       
         if (obj.uid === uid) {
           return { ...obj, [name]: value };
         }
@@ -229,6 +226,13 @@ const AddAgendas = () => {
 
       console.log(modifiedAgendas);
       setAgendaData(modifiedAgendas);
+    }
+    else{
+      setFormData({
+        ...formData,
+        //   index: props.index ,
+        [name]: value,
+      });
     }
   };
 
@@ -254,7 +258,7 @@ const AddAgendas = () => {
     setErrors(errors);
   };
   console.log(agendaData);
-  //console.log(agendas);
+console.log(formData.topic);
   return (
     <form className="mt-2 details-form no-padding-2" onSubmit={submitAgendasDetails}>
       <div className="inner-detail-form">
@@ -596,7 +600,7 @@ const AddAgendas = () => {
           {errors.addAgenda ? (
             <span className="error-message">{errors.addAgenda}</span>
           ) : null}
-          <div className="d-flex align-items-center" style={{ marginTop: 20 }}>
+       <div className="button-outer" style={{ marginTop: 20 }}>
             {/* <Button
             type="button"
             variant="primary"
@@ -620,8 +624,13 @@ const AddAgendas = () => {
                 </div>
               </div>
             ) : null} */}
-            <div>
-             
+            
+            <button
+                    className="create-meeting-button Mom-btn"
+                    onClick={(e) => dispatch(updateStep(1))}
+                  >
+                    <p>Back</p>
+                  </button>
               {!meetingData.loading ? (
                 // <Button
                 //   variant="primary"
@@ -638,9 +647,6 @@ const AddAgendas = () => {
                >
                  <p>Submit</p>
                  </button>
-
-
-
               ) : (
                 <LoaderButton />
               )}
@@ -651,14 +657,9 @@ const AddAgendas = () => {
               >
                 Back
               </Button> */}
-               <button
-                    className="create-meeting-button Mom-btn"
-                    onClick={(e) => dispatch(updateStep(1))}
-                  >
-                    <p>Back</p>
-                  </button>
-            </div>
             
+            </div>
+            <div>
           </div>
         </div>
       </div>

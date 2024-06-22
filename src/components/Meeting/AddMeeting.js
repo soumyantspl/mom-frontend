@@ -141,7 +141,7 @@ if(meetingData.isSuccess){
           toTime: formData.toTime,
           title: formData.title,
           step: 1,
-         
+          isUpdate:stateData.isMeetingDataUpdate?true:false,
         };
         console.log(payload);
         dispatch(

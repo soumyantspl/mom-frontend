@@ -135,7 +135,7 @@ export const meetingReducer = (state = initialObject, action) => {
         step:action.payload.success ? state.step+1 : state.step,
         isCreateMeetingProcessed: true,
         checkStep:false,
-        isNewMeetingPage:action.payload.data.step===3 ?true:false
+        isNewMeetingPage:false
         
       };
     case LOAD_PREVIOUS_STEP:

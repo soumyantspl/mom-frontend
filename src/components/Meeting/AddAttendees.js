@@ -86,7 +86,7 @@ if(stateData.isMeetingDataUpdate){
         name: formData.name,
         email: formData.email,
         isEmployee: false,
-        organizationId: userData.organizationId,
+       // organizationId: userData.organizationId,
       };
       const newAttendeeData = [...attendeesData, newAttendee];
       setAttendeesData(newAttendeeData);
@@ -130,7 +130,8 @@ console.log(meetingData)
       const payload = {
         attendees: attendeesData,
         organizationId: userData.organizationId,
-        step: meetingData?.singleMeetingDetails?.step + 1,
+        isUpdate:stateData.isMeetingDataUpdate && meetingData.singleMeetingDetails.step===3?true:false,
+        step:2,
         meetingStatus:meetingData?.singleMeetingDetails?.meetingStatus.status
       };
       dispatch(updateMeetingDetails(meetingId, payload, accessToken,"addAttendee"));
@@ -598,11 +599,14 @@ console.log(meetingData)
             <span className="error-message">{errors.addAttendee}</span>
           )}
           </div>
-          <div className="button-outer"
-          
-          >
-        
-          {!meetingData.loading ? (
+          <div className="button-outer">
+          <button
+                    className="create-meeting-button Mom-btn"
+                    onClick={(e) => dispatch(updateStep(0))}
+                  >
+                    <p>Back</p>
+                  </button>
+          {!meetingData.loading && stateData.isMeetingDataUpdate  ? (
             <>
               {/* <Button
                 
@@ -612,28 +616,18 @@ console.log(meetingData)
               >
                 Next
               </Button> */}
-                <button
-                    className="create-meeting-button Mom-btn"
-                    onClick={(e) => dispatch(updateStep(0))}
-                  >
-                    <p>Back</p>
-                  </button>
+               
                <button
                     className="create-meeting-button Mom-btn"
                     type="submit"
                   >
                     <p>Update</p>
                   </button>
-              <button
-                    className="create-meeting-button Mom-btn"
-                    onClick={(e) => dispatch(updateStep(2))}
-                  >
-                    <p>Next</p>
-                  </button>
+              
             </>
-          ) : (
+          ) : meetingData.loading && stateData.isMeetingDataUpdate?(
             <LoaderButton />
-          )}
+          ):null}
           {/* <Button
             variant="primary"
             class="btn-primary"
@@ -641,6 +635,24 @@ console.log(meetingData)
           >
             Back
           </Button> */}
+            {!meetingData.loading && stateData.isMeetingDataUpdate  ? (
+          <button
+                    className="create-meeting-button Mom-btn"
+                    onClick={(e) => dispatch(updateStep(2))}
+                  >
+                    <p>Next</p>
+                  </button>
+            ):!meetingData.loading && !stateData.isMeetingDataUpdate ? (
+              <button
+              className="create-meeting-button Mom-btn"
+              type="submit"
+            >
+              <p>Next</p>
+            </button>
+            ):(
+              <LoaderButton />
+            )}
+                  
         </div>
         </div>
       </form>
