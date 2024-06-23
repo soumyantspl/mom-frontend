@@ -16,7 +16,8 @@ import {
   SET_MEETING_VIEW_PAGE,
   SET_CREATE_NEW_MEETING_PAGE,
   UNSET_SINGLE_MEETING_DETAILS,
-  UPDATE_STEP
+  UPDATE_STEP,
+  UPDATE_FETCH_MEETING_LIST_STATUS
 } from "./actionTypes";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -254,6 +255,7 @@ export const createMeetingDetails = (payload, accessToken) => {
             // transition: Bounce,
           });
           dispatch(createMeetingResponse(resData));
+          dispatch(updateStep(1,false))
         } else {
           dispatch(failRequest(resData.message));
           toast.error(resData.message, {
@@ -378,6 +380,7 @@ export const updateMeetingDetails = (
           });
           dispatch(getSingleMeetingDetails(meetingId, accessToken));
           dispatch(updateMeetingResponse(resData));
+          dispatch(updateStep(bodyPayload.step,true))
         } else {
           toast.error(resData.message, {
             position: "bottom-left",
@@ -459,10 +462,10 @@ export const unSetSingleMeetingDetails = () => {
    // payload: data,
   };
 };
-export const updateStep = (step) => {
+export const updateStep = (step,isUpdateStep) => {
   return {
     type:UPDATE_STEP,
-   payload: step,
+   payload: {step,isUpdateStep}
   };
 };
 
@@ -484,6 +487,83 @@ export const setMeetingViewPage = (data) => {
 export const setCreateNewMeetingPage = (data) => {
   return {
     type: SET_CREATE_NEW_MEETING_PAGE,
+    payload: data,
+  };
+};
+
+
+
+
+export const cancelMeeting = (
+  meetingId,
+  bodyPayload,
+  accessToken
+) => {
+  return (dispatch) => {
+    dispatch(makeRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/cancelMeeting/${meetingId}`;
+    const headerObject = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: accessToken,
+      },
+    };
+    console.log("webApiUrl----------------", webApiUrl);
+    console.log("accessToken------------>>>>>", accessToken);
+    axios
+      .put(webApiUrl, bodyPayload, headerObject)
+      .then((result) => {
+        console.log("result------------------------->>>>>>>", result);
+        const resData = result.data;
+        if (resData.success) {
+          toast.success(resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
+          dispatch(updateFetchMeetingListStatus(true))
+        } else {
+          toast.error(resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
+         
+        }
+      })
+      .catch((err) => {
+        console.log("err------------------------->>>>>>>", err);
+        dispatch(failRequest(err.message));
+        toast.error(err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
+      });
+  };
+};
+
+export const updateFetchMeetingListStatus = (data) => {
+  return {
+    type: UPDATE_FETCH_MEETING_LIST_STATUS,
     payload: data,
   };
 };

@@ -12,6 +12,7 @@ import {
   getCreateMeetingStep,
   updateIsCreateMeetingProcessed,
   updateMeetingDetails,
+  updateStep,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import Loader from "../Common/Loader";
 import * as constantMessages from "../../constants/constatntMessages";
@@ -58,10 +59,11 @@ const AddMeeting = (props) => {
     console.log(meetingData.checkStep);
     // if (meetingData.checkStep) {
     console.log(meetingData.checkStep);
-    if (!meetingData.isNewMeetingPage) {
+    if (!meetingData.isNewMeetingPage && !meetingData.isUpdateStep) {
+      console.log('ffffffffffffffffffffff')
       dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
     }
-if(meetingData.isSuccess){
+if(meetingData.isSuccess || meetingData.isNewMeetingPage){
   setFormData({
     ...formData,
     title: "",
@@ -79,7 +81,7 @@ if(meetingData.isSuccess){
 
     // console.log(meetingData.step);
     setStep(meetingData.step + 1);
-    if (meetingData.singleMeetingDetails && meetingData.checkStep) {
+    if (meetingData.singleMeetingDetails && meetingData.isUpdateStep) {
       console.log("in------------444", meetingData);
       setFormData({
         ...formData,
@@ -145,6 +147,7 @@ if(meetingData.isSuccess){
           isUpdate:stateData.isMeetingDataUpdate?true:false,
         };
         console.log(payload);
+      
         dispatch(
           updateMeetingDetails(meetingId, payload, accessToken, "updateMeeting")
         );
@@ -164,18 +167,28 @@ if(meetingData.isSuccess){
        
       }
 
-      if (meetingData.isSuccess) {
-        setStep(2);
+      // if (meetingData.isSuccess) {
+      //   setStep(2);
+      // }
+
+      if(meetingData.isUpdateStep){
+      //  dispatch(updateStep(1,false))
       }
+
+
       console.log("Form submitted successfully!");
     } else {
       console.log(`Form submission failed
        due to validation errors.`);
     }
+    dispatch(updateStep(1,true))
+  
   };
 
   console.log(step);
-
+const updateState=(step)=>{
+setStep(step)
+}
   const handleChange = (e) => {
     dispatch(updateIsCreateMeetingProcessed(false));
     setErrors({});
@@ -682,8 +695,8 @@ if(meetingData.isSuccess){
                 >
                   Next
                 </Button> */}
-
-            {!meetingData.loading ? (
+ <div className="button-outer">
+            {!meetingData.loading && !meetingData.isUpdateStep ? (
               // <div className="create-meeting-button">
               //   <Button
               //     variant="primary"
@@ -695,7 +708,7 @@ if(meetingData.isSuccess){
               //   </Button>
               <>
                 <></>
-                <div className="create-meeting-button create-meet-btn">
+               
                   {/* {meetingData.isCreateMeetingProcessed &&
                   meetingData.step === 1 ? (
                     <div className="mb-3">
@@ -717,17 +730,35 @@ if(meetingData.isSuccess){
                     className="create-meeting-button Mom-btn"
                     type="submit"
                   >
-                    <p>Next</p>
+                    <p>Next submit</p>
                   </button>
-                </div>
+               
               </>
-            ) : (
+            ) : !meetingData.loading && meetingData.isUpdateStep ? (
+              <button
+              className="create-meeting-button Mom-btn"
+              type="submit"
+            >
+              <p>Update</p>
+            </button>
+            )
+            :(
               // </div>
               <LoaderButton />
             )}
+{!meetingData.loading && meetingData.isUpdateStep ? (
+              <button
+              className="create-meeting-button Mom-btn"
+              onClick={(e) => dispatch(updateStep(1,true))}
+            >
+              <p>Next</p>
+            </button>
+            ):null}
+
+            </div>
           </div>
         </form>
-      ) : meetingData.step + 1 === 2 && !meetingData.isNewMeetingPage ? (
+      ) : meetingData.step + 1 === 2 && !meetingData.isNewMeetingPage  ? (
         <>
           <AddAttendees />
         </>

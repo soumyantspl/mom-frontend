@@ -11,7 +11,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import { useNavigate, Navigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import "./style/meetings-css.css";
-import { getCreateMeetingStep } from "../../redux/actions/meetingActions/MeetingAction";
+import { getCreateMeetingStep, updateStep } from "../../redux/actions/meetingActions/MeetingAction";
 const MeetingPage = () => {
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -24,6 +24,9 @@ const MeetingPage = () => {
     // }
    
     console.log(meetingData.step);
+    return()=>{
+      dispatch(updateStep(0,false))
+    }
   }, []);
   return (
     <>

@@ -54,7 +54,7 @@ const AddAgendas = () => {
   const [agendaData, setAgendaData] = useState([]);
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
-    if(stateData.isMeetingDataUpdate){
+    if(stateData.isMeetingDataUpdate || meetingData.isUpdateStep){
       document.title = "Update Meeting: Meeting Plus";
       setAgendaData(meetingData.singleMeetingDetails.agendasDetail.map((item)=>{
         item.uid = Math.floor(100000 + Math.random() * 900000);
@@ -620,7 +620,7 @@ console.log(formData.topic);
             
             <button
                     className="create-meeting-button Mom-btn"
-                    onClick={(e) => dispatch(updateStep(1))}
+                    onClick={(e) => dispatch(updateStep(1,true))}
                   >
                     <p>Back</p>
                   </button>

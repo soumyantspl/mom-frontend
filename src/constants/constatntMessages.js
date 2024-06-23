@@ -29,7 +29,9 @@ const invalidDate="Invalid Date."
 const addAgenda="Please add agenda."
 const addAttendee="Please add attendee."
 const invalidTime="Please enter valid time."
+const cancelMeeting="Do you want to cancel this meeting ?"
 module.exports = {
+  cancelMeeting,
   addAttendee,
   invalidTime,
   addAgenda,

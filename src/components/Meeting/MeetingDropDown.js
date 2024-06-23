@@ -105,6 +105,7 @@ const MeetingDropDown = (props) => {
         {props.status === "scheduled"||props.status === "rescheduled" ? (
           <Dropdown.Item eventKey="4">
             <Link
+            onClick={()=>{props.handleCancelModal(props.meetingId)}}
               style={{
                 textDecoration: "none",
                 color: "black",

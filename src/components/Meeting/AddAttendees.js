@@ -72,7 +72,7 @@ const AddAttendees = (props) => {
 
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
-if(stateData.isMeetingDataUpdate){
+if(stateData.isMeetingDataUpdate || meetingData.isUpdateStep){
   document.title = "Update Meeting: Meeting Plus";
 
   setAttendeesData(meetingData.singleMeetingDetails.attendees.map(({rsvp,...keepAttrs}) => keepAttrs));
@@ -317,9 +317,8 @@ console.log(meetingData)
 
   console.log(
     attendeesData,
-    formData,
     meetingData,
-    employeeData
+   
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -602,7 +601,7 @@ console.log(meetingData)
           <div className="button-outer">
           <button
                     className="create-meeting-button Mom-btn"
-                    onClick={(e) => dispatch(updateStep(0))}
+                    onClick={(e) => dispatch(updateStep(0,true))}
                   >
                     <p>Back</p>
                   </button>
@@ -638,7 +637,7 @@ console.log(meetingData)
             {!meetingData.loading && stateData.isMeetingDataUpdate  ? (
           <button
                     className="create-meeting-button Mom-btn"
-                    onClick={(e) => dispatch(updateStep(2))}
+                    onClick={(e) => dispatch(updateStep(2,true))}
                   >
                     <p>Next</p>
                   </button>
@@ -647,7 +646,7 @@ console.log(meetingData)
               className="create-meeting-button Mom-btn"
               type="submit"
             >
-              <p>Next</p>
+              <p>Next submit</p>
             </button>
             ):(
               <LoaderButton />

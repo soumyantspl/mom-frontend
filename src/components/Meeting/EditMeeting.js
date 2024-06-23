@@ -24,7 +24,7 @@ import AddAgendas from "./AddAgendas";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const AddMeeting = (props) => {
+const EditMeeting = (props) => {
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
   const dispatch = useDispatch();
@@ -785,4 +785,4 @@ const AddMeeting = (props) => {
   );
 };
 
-export default AddMeeting;
+export default EditMeeting;

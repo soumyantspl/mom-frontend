@@ -24,6 +24,8 @@ import AttendeesModal from "./AttendeesModal";
 import { customName } from "../../helpers/commonHelpers";
 import NoDataFound from "../Common/NoDataFound";
 import AttendeesRsvpModal from "./AttendeesRsvpModal";
+import CommonModal from "../Common/CommonModal";
+import { cancelMeeting } from "../../constants/constatntMessages";
 const MeetingList = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const accessToken = localStorage.getItem("accessToken");
@@ -33,11 +35,11 @@ const MeetingList = () => {
   const meetingData = useSelector((state) => state.meeting);
   const loginUserData = useSelector((state) => state.user);
   const [filter, setfilter] = useState(false);
-  const [isUser, setIsUser] = useState(false);
+  const [meetingId, setMeetingId] = useState(null);
   const [rsvpCount, setRsvpCount] = useState("");
-
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isRsvpModalOpen, setIsRsvpModalOpen] = useState(false);
-
+  const [remarks, setRemarks] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [optionArray, setOptionArray] = useState(false);
   const [attendeesData, setAttendeesData] = useState([]);
@@ -114,12 +116,23 @@ const MeetingList = () => {
     searchData.limit,
     searchData.filterData,
     meetingData.isRsvpUpdated,
+    meetingData.isFetchedMeetingList
   ]);
   console.log(
     "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
     meetingData
   );
+const handleCancelMeeting=(meetingId,remarks)=>{
+  console.log(meetingId)
+  dispatch(cancelMeeting(meetingId,{remarks:remarks}))
+  setMeetingId(null);
+}
 
+const handleCancelModal=(meetingId)=>{
+  console.log("gggggggggggggg")
+  setMeetingId(meetingId);
+  setIsCancelModalOpen(true)
+}
   const handleChange = (e) => {
     // console.log("on change------------------->>>>>>", e.target);
     const { name, value } = e.target;
@@ -221,7 +234,7 @@ const MeetingList = () => {
     return result;
   };
 
-  console.log("repeat------------------------", searchData);
+  console.log("repeat------------------------", searchData,isCancelModalOpen);
   return (
     <div>
       <Header />
@@ -455,6 +468,7 @@ const MeetingList = () => {
                             <MeetingDropDown
                               meetingId={meeting._id}
                               status={meeting.meetingStatus.status}
+                              handleCancelModal={()=>{handleCancelModal(meetingId)}}
                             />
                           </Dropdown>
 
@@ -592,7 +606,14 @@ const MeetingList = () => {
                   </button>
                 ) : null}
               </div>
-
+              <CommonModal
+        message={cancelMeeting}
+        title={"Cancel Meeting"}
+        setIsModalOpen={setIsCancelModalOpen}
+        isModalOpen={isCancelModalOpen}
+        handleSubmit={handleCancelMeeting}
+        buttonName={"Cancel"}
+      />
               <div className="right-tbl-bottom">
                 <p>Rows Per Page</p>
                 <select
@@ -622,8 +643,10 @@ const MeetingList = () => {
               </div>
             </div>
           )}
+    
         </div>
       </div>
+    
     </div>
   );
 };
