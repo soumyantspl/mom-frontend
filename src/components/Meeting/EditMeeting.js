@@ -108,7 +108,7 @@ const AddMeeting = (props) => {
           ? meetingData.singleMeetingDetails.locationDetails.location
           : "",
       });
-      if (meetingData.singleMeetingDetails.locationDetails.isMeetingRoom) {
+      if (meetingData.singleMeetingDetails.locationDetails.isMeetingRoom && meetingData.step===1||3) {
         const payload = {
           limit: 1000,
           page: 1,
@@ -164,6 +164,7 @@ const AddMeeting = (props) => {
           fromTime: formData.fromTime,
           toTime: formData.toTime,
           title: formData.title,
+          link:formData.link,
           step:1,
           isUpdate:stateData.isMeetingDataUpdate && meetingData.singleMeetingDetails.step===3?true:false,
         };
@@ -183,7 +184,7 @@ const AddMeeting = (props) => {
     }
   };
 
-  console.log(step);
+ // console.log(step);
 
   const handleChange = (e) => {
     dispatch(updateIsCreateMeetingProcessed(false));
@@ -742,7 +743,7 @@ const AddMeeting = (props) => {
                     className="create-meeting-button Mom-btn"
                     onClick={(e) => dispatch(updateStep(1))}
                   >
-                    <p>Update Next</p>
+                    <p>Update Next1</p>
                   </button>
             ):!meetingData.loading && !stateData.isMeetingDataUpdate  ?(
               <button
@@ -751,9 +752,9 @@ const AddMeeting = (props) => {
             >
               <p>Submit Next</p>
             </button>
-            ):(
+            ):meetingData.loading && !stateData.isMeetingDataUpdate  ?(
               <LoaderButton />
-            )
+            ):null
             
             
             }

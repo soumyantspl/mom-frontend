@@ -180,7 +180,7 @@ export const meetingReducer = (state = initialObject, action) => {
               case UPDATE_STEP:
                 return {
                 ...state,
-                step:action.payload
+               // step:action.payload
               }
     default:
       return state;

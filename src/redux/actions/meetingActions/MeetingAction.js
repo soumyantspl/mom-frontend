@@ -57,8 +57,6 @@ export const fetchMeetingList = (payload) => {
     };
     console.log("webApiUrl----------------", webApiUrl);
     console.log("accessToken------------>>>>>", accessToken);
-    // axios
-    //   .post(webApiUrl, payload)
     const bodyPayload = {
       organizationId: payload.organizationId,
       searchKey: payload.searchKey ? payload.searchKey : undefined,
@@ -73,10 +71,22 @@ export const fetchMeetingList = (payload) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
         dispatch(getMeetingList(resData));
+       
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
+        toast.error(err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -105,12 +115,22 @@ export const fetchAttendeesList = (organizationId, token) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
-
-        dispatch(getAttendeesList(resData));
+       dispatch(getAttendeesList(resData));
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
+        toast.error(err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -148,12 +168,47 @@ export const updateRsvp = (rsvp, meetingId) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
-
+if(resData.success){
+  toast.success(resData.message, {
+    position: "bottom-left",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    // transition: Bounce,
+  });
+}else{
+  toast.error(resData.message, {
+    position: "bottom-left",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    // transition: Bounce,
+  });
+}
         dispatch(updateRsvpStatus(resData));
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
+        toast.error(err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -298,12 +353,6 @@ export const updateMeetingDetails = (
     };
     console.log("webApiUrl----------------", webApiUrl);
     console.log("accessToken------------>>>>>", accessToken);
-
-    // const bodyPayload = {
-    //   organizationId: payload.organizationId,
-    //   attendees: payload.attendees,
-    //   step:payload.step
-    // };
     axios
       .put(webApiUrl, bodyPayload, headerObject)
       .then((result) => {
@@ -347,6 +396,17 @@ export const updateMeetingDetails = (
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
+        toast.error(err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };

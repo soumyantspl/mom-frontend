@@ -105,13 +105,6 @@ const AddAgendas = () => {
   const onAddAgenda = () => {
     console.log(formData);
     console.log(agendaData);
-    //  if(agendaData.length===0){
-    //   setAgendaData([
-    //       { index: agendaData.length , title: "", topic: "", time: 0 },
-    //     ]);
-    //  }
-    //  else{
-    // console.log(agendaData);
     const newErrors = validateForm(formData);
     setErrors(newErrors);
 

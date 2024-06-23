@@ -140,6 +140,7 @@ if(meetingData.isSuccess){
           fromTime: formData.fromTime,
           toTime: formData.toTime,
           title: formData.title,
+          link:formData.link,
           step: 1,
           isUpdate:stateData.isMeetingDataUpdate?true:false,
         };
@@ -155,7 +156,8 @@ if(meetingData.isSuccess){
           mode: formData.mode.toUpperCase(),
           fromTime: formData.fromTime,
           toTime: formData.toTime,
-          title: formData.title
+          title: formData.title,
+          link:formData.link
         };
         console.log(payload);
         dispatch(createMeetingDetails(payload, accessToken));
