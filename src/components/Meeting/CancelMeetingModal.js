@@ -8,9 +8,6 @@ const CancelMeetingModal = (props) => {
   console.log(props);
   const [remark, setRemark] = useState("");
   const [errors, setErrors] = useState({});
-  const handleClose = () => {
-    props.updateShow();
-  };
   const handleSubmit = () => {
     const newErrors = validateForm();
     setErrors(newErrors);
@@ -31,16 +28,10 @@ const CancelMeetingModal = (props) => {
 
   return (
     <>
-      {/* <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
-      </Button> */}
-
       <Modal
         show={props.isModalOpen}
         onHide={(e) => props.setIsModalOpen(false)}
       >
-        {/* <Modal.Title>{props.title}</Modal.Title> */}
-
         <div className="modal-header">
           <h4 className="modal-title">Meeting Cancellation Remark</h4>
           <button
@@ -50,8 +41,6 @@ const CancelMeetingModal = (props) => {
             onClick={(e) => props.setIsModalOpen(false)}
           ></button>
         </div>
-
-        {/* {props.message} */}
         <div className="modal-body delete-txt">
           <h6>Please provide your remarks regarding the cancellation</h6>
           <textarea
@@ -86,18 +75,6 @@ const CancelMeetingModal = (props) => {
             <p>Close</p>
           </button>
         </div>
-
-        {/* <Button
-            variant="light"
-            onClick={(e) => props.setIsModalOpen(false)}
-            className="btn-light"
-          >
-            No
-          </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-           
-            Yes
-          </Button> */}
       </Modal>
     </>
   );

@@ -416,7 +416,7 @@ const SetPassword = (props) => {
                       </span>
                     )}
                   </div>
-                  {authData.isOtpProcessed && authData.isSuccess ? (
+                  {/* {authData.isOtpProcessed && authData.isSuccess ? (
                     <Alert
                       status={authData.isSuccess}
                       message={authData.message}
@@ -428,7 +428,7 @@ const SetPassword = (props) => {
                       message={authData.message}
                       timeoutSeconds={0}
                     />
-                  ) : null}
+                  ) : null} */}
                 </div>
                 {!authData.loading ? (
                   <button className="btn1" type="submit">

@@ -64,10 +64,10 @@ const MeetingList = () => {
   };
 
   const setModalStatus = (value, attendeesData) => {
-    if(attendeesData.length!==0){
-    setIsModalOpen(value);
-    setAttendeesData([...attendeesData]);
-    // setIsUser(isUser)
+    if (attendeesData.length !== 0) {
+      setIsModalOpen(value);
+      setAttendeesData([...attendeesData]);
+      // setIsUser(isUser)
     }
   };
 
@@ -118,25 +118,25 @@ const MeetingList = () => {
     searchData.limit,
     searchData.filterData,
     meetingData.isRsvpUpdated,
-    meetingData.isFetchedMeetingList
+    meetingData.isFetchedMeetingList,
   ]);
   console.log(
     "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
     meetingData
   );
-const handleCancelMeeting=(remarks)=>{
-  console.log("ccccccccccc",meetingId,remarks)
+  const handleCancelMeeting = (remarks) => {
+    console.log("ccccccccccc", meetingId, remarks);
 
-  dispatch(processCancelMeeting(meetingId,{remarks},accessToken))
-  setMeetingId(null);
- setIsCancelModalOpen(false)
-}
+    dispatch(processCancelMeeting(meetingId, { remarks }, accessToken));
+    setMeetingId(null);
+    setIsCancelModalOpen(false);
+  };
 
-const handleCancelModal=(meetingId)=>{
-  console.log("gggggggggggggg",meetingId)
-  setMeetingId(meetingId);
-  setIsCancelModalOpen(true)
-}
+  const handleCancelModal = (meetingId) => {
+    console.log("gggggggggggggg", meetingId);
+    setMeetingId(meetingId);
+    setIsCancelModalOpen(true);
+  };
   const handleChange = (e) => {
     // console.log("on change------------------->>>>>>", e.target);
     const { name, value } = e.target;
@@ -164,7 +164,7 @@ const handleCancelModal=(meetingId)=>{
   const totalOption = Math.round(meetingData.totalCount / 5 + 0.5);
   const totalPage = Math.round(meetingData.totalCount / searchData.limit + 0.5);
   const totalPageArray = Array(totalPage).fill();
-  console.log(totalPageArray)
+  console.log(totalPageArray);
   // console.log(
   //   "totalOption-------------------->",
   //   meetingData.totalCount / searchData.limit + 0.5,
@@ -238,7 +238,7 @@ const handleCancelModal=(meetingId)=>{
     return result;
   };
 
-  console.log("repeat------------------------", searchData,isCancelModalOpen);
+  console.log("repeat------------------------", searchData, isCancelModalOpen);
   return (
     <div>
       <Header />
@@ -447,9 +447,9 @@ const handleCancelModal=(meetingId)=>{
                               ? "badge bg-success bg-opacity-10 "
                               : meeting.meetingStatus.status === "closed"
                               ? "badge bg-primary bg-opacity-10 "
-                               : meeting.meetingStatus.status === "draft"
-                               ?"badge bg-secondary bg-opacity-10 ": "badge bg-danger bg-opacity-10 "
-                              
+                              : meeting.meetingStatus.status === "draft"
+                              ? "badge bg-secondary bg-opacity-10 "
+                              : "badge bg-danger bg-opacity-10 "
                           }
                         >
                           {meeting.meetingStatus.status
@@ -472,7 +472,9 @@ const handleCancelModal=(meetingId)=>{
                             <MeetingDropDown
                               meetingId={meeting._id}
                               status={meeting.meetingStatus.status}
-                              handleCancelModal={()=>{handleCancelModal(meeting._id)}}
+                              handleCancelModal={() => {
+                                handleCancelModal(meeting._id);
+                              }}
                             />
                           </Dropdown>
 
@@ -511,8 +513,8 @@ const handleCancelModal=(meetingId)=>{
           ) : !meetingData.loading && meetingData.meetingList?.length === 0 ? (
             <div className="mt-2 table-box no-data-img">
               {/* <Alert message="No Data Found !" status={false} /> */}
-           
-              <NoDataFound dataType={"meeting"}/>
+
+              <NoDataFound dataType={"meeting"} />
               <Button
                 variant="primary"
                 onClick={(e) => {
@@ -612,13 +614,10 @@ const handleCancelModal=(meetingId)=>{
                 ) : null}
               </div>
               <CancelMeetingModal
-        message={cancelMeeting}
-        title={"Cancel Meeting"}
-        setIsModalOpen={setIsCancelModalOpen}
-        isModalOpen={isCancelModalOpen}
-        handleSubmit={handleCancelMeeting}
-        buttonName={"Cancel"}
-      />
+                setIsModalOpen={setIsCancelModalOpen}
+                isModalOpen={isCancelModalOpen}
+                handleSubmit={handleCancelMeeting}
+              />
               <div className="right-tbl-bottom">
                 <p>Rows Per Page</p>
                 <select
@@ -648,10 +647,8 @@ const handleCancelModal=(meetingId)=>{
               </div>
             </div>
           )}
-    
         </div>
       </div>
-    
     </div>
   );
 };

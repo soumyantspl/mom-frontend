@@ -134,13 +134,13 @@ const LoginByOtp = () => {
                       <span className="error-message">{errors.email}</span>
                     )}
 
-                    {authData.isOtpProcessed ? (
+                    {/* {authData.isOtpProcessed ? (
                       <Alert
                         status={authData.isSuccess}
                         message={authData.message}
                         timeoutSeconds={0}
                       />
-                    ) : null}
+                    ) : null} */}
                   </div>
                 </div>
                 {!authData.loading ? (
