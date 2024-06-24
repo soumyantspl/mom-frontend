@@ -14,6 +14,7 @@ import {
   getCreateMeetingStep,
   loadCreateMeeting,
   updateMeetingDetails,
+  updateStep,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import Loader from "../Common/Loader";
 import * as constantMessages from "../../constants/constatntMessages";
@@ -27,6 +28,7 @@ import { customName } from "../../helpers/commonHelpers";
 import CommonModal from "../Common/CommonModal";
 import Alert from "../Common/Alert";
 import RemoveAttendeesModal from "./RemoveAttendeesModal";
+import { Navigate, Link, useLocation } from "react-router-dom";
 
 const AddAttendees = (props) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -36,6 +38,11 @@ const AddAttendees = (props) => {
   const meetingData = useSelector((state) => state.meeting);
   const employeeData = useSelector((state) => state.user);
   console.log(meetingRoomData);
+  const location = useLocation();
+  console.log(location);
+  const stateData = location.state;
+  console.log(meetingData);
+  console.log(stateData);
   const [numAgenda, setNumAgenda] = useState(0);
   const [attendees, setAttendees] = useState([]);
   const [step, setStep] = useState(0);
@@ -65,7 +72,11 @@ const AddAttendees = (props) => {
 
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
+if(stateData.isMeetingDataUpdate || meetingData.isUpdateStep){
+  document.title = "Update Meeting: Meeting Plus";
 
+  setAttendeesData(meetingData.singleMeetingDetails.attendees.map(({rsvp,...keepAttrs}) => keepAttrs));
+}
     if (formData.attendyType === "fromPreviousMeeting") {
       dispatch(fetchAttendeesList(userData.organizationId, accessToken));
     }
@@ -75,7 +86,7 @@ const AddAttendees = (props) => {
         name: formData.name,
         email: formData.email,
         isEmployee: false,
-        organizationId: userData.organizationId,
+       // organizationId: userData.organizationId,
       };
       const newAttendeeData = [...attendeesData, newAttendee];
       setAttendeesData(newAttendeeData);
@@ -119,7 +130,8 @@ console.log(meetingData)
       const payload = {
         attendees: attendeesData,
         organizationId: userData.organizationId,
-        step: meetingData?.singleMeetingDetails?.step + 1,
+        isUpdate:stateData.isMeetingDataUpdate && meetingData.singleMeetingDetails.step===3?true:false,
+        step:2,
         meetingStatus:meetingData?.singleMeetingDetails?.meetingStatus.status
       };
       dispatch(updateMeetingDetails(meetingId, payload, accessToken,"addAttendee"));
@@ -305,9 +317,8 @@ console.log(meetingData)
 
   console.log(
     attendeesData,
-    formData,
     meetingData,
-    employeeData
+   
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -462,9 +473,9 @@ console.log(meetingData)
                   Name / Email Address
                 </option>
                 {meetingData.attendeesList &&
-                  meetingData.attendeesList.map((attendee) => {
+                  meetingData.attendeesList.map((attendee,index) => {
                     return (
-                      <option value={attendee._id}>
+                      <option key={index} value={attendee._id}>
                         {attendee.name} / {attendee.email}
                       </option>
                     );
@@ -482,9 +493,9 @@ console.log(meetingData)
                   Name / Employee ID
                 </option>
                 {employeeData.employeeList &&
-                  employeeData.employeeList.map((employee) => {
+                  employeeData.employeeList.map((employee,index) => {
                     return (
-                      <option value={employee._id}>
+                      <option value={employee._id} key={index}>
                         {employee.name} / {employee.empId}
                       </option>
                     );
@@ -587,11 +598,14 @@ console.log(meetingData)
             <span className="error-message">{errors.addAttendee}</span>
           )}
           </div>
-          <div className="button-outer"
-          
-          >
-        
-          {!meetingData.loading ? (
+          <div className="button-outer">
+          <button
+                    className="create-meeting-button Mom-btn"
+                    onClick={(e) => dispatch(updateStep(0,true))}
+                  >
+                    <p>Back</p>
+                  </button>
+          {!meetingData.loading && stateData.isMeetingDataUpdate  ? (
             <>
               {/* <Button
                 
@@ -601,16 +615,18 @@ console.log(meetingData)
               >
                 Next
               </Button> */}
-              <button
+               
+               <button
                     className="create-meeting-button Mom-btn"
                     type="submit"
                   >
-                    <p>Next</p>
+                    <p>Update</p>
                   </button>
+              
             </>
-          ) : (
+          ) : meetingData.loading && stateData.isMeetingDataUpdate?(
             <LoaderButton />
-          )}
+          ):null}
           {/* <Button
             variant="primary"
             class="btn-primary"
@@ -618,6 +634,24 @@ console.log(meetingData)
           >
             Back
           </Button> */}
+            {!meetingData.loading && stateData.isMeetingDataUpdate  ? (
+          <button
+                    className="create-meeting-button Mom-btn"
+                    onClick={(e) => dispatch(updateStep(2,true))}
+                  >
+                    <p>Next</p>
+                  </button>
+            ):!meetingData.loading && !stateData.isMeetingDataUpdate ? (
+              <button
+              className="create-meeting-button Mom-btn"
+              type="submit"
+            >
+              <p>Next submit</p>
+            </button>
+            ):(
+              <LoaderButton />
+            )}
+                  
         </div>
         </div>
       </form>

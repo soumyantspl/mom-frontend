@@ -76,7 +76,7 @@ const MeetingDropDown = (props) => {
           <Dropdown.Item href="#/action-3">
             <Link
               to="/edit-meeting"
-              state={{ meetingId: props.meetingId}}
+              state={{ meetingId: props.meetingId,isMeetingDataUpdate:true,step:props.step}}
               style={{
                 textDecoration: "none",
                 color: "black",
@@ -105,6 +105,7 @@ const MeetingDropDown = (props) => {
         {props.status === "scheduled"||props.status === "rescheduled" ? (
           <Dropdown.Item eventKey="4">
             <Link
+            onClick={()=>{props.handleCancelModal(props.meetingId)}}
               style={{
                 textDecoration: "none",
                 color: "black",

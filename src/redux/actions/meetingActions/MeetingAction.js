@@ -15,6 +15,9 @@ import {
   SET_SINGLE_MEETING_DETAILS,
   SET_MEETING_VIEW_PAGE,
   SET_CREATE_NEW_MEETING_PAGE,
+  UNSET_SINGLE_MEETING_DETAILS,
+  UPDATE_STEP,
+  UPDATE_FETCH_MEETING_LIST_STATUS,
 } from "./actionTypes";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -55,8 +58,6 @@ export const fetchMeetingList = (payload) => {
     };
     console.log("webApiUrl----------------", webApiUrl);
     console.log("accessToken------------>>>>>", accessToken);
-    // axios
-    //   .post(webApiUrl, payload)
     const bodyPayload = {
       organizationId: payload.organizationId,
       searchKey: payload.searchKey ? payload.searchKey : undefined,
@@ -75,6 +76,17 @@ export const fetchMeetingList = (payload) => {
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
+        toast.error(err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -103,12 +115,22 @@ export const fetchAttendeesList = (organizationId, token) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
-
         dispatch(getAttendeesList(resData));
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
+        toast.error(err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -146,12 +168,47 @@ export const updateRsvp = (rsvp, meetingId) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
-
+        if (resData.success) {
+          toast.success(resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
+        } else {
+          toast.error(resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
+        }
         dispatch(updateRsvpStatus(resData));
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
+        toast.error(err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -182,6 +239,8 @@ export const createMeetingDetails = (payload, accessToken) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
         if (resData.success) {
+          dispatch(getSingleMeetingDetails(resData.data._id, accessToken));
+
           toast.success(resData.message, {
             position: "bottom-left",
             autoClose: 3000,
@@ -194,6 +253,7 @@ export const createMeetingDetails = (payload, accessToken) => {
             // transition: Bounce,
           });
           dispatch(createMeetingResponse(resData));
+          dispatch(updateStep(1, false));
         } else {
           dispatch(failRequest(resData.message));
           toast.error(resData.message, {
@@ -236,7 +296,7 @@ export const createMeetingResponse = (data) => {
 
 export const getCreateMeetingStep = (organizationId, accessToken) => {
   return (dispatch) => {
-   // dispatch(makeRequest());
+    // dispatch(makeRequest());
     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/getCreateMeetingStep/${organizationId}`;
     const headerObject = {
       headers: {
@@ -293,12 +353,6 @@ export const updateMeetingDetails = (
     };
     console.log("webApiUrl----------------", webApiUrl);
     console.log("accessToken------------>>>>>", accessToken);
-
-    // const bodyPayload = {
-    //   organizationId: payload.organizationId,
-    //   attendees: payload.attendees,
-    //   step:payload.step
-    // };
     axios
       .put(webApiUrl, bodyPayload, headerObject)
       .then((result) => {
@@ -322,7 +376,9 @@ export const updateMeetingDetails = (
             theme: "light",
             // transition: Bounce,
           });
+          dispatch(getSingleMeetingDetails(meetingId, accessToken));
           dispatch(updateMeetingResponse(resData));
+          dispatch(updateStep(bodyPayload.step, true));
         } else {
           toast.error(resData.message, {
             position: "bottom-left",
@@ -341,6 +397,17 @@ export const updateMeetingDetails = (
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
+        toast.error(err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -371,7 +438,7 @@ export const getSingleMeetingDetails = (meetingId, accessToken) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
 
-        dispatch(setSingleMeetingDetails({data:resData.data,meetingId}));
+        dispatch(setSingleMeetingDetails({ data: resData.data, meetingId }));
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
@@ -389,8 +456,14 @@ export const setSingleMeetingDetails = (data) => {
 
 export const unSetSingleMeetingDetails = () => {
   return {
-    type: SET_SINGLE_MEETING_DETAILS,
-   // payload: data,
+    type: UNSET_SINGLE_MEETING_DETAILS,
+    // payload: data,
+  };
+};
+export const updateStep = (step, isUpdateStep) => {
+  return {
+    type: UPDATE_STEP,
+    payload: { step, isUpdateStep },
   };
 };
 
@@ -407,11 +480,84 @@ export const setMeetingViewPage = (data) => {
   };
 };
 
-
-
 export const setCreateNewMeetingPage = (data) => {
   return {
     type: SET_CREATE_NEW_MEETING_PAGE,
+    payload: data,
+  };
+};
+
+export const processCancelMeeting = (meetingId, bodyPayload, accessToken) => {
+  return (dispatch) => {
+   // dispatch(makeRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/cancelMeeting/${meetingId}`;
+    //const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/viewMeeting/${meetingId}`;
+    const headerObject = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: accessToken,
+      },
+    };
+    console.log("webApiUrl----------------", webApiUrl);
+    console.log("accessToken------------>>>>>", accessToken);
+    console.log("bodyPayload------------>>>>>", bodyPayload);
+    console.log("headerObject------------>>>>>", headerObject);
+    
+    axios
+      .put(webApiUrl, bodyPayload, headerObject)
+      .then((result) => {
+        console.log("result------------------------->>>>>>>", result);
+        const resData = result.data;
+        if (resData.success) {
+          toast.success(resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
+           dispatch(updateFetchMeetingListStatus(true))
+        } else {
+          toast.error(resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
+          dispatch(updateFetchMeetingListStatus(false));
+        }
+      })
+      .catch((err) => {
+        console.log("err------------------------->>>>>>>", err);
+        dispatch(failRequest(err.message));
+        toast.error(err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
+        dispatch(updateFetchMeetingListStatus(false));
+      });
+  };
+};
+
+export const updateFetchMeetingListStatus = (data) => {
+  return {
+    type: UPDATE_FETCH_MEETING_LIST_STATUS,
     payload: data,
   };
 };

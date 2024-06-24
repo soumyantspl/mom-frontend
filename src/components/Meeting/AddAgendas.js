@@ -4,6 +4,7 @@ import Collapse from "react-bootstrap/Collapse";
 import { Margin } from "../../../node_modules/@mui/icons-material/index";
 import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction.js/meetingRoomAction";
 import { useSelector, useDispatch } from "react-redux";
+import { Navigate, Link, useLocation } from "react-router-dom";
 import CommonStepper from "../Common/CommonStepper";
 import CreateMeeting from "./CreateMeeting";
 import {
@@ -13,6 +14,7 @@ import {
   setCreateNewMeetingPage,
   updateIsCreateMeetingProcessed,
   updateMeetingDetails,
+  updateStep,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import Loader from "../Common/Loader";
 import * as constantMessages from "../../constants/constatntMessages";
@@ -37,7 +39,10 @@ const AddAgendas = () => {
   const [step, setStep] = useState(0);
   const [selectedOption, setSelectedOption] = useState("prevMeetingRadio");
   const [isManualLocation, setIsManualLocation] = useState(true);
-
+  const location = useLocation();
+  console.log(location);
+  const stateData = location.state;
+  console.log(meetingData);
   const [removeAttendeeData, setRemoveAttendeeData] = useState({});
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -49,6 +54,14 @@ const AddAgendas = () => {
   const [agendaData, setAgendaData] = useState([]);
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
+    if(stateData.isMeetingDataUpdate || meetingData.isUpdateStep){
+      document.title = "Update Meeting: Meeting Plus";
+      setAgendaData(meetingData.singleMeetingDetails.agendasDetail.map((item)=>{
+        item.uid = Math.floor(100000 + Math.random() * 900000);
+        return item
+      })
+      );
+    }
    // dispatch(setCreateNewMeetingPage(true))
   }, []);
 
@@ -70,15 +83,16 @@ const AddAgendas = () => {
         return {
           topic: item.topic,
           title: item.title,
-          timeLine: item.timeLine,
+          timeLine: item.timeLine.toString()
         };
       });
       const meetingId = meetingData?.singleMeetingDetails?._id;
       const payload = {
         agendas: newAgendaData,
         organizationId: userData.organizationId,
-        step: 3,
-        meetingStatus:"scheduled"
+        step:3,
+        meetingStatus:"scheduled",
+        isUpdate:stateData.isMeetingDataUpdate && meetingData.singleMeetingDetails.step===3?true:false,
       };
       console.log(payload);
       dispatch(updateMeetingDetails(meetingId, payload, accessToken,"addAgenda"));
@@ -86,18 +100,11 @@ const AddAgendas = () => {
     }
   };
 
-  const agendas = [];
+
 
   const onAddAgenda = () => {
     console.log(formData);
     console.log(agendaData);
-    //  if(agendaData.length===0){
-    //   setAgendaData([
-    //       { index: agendaData.length , title: "", topic: "", time: 0 },
-    //     ]);
-    //  }
-    //  else{
-    // console.log(agendaData);
     const newErrors = validateForm(formData);
     setErrors(newErrors);
 
@@ -198,16 +205,12 @@ const AddAgendas = () => {
     //  console.log("9999999999999999999999999999999999999", authData);
     const { name, value } = e.target;
     console.log(name, value);
-    setFormData({
-      ...formData,
-      //   index: props.index ,
-      [name]: value,
-    });
+  
     // props.agendaData(formData)
-
+    console.log(agendaData);
     if (uid) {
       const modifiedAgendas = agendaData.map((obj) => {
-        const fieldName = name;
+       
         if (obj.uid === uid) {
           return { ...obj, [name]: value };
         }
@@ -216,6 +219,13 @@ const AddAgendas = () => {
 
       console.log(modifiedAgendas);
       setAgendaData(modifiedAgendas);
+    }
+    else{
+      setFormData({
+        ...formData,
+        //   index: props.index ,
+        [name]: value,
+      });
     }
   };
 
@@ -241,7 +251,7 @@ const AddAgendas = () => {
     setErrors(errors);
   };
   console.log(agendaData);
-  //console.log(agendas);
+console.log(formData.topic);
   return (
     <form className="mt-2 details-form no-padding-2" onSubmit={submitAgendasDetails}>
       <div className="inner-detail-form">
@@ -583,7 +593,7 @@ const AddAgendas = () => {
           {errors.addAgenda ? (
             <span className="error-message">{errors.addAgenda}</span>
           ) : null}
-          <div className="d-flex align-items-center" style={{ marginTop: 20 }}>
+       <div className="button-outer" style={{ marginTop: 20 }}>
             {/* <Button
             type="button"
             variant="primary"
@@ -607,8 +617,13 @@ const AddAgendas = () => {
                 </div>
               </div>
             ) : null} */}
-            <div>
-             
+            
+            <button
+                    className="create-meeting-button Mom-btn"
+                    onClick={(e) => dispatch(updateStep(1,true))}
+                  >
+                    <p>Back</p>
+                  </button>
               {!meetingData.loading ? (
                 // <Button
                 //   variant="primary"
@@ -635,8 +650,9 @@ const AddAgendas = () => {
               >
                 Back
               </Button> */}
-            </div>
             
+            </div>
+            <div>
           </div>
         </div>
       </div>

@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import "./style/meetings-css.css";
 import {
   fetchMeetingList,
+  processCancelMeeting,
   updateRsvp,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import LoaderButton from "../Common/LoaderButton";
@@ -24,6 +25,9 @@ import AttendeesModal from "./AttendeesModal";
 import { customName } from "../../helpers/commonHelpers";
 import NoDataFound from "../Common/NoDataFound";
 import AttendeesRsvpModal from "./AttendeesRsvpModal";
+import CommonModal from "../Common/CommonModal";
+import { cancelMeeting } from "../../constants/constatntMessages";
+import CancelMeetingModal from "./CancelMeetingModal";
 const MeetingList = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const accessToken = localStorage.getItem("accessToken");
@@ -33,11 +37,11 @@ const MeetingList = () => {
   const meetingData = useSelector((state) => state.meeting);
   const loginUserData = useSelector((state) => state.user);
   const [filter, setfilter] = useState(false);
-  const [isUser, setIsUser] = useState(false);
+  const [meetingId, setMeetingId] = useState(null);
   const [rsvpCount, setRsvpCount] = useState("");
-
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isRsvpModalOpen, setIsRsvpModalOpen] = useState(false);
-
+  const [remarks, setRemarks] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [optionArray, setOptionArray] = useState(false);
   const [attendeesData, setAttendeesData] = useState([]);
@@ -114,12 +118,25 @@ const MeetingList = () => {
     searchData.limit,
     searchData.filterData,
     meetingData.isRsvpUpdated,
+    meetingData.isFetchedMeetingList
   ]);
   console.log(
     "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
     meetingData
   );
+const handleCancelMeeting=(remarks)=>{
+  console.log("ccccccccccc",meetingId,remarks)
 
+  dispatch(processCancelMeeting(meetingId,{remarks},accessToken))
+  setMeetingId(null);
+ setIsCancelModalOpen(false)
+}
+
+const handleCancelModal=(meetingId)=>{
+  console.log("gggggggggggggg",meetingId)
+  setMeetingId(meetingId);
+  setIsCancelModalOpen(true)
+}
   const handleChange = (e) => {
     // console.log("on change------------------->>>>>>", e.target);
     const { name, value } = e.target;
@@ -221,7 +238,7 @@ const MeetingList = () => {
     return result;
   };
 
-  console.log("repeat------------------------", searchData);
+  console.log("repeat------------------------", searchData,isCancelModalOpen);
   return (
     <div>
       <Header />
@@ -241,7 +258,7 @@ const MeetingList = () => {
                 onClick={(e) => setfilter(true)}
               >
                 <p> Filter</p>
-                {/* <svg
+                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
                   height="16"
@@ -250,7 +267,7 @@ const MeetingList = () => {
                   viewBox="0 0 16 16"
                 >
                   <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2z" />
-                </svg> */}
+                </svg>
               </button>
             </div>
           </div>
@@ -455,6 +472,7 @@ const MeetingList = () => {
                             <MeetingDropDown
                               meetingId={meeting._id}
                               status={meeting.meetingStatus.status}
+                              handleCancelModal={()=>{handleCancelModal(meeting._id)}}
                             />
                           </Dropdown>
 
@@ -493,7 +511,8 @@ const MeetingList = () => {
           ) : !meetingData.loading && meetingData.meetingList?.length === 0 ? (
             <div className="mt-2 table-box no-data-img">
               {/* <Alert message="No Data Found !" status={false} /> */}
-              <NoDataFound />
+           
+              <NoDataFound dataType={"meeting"}/>
               <Button
                 variant="primary"
                 onClick={(e) => {
@@ -592,7 +611,14 @@ const MeetingList = () => {
                   </button>
                 ) : null}
               </div>
-
+              <CancelMeetingModal
+        message={cancelMeeting}
+        title={"Cancel Meeting"}
+        setIsModalOpen={setIsCancelModalOpen}
+        isModalOpen={isCancelModalOpen}
+        handleSubmit={handleCancelMeeting}
+        buttonName={"Cancel"}
+      />
               <div className="right-tbl-bottom">
                 <p>Rows Per Page</p>
                 <select
@@ -622,8 +648,10 @@ const MeetingList = () => {
               </div>
             </div>
           )}
+    
         </div>
       </div>
+    
     </div>
   );
 };

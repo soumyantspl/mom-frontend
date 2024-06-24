@@ -79,18 +79,18 @@ const ViewMeeting = (props) => {
       {/* <Header />
           <MeetingHeader />
           <Sidebar /> */}
-      {meetingData.step + 1 == 1 || meetingData.isNewMeetingPage === true ? (
+      {(meetingData.step + 1 === 1 && !meetingData.singleMeetingDetails) || (meetingData.isNewMeetingPage === true && !meetingData.singleMeetingDetails)  ? (
         // {!meetingData.isLoading && meetingData.isNewMeetingPage ? (
         <form className="mt-2 details-form details-form-right">
           <div className="form-group mb-2">
             <div className="row">
-              <NoDataFound />
+            <NoDataFound dataType={"meeting"}/>
             </div>
           </div>
         </form>
-      ) : !meetingData.isLoading &&
-        meetingData.singleMeetingDetails &&
-        !meetingData.isNewMeetingPage ? (
+      ) : !meetingData.loading &&
+        meetingData.singleMeetingDetails 
+         ? (
         <form className="mt-2 details-form details-form-right">
           <div className="form-group mb-2">
             <div className="row">

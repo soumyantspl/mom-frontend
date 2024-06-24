@@ -14,7 +14,9 @@ import {
   SET_SINGLE_MEETING_DETAILS,
   SET_MEETING_VIEW_PAGE,
   SET_CREATE_NEW_MEETING_PAGE,
-  UNSET_SINGLE_MEETING_DETAILS
+  UNSET_SINGLE_MEETING_DETAILS,
+  UPDATE_STEP,
+  UPDATE_FETCH_MEETING_LIST_STATUS
 } from "../actions/meetingActions/actionTypes";
 
 const initialObject = {
@@ -33,7 +35,9 @@ const initialObject = {
   checkStep:null,
   meetingId:null,
   isViewMeetingPage:false,
-  isNewMeetingPage:false
+  isNewMeetingPage:false,
+  isUpdateStep:false,
+  isFetchedMeetingList:false
 };
 
 export const meetingReducer = (state = initialObject, action) => {
@@ -62,6 +66,7 @@ export const meetingReducer = (state = initialObject, action) => {
         meetingList: action.payload.data?.meetingData,
         totalCount: action.payload.data?.totalCount,
         isSuccess: action.payload.success,
+        isFetchedMeetingList:false
       };
     case GET_ATTENDEES_LIST:
       return {
@@ -131,10 +136,11 @@ export const meetingReducer = (state = initialObject, action) => {
         loading: false,
         message: action.payload.message,
         isSuccess: action.payload.success,
-        step:action.payload.success ? state.step+1 : state.step,
+        step:action.payload.success && !state.isUpdateStep ? state.step+1 : state.step,
         isCreateMeetingProcessed: true,
         checkStep:false,
-        isNewMeetingPage:action.payload.data.step===3 ?true:false
+        isNewMeetingPage:false,
+        isUpdateStep:state.step===3?false:true
         
       };
     case LOAD_PREVIOUS_STEP:
@@ -151,6 +157,7 @@ export const meetingReducer = (state = initialObject, action) => {
           isSuccess: action.payload.success,
           singleMeetingDetails: action.payload.data,
           meetingId:action.payload.meetingId,
+          step: state.isUpdateStep?state.step:action.payload.data.step
         };
         case SET_MEETING_VIEW_PAGE:
           return {
@@ -164,7 +171,8 @@ export const meetingReducer = (state = initialObject, action) => {
              // meetingId:action.payload.meetingId,
               isNewMeetingPage:action.payload,
               singleMeetingDetails:null,
-              isCreateMeetingProcessed:false
+              isCreateMeetingProcessed:false,
+              isUpdateStep:false
             };
             case UNSET_SINGLE_MEETING_DETAILS:
               return {
@@ -175,6 +183,19 @@ export const meetingReducer = (state = initialObject, action) => {
                 singleMeetingDetails: null,
                 meetingId:null,
               };
+              case UPDATE_STEP:
+                return {
+                ...state,
+                step:action.payload.step,
+                isUpdateStep:action.payload.isUpdateStep
+              }
+
+              
+              case UPDATE_FETCH_MEETING_LIST_STATUS:
+                return {
+                ...state,
+                isFetchedMeetingList:action.payload
+              }
     default:
       return state;
   }

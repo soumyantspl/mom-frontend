@@ -14,10 +14,10 @@ const AttendeesDetails = (props) => {
           <div className="status-detail">
             <p className="rsvpStatus">Summary</p>
             <div className="respond-button">
-              <button className="respond-action">{ checkRsvpCount(attendees).yesCount} Yes</button>
-              <button className="respond-action">{ checkRsvpCount(attendees).noCount} No</button>
-              <button className="respond-action">{ checkRsvpCount(attendees).mayBeCount} May Be</button>
-              <button className="respond-action">{ checkRsvpCount(attendees).pendingCount} Awaiting</button>
+              <button className="respond-action" disabled>{ checkRsvpCount(attendees).yesCount} Yes</button>
+              <button className="respond-action" disabled>{ checkRsvpCount(attendees).noCount} No</button>
+              <button className="respond-action" disabled>{ checkRsvpCount(attendees).mayBeCount} May Be</button>
+              <button className="respond-action" disabled>{ checkRsvpCount(attendees).pendingCount} Awaiting</button>
               {/* <p>{attendees.length} Attendees</p>
                         <p className="detail-date-time">
                           {checkRsvpCount(attendees)}
@@ -64,7 +64,8 @@ const AttendeesDetails = (props) => {
                       />
                  <div className="mt-3 agenda-box-border">
                  
-                  <NoDataFound />
+                
+                  <NoDataFound dataType={"attendee"}/>
                 </div>
                 </>
                
