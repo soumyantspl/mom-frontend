@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import "./style/meetings-css.css";
 import {
   fetchMeetingList,
+  processCancelMeeting,
   updateRsvp,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import LoaderButton from "../Common/LoaderButton";
@@ -26,6 +27,7 @@ import NoDataFound from "../Common/NoDataFound";
 import AttendeesRsvpModal from "./AttendeesRsvpModal";
 import CommonModal from "../Common/CommonModal";
 import { cancelMeeting } from "../../constants/constatntMessages";
+import CancelMeetingModal from "./CancelMeetingModal";
 const MeetingList = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const accessToken = localStorage.getItem("accessToken");
@@ -122,14 +124,16 @@ const MeetingList = () => {
     "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
     meetingData
   );
-const handleCancelMeeting=(meetingId,remarks)=>{
-  console.log(meetingId)
-  dispatch(cancelMeeting(meetingId,{remarks:remarks}))
+const handleCancelMeeting=(remarks)=>{
+  console.log("ccccccccccc",meetingId,remarks)
+
+  dispatch(processCancelMeeting(meetingId,{remarks},accessToken))
   setMeetingId(null);
+ setIsCancelModalOpen(false)
 }
 
 const handleCancelModal=(meetingId)=>{
-  console.log("gggggggggggggg")
+  console.log("gggggggggggggg",meetingId)
   setMeetingId(meetingId);
   setIsCancelModalOpen(true)
 }
@@ -468,7 +472,7 @@ const handleCancelModal=(meetingId)=>{
                             <MeetingDropDown
                               meetingId={meeting._id}
                               status={meeting.meetingStatus.status}
-                              handleCancelModal={()=>{handleCancelModal(meetingId)}}
+                              handleCancelModal={()=>{handleCancelModal(meeting._id)}}
                             />
                           </Dropdown>
 
@@ -507,7 +511,8 @@ const handleCancelModal=(meetingId)=>{
           ) : !meetingData.loading && meetingData.meetingList?.length === 0 ? (
             <div className="mt-2 table-box no-data-img">
               {/* <Alert message="No Data Found !" status={false} /> */}
-              <NoDataFound />
+           
+              <NoDataFound dataType={"meeting"}/>
               <Button
                 variant="primary"
                 onClick={(e) => {
@@ -606,7 +611,7 @@ const handleCancelModal=(meetingId)=>{
                   </button>
                 ) : null}
               </div>
-              <CommonModal
+              <CancelMeetingModal
         message={cancelMeeting}
         title={"Cancel Meeting"}
         setIsModalOpen={setIsCancelModalOpen}

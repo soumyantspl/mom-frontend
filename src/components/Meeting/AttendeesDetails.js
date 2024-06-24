@@ -64,7 +64,8 @@ const AttendeesDetails = (props) => {
                       />
                  <div className="mt-3 agenda-box-border">
                  
-                  <NoDataFound />
+                
+                  <NoDataFound dataType={"attendee"}/>
                 </div>
                 </>
                

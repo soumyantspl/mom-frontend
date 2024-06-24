@@ -184,7 +184,8 @@ const ViewMeetingDetails = () => {
                       timeoutSeconds={0}
                     />
                     <div className="mt-3 agenda-box-border no-data-img">
-                      <NoDataFound />
+                    
+                      <NoDataFound dataType={"attendee"}/>
                     </div>
                   </>
                 )}
@@ -304,7 +305,7 @@ const ViewMeetingDetails = () => {
                       timeoutSeconds={0}
                     />
                     <div className="mt-3 agenda-box-border no-data-img">
-                      <NoDataFound />
+                      <NoDataFound dataType={"agenda"}/>
                     </div>
                   </>
                 )}

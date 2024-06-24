@@ -743,14 +743,14 @@ const EditMeeting = (props) => {
                     className="create-meeting-button Mom-btn"
                     onClick={(e) => dispatch(updateStep(1))}
                   >
-                    <p>Update Next1</p>
+                    <p>Next</p>
                   </button>
             ):!meetingData.loading && !stateData.isMeetingDataUpdate  ?(
               <button
               className="create-meeting-button Mom-btn"
               type="submit"
             >
-              <p>Submit Next</p>
+              <p>Next</p>
             </button>
             ):meetingData.loading && !stateData.isMeetingDataUpdate  ?(
               <LoaderButton />

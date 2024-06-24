@@ -84,7 +84,7 @@ const ViewMeeting = (props) => {
         <form className="mt-2 details-form details-form-right">
           <div className="form-group mb-2">
             <div className="row">
-              <NoDataFound />
+            <NoDataFound dataType={"meeting"}/>
             </div>
           </div>
         </form>

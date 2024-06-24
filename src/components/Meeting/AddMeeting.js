@@ -730,7 +730,7 @@ setStep(step)
                     className="create-meeting-button Mom-btn"
                     type="submit"
                   >
-                    <p>Next submit</p>
+                    <p>Next</p>
                   </button>
                
               </>
