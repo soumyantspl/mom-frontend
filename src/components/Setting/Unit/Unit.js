@@ -25,7 +25,7 @@ const Unit = () => {
   const [searchKey, setSearchKey] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
-  const [order, setOrder] = useState(1);
+  const [order, setOrder] = useState(-1);
   const [isLoading, setIsLoading] = useState(false);
 
   const [isFetching, setIsFetching] = useState(false);
@@ -274,6 +274,8 @@ const Unit = () => {
     setLimit(parseInt(e.target.value, 10));
     setPage(1);
   };
+  const fromDataCount = units.length === 0 ? 0 : (page - 1) * limit + 1;
+  const toDataCount = (page - 1) * limit + units.length;
 
   //Delete Unit
   const handleDeleteClick = (unit) => {
@@ -323,8 +325,18 @@ const Unit = () => {
       }
       return response.data;
     } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: 0,
+        theme: "light",
+        // transition: Slide,
+      });
       console.error("Error deleting unit:", error);
-
       throw error;
     }
   };
@@ -402,10 +414,12 @@ const Unit = () => {
           <div className="mt-2 table-box">
             <div className="tbl-text-search">
               <div className="left-tbl-text">
-                <p>
-                  Showing {page * limit - limit + 1} to {page * limit} of{" "}
-                  {totalCount} entries
-                </p>
+                {totalCount > 0 ? (
+                  <p>
+                    Showing {fromDataCount} to {toDataCount} of {totalCount}{" "}
+                    entries
+                  </p>
+                ) : null}
               </div>
               <div className="search-box">
                 <input
