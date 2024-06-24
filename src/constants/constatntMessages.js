@@ -30,7 +30,9 @@ const addAgenda="Please add agenda."
 const addAttendee="Please add attendee."
 const invalidTime="Please enter valid time."
 const cancelMeeting="Do you want to cancel this meeting ?"
+const remarksRequired="Please give remark."
 module.exports = {
+  remarksRequired,
   cancelMeeting,
   addAttendee,
   invalidTime,

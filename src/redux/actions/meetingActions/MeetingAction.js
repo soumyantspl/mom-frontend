@@ -487,7 +487,7 @@ export const setCreateNewMeetingPage = (data) => {
   };
 };
 
-export const processCancelMeeting = (meetingId, payload, accessToken) => {
+export const processCancelMeeting = (meetingId, bodyPayload, accessToken) => {
   return (dispatch) => {
    // dispatch(makeRequest());
     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/cancelMeeting/${meetingId}`;
@@ -498,15 +498,11 @@ export const processCancelMeeting = (meetingId, payload, accessToken) => {
         Authorization: accessToken,
       },
     };
-    const bodyPayload = {
-      remarks: payload.remarks,
-    };
-
     console.log("webApiUrl----------------", webApiUrl);
     console.log("accessToken------------>>>>>", accessToken);
     console.log("bodyPayload------------>>>>>", bodyPayload);
     console.log("headerObject------------>>>>>", headerObject);
-
+    
     axios
       .put(webApiUrl, bodyPayload, headerObject)
       .then((result) => {
