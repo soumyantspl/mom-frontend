@@ -599,6 +599,7 @@ console.log(meetingData)
           )}
           </div>
           <div className="button-outer">
+            <div className="d-flex people"> 
           <button
                     className="create-meeting-button Mom-btn"
                     onClick={(e) => dispatch(updateStep(0,true))}
@@ -622,11 +623,12 @@ console.log(meetingData)
                   >
                     <p>Update</p>
                   </button>
-              
+             
             </>
           ) : meetingData.loading && stateData.isMeetingDataUpdate?(
             <LoaderButton />
           ):null}
+           </div>
           {/* <Button
             variant="primary"
             class="btn-primary"
