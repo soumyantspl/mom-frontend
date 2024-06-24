@@ -33,15 +33,15 @@ import ViewMeeting from "../components/Meeting/ViewMeeting";
 import { ToastContainer, toast } from "react-toastify";
 import ViewMeetingDetails from "../components/Meeting/ViewMeetingDetails";
 import EditMeetingPage from "../components/Meeting/EditMeetingPage";
+import CreateMinutes from "../components/Minutes/CreateMinutes";
+import MinutesPage from "../components/Minutes/MinutesPage";
 
 const PrivateRoutes = () => {
   let accessToken = localStorage.getItem("accessToken");
-  const userStore = localStorage.getItem("username");
   return accessToken ? <Outlet /> : <Navigate to="/login" />;
 };
 
 const AuthRoutes = () => {
-  let accessToken = localStorage.getItem("accessToken");
   const isRememberMe = localStorage.getItem("rememberMe");
   return !isRememberMe ? <Outlet /> : <Navigate to="/meeting-list" />;
 };
@@ -49,16 +49,6 @@ const AuthRoutes = () => {
 const MainRoute = () => {
   return (
     <div>
-      {/* <Router>
-        <Routes>
-          <Route element={<PrivateRoutes/>}>
-              <Route path='/' element={<Users/>} />
-              <Route path='/products' element={<Products/>} />
-          </Route>
-          <Route path='/login' element={<Login/>}/>
-        </Routes>
-    </Router> */}
-
       <Router>
         <Routes>
           <Route element={<PrivateRoutes />}>
@@ -76,7 +66,7 @@ const MainRoute = () => {
             <Route exact path="/designation" element={<Designation />} />
             <Route exact path="/create-meeting" element={<MeetingPage />} />
             <Route exact path="/edit-meeting" element={<EditMeetingPage />} />
-            
+            <Route exact path="/write-minutes" element={<MinutesPage />} />
             <Route
               exact
               path="/view-meeting-details"
@@ -109,7 +99,7 @@ const MainRoute = () => {
           </Route>
         </Routes>
       </Router>
-      <ToastContainer  />
+      <ToastContainer />
     </div>
   );
 };

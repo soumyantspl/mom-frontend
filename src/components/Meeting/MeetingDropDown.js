@@ -49,6 +49,7 @@ const MeetingDropDown = (props) => {
           <Dropdown.Item href="#/action-1">
             <Link
               to="/write-minutes"
+              state={{ meetingId: props.meetingId}}
               style={{
                 textDecoration: "none",
                 color: "black",
