@@ -25,7 +25,7 @@ const Unit = () => {
   const [searchKey, setSearchKey] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
-  const [order, setOrder] = useState(1);
+  const [order, setOrder] = useState(-1);
   const [isLoading, setIsLoading] = useState(false);
 
   const [isFetching, setIsFetching] = useState(false);
@@ -40,6 +40,11 @@ const Unit = () => {
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [unitName, setUnitName] = useState("");
   const [unitAddress, setUnitAddress] = useState("");
+
+  //Delete Unit
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [unitToDelete, setUnitToDelete] = useState(null);
+  console.log("unitToDelete-->", unitToDelete);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,6 +62,17 @@ const Unit = () => {
     if (!formValues.name.trim()) {
       errors.name = "Unit Name is required";
       isValid = false;
+      toast.error(errors.message, {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: 0,
+        theme: "light",
+        // transition: Slide,
+      });
     }
     if (!formValues.address.trim()) {
       errors.address = "Address is required";
@@ -95,6 +111,18 @@ const Unit = () => {
             theme: "light",
             // transition: Slide,
           });
+        } else {
+          toast.error(response.data.message, {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: 0,
+            theme: "light",
+            // transition: Slide,
+          });
         }
         setApiResData({
           isSuccess: response.data.success,
@@ -102,6 +130,7 @@ const Unit = () => {
         });
         setIsGetApiRes(true);
       } catch (error) {
+        console.log("error--->", error);
         toast.error(error.message, {
           position: "bottom-left",
           autoClose: 5000,
@@ -135,6 +164,7 @@ const Unit = () => {
         headerObject
       );
       const data = response.data.data || {};
+      console.log("Unit id->", unitData.id);
       setUnits(data.unitData || []);
       setTotalCount(data.totalCount || 0);
       setIsFetching(false);
@@ -182,7 +212,7 @@ const Unit = () => {
         address: unitAddress,
         organizationId,
       };
-      await axios.put(
+      const response = await axios.put(
         `${process.env.REACT_APP_API_URL}/api/V1/unit/editUnit/${selectedUnit._id}`,
         updatedUnit,
         {
@@ -192,6 +222,31 @@ const Unit = () => {
           },
         }
       );
+      if (response.data.success) {
+        toast.success(response.data.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Slide,
+        });
+      } else {
+        toast.error(response.data.message, {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: 0,
+          theme: "light",
+          // transition: Slide,
+        });
+      }
       setUnits((prevUnits) =>
         prevUnits.map((unit) =>
           unit._id === selectedUnit._id ? { ...unit, ...updatedUnit } : unit
@@ -199,6 +254,17 @@ const Unit = () => {
       );
       setShowEditModal(false);
     } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: 0,
+        theme: "light",
+        // transition: Slide,
+      });
       console.log("Error while updating units:", error);
     }
   };
@@ -208,6 +274,73 @@ const Unit = () => {
     setLimit(parseInt(e.target.value, 10));
     setPage(1);
   };
+  const fromDataCount = units.length === 0 ? 0 : (page - 1) * limit + 1;
+  const toDataCount = (page - 1) * limit + units.length;
+
+  //Delete Unit
+  const handleDeleteClick = (unit) => {
+    setUnitToDelete(unit);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      if (unitToDelete) {
+        await deleteUnit(unitToDelete._id);
+        setUnits((prevUnits) =>
+          prevUnits.filter((unit) => unit._id !== unitToDelete._id)
+        );
+        setShowDeleteModal(false);
+        setUnitToDelete(null);
+      }
+    } catch (error) {
+      console.error("Error while deleting unit:", error);
+    }
+  };
+
+  const deleteUnit = async (unitId) => {
+    try {
+      console.log("unitId-->", unitId);
+      const response = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/V1/unit/deleteUnit/${unitId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: accessToken,
+          },
+        }
+      );
+      if (response.data.success) {
+        toast.success(response.data.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Slide,
+        });
+      }
+      return response.data;
+    } catch (error) {
+      toast.error(error.message, {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: 0,
+        theme: "light",
+        // transition: Slide,
+      });
+      console.error("Error deleting unit:", error);
+      throw error;
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -263,7 +396,7 @@ const Unit = () => {
               </button>
             </form>
             <div>
-              {isGetApiRes ? (
+              {/* {isGetApiRes ? (
                 <div className="alertwidth">
                   <Alert
                     status={apiResData.isSuccess}
@@ -271,7 +404,7 @@ const Unit = () => {
                     timeoutSeconds={3000}
                   />
                 </div>
-              ) : null}
+              ) : null} */}
             </div>
           </div>
           {/* ////////////////////////// */}
@@ -281,10 +414,12 @@ const Unit = () => {
           <div className="mt-2 table-box">
             <div className="tbl-text-search">
               <div className="left-tbl-text">
-                <p>
-                  Showing {page * limit - limit + 1} to {page * limit} of{" "}
-                  {totalCount} entries
-                </p>
+                {totalCount > 0 ? (
+                  <p>
+                    Showing {fromDataCount} to {toDataCount} of {totalCount}{" "}
+                    entries
+                  </p>
+                ) : null}
               </div>
               <div className="search-box">
                 <input
@@ -337,8 +472,7 @@ const Unit = () => {
                       </td>
                       <td data-label="Action">
                         <Dropdown>
-                        <div className="d-inline-block menu-dropdown custom-dropdown">
-
+                          {/* <div className="d-inline-block menu-dropdown custom-dropdown"> */}
                           <Dropdown.Toggle id="dropdown-basic">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -373,7 +507,7 @@ const Unit = () => {
                               Edit
                             </Dropdown.Item>
                             <Dropdown.Item
-                              onClick={() => console.log("Delete")}
+                              onClick={() => handleDeleteClick(unit)}
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -388,7 +522,7 @@ const Unit = () => {
                               Delete
                             </Dropdown.Item>
                           </Dropdown.Menu>
-                          </div>
+                          {/* </div> */}
                         </Dropdown>
                       </td>
                     </tr>
@@ -506,6 +640,27 @@ const Unit = () => {
               </Button>
               <Button variant="primary" onClick={handleEditSave}>
                 Save Changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          <Modal
+            show={showDeleteModal}
+            onHide={() => setShowDeleteModal(false)}
+            centered
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Confirm Delete</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Are you sure you want to delete this unit?</Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant="secondary"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button variant="danger" onClick={handleDeleteConfirm}>
+                Delete
               </Button>
             </Modal.Footer>
           </Modal>
