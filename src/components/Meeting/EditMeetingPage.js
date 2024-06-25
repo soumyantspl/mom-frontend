@@ -43,7 +43,7 @@ const EditMeetingPage = () => {
         <div className="row">
           <div className="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 detail-col">
             <div className="meeting-header-text">
-              <h4>Meeting Details</h4>
+              <h4>Edit Meeting Details</h4>
             </div>
             <EditMeeting />
           </div>
