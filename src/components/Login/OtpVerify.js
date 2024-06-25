@@ -161,15 +161,14 @@ const OtpVerify = () => {
     //   errors.roomId = constantMessages.roomRequired;
     //   setErrors(errors);
     // }
-    console.log(e.target.value)
+    console.log(e.target.value);
     if (!e.target.value) {
       errors.message = "OTP is required";
     } else if (isNaN(e.target.value)) {
       errors.message = "OTP must be a number";
     }
-    console.log(errors)
-      setErrors(errors);
-    
+    console.log(errors);
+    setErrors(errors);
   };
 
   const fieldValidationCheck = (e) => {
@@ -290,7 +289,7 @@ const OtpVerify = () => {
                   {errors.message && (
                     <span className="error-message">{errors.message}</span>
                   )}
-{/* 
+                  {/* 
                   {authData.isOtpProcessed && authData.isSuccess ? (
                     <Alert
                       status={authData.isSuccess}
@@ -331,8 +330,15 @@ const OtpVerify = () => {
                         />
                       </svg>
                       <span
+                        // onClick={() => {
+
+                        //   dispatch(updateIsSuccess(false));
+                        // }}
+
                         onClick={() => {
-                          dispatch(updateIsSuccess(false));
+                          if (!authData.loading) {
+                            dispatch(updateIsSuccess(false));
+                          }
                         }}
                       >
                         Back to Sign In

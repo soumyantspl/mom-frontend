@@ -278,6 +278,7 @@ const LogInByPassword = (props) => {
                   <div className="set-pwd">
                     {/* <Link to="/set-password" > Forgot Password ?</Link> */}
                     <button
+                      disabled={authData.loading}
                       type="submit"
                       className="signin-btn2"
                       onClick={() => setIsSetPassword(true)}
@@ -305,6 +306,7 @@ const LogInByPassword = (props) => {
                 </a> */}
                 {!authData.loading ? (
                   <button
+                  disabled={authData.loading}
                     className="signin-btn1"
                     type="submit"
                     onClick={() => setIsSetPassword(false)}
@@ -317,8 +319,8 @@ const LogInByPassword = (props) => {
 
                 <div className="account">Don't have an account ?</div>
 
-                <Link to="/sign-up">
-                  <button className="signup-btn">Sign Up</button>
+                <Link to={!authData.loading?"/sign-up":"#"}>
+                  <button   disabled={true} className="signup-btn">Sign Up</button>
                 </Link>
 
                 <Link to="/login">
@@ -338,7 +340,9 @@ const LogInByPassword = (props) => {
                     </svg>
                     <span
                       onClick={() => {
-                        dispatch(updateIsSuccess(false));
+                        if(!authData.loading){
+                          dispatch(updateIsSuccess(false));
+                        }
                       }}
                     >
                       Back to Sign In

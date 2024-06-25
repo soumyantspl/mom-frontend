@@ -443,7 +443,11 @@ const AddAgendas = () => {
               {agendaData.length !== 0
                 ? agendaData.map((agenda, index) => {
                     return (
+                      <>
+                       <br></br>
+                   
                       <div className="agenda-background">
+                       
                         <h2>
                           <button
                             className=""
@@ -583,6 +587,7 @@ const AddAgendas = () => {
                           </Collapse>
                         </div>
                       </div>
+                      </>
                     );
                   })
                 : null}
@@ -647,7 +652,7 @@ const AddAgendas = () => {
               //   Submit
               // </Button>
               <button className="create-meeting-button Mom-btn" type="submit">
-                <p>Submit</p>
+                {stateData.isMeetingDataUpdate?<p>Update </p>:<p>Save </p>}
               </button>
             ) : (
               <LoaderButton />

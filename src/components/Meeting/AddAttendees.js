@@ -652,7 +652,7 @@ const AddAttendees = (props) => {
               </button>
             ) : !meetingData.loading && !stateData.isMeetingDataUpdate ? (
               <button className="create-meeting-button Mom-btn" type="submit">
-                <p>Next submit</p>
+                <p>Save & Proceed</p>
               </button>
             ) : (
               <LoaderButton />

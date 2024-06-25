@@ -46,7 +46,6 @@ const MeetingList = () => {
   const [optionArray, setOptionArray] = useState(false);
   const [attendeesData, setAttendeesData] = useState([]);
 
-  const [isBack, setIsBack] = useState(false);
   const [searchData, setSearchData] = useState({
     searchKey: "",
     page: 1,
@@ -78,7 +77,7 @@ const MeetingList = () => {
     // setIsUser(isUser)
   };
 
-  //  console.log(filter);
+
   const isLogIn = false;
   useEffect(() => {
     document.title = "Meeting List";
@@ -119,6 +118,7 @@ const MeetingList = () => {
     searchData.filterData,
     meetingData.isRsvpUpdated,
     meetingData.isFetchedMeetingList,
+
   ]);
   console.log(
     "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
@@ -277,6 +277,7 @@ const MeetingList = () => {
               setfilter={setfilter}
               filterData={filterData}
               initData={searchData.filterData}
+             
             />
           ) : null}
         </div>
@@ -518,9 +519,11 @@ const MeetingList = () => {
               <Button
                 variant="primary"
                 onClick={(e) => {
+            
                   setSearchData({
                     ...searchData,
                     searchKey: "",
+                    filterData:{},
                   });
                 }}
               >

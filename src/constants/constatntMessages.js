@@ -25,13 +25,16 @@ const invalidFromHour = "Invali From Hour.";
 const invalidToHour = "Invali To Hour.";
 const invalidFromMinute = "Invali From Minute.";
 const invalidToMinute = "Invali To Minute.";
-const invalidDate="Invalid Date."
-const addAgenda="Please add agenda."
-const addAttendee="Please add attendee."
-const invalidTime="Please enter valid time."
-const cancelMeeting="Do you want to cancel this meeting ?"
-const remarksRequired="Please give remark."
+const invalidDate = "Invalid Date.";
+const addAgenda = "Please add agenda.";
+const addAttendee = "Please add attendee.";
+const invalidTime = "Please enter valid time.";
+const cancelMeeting = "Do you want to cancel this meeting ?";
+const remarksRequired = "Please give remark.";
+const meetingCreated =
+  "Meeting Details Created Successfully, Please Add Attendees.";
 module.exports = {
+  meetingCreated,
   remarksRequired,
   cancelMeeting,
   addAttendee,

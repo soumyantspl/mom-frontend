@@ -13,7 +13,7 @@ import ViewMeeting from "./ViewMeeting";
 const EditMeetingPage = () => {
   const location = useLocation();
   const stateData = location.state;
-  console.log(stateData);
+  //console.log(stateData);
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
   const meetingData = useSelector((state) => state.meeting);
@@ -22,7 +22,9 @@ const EditMeetingPage = () => {
   useEffect(() => {
     console.log("use effect------------------------------------");
     console.log(stateData);
-    dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
+    if(stateData?.meetingId){
+    dispatch(getSingleMeetingDetails(stateData?.meetingId, accessToken));
+    }
     // dispatch()
 
     return () => {
@@ -33,6 +35,7 @@ const EditMeetingPage = () => {
   }, []);
   return (
     <>
+     {!stateData?.meetingId ? <Navigate to="/meeting-list" /> : null}
       <Header />
       <MeetingHeader />
       <Sidebar />
