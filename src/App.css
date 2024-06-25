@@ -2109,3 +2109,13 @@ input[type="number"] {
   z-index: 0;
   color: #fff !important;
 }
+.loader-cont{
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  position:absolute;
+  height: 200px;
+  left: 0;
+  padding: 40px 0;
+}

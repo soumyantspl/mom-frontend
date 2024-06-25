@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../Common/Header/Header";
 import Sidebar from "../../Common/Sidebar/Sidebar";
 import MeetingHeader from "../../Common/Header/MeetingHeader";
 import { ToastContainer, toast } from "react-toastify";
-const [isLoading, setIsLoading] = useState(false);
+
 // const department = () => {};
 
 const Department = () => {
