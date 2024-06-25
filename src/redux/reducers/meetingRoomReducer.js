@@ -39,7 +39,7 @@ import {
           isSuccess: action.payload.success,
         };
   
-     
+   
       default:
         return state;
     }

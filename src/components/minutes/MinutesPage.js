@@ -9,6 +9,7 @@ import { useNavigate, Navigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getCreateMeetingStep,
+  getSingleMeetingAgendaFullDetails,
   getSingleMeetingDetails,
   unSetSingleMeetingDetails,
   updateStep,
@@ -34,13 +35,13 @@ const MinutesPage = () => {
      
         console.log("use effect-------------------------------22-----");
       console.log(stateData);
-      dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
+      dispatch(getSingleMeetingAgendaFullDetails(stateData.meetingId, accessToken));
       // dispatch()
   
       return () => {
         console.log("return useeffect--------------->>>>>>>>>>>>>>");
   
-        dispatch(unSetSingleMeetingDetails);
+       // dispatch(unSetSingleMeetingDetails);
       };
     }, []);
   return (

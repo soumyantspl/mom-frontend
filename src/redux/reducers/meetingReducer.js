@@ -16,7 +16,8 @@ import {
   SET_CREATE_NEW_MEETING_PAGE,
   UNSET_SINGLE_MEETING_DETAILS,
   UPDATE_STEP,
-  UPDATE_FETCH_MEETING_LIST_STATUS
+  UPDATE_FETCH_MEETING_LIST_STATUS,
+  UPDATE_FETCH_MEETING_WITH_AGENDA_STATUS
 } from "../actions/meetingActions/actionTypes";
 
 const initialObject = {
@@ -37,7 +38,8 @@ const initialObject = {
   isViewMeetingPage:false,
   isNewMeetingPage:false,
   isUpdateStep:false,
-  isFetchedMeetingList:false
+  isFetchedMeetingList:false,
+  singleMeetingWithAgendaDetails:null
 };
 
 export const meetingReducer = (state = initialObject, action) => {
@@ -196,6 +198,16 @@ export const meetingReducer = (state = initialObject, action) => {
                 ...state,
                 isFetchedMeetingList:action.payload
               }
+
+              case UPDATE_FETCH_MEETING_WITH_AGENDA_STATUS:
+                return {
+                  ...state,
+                  loading: false,
+                  message: action.payload.message,
+                  isSuccess: action.payload.success,
+                  singleMeetingWithAgendaDetails: action.payload.data,
+                  meetingId:action.payload.meetingId,
+                }
     default:
       return state;
   }

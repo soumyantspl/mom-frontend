@@ -18,6 +18,7 @@ import {
   UNSET_SINGLE_MEETING_DETAILS,
   UPDATE_STEP,
   UPDATE_FETCH_MEETING_LIST_STATUS,
+  UPDATE_FETCH_MEETING_WITH_AGENDA_STATUS
 } from "./actionTypes";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -443,6 +444,17 @@ export const getSingleMeetingDetails = (meetingId, accessToken) => {
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
+        toast.error(err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -558,6 +570,55 @@ export const processCancelMeeting = (meetingId, bodyPayload, accessToken) => {
 export const updateFetchMeetingListStatus = (data) => {
   return {
     type: UPDATE_FETCH_MEETING_LIST_STATUS,
+    payload: data,
+  };
+};
+
+
+export const getSingleMeetingAgendaFullDetails = (meetingId, accessToken) => {
+  return (dispatch) => {
+    dispatch(makeRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/viewMeetingAgendaWithMinutes/${meetingId}`;
+    const headerObject = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: accessToken,
+      },
+    };
+    console.log("webApiUrl----------------", webApiUrl);
+    console.log("accessToken------------>>>>>", accessToken);
+
+    axios
+      .get(webApiUrl, headerObject)
+      .then((result) => {
+        console.log("result------------------------->>>>>>>", result);
+        const resData = result.data;
+
+        dispatch(setSingleMeetingAgendaFullDetails({ data: resData.data, meetingId }));
+      })
+      .catch((err) => {
+        console.log("err------------------------->>>>>>>", err);
+        dispatch(failRequest(err.message));
+        toast.error(err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
+      
+      });
+  };
+};
+
+
+export const setSingleMeetingAgendaFullDetails = (data) => {
+  return {
+    type: UPDATE_FETCH_MEETING_WITH_AGENDA_STATUS,
     payload: data,
   };
 };
