@@ -13,10 +13,11 @@ import {
   unSetSingleMeetingDetails,
   updateStep,
 } from "../../redux/actions/meetingActions/MeetingAction";
-import CreateMinutes from "./CreateMinutes";
+// import CreateMinutes from "./CreateMinutes";
 import ViewMinutes from "./ViewMinutes";
 import { useLocation } from "react-router-dom";
 import "./minutes.css"
+import CreateMinutes from "./CreateMinutes";
 const MinutesPage = () => {
     const location = useLocation();
     const stateData = location.state;

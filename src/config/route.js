@@ -33,7 +33,6 @@ import ViewMeeting from "../components/Meeting/ViewMeeting";
 import { ToastContainer, toast } from "react-toastify";
 import ViewMeetingDetails from "../components/Meeting/ViewMeetingDetails";
 import EditMeetingPage from "../components/Meeting/EditMeetingPage";
-import CreateMinutes from "../components/Minutes/CreateMinutes";
 import MinutesPage from "../components/Minutes/MinutesPage";
 
 const PrivateRoutes = () => {
@@ -66,7 +65,7 @@ const MainRoute = () => {
             <Route exact path="/designation" element={<Designation />} />
             <Route exact path="/create-meeting" element={<MeetingPage />} />
             <Route exact path="/edit-meeting" element={<EditMeetingPage />} />
-            <Route exact path="/write-minutes" element={<MinutesPage />} />
+            {/* <Route exact path="/write-minutes" element={<MinutesPage />} /> */}
             <Route
               exact
               path="/view-meeting-details"
