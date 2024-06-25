@@ -79,18 +79,18 @@ const ViewMeeting = (props) => {
       {/* <Header />
           <MeetingHeader />
           <Sidebar /> */}
-      {(meetingData.step + 1 === 1 && !meetingData.singleMeetingDetails) || (meetingData.isNewMeetingPage === true && !meetingData.singleMeetingDetails)  ? (
+      {(meetingData.step + 1 === 1 && !meetingData.singleMeetingDetails) ||
+      (meetingData.isNewMeetingPage === true &&
+        !meetingData.singleMeetingDetails) ? (
         // {!meetingData.isLoading && meetingData.isNewMeetingPage ? (
         <form className="mt-2 details-form details-form-right">
           <div className="form-group mb-2">
             <div className="row">
-            <NoDataFound dataType={"meeting"}/>
+              <NoDataFound dataType={"meeting"} />
             </div>
           </div>
         </form>
-      ) : !meetingData.loading &&
-        meetingData.singleMeetingDetails 
-         ? (
+      ) : !meetingData.loading && meetingData.singleMeetingDetails ? (
         <form className="mt-2 details-form details-form-right">
           <div className="form-group mb-2">
             <div className="row">
@@ -198,7 +198,15 @@ const ViewMeeting = (props) => {
                 </div>
               </div>
             </div>
-          ) : null}
+          ) : (
+            <form className="mt-2 details-form details-form-right">
+              <div className="form-group mb-2">
+                <div className="row">
+                  <NoDataFound dataType={"attendee"} />
+                </div>
+              </div>
+            </form>
+          )}
           {meetingData.singleMeetingDetails.agendasDetail.length !== 0 ? (
             <div className="form-group agenda">
               <label className="mt-3 mb-3">
@@ -263,7 +271,15 @@ const ViewMeeting = (props) => {
                   }
                 )}
             </div>
-          ) : null}
+          ) : (
+            <form className="mt-2 details-form details-form-right">
+              <div className="form-group mb-2">
+                <div className="row">
+                  <NoDataFound dataType={"agenda"} />
+                </div>
+              </div>
+            </form>
+          )}
         </form>
       ) : meetingData.isLoading ? (
         <form className="mt-2 details-form details-form-right">

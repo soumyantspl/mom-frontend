@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
 import { Margin } from "../../../node_modules/@mui/icons-material/index";
@@ -57,7 +58,7 @@ const AddAgendas = () => {
     if (stateData.isMeetingDataUpdate || meetingData.isUpdateStep) {
       document.title = "Update Meeting: Meeting Plus";
       setAgendaData(
-        meetingData.singleMeetingDetails.agendasDetail.map((item) => {
+        meetingData?.singleMeetingDetails?.agendasDetail?.map((item) => {
           item.uid = Math.floor(100000 + Math.random() * 900000);
           return item;
         })
@@ -66,8 +67,10 @@ const AddAgendas = () => {
     // dispatch(setCreateNewMeetingPage(true))
   }, []);
 
-  const submitAgendasDetails = (e) => {
-    e.preventDefault();
+  const submitAgendasDetails = (isSendNotification) => {
+   
+  //  e.preventDefault();
+    console.log(isSendNotification)
     if (agendaData.length === 0) {
       const newErrors = validateForm(formData);
       setErrors(newErrors);
@@ -101,7 +104,13 @@ const AddAgendas = () => {
       };
       console.log(payload);
       dispatch(
-        updateMeetingDetails(meetingId, payload, accessToken, "addAgenda")
+        updateMeetingDetails(
+          meetingId,
+          payload,
+          accessToken,
+          "addAgenda",
+          stateData.isMeetingDataUpdate
+        )
       );
       //setStep(3);
     }
@@ -257,7 +266,7 @@ const AddAgendas = () => {
   return (
     <form
       className="mt-2 details-form no-padding-2"
-      onSubmit={submitAgendasDetails}
+     // onSubmit={submitAgendasDetails}
     >
       <div className="inner-detail-form">
         <div className="form-group agenda">
@@ -440,40 +449,39 @@ const AddAgendas = () => {
                 </div>
               </div>
 
-              {agendaData.length !== 0
-                ? agendaData.map((agenda, index) => {
+              {agendaData?.length !== 0
+                ? agendaData?.map((agenda, index) => {
                     return (
                       <>
-                       <br></br>
-                   
-                      <div className="agenda-background">
-                       
-                        <h2>
-                          <button
-                            className=""
-                            onClick={() => setOpen(!open)}
-                            aria-controls="example-collapse-text"
-                            aria-expanded={open}
-                            type="button"
-                          >
-                            Agenda {index + 1}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => onRemoveAgenda(agenda.uid)}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="23"
-                              height="23"
-                              fill="#0564f3"
-                              className="bi-minus-circle bi bi-dash-circle"
-                              viewBox="0 0 16 16"
+                        <br></br>
+
+                        <div className="agenda-background">
+                          <h2>
+                            <button
+                              className=""
+                              onClick={() => setOpen(!open)}
+                              aria-controls="example-collapse-text"
+                              aria-expanded={open}
+                              type="button"
                             >
-                              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                              <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
-                            </svg>
-                            {/* <svg
+                              Agenda {index + 1}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => onRemoveAgenda(agenda.uid)}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="23"
+                                height="23"
+                                fill="#0564f3"
+                                className="bi-minus-circle bi bi-dash-circle"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
+                              </svg>
+                              {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="23"
                 height="23"
@@ -484,109 +492,111 @@ const AddAgendas = () => {
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
                 <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
               </svg> */}
-                          </button>
-                        </h2>
-                        <div className="open-div">
-                          <Collapse in={open}>
-                            <div>
-                              <div className="form-group">
-                                <div className="row">
-                                  <div className="col-md-4">
-                                    <label className="mb-1">Agenda Title</label>
-                                  </div>
-                                  <div className="col-md-8">
-                                    <input
-                                      type="text"
-                                      placeholder="Enter agenda title here"
-                                      name="title"
-                                      value={agenda.title}
-                                      //  readonly={true}
-                                      onChange={(e) =>
-                                        handleChange(e, agenda.uid)
-                                      }
-                                      // onBlur={
-                                      //   validateAgendaTitle
-                                      // }
-                                      autoComplete="off"
-                                    />
+                            </button>
+                          </h2>
+                          <div className="open-div">
+                            <Collapse in={open}>
+                              <div>
+                                <div className="form-group">
+                                  <div className="row">
+                                    <div className="col-md-4">
+                                      <label className="mb-1">
+                                        Agenda Title
+                                      </label>
+                                    </div>
+                                    <div className="col-md-8">
+                                      <input
+                                        type="text"
+                                        placeholder="Enter agenda title here"
+                                        name="title"
+                                        value={agenda.title}
+                                        //  readonly={true}
+                                        onChange={(e) =>
+                                          handleChange(e, agenda.uid)
+                                        }
+                                        // onBlur={
+                                        //   validateAgendaTitle
+                                        // }
+                                        autoComplete="off"
+                                      />
 
-                                    {/* {errors.title ? (
+                                      {/* {errors.title ? (
                       <span className="error-message">{errors.title}</span>
                     ):null} */}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
 
-                              <div className="form-group">
-                                <div className="row">
-                                  <div className="col-md-4">
-                                    <label className="mb-1">
-                                      What are the topic to discuss ?
-                                    </label>
-                                  </div>
-                                  <div className="col-md-8">
-                                    <textarea
-                                      name="topic"
-                                      value={agenda.topic}
-                                      onChange={(e) =>
-                                        handleChange(e, agenda.uid)
-                                      }
-                                      // onChange={handleChange}
-                                      // onBlur={() => {
-                                      //   props.agendaData(formData);
-                                      // }}
-                                      autoComplete="off"
-                                      placeholder="Enter issue to discuss..."
-                                      id=""
-                                      cols="56"
-                                      rows="4"
-                                    ></textarea>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="form-group m-0">
-                                <div className="row">
-                                  <div className="col-md-4">
-                                    <label className="mb-1">
-                                      How long will this agenda item take to
-                                      discuss?
-                                    </label>
-                                  </div>
-                                  <div className="col-md-8">
-                                    <div className="time-taken">
-                                      <input
-                                        // max="360"
-                                        // min="0"
-                                        name="timeLine"
-                                        value={agenda.timeLine}
+                                <div className="form-group">
+                                  <div className="row">
+                                    <div className="col-md-4">
+                                      <label className="mb-1">
+                                        What are the topic to discuss ?
+                                      </label>
+                                    </div>
+                                    <div className="col-md-8">
+                                      <textarea
+                                        name="topic"
+                                        value={agenda.topic}
                                         onChange={(e) =>
                                           handleChange(e, agenda.uid)
                                         }
                                         // onChange={handleChange}
-                                        // onBlur={
-                                        //   validateAgendaTime
-                                        // }
-                                        // autoComplete="off"
-                                        required="required"
-                                        type="number"
-                                        autocomplete="off"
-                                      />
-                                      <div className="minute_box">mins</div>
+                                        // onBlur={() => {
+                                        //   props.agendaData(formData);
+                                        // }}
+                                        autoComplete="off"
+                                        placeholder="Enter issue to discuss..."
+                                        id=""
+                                        cols="56"
+                                        rows="4"
+                                      ></textarea>
                                     </div>
+                                  </div>
+                                </div>
 
-                                    {/* {props.errorData.index===props.agenda.index && props.errorData.time && ( 
+                                <div className="form-group m-0">
+                                  <div className="row">
+                                    <div className="col-md-4">
+                                      <label className="mb-1">
+                                        How long will this agenda item take to
+                                        discuss?
+                                      </label>
+                                    </div>
+                                    <div className="col-md-8">
+                                      <div className="time-taken">
+                                        <input
+                                          // max="360"
+                                          // min="0"
+                                          name="timeLine"
+                                          value={agenda.timeLine}
+                                          onChange={(e) =>
+                                            handleChange(e, agenda.uid)
+                                          }
+                                          // onChange={handleChange}
+                                          // onBlur={
+                                          //   validateAgendaTime
+                                          // }
+                                          // autoComplete="off"
+                                          required="required"
+                                          type="number"
+                                          autocomplete="off"
+                                        />
+                                        <div className="minute_box">mins</div>
+                                      </div>
+
+                                      {/* {props.errorData.index===props.agenda.index && props.errorData.time && ( 
                   <span className="error-message">
                     {props.errorData.time}
                   </span>
                  )} */}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          </Collapse>
+                            </Collapse>
+                          </div>
                         </div>
-                      </div>
                       </>
                     );
                   })
@@ -636,34 +646,43 @@ const AddAgendas = () => {
             ) : null} */}
 
             <button
-               className="btn-light"
+              className="btn-light"
               onClick={(e) => dispatch(updateStep(1, true))}
             >
               <p>Back</p>
             </button>
             {!meetingData.loading ? (
-              // <Button
-              //   variant="primary"
-              //    class="btn-primary"
-              //   type="submit"
+              <>
+                {stateData.isMeetingDataUpdate ? (
+                  <button
+                    className="create-meeting-button Mom-btn"
+                    type="submit"
+                  >
+                    <p>Update </p>
+                  </button>
+                ) : (
+                  <>
+                    <Dropdown>
+                      <Dropdown.Toggle
+                        variant="success"
+                        id="dropdown-basic"
+                      >
+                        Save
+                      </Dropdown.Toggle>
 
-              //  // onClick={(e) => dispatch(loadCreateMeeting(1))}
-              // >
-              //   Submit
-              // </Button>
-              <button className="create-meeting-button Mom-btn" type="submit">
-                {stateData.isMeetingDataUpdate?<p>Update </p>:<p>Save </p>}
-              </button>
+                      <Dropdown.Menu>
+                        <Dropdown.Item type="submit" onClick={()=>submitAgendasDetails(false)}>Save</Dropdown.Item>
+                        <Dropdown.Item type="submit" onClick={()=>submitAgendasDetails(true)}>
+                          Save and Notification
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </>
+                )}
+              </>
             ) : (
               <LoaderButton />
             )}
-            {/* <Button
-                variant="primary"
-                class="btn-primary"
-                onClick={(e) => dispatch(loadCreateMeeting(1))}
-              >
-                Back
-              </Button> */}
           </div>
           <div></div>
         </div>

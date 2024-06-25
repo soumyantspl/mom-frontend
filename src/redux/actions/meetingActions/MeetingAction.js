@@ -341,7 +341,8 @@ export const updateMeetingDetails = (
   meetingId,
   bodyPayload,
   accessToken,
-  isFrom,isUpdate
+  isFrom,
+  isUpdate
 ) => {
   return (dispatch) => {
     dispatch(makeRequest());
@@ -360,9 +361,9 @@ export const updateMeetingDetails = (
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
         const message =
-          isFrom  === "addAttendee" && isUpdate
-            ? "Attendees added successfully"
-            :isFrom  === "addAttendee" && !isUpdate?"Attendees updated successfully"
+          isFrom  === "addAttendee" && !isUpdate
+            ? "Attendees added successfully, Please Add Agendas"
+            :isFrom  === "addAttendee" && isUpdate?"Attendees updated successfully"
             : isFrom === "addAgenda"  && !isUpdate? "Agendas added successfully"
             :  isFrom === "addAgenda"  && isUpdate? "Agendas updated successfully"
             : resData.message;

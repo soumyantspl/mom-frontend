@@ -75,7 +75,7 @@ const AddAttendees = (props) => {
       document.title = "Update Meeting: Meeting Plus";
 
       setAttendeesData(
-        meetingData.singleMeetingDetails.attendees.map(
+        meetingData.singleMeetingDetails?.attendees?.map(
           ({ rsvp, ...keepAttrs }) => keepAttrs
         )
       );
@@ -140,7 +140,7 @@ const AddAttendees = (props) => {
         meetingStatus: meetingData?.singleMeetingDetails?.meetingStatus.status,
       };
       dispatch(
-        updateMeetingDetails(meetingId, payload, accessToken, "addAttendee")
+        updateMeetingDetails(meetingId, payload, accessToken, "addAttendee",stateData.isMeetingDataUpdate)
       );
     }
     //  setStep(3);
@@ -345,7 +345,7 @@ const AddAttendees = (props) => {
         <div className="inner-detail-form">
           <label className="mb-1 people">Attendee(s)</label>
           <div className="d-flex people ">
-            {attendeesData.length > 0 ? (
+            {attendeesData?.length > 0 ? (
               <>
                 {/* <div className="people-circle-add Mom-btn pointer">
                   <svg
