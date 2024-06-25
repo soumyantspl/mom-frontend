@@ -24,7 +24,7 @@ import AddAgendas from "./AddAgendas";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const AddMeeting = (props) => {
+const EditMeeting = (props) => {
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
   const dispatch = useDispatch();
@@ -52,36 +52,41 @@ const AddMeeting = (props) => {
   const location = useLocation();
   console.log(location);
   const stateData = location.state;
+  console.log(meetingData);
   console.log(stateData);
+  console.log(stateData.isMeetingDataUpdate)
   useEffect(() => {
-    document.title = "Create Meeting: Meeting Plus";
+    console.log(" useeffect--------------->>>>>>>>>>>>>>1");
+    if(stateData.isMeetingDataUpdate){
+      document.title = "Update Meeting: Meeting Plus";
+    
+    }
 
     console.log(meetingData.checkStep);
     // if (meetingData.checkStep) {
     console.log(meetingData.checkStep);
-    if (!meetingData.isNewMeetingPage && !meetingData.isUpdateStep) {
-      console.log('ffffffffffffffffffffff')
-      dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
-    }
-if(meetingData.isSuccess || meetingData.isNewMeetingPage){
-  setFormData({
-    ...formData,
-    title: "",
-    mode: "physical",
-    location: "manual",
-    date: "",
-    link: "",
-    fromTime: "",
-    toTime: "",
-    roomId: "",
-    locationData: ""
-  });
-}
+    // if (!meetingData.isNewMeetingPage && !stateData.isMeetingDataUpdate) {
+    //   dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
+    // }
+// if(meetingData.isSuccess){
+//   setFormData({
+//     ...formData,
+//     title: "",
+//     mode: "physical",
+//     location: "manual",
+//     date: "",
+//     link: "",
+//     fromTime: "",
+//     toTime: "",
+//     roomId: "",
+//     locationData: ""
+//   });
+// }
     // }
 
     // console.log(meetingData.step);
     setStep(meetingData.step + 1);
-    if (meetingData.singleMeetingDetails && meetingData.isUpdateStep) {
+    if (meetingData.singleMeetingDetails && stateData.isMeetingDataUpdate) {
       console.log("in------------444", meetingData);
       setFormData({
         ...formData,
@@ -103,7 +108,7 @@ if(meetingData.isSuccess || meetingData.isNewMeetingPage){
           ? meetingData.singleMeetingDetails.locationDetails.location
           : "",
       });
-      if (meetingData.singleMeetingDetails.locationDetails.isMeetingRoom) {
+      if (meetingData.singleMeetingDetails.locationDetails.isMeetingRoom && meetingData.step===1||3) {
         const payload = {
           limit: 1000,
           page: 1,
@@ -114,7 +119,24 @@ if(meetingData.isSuccess || meetingData.isNewMeetingPage){
         dispatch(getMeetingRoomList(payload, accessToken));
       }
     }
-  }, [meetingData.step]);
+    return () => {
+      console.log("return useeffect--------------->>>>>>>>>>>>>>");
+
+    
+    setFormData({
+      ...formData,
+      title: "",
+      mode: "physical",
+      location: "manual",
+      date: "",
+      link: "",
+      fromTime: "",
+      toTime: "",
+      roomId: "",
+      locationData: ""
+    });
+  }
+  }, [meetingData.step,meetingData.singleMeetingDetails,meetingData.isSuccess]);
 
   const submitMeetingDetails = (e) => {
     console.log("submitMeetingDetails------------------------------");
@@ -132,7 +154,7 @@ if(meetingData.isSuccess || meetingData.isNewMeetingPage){
         locationDetails["location"] = formData.locationData;
       }
 
-      if (meetingData.singleMeetingDetails) {
+      if (meetingData.singleMeetingDetails || stateData.isMeetingDataUpdate) {
         const meetingId = meetingData?.singleMeetingDetails?._id;
         const payload = {
           date: new Date(formData.date),
@@ -143,54 +165,30 @@ if(meetingData.isSuccess || meetingData.isNewMeetingPage){
           toTime: formData.toTime,
           title: formData.title,
           link:formData.link,
-          step: 1,
-          isUpdate:stateData.isMeetingDataUpdate?true:false,
+          step:1,
+          isUpdate:stateData.isMeetingDataUpdate && meetingData.singleMeetingDetails.step===3?true:false,
         };
         console.log(payload);
-      
         dispatch(
           updateMeetingDetails(meetingId, payload, accessToken, "updateMeeting")
         );
-      } else {
-        const payload = {
-          date: new Date(formData.date),
-          locationDetails,
-          organizationId: userData.organizationId,
-          mode: formData.mode.toUpperCase(),
-          fromTime: formData.fromTime,
-          toTime: formData.toTime,
-          title: formData.title,
-          link:formData.link
-        };
-        console.log(payload);
-        dispatch(createMeetingDetails(payload, accessToken));
-       
+      } 
+
+      if (meetingData.isSuccess) {
+        setStep(2);
       }
-
-      // if (meetingData.isSuccess) {
-      //   setStep(2);
-      // }
-
-      if(meetingData.isUpdateStep){
-      //  dispatch(updateStep(1,false))
-      }
-
-
       console.log("Form submitted successfully!");
     } else {
       console.log(`Form submission failed
        due to validation errors.`);
     }
-    dispatch(updateStep(1,true))
-  
   };
 
-  console.log(step);
-const updateState=(step)=>{
-setStep(step)
-}
+ // console.log(step);
+
   const handleChange = (e) => {
     dispatch(updateIsCreateMeetingProcessed(false));
+   // dispatch(updateStep(1))
     setErrors({});
     //  dispatch(updateOtpProcessed(false));
     //  console.log("9999999999999999999999999999999999999", authData);
@@ -439,14 +437,14 @@ setStep(step)
   console.log(meetingData);
   return (
     <div className="mt-2 details-form add-meetings">
-      {meetingData.step === 3 && !meetingData.isNewMeetingPage ? (
+      {/* {meetingData.step === 3 && !meetingData.isNewMeetingPage && !meetingData.isMeetingDataUpdate ? (
         <Navigate to="/meeting-list" />
-      ) : null}
+      ) : null} */}
       <CommonStepper step={meetingData.isNewMeetingPage?1:meetingData.step} />
       <br></br>
       {/* {!meetingData.loading ? (
         <> */}
-      {meetingData.step + 1 == 1 || meetingData.isNewMeetingPage === true ? (
+      {meetingData.step + 1 == 1 || meetingData.isNewMeetingPage === true  || (stateData.isMeetingDataUpdate && meetingData.step === 3 )? (
         <form className="mt-0 p-0 details-form" onSubmit={submitMeetingDetails}>
           <div className="inner-detail-form">
             <div className="mb-3">
@@ -687,6 +685,7 @@ setStep(step)
                 </div>
               </div>
             </div>
+          
             {/* <Button
                   variant="primary"
                   type="submit"
@@ -695,8 +694,8 @@ setStep(step)
                 >
                   Next
                 </Button> */}
- <div className="button-outer">
-            {!meetingData.loading && !meetingData.isUpdateStep ? (
+  <div className="button-outer">
+  {!meetingData.loading && stateData.isMeetingDataUpdate  ? (
               // <div className="create-meeting-button">
               //   <Button
               //     variant="primary"
@@ -708,7 +707,7 @@ setStep(step)
               //   </Button>
               <>
                 <></>
-               
+              
                   {/* {meetingData.isCreateMeetingProcessed &&
                   meetingData.step === 1 ? (
                     <div className="mb-3">
@@ -725,40 +724,44 @@ setStep(step)
                       </div>
                     </div>
                   ) : null} */}
-
+ 
                   <button
                     className="create-meeting-button Mom-btn"
                     type="submit"
                   >
-                    <p>Next</p>
+                    <p>Update</p>
                   </button>
                
               </>
-            ) : !meetingData.loading && meetingData.isUpdateStep ? (
+            ) :  (
+              // </div>
+              <LoaderButton />
+            )}
+            
+            {!meetingData.loading && stateData.isMeetingDataUpdate  ? (
+             <button
+                    className="create-meeting-button Mom-btn"
+                    onClick={(e) => dispatch(updateStep(1))}
+                  >
+                    <p>Next</p>
+                  </button>
+            ):!meetingData.loading && !stateData.isMeetingDataUpdate  ?(
               <button
               className="create-meeting-button Mom-btn"
               type="submit"
             >
-              <p>Update</p>
-            </button>
-            )
-            :(
-              // </div>
-              <LoaderButton />
-            )}
-{!meetingData.loading && meetingData.isUpdateStep ? (
-              <button
-              className="create-meeting-button Mom-btn"
-              onClick={(e) => dispatch(updateStep(1,true))}
-            >
               <p>Next</p>
             </button>
-            ):null}
-
-            </div>
+            ):meetingData.loading && !stateData.isMeetingDataUpdate  ?(
+              <LoaderButton />
+            ):null
+            
+            
+            }
+                  </div>
           </div>
         </form>
-      ) : meetingData.step + 1 === 2 && !meetingData.isNewMeetingPage  ? (
+      ) : meetingData.step + 1 === 2 && !meetingData.isNewMeetingPage ? (
         <>
           <AddAttendees />
         </>
@@ -782,4 +785,4 @@ setStep(step)
   );
 };
 
-export default AddMeeting;
+export default EditMeeting;

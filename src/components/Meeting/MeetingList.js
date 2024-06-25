@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import "./style/meetings-css.css";
 import {
   fetchMeetingList,
+  processCancelMeeting,
   updateRsvp,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import LoaderButton from "../Common/LoaderButton";
@@ -24,6 +25,9 @@ import AttendeesModal from "./AttendeesModal";
 import { customName } from "../../helpers/commonHelpers";
 import NoDataFound from "../Common/NoDataFound";
 import AttendeesRsvpModal from "./AttendeesRsvpModal";
+import CommonModal from "../Common/CommonModal";
+import { cancelMeeting } from "../../constants/constatntMessages";
+import CancelMeetingModal from "./CancelMeetingModal";
 const MeetingList = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const accessToken = localStorage.getItem("accessToken");
@@ -33,11 +37,11 @@ const MeetingList = () => {
   const meetingData = useSelector((state) => state.meeting);
   const loginUserData = useSelector((state) => state.user);
   const [filter, setfilter] = useState(false);
-  const [isUser, setIsUser] = useState(false);
+  const [meetingId, setMeetingId] = useState(null);
   const [rsvpCount, setRsvpCount] = useState("");
-
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isRsvpModalOpen, setIsRsvpModalOpen] = useState(false);
-
+  const [remarks, setRemarks] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [optionArray, setOptionArray] = useState(false);
   const [attendeesData, setAttendeesData] = useState([]);
@@ -47,7 +51,7 @@ const MeetingList = () => {
     searchKey: "",
     page: 1,
     limit: 5,
-    order: 1,
+    order: -1,
     filterData: {},
   });
 
@@ -60,9 +64,11 @@ const MeetingList = () => {
   };
 
   const setModalStatus = (value, attendeesData) => {
-    setIsModalOpen(value);
-    setAttendeesData([...attendeesData]);
-    // setIsUser(isUser)
+    if (attendeesData.length !== 0) {
+      setIsModalOpen(value);
+      setAttendeesData([...attendeesData]);
+      // setIsUser(isUser)
+    }
   };
 
   const setRsvpModalStatus = (value, attendeesData, rsvpCount) => {
@@ -112,12 +118,25 @@ const MeetingList = () => {
     searchData.limit,
     searchData.filterData,
     meetingData.isRsvpUpdated,
+    meetingData.isFetchedMeetingList,
   ]);
   console.log(
     "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
     meetingData
   );
+  const handleCancelMeeting = (remarks) => {
+    console.log("ccccccccccc", meetingId, remarks);
 
+    dispatch(processCancelMeeting(meetingId, { remarks }, accessToken));
+    setMeetingId(null);
+    setIsCancelModalOpen(false);
+  };
+
+  const handleCancelModal = (meetingId) => {
+    console.log("gggggggggggggg", meetingId);
+    setMeetingId(meetingId);
+    setIsCancelModalOpen(true);
+  };
   const handleChange = (e) => {
     // console.log("on change------------------->>>>>>", e.target);
     const { name, value } = e.target;
@@ -145,6 +164,7 @@ const MeetingList = () => {
   const totalOption = Math.round(meetingData.totalCount / 5 + 0.5);
   const totalPage = Math.round(meetingData.totalCount / searchData.limit + 0.5);
   const totalPageArray = Array(totalPage).fill();
+  console.log(totalPageArray);
   // console.log(
   //   "totalOption-------------------->",
   //   meetingData.totalCount / searchData.limit + 0.5,
@@ -183,11 +203,11 @@ const MeetingList = () => {
   };
 
   const formatDateTimeFormat = (date) => {
-    //  console.log(date);
+    console.log(date);
     const sourceDate = new Date(date).toDateString();
     const sourceTime = new Date(date).toLocaleTimeString();
     // The above yields e.g. 'Mon Jan 06 2020'
-
+    console.log(sourceTime);
     const [, month, day, year] = sourceDate.split(" ");
     const formattedDate = [day, month, year].join(" ");
     // console.log(formattedDate);
@@ -202,13 +222,13 @@ const MeetingList = () => {
   };
 
   const formatTimeFormat = (time) => {
-    console.log(time)
+    console.log(time);
     const timeArray = time.split(":");
-    console.log(timeArray)
+    console.log(timeArray);
     let session = "AM";
     let hour = parseInt(timeArray[0]);
     let minute = parseInt(timeArray[1]);
-    console.log(hour,minute)
+    console.log(hour, minute);
     if (hour > 12) {
       session = "PM";
       hour = hour - 12;
@@ -218,7 +238,7 @@ const MeetingList = () => {
     return result;
   };
 
-   console.log("repeat------------------------", searchData);
+  console.log("repeat------------------------", searchData, isCancelModalOpen);
   return (
     <div>
       <Header />
@@ -280,7 +300,7 @@ const MeetingList = () => {
                 value={searchData.searchKey}
                 autoComplete="off"
               />
-              <svg
+              {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
                 height="16"
@@ -289,7 +309,7 @@ const MeetingList = () => {
                 viewBox="0 0 16 16"
               >
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-              </svg>
+              </svg> */}
             </div>
           </div>
           {!meetingData.loading &&
@@ -323,59 +343,61 @@ const MeetingList = () => {
                       </td>
                       <td data-label="Meeting Title">
                         {meeting.title}
+                        {meeting.attendees.length !== 0 &&
+                        !userData.isMeetingOrganiser ? (
+                          <div className="respond-button">
+                            {meeting.rsvp === "YES" ? (
+                              <button disabled className="respond-action">
+                                {" "}
+                                <>&#x2713; </>Yes
+                              </button>
+                            ) : (
+                              <button
+                                className="respond-action"
+                                onClick={() => {
+                                  dispatch(updateRsvp("YES", meeting._id));
+                                }}
+                              >
+                                {" "}
+                                Yes
+                              </button>
+                            )}
 
-                        <div className="respond-button">
-                          {meeting.rsvp === "YES" ? (
-                            <button disabled className="respond-action">
-                              {" "}
-                              <>&#x2713; </>Yes
-                            </button>
-                          ) : (
-                            <button
-                              className="respond-action"
-                              onClick={() => {
-                                dispatch(updateRsvp("YES", meeting._id));
-                              }}
-                            >
-                              {" "}
-                              Yes
-                            </button>
-                          )}
+                            {meeting.rsvp === "NO" ? (
+                              <button disabled className="respond-action">
+                                {" "}
+                                <>&#x2713; </>No
+                              </button>
+                            ) : (
+                              <button
+                                className="respond-action"
+                                onClick={() => {
+                                  dispatch(updateRsvp("NO", meeting._id));
+                                }}
+                              >
+                                {" "}
+                                No
+                              </button>
+                            )}
 
-                          {meeting.rsvp === "NO" ? (
-                            <button disabled className="respond-action">
-                              {" "}
-                              <>&#x2713; </>No
-                            </button>
-                          ) : (
-                            <button
-                              className="respond-action"
-                              onClick={() => {
-                                dispatch(updateRsvp("NO", meeting._id));
-                              }}
-                            >
-                              {" "}
-                              No
-                            </button>
-                          )}
-
-                          {meeting.rsvp === "MAYBE" ? (
-                            <button disabled className="respond-action">
-                              {" "}
-                              <>&#x2713; </>May Be
-                            </button>
-                          ) : (
-                            <button
-                              className="respond-action"
-                              onClick={() => {
-                                dispatch(updateRsvp("MAYBE", meeting._id));
-                              }}
-                            >
-                              {" "}
-                              May Be
-                            </button>
-                          )}
-                        </div>
+                            {meeting.rsvp === "MAYBE" ? (
+                              <button disabled className="respond-action">
+                                {" "}
+                                <>&#x2713; </>May Be
+                              </button>
+                            ) : (
+                              <button
+                                className="respond-action"
+                                onClick={() => {
+                                  dispatch(updateRsvp("MAYBE", meeting._id));
+                                }}
+                              >
+                                {" "}
+                                May Be
+                              </button>
+                            )}
+                          </div>
+                        ) : null}
                       </td>
                       <td
                         data-label="Attendees"
@@ -396,7 +418,6 @@ const MeetingList = () => {
                                 );
                               })}
                         </div>
-
                         <p className="plus-more-text m-0">
                           {meeting.attendees.length > 5
                             ? `+${meeting.attendees.length - 5} More`
@@ -426,6 +447,8 @@ const MeetingList = () => {
                               ? "badge bg-success bg-opacity-10 "
                               : meeting.meetingStatus.status === "closed"
                               ? "badge bg-primary bg-opacity-10 "
+                              : meeting.meetingStatus.status === "draft"
+                              ? "badge bg-secondary bg-opacity-10 "
                               : "badge bg-danger bg-opacity-10 "
                           }
                         >
@@ -447,18 +470,22 @@ const MeetingList = () => {
                         <div className="d-inline-block menu-dropdown custom-dropdown">
                           <Dropdown>
                             <MeetingDropDown
+                              meetingId={meeting._id}
                               status={meeting.meetingStatus.status}
+                              handleCancelModal={() => {
+                                handleCancelModal(meeting._id);
+                              }}
                             />
                           </Dropdown>
 
                           {/* {buttonStatus ? <VariantsExample /> : null} */}
 
-                          <div
+                          {/* <div
                             aria-labelledby="dropdownBasic1"
                             className="list-dropdown"
                           >
                             <div className="dropdown-divider"></div>
-                          </div>
+                          </div> */}
                         </div>
                       </td>
                     </tr>
@@ -486,7 +513,8 @@ const MeetingList = () => {
           ) : !meetingData.loading && meetingData.meetingList?.length === 0 ? (
             <div className="mt-2 table-box no-data-img">
               {/* <Alert message="No Data Found !" status={false} /> */}
-              <NoDataFound />
+
+              <NoDataFound dataType={"meeting"} />
               <Button
                 variant="primary"
                 onClick={(e) => {
@@ -585,7 +613,11 @@ const MeetingList = () => {
                   </button>
                 ) : null}
               </div>
-
+              <CancelMeetingModal
+                setIsModalOpen={setIsCancelModalOpen}
+                isModalOpen={isCancelModalOpen}
+                handleSubmit={handleCancelMeeting}
+              />
               <div className="right-tbl-bottom">
                 <p>Rows Per Page</p>
                 <select

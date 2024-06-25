@@ -190,13 +190,13 @@ const LogInByPassword = (props) => {
                   <h4>Welcome to Meeting Plus</h4>
                   <p>Enter email & password to logging in to your account</p>
                 </div>
-                {authData.isOtpVerifiedSuccess && authData.isOtpProcessed ? (
+                {/* {authData.isOtpVerifiedSuccess && authData.isOtpProcessed ? (
                   <Alert
                     status={authData.isSuccess}
                     message={authData.message}
                     timeoutSeconds={0}
                   />
-                ) : null}
+                ) : null} */}
                 <div className="form-group">
                   <div className="email-group">
                     <label className="mb-1">
@@ -286,13 +286,13 @@ const LogInByPassword = (props) => {
                     </button>
                   </div>
                 </div>
-                {authData.isLogInProcessed && !authData.isSuccess ? (
+                {/* {authData.isLogInProcessed && !authData.isSuccess ? (
                   <Alert
                     status={authData.isSuccess}
                     message={authData.message}
                     timeoutSeconds={0}
                   />
-                ) : null}
+                ) : null} */}
                 {/* {authData.isOtpProcessed && !authData.isSuccess ? (
                   <Alert
                     status={authData.isSuccess}

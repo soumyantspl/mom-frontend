@@ -25,6 +25,7 @@ const MeetingDropDown = (props) => {
         <Dropdown.Item href="#/action-2">
           <Link
             to="/view-meeting-details"
+            state={{ meetingId: props.meetingId,isViewMeetingPage:true}}
             style={{
               textDecoration: "none",
               color: "black",
@@ -48,6 +49,7 @@ const MeetingDropDown = (props) => {
           <Dropdown.Item href="#/action-1">
             <Link
               to="/write-minutes"
+              state={{ meetingId: props.meetingId}}
               style={{
                 textDecoration: "none",
                 color: "black",
@@ -71,10 +73,11 @@ const MeetingDropDown = (props) => {
             </Link>
           </Dropdown.Item>
         ) : null}
-        {props.status === "scheduled"||props.status === "rescheduled" ? (
+        {props.status === "scheduled"||props.status === "rescheduled"||props.status === "draft" ? (
           <Dropdown.Item href="#/action-3">
             <Link
-              to="/edit-minutes"
+              to="/edit-meeting"
+              state={{ meetingId: props.meetingId,isMeetingDataUpdate:true,step:props.step}}
               style={{
                 textDecoration: "none",
                 color: "black",
@@ -103,6 +106,7 @@ const MeetingDropDown = (props) => {
         {props.status === "scheduled"||props.status === "rescheduled" ? (
           <Dropdown.Item eventKey="4">
             <Link
+            onClick={()=>{props.handleCancelModal(props.meetingId)}}
               style={{
                 textDecoration: "none",
                 color: "black",

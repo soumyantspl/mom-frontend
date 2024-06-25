@@ -1,9 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../../Common/Header/Header";
 import Sidebar from "../../Common/Sidebar/Sidebar";
 import MeetingHeader from "../../Common/Header/MeetingHeader";
+import { ToastContainer, toast } from "react-toastify";
+const [isLoading, setIsLoading] = useState(false);
+// const department = () => {};
 
 const Department = () => {
+  //Create Department
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userId = userData._id;
+  const organizationId = userData.organizationId;
+  const accessToken = localStorage.getItem("accessToken");
+  const [departmentData, setDepartmentData] = useState({ name: "" });
+  const [formValues, setFormValues] = useState({ name: "" });
+  const [errors, setErrors] = useState({ name: "" });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setDepartmentData({
+      ...departmentData,
+      [name]: value,
+    });
+  };
+  const validate = () => {
+    let isValid = true;
+    let errors = {};
+    if (!formValues.name.trim()) {
+      if (!formValues.name.trim()) {
+        errors.name = "Unit Name is required";
+        isValid = false;
+        toast.error(errors.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: 0,
+          theme: "colored",
+          // transition: Slide,
+        });
+      }
+    }
+    setErrors(errors);
+    return isValid;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  };
   return (
     <div>
       <Header />

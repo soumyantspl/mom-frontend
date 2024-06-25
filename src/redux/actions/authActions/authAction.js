@@ -14,6 +14,8 @@ import {
   UPDATE_TIMER,
 } from "./actionTypes";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const makeRequest = () => {
   return {
@@ -50,6 +52,42 @@ export const sendOtp = (email, isSetPassword) => {
       .then((res) => {
         const resData = res.data;
         let data;
+
+        // if (resData.success) {
+        //   toast.success(message, {
+        //     position: "bottom-left",
+        //     autoClose: 3000,
+        //     hideProgressBar: false,
+        //     closeOnClick: true,
+        //     pauseOnHover: true,
+        //     draggable: true,
+        //     progress: undefined,
+        //     theme: "light",
+        //     // transition: Bounce,
+        //   });
+        //   dispatch(updateMeetingResponse(resData));
+        // } else {
+        //   toast.error(resData.message, {
+        //     position: "bottom-left",
+        //     autoClose: 3000,
+        //     hideProgressBar: false,
+        //     closeOnClick: true,
+        //     pauseOnHover: true,
+        //     draggable: true,
+        //     progress: undefined,
+        //     theme: "light",
+        //     // transition: Bounce,
+        //   });
+        //   dispatch(failRequest(resData.message));
+        // }
+
+
+
+
+
+
+
+
         if (resData.success) {
           data = {
             ...resData,
@@ -58,6 +96,17 @@ export const sendOtp = (email, isSetPassword) => {
             email,
             isSetPassword: true,
           };
+          toast.success( resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
         } else {
           data = {
             ...resData,
@@ -66,6 +115,17 @@ export const sendOtp = (email, isSetPassword) => {
             email,
             isSetPassword: false,
           };
+          toast.error( resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
         }
         if (isSetPassword) {
           dispatch(isOtpSendForSetPassword(data));
@@ -75,6 +135,17 @@ export const sendOtp = (email, isSetPassword) => {
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
+        toast.error( err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -118,17 +189,50 @@ export const verifyOtp = (payload) => {
           console.log('------------------------>>>>>>>>>>>',token)
           localStorage.setItem("accessToken", token);
           localStorage.setItem("userData", JSON.stringify(userData));
+          toast.success( resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
         } else {
           data = {
             ...resData,
             variant: "danger",
             message: resData.message,
           };
+          toast.error( resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
         }
         dispatch(isOtpVerified(data));
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
+        toast.error( err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -163,6 +267,17 @@ export const reSendOtp = (email) => {
             message: resData.message,
             email,
           };
+          toast.success( resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
         } else {
           data = {
             ...resData,
@@ -170,11 +285,33 @@ export const reSendOtp = (email) => {
             message: resData.message,
             email,
           };
+          toast.error( resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
         }
         dispatch(isOtpReSend(data));
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
+        toast.error( err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -201,17 +338,50 @@ export const setPassword = (payload) => {
             variant: "success",
             message: resData.message,
           };
+          toast.success( resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
         } else {
           data = {
             ...resData,
             variant: "danger",
             message: resData.message,
           };
+          toast.error( resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
         }
         dispatch(isPasswordSet(data));
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
+        toast.error( err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -245,17 +415,50 @@ export const logInByPassword = (payload,rememberMe) => {
             message: resData.message,
             userData
           };
+          toast.success( resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
         } else {
           data = {
             ...resData,
             variant: "danger",
             message: resData.message,
           };
+          toast.error( resData.message, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
         }
         dispatch(isLogInProcess(data));
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
+        toast.error( err.message, {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
       });
   };
 };

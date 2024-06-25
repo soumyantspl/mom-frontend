@@ -21,13 +21,21 @@ const nameRequired = "Please enter a name.";
 const invalidName = "Please enter a valid name.";
 const duplicateAttendee = "Attendee already added.";
 const deleteAttendeeMessage = "Do you want to remove ?";
-const invalidFromHour = "Invali from hour.";
-const invalidToHour = "Invali to hour.";
-const invalidFromMinute = "Invali from minute.";
-const invalidToMinute = "Invali to minute.";
+const invalidFromHour = "Invali From Hour.";
+const invalidToHour = "Invali To Hour.";
+const invalidFromMinute = "Invali From Minute.";
+const invalidToMinute = "Invali To Minute.";
 const invalidDate="Invalid Date."
 const addAgenda="Please add agenda."
+const addAttendee="Please add attendee."
+const invalidTime="Please enter valid time."
+const cancelMeeting="Do you want to cancel this meeting ?"
+const remarksRequired="Please give remark."
 module.exports = {
+  remarksRequired,
+  cancelMeeting,
+  addAttendee,
+  invalidTime,
   addAgenda,
   invalidDate,
   invalidFromHour,

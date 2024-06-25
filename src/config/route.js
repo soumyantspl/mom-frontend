@@ -31,15 +31,17 @@ import CreateMeeting from "../components/Meeting/CreateMeeting";
 import MeetingPage from "../components/Meeting/MeetingPage";
 import ViewMeeting from "../components/Meeting/ViewMeeting";
 import { ToastContainer, toast } from "react-toastify";
+import ViewMeetingDetails from "../components/Meeting/ViewMeetingDetails";
+import EditMeetingPage from "../components/Meeting/EditMeetingPage";
+// import MinutesPage from "../components/Minutes/MinutesPage";
+import MinutesPage from "../components/minutes/MinutesPage";
 
 const PrivateRoutes = () => {
   let accessToken = localStorage.getItem("accessToken");
-  const userStore = localStorage.getItem("username");
   return accessToken ? <Outlet /> : <Navigate to="/login" />;
 };
 
 const AuthRoutes = () => {
-  let accessToken = localStorage.getItem("accessToken");
   const isRememberMe = localStorage.getItem("rememberMe");
   return !isRememberMe ? <Outlet /> : <Navigate to="/meeting-list" />;
 };
@@ -47,16 +49,6 @@ const AuthRoutes = () => {
 const MainRoute = () => {
   return (
     <div>
-      {/* <Router>
-        <Routes>
-          <Route element={<PrivateRoutes/>}>
-              <Route path='/' element={<Users/>} />
-              <Route path='/products' element={<Products/>} />
-          </Route>
-          <Route path='/login' element={<Login/>}/>
-        </Routes>
-    </Router> */}
-
       <Router>
         <Routes>
           <Route element={<PrivateRoutes />}>
@@ -73,10 +65,12 @@ const MainRoute = () => {
             <Route exact path="/department" element={<Department />} />
             <Route exact path="/designation" element={<Designation />} />
             <Route exact path="/create-meeting" element={<MeetingPage />} />
+            <Route exact path="/edit-meeting" element={<EditMeetingPage />} />
+            {/* <Route exact path="/write-minutes" element={<MinutesPage />} /> */}
             <Route
               exact
               path="/view-meeting-details"
-              element={<ViewMeeting />}
+              element={<ViewMeetingDetails />}
             />
           </Route>
           <Route element={<AuthRoutes />}>
@@ -105,7 +99,7 @@ const MainRoute = () => {
           </Route>
         </Routes>
       </Router>
-      <ToastContainer className="toast-position" position="bottom-right" />
+      <ToastContainer />
     </div>
   );
 };

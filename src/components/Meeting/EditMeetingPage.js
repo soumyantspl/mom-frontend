@@ -1,32 +1,35 @@
 import Header from "../Common/Header/Header";
 import MeetingHeader from "../Common/Header/MeetingHeader";
 import Sidebar from "../Common/Sidebar/Sidebar";
-import AddMeeting from "./AddMeeting";
 import "./style/CreateMeeting.css";
-import ViewMeeting from "./ViewMeeting";
 import React, { useState ,useEffect} from "react";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import { useNavigate, Navigate, Link } from "react-router-dom";
+import { useNavigate, Navigate, Link ,useLocation} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import "./style/meetings-css.css";
-import { getCreateMeetingStep, updateStep } from "../../redux/actions/meetingActions/MeetingAction";
-const MeetingPage = () => {
+import EditMeeting from "./EditMeeting";
+import ViewEditMeeting from "./ViewEditMeeting";
+import { getSingleMeetingDetails, unSetSingleMeetingDetails } from "../../redux/actions/meetingActions/MeetingAction";
+import ViewMeeting from "./ViewMeeting";
+const EditMeetingPage = () => {
+  const location = useLocation();
+  const stateData = location.state;
+  console.log(stateData);
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
   const meetingData = useSelector((state) => state.meeting);
   const dispatch = useDispatch();
+  console.log("before use effect------------------------------------");
   useEffect(() => {
-    document.title = "Create Meeting: Meeting Plus";
-    // if (meetingData.checkStep) {
-    //   dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
-    // }
-   
-    console.log(meetingData.step);
-    return()=>{
-      dispatch(updateStep(0,false))
-    }
+    console.log("use effect------------------------------------");
+    console.log(stateData);
+    dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
+    // dispatch()
+
+    return () => {
+      console.log("return useeffect--------------->>>>>>>>>>>>>>");
+
+      dispatch(unSetSingleMeetingDetails());
+    };
   }, []);
   return (
     <>
@@ -39,7 +42,7 @@ const MeetingPage = () => {
             <div className="meeting-header-text">
               <h4>Meeting Details</h4>
             </div>
-            <AddMeeting />
+            <EditMeeting />
           </div>
           <div className="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 detail-col">
             <div className="meeting-header-text">
@@ -53,4 +56,4 @@ const MeetingPage = () => {
   );
 };
 
-export default MeetingPage;
+export default EditMeetingPage;

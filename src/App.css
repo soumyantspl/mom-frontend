@@ -95,7 +95,7 @@ textarea {
 }
 form input[type="date"],
 form input[type="time"] {
-  padding: 10px 0 10px 0px;
+  padding: 10px 5px 10px 0px;
 }
 table th,
 table td {
@@ -891,16 +891,10 @@ button.btn.btn-light {
   align-items: center;
   position: relative;
 }
-/* .filter-date::-webkit-calendar-picker-indicator {
+ /* .filter-date::-webkit-calendar-picker-indicator {
   background-color: rgb(11, 68, 238);
-  background: url(assets/images/calender.png);
   padding: 12px 12px;
-} */
-/* background: linear-gradient(
-    117deg,
-    rgba(13, 55, 180, 1) 0%,
-    rgba(118, 60, 209, 1) 59%
-  ); */
+ }  */
 .filter-inputIcon {
   position: absolute;
   bottom: 11px;
@@ -916,11 +910,26 @@ button.btn.btn-light {
   font-size: 16px;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
-  background-color: #6a76ff;
+/* input[type="date"]::-webkit-calendar-picker-indicator {
+  background: rgb(13, 55, 180);
+  background: linear-gradient(
+    117deg,
+    rgba(13, 55, 180, 1) 0%,
+    rgba(118, 60, 209, 1) 59%
+    
+  );
   padding: 11px 12px;
-}
-
+} */
+/* input[type="time"]::-webkit-calendar-picker-indicator {
+  background: rgb(13, 55, 180);
+  background: linear-gradient(
+    117deg,
+    rgba(13, 55, 180, 1) 0%,
+    rgba(118, 60, 209, 1) 59%
+    
+  );
+  padding: 11px 12px;
+} */
 .fltr-opt {
   outline: none !important;
   padding: 5px 0;
@@ -954,12 +963,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background-color: #4f2cc8;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
+/* input[type="date"]::-webkit-calendar-picker-indicator {
   background-color: #6a76ff;
   padding: 11px 12px;
-}
+} */
 .followonDate::-webkit-calendar-picker-indicator {
-  display: none !important;
+  display:block;
 }
 .followon-poupText h6 {
   font-size: 17px;
@@ -1187,15 +1196,14 @@ textarea::placeholder,
 select option {
   font-size: 14px;
 }
-input[type="date"]::-webkit-calendar-picker-indicator {
-  background: rgb(13, 55, 180);
+/* input[type="date"]::-webkit-calendar-picker-indicator {
   background: linear-gradient(
     117deg,
     rgba(13, 55, 180, 1) 0%,
     rgba(118, 60, 209, 1) 59%
   );
   padding: 11px 12px;
-}
+} */
 
 .input-date {
   position: relative;
@@ -1221,16 +1229,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   right: 12px;
 }
 
-input[type="time"]::-webkit-calendar-picker-indicator {
-  background: rgb(13, 55, 180);
-  background: linear-gradient(
-    117deg,
-    rgba(13, 55, 180, 1) 0%,
-    rgba(118, 60, 209, 1) 59%
-  );
+/* 
   padding: 11px 12px;
   font-size: 16px;
-}
+} */
 
 /* ---------------------Add Agenda--------------- */
 .inner-detail-form label {
@@ -1239,10 +1241,9 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .agenda {
-  border-top: 1px solid #cbcbcb;
+  border-top:0;
   border-top-style: dashed;
-  padding-top: 20px;
-  margin-top: 25px;
+  padding-top:0px;
   margin-bottom: 0 !important;
 }
 
@@ -1255,8 +1256,13 @@ input[type="checkbox"] {
 .agenda-box-border {
   border: 1px solid rgb(222 226 230);
   border-radius: 5px;
+  /* display: flex;
+  justify-content: center; */
 }
-
+.no-data-img{
+  display: flex;
+  justify-content: center;
+}
 .time-taken {
   display: flex;
   gap: 5px;
@@ -1326,9 +1332,8 @@ textarea {
   border-radius: 10px;
   background-color: #fff;
   padding: 20px;
-  min-height: 300px;
+  min-height: 196px;
   background-color: #fff;
-  margin-bottom: 20px;
   overflow: hidden;
 }
 
@@ -1340,6 +1345,15 @@ textarea {
 
 .details-form-right p {
   font-size: 15px;
+}
+.details-form-right{
+  position: relative;
+}
+.loader-icon{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .people-circle {
   height: 40px;
@@ -1498,6 +1512,7 @@ textarea {
 .reset p {
   position: relative;
   z-index: 99;
+  font-size: 16px;
 }
 .Mom-btn:hover .dropdown-toggle::after {
   position: absolute;
@@ -1852,8 +1867,19 @@ th.action-col {
 }
 
 /* ------------------------------------------ */
-.inner-detail-form button {
+.agenda-background h2 button {
   padding: 1rem;
+}
+.button-outer{
+  margin-Top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+}
+.atd-button button{
+  padding: 6px 13px !important;
+  margin-top: 5px;
 }
 .agenda-background:has(button[aria-expanded="true"]) h2 {
   background-color: #cfe2ff;
@@ -1889,9 +1915,9 @@ th.action-col {
 .cpwd-group {
   margin: 25px 0;
 }
-.add-meetings .form-group {
+/* .add-meetings .form-group {
   margin-bottom: 15px;
-}
+} */
 .btn-primary {
   border-radius: 40px !important;
   padding: 6px 17px !important;
@@ -2055,9 +2081,31 @@ input[type="number"] {
 .modal-margin .attendee-content:last-child {
   padding-bottom: 0;
 }
-.col-padding-none .col-12 {
-  padding: 0 !important;
-}
 .create-meet-btn button {
   padding: 5px 18px;
+}
+.no-padding-2{
+  padding:0px;
+}
+
+.agenda-background h2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reset {
+  padding: 5px 11px !important;
+  border: 1px solid #6a76ff !important;
+  color: #6a76ff !important;
+  border-radius: 40px !important;
+  background-color: transparent;
+  font-size: 17px !important;
+  overflow: hidden;
+  position: relative;
+}
+.Mom-btn:hover.Mom-btn:before, .reset:hover.reset:before, .reset:hover.reset p{
+  left: 0;
+  z-index: 0;
+  color: #fff !important;
 }

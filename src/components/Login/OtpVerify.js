@@ -290,7 +290,7 @@ const OtpVerify = () => {
                   {errors.message && (
                     <span className="error-message">{errors.message}</span>
                   )}
-
+{/* 
                   {authData.isOtpProcessed && authData.isSuccess ? (
                     <Alert
                       status={authData.isSuccess}
@@ -303,7 +303,7 @@ const OtpVerify = () => {
                       message={authData.message}
                       timeoutSeconds={0}
                     />
-                  ) : null}
+                  ) : null} */}
                 </div>
                 {!authData.loading ? (
                   <button className="btn1" type="submit">

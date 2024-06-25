@@ -4,13 +4,17 @@ import Collapse from "react-bootstrap/Collapse";
 import { Margin } from "../../../node_modules/@mui/icons-material/index";
 import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction.js/meetingRoomAction";
 import { useSelector, useDispatch } from "react-redux";
+import { Navigate, Link, useLocation } from "react-router-dom";
 import CommonStepper from "../Common/CommonStepper";
 import CreateMeeting from "./CreateMeeting";
 import {
   createMeetingDetails,
   getCreateMeetingStep,
+  loadCreateMeeting,
+  setCreateNewMeetingPage,
   updateIsCreateMeetingProcessed,
   updateMeetingDetails,
+  updateStep,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import Loader from "../Common/Loader";
 import * as constantMessages from "../../constants/constatntMessages";
@@ -35,18 +39,30 @@ const AddAgendas = () => {
   const [step, setStep] = useState(0);
   const [selectedOption, setSelectedOption] = useState("prevMeetingRadio");
   const [isManualLocation, setIsManualLocation] = useState(true);
-
+  const location = useLocation();
+  console.log(location);
+  const stateData = location.state;
+  console.log(meetingData);
   const [removeAttendeeData, setRemoveAttendeeData] = useState({});
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     title: " ",
     topic: "",
-    timeLine: 0,
+    timeLine:"0",
     index: 0,
   });
   const [agendaData, setAgendaData] = useState([]);
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
+    if(stateData.isMeetingDataUpdate || meetingData.isUpdateStep){
+      document.title = "Update Meeting: Meeting Plus";
+      setAgendaData(meetingData.singleMeetingDetails.agendasDetail.map((item)=>{
+        item.uid = Math.floor(100000 + Math.random() * 900000);
+        return item
+      })
+      );
+    }
+   // dispatch(setCreateNewMeetingPage(true))
   }, []);
 
   const submitAgendasDetails = (e) => {
@@ -67,33 +83,28 @@ const AddAgendas = () => {
         return {
           topic: item.topic,
           title: item.title,
-          timeLine: item.timeLine,
+          timeLine: item.timeLine.toString()
         };
       });
       const meetingId = meetingData?.singleMeetingDetails?._id;
       const payload = {
         agendas: newAgendaData,
         organizationId: userData.organizationId,
-        step: 3,
+        step:3,
+        meetingStatus:"scheduled",
+        isUpdate:stateData.isMeetingDataUpdate && meetingData.singleMeetingDetails.step===3?true:false,
       };
       console.log(payload);
-      dispatch(updateMeetingDetails(meetingId, payload, accessToken));
+      dispatch(updateMeetingDetails(meetingId, payload, accessToken,"addAgenda"));
       //setStep(3);
     }
   };
 
-  const agendas = [];
+
 
   const onAddAgenda = () => {
     console.log(formData);
     console.log(agendaData);
-    //  if(agendaData.length===0){
-    //   setAgendaData([
-    //       { index: agendaData.length , title: "", topic: "", time: 0 },
-    //     ]);
-    //  }
-    //  else{
-    // console.log(agendaData);
     const newErrors = validateForm(formData);
     setErrors(newErrors);
 
@@ -117,7 +128,7 @@ const AddAgendas = () => {
         ...formData,
         title: " ",
         topic: "",
-        timeLine: 0,
+        timeLine:"0",
         index: 0,
       });
 
@@ -138,9 +149,8 @@ const AddAgendas = () => {
       // errors.index = formData.index;
     }
 
-    if (!formData.timeLine) {
-      errors.timeLine = constantMessages.timeRequired;
-      // errors.index = formData.index;
+    if (formData.timeLine > 365 || formData.timeLine < 0) {
+      errors.timeLine = constantMessages.invalidTime;
     }
 
     return errors;
@@ -195,16 +205,12 @@ const AddAgendas = () => {
     //  console.log("9999999999999999999999999999999999999", authData);
     const { name, value } = e.target;
     console.log(name, value);
-    setFormData({
-      ...formData,
-      //   index: props.index ,
-      [name]: value,
-    });
+  
     // props.agendaData(formData)
-
+    console.log(agendaData);
     if (uid) {
       const modifiedAgendas = agendaData.map((obj) => {
-        const fieldName = name;
+       
         if (obj.uid === uid) {
           return { ...obj, [name]: value };
         }
@@ -213,6 +219,13 @@ const AddAgendas = () => {
 
       console.log(modifiedAgendas);
       setAgendaData(modifiedAgendas);
+    }
+    else{
+      setFormData({
+        ...formData,
+        //   index: props.index ,
+        [name]: value,
+      });
     }
   };
 
@@ -230,35 +243,21 @@ const AddAgendas = () => {
   const validateAgendaTime = () => {
     console.log(formData);
     const errors = {};
-    if (!formData.timeLine) {
-      errors.timeLine = constantMessages.timeRequired;
-      //  errors.index = formData.index;
+ 
+      
+    if (formData.timeLine > 365 || formData.timeLine < 0) {
+      errors.timeLine = constantMessages.invalidTime;
     }
     setErrors(errors);
   };
   console.log(agendaData);
-  //console.log(agendas);
+console.log(formData.topic);
   return (
-    <form className="mt-2 details-form" onSubmit={submitAgendasDetails}>
+    <form className="mt-2 details-form no-padding-2" onSubmit={submitAgendasDetails}>
       <div className="inner-detail-form">
-        <div className="form-group mt-3 agenda">
+        <div className="form-group agenda">
           <label className="mb-1">Agenda Item</label>
-          <div className="mt-2 mb-3 plus pointer">
-            <button type="button" onClick={onAddAgenda}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="23"
-                height="23"
-                fill="#0564f3"
-                className="bi bi-plus-circle pointer"
-                viewBox="0 0 16 16"
-              >
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-              </svg>
-            </button>
-            <div>Create Agenda Item</div>
-          </div>
+         
         </div>
 
         <div>
@@ -280,7 +279,7 @@ const AddAgendas = () => {
                     type="button"
                     //onClick={()=>onRemoveAgenda(props.agenda.index)}
                   >
-                    <svg
+                    {/* <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="23"
                       height="23"
@@ -290,7 +289,7 @@ const AddAgendas = () => {
                     >
                       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
                       <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
-                    </svg>
+                    </svg> */}
                     {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="23"
@@ -308,6 +307,7 @@ const AddAgendas = () => {
                   <Collapse in={open}>
                     <div>
                       <div className="form-group">
+                        <div className="mb-2">
                         <div className="row">
                           <div className="col-md-4">
                             <label className="mb-1">Agenda Title</label>
@@ -330,6 +330,8 @@ const AddAgendas = () => {
                             ) : null}
                           </div>
                         </div>
+                        </div>
+                       
                       </div>
 
                       <div className="form-group">
@@ -385,15 +387,42 @@ const AddAgendas = () => {
                                 {errors.timeLine}
                               </span>
                             )}
-
+ 
                             {/* {props.errorData.index===props.agenda.index && props.errorData.time && ( 
                   <span className="error-message">
                     {props.errorData.time}
                   </span>
                  )} */}
+                 
                           </div>
+                          
                         </div>
+                        
+
+
+                       
+        
+
+            <div className="mt-2 mb-3 plus pointer">
+            <button type="button" onClick={onAddAgenda}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="23"
+                height="23"
+                fill="#0564f3"
+                className="bi bi-plus-circle pointer"
+                viewBox="0 0 16 16"
+              >
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+              </svg>
+            </button>
+            <div>Add Item</div>
+          </div>
+            
+
                       </div>
+                      
                     </div>
                   </Collapse>
                 </div>
@@ -562,9 +591,9 @@ const AddAgendas = () => {
             </div>
           </div>
           {errors.addAgenda ? (
-              <span className="error-message">{errors.addAgenda}</span>
-            ) : null}
-          <div className="d-flex align-items-center" style={{ marginTop: 20 }}>
+            <span className="error-message">{errors.addAgenda}</span>
+          ) : null}
+       <div className="button-outer" style={{ marginTop: 20 }}>
             {/* <Button
             type="button"
             variant="primary"
@@ -573,7 +602,7 @@ const AddAgendas = () => {
             Back
           </Button> */}
 
-            {meetingData.isCreateMeetingProcessed && meetingData.step === 3 ? (
+            {/* {meetingData.isCreateMeetingProcessed && meetingData.step === 3 ? (
               <div className="mb-3 col-padding-none">
                 <div className="row">
                   <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
@@ -581,26 +610,49 @@ const AddAgendas = () => {
                       <Alert
                         status={meetingData.isSuccess}
                         message={meetingData.message}
-                        timeoutSeconds={3000}
+                        timeoutSeconds={0}
                       />
                     </div>
                   </div>
                 </div>
               </div>
-            ) : null}
-           
-            {!meetingData.loading ? (
-              <Button
+            ) : null} */}
+            
+            <button
+                    className="create-meeting-button Mom-btn"
+                    onClick={(e) => dispatch(updateStep(1,true))}
+                  >
+                    <p>Back</p>
+                  </button>
+              {!meetingData.loading ? (
+                // <Button
+                //   variant="primary"
+                //    class="btn-primary"
+                //   type="submit"
+                 
+                //  // onClick={(e) => dispatch(loadCreateMeeting(1))}
+                // >
+                //   Submit
+                // </Button>
+                 <button
+                 className="create-meeting-button Mom-btn"
+                 type="submit"
+               >
+                 <p>Submit</p>
+                 </button>
+              ) : (
+                <LoaderButton />
+              )}
+               {/* <Button
                 variant="primary"
-                type="submit"
-                style={{ margin: 20 }}
-                //  onClick={(e) => setStep(3)}
+                class="btn-primary"
+                onClick={(e) => dispatch(loadCreateMeeting(1))}
               >
-                Submit
-              </Button>
-            ) : (
-              <LoaderButton />
-            )}
+                Back
+              </Button> */}
+            
+            </div>
+            <div>
           </div>
         </div>
       </div>

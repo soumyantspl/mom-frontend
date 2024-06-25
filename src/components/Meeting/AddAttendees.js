@@ -12,7 +12,9 @@ import {
   getAttendeesListFromPreviousMeeting,
   getAttendeesListfromEmployeeList,
   getCreateMeetingStep,
+  loadCreateMeeting,
   updateMeetingDetails,
+  updateStep,
 } from "../../redux/actions/meetingActions/MeetingAction";
 import Loader from "../Common/Loader";
 import * as constantMessages from "../../constants/constatntMessages";
@@ -25,6 +27,8 @@ import {
 import { customName } from "../../helpers/commonHelpers";
 import CommonModal from "../Common/CommonModal";
 import Alert from "../Common/Alert";
+import RemoveAttendeesModal from "./RemoveAttendeesModal";
+import { Navigate, Link, useLocation } from "react-router-dom";
 
 const AddAttendees = (props) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -34,6 +38,11 @@ const AddAttendees = (props) => {
   const meetingData = useSelector((state) => state.meeting);
   const employeeData = useSelector((state) => state.user);
   console.log(meetingRoomData);
+  const location = useLocation();
+  console.log(location);
+  const stateData = location.state;
+  console.log(meetingData);
+  console.log(stateData);
   const [numAgenda, setNumAgenda] = useState(0);
   const [attendees, setAttendees] = useState([]);
   const [step, setStep] = useState(0);
@@ -59,9 +68,15 @@ const AddAttendees = (props) => {
     //  attendeesData:[]
   });
   const [attendeesData, setAttendeesData] = useState([]);
+ 
+
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
+if(stateData.isMeetingDataUpdate || meetingData.isUpdateStep){
+  document.title = "Update Meeting: Meeting Plus";
 
+  setAttendeesData(meetingData.singleMeetingDetails.attendees.map(({rsvp,...keepAttrs}) => keepAttrs));
+}
     if (formData.attendyType === "fromPreviousMeeting") {
       dispatch(fetchAttendeesList(userData.organizationId, accessToken));
     }
@@ -71,7 +86,7 @@ const AddAttendees = (props) => {
         name: formData.name,
         email: formData.email,
         isEmployee: false,
-        organizationId: userData.organizationId,
+       // organizationId: userData.organizationId,
       };
       const newAttendeeData = [...attendeesData, newAttendee];
       setAttendeesData(newAttendeeData);
@@ -81,29 +96,70 @@ const AddAttendees = (props) => {
         email: "",
       });
     }
-    // dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
+    // if(!employeeData.isDuplicateUser){
+    //   dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
+    // }
+   
     // console.log(meetingData.step);
     // setStep(meetingData.step + 1);
 
     // setAttendeesData(meetingData?.singleMeetingDetails?attendees)
-  }, [meetingData.step, employeeData.isDuplicateUser]);
-
+  }, [meetingData.step,
+     employeeData.isDuplicateUser
+    ]);
+console.log(meetingData)
   const submitAttendeeDetails = (e) => {
     e.preventDefault();
-    const meetingId = meetingData?.singleMeetingDetails?._id;
-    const payload = {
-      attendees: attendeesData,
-      organizationId: userData.organizationId,
-      step: meetingData?.singleMeetingDetails?.step + 1,
-    };
-    dispatch(updateMeetingDetails(meetingId, payload, accessToken));
+    console.log("sssssssssssssss", attendeesData);
+    if (attendeesData.length === 0) {
+      const newErrors = validateForm(formData);
+      console.log(newErrors);
+      setErrors(newErrors);
+
+      if (Object.keys(newErrors).length === 0) {
+        console.log("uuuuuuuuuuu");
+        const errors = {};
+        errors.addAttendee = constantMessages.addAttendee;
+        //  errors.index = formData.index;
+        setErrors(errors);
+      }
+    } else {
+      const meetingId = meetingData?.singleMeetingDetails?._id;
+      console.log(attendeesData)
+  
+      const payload = {
+        attendees: attendeesData,
+        organizationId: userData.organizationId,
+        isUpdate:stateData.isMeetingDataUpdate && meetingData.singleMeetingDetails.step===3?true:false,
+        step:2,
+        meetingStatus:meetingData?.singleMeetingDetails?.meetingStatus.status
+      };
+      dispatch(updateMeetingDetails(meetingId, payload, accessToken,"addAttendee"));
+    }
     //  setStep(3);
   };
 
   const addAttendee = async (e) => {
     // const attenId = e.target.value;
     // const user = userlist.find(u => u.id === userId);
-
+    console.log(employeeData.employeeList)
+    console.log(meetingData.attendeeList)
+    let attendeeList=[]
+    if(employeeData.employeeList){
+      const newEmpList=employeeData.employeeList.map((item)=>{
+        return {
+          _id:item._id,
+          name:item.name,
+          email:item.email
+        }
+      })
+      attendeeList=[...attendeeList,...newEmpList]
+    }
+    if(meetingData.attendeesList){
+      attendeeList=[...attendeeList,...meetingData.attendeesList]
+    }
+   // const attendeeList=[...employeeData.employeeList,...meetingData?.attendeeList]
+    console.log(attendeeList)
     if (formData.attendyType === "addNewPeople") {
       const newErrors = validateForm(formData);
       setErrors(newErrors);
@@ -138,9 +194,11 @@ const AddAttendees = (props) => {
       //  addNewPeople();
     } else {
       if (formData.attendeeId) {
+        console.log(formData.attendeeId )
         if (attendeesData.length > 0) {
+          console.log(attendeesData);
           const attendeeFound = attendeesData.find(
-            (u) => u._id === formData.attendeeId
+            (u) => u._id === formData.attendeeId 
           );
           console.log(attendeeFound);
           if (attendeeFound) {
@@ -150,10 +208,15 @@ const AddAttendees = (props) => {
             return errors;
           }
         }
-        let newAttendee = meetingData.attendeesList.find(
-          (u) => u._id === formData.attendeeId
+        console.log(meetingData.attendeesList)
+        let newAttendee = attendeeList.find(
+          (u) => u._id === formData.attendeeId 
         );
+        console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",attendeesData,formData.attendeeId)
         newAttendee.isEmployee = true;
+       // newAttendee.id=newAttendee._id
+      //  delete newAttendee._id
+      
         console.log(newAttendee);
         //  const newAttendee = e.target.value;
         const newAttendeeData = [...attendeesData, newAttendee];
@@ -161,36 +224,23 @@ const AddAttendees = (props) => {
       }
     }
   };
-  // const checkDuplicateUser = async (payload) => {
-  //   return dispatch(checkDuplicateUser(payload, accessToken));
-  // };
-  const addNewPeople = (e) => {
-    // const newErrors = validateForm(formData);
-    // setErrors(newErrors);
-    // if (Object.keys(newErrors).length === 0) {
-    //   // Form submission logic here
-    //   console.log("Form submitted successfully!");
-    // } else {
-    //   console.log(`Form submission failed
-    //    due to validation errors.`);
-    // }
-  };
 
   const validateForm = (data) => {
     const errors = {};
-    const regularExpression = /^[A-Za-z\s]+$/; //returns true if matched, vaidates for a-z and A-Z and white space
-    if (!formData.name.trim()) {
-      errors.name = constantMessages.nameRequired;
-    } else if (!regularExpression.test(formData.name)) {
-      errors.name = constantMessages.invalidName;
-    }
+    if (formData.attendyType === "addNewPeople") {
+      const regularExpression = /^[A-Za-z\s]+$/; //returns true if matched, vaidates for a-z and A-Z and white space
+      if (!formData.name.trim()) {
+        errors.name = constantMessages.nameRequired;
+      } else if (!regularExpression.test(formData.name)) {
+        errors.name = constantMessages.invalidName;
+      }
 
-    if (!formData.email.trim()) {
-      errors.email = constantMessages.emailRequired;
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = constantMessages.invalidEmail;
+      if (!formData.email.trim()) {
+        errors.email = constantMessages.emailRequired;
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        errors.email = constantMessages.invalidEmail;
+      }
     }
-
     return errors;
   };
 
@@ -260,26 +310,29 @@ const AddAttendees = (props) => {
     console.log(filteredAttendees);
     setAttendeesData(filteredAttendees);
     setIsModalOpen(false);
+    setFormData({
+      ...formData,attendeeId:null
+    })
   };
 
   console.log(
     attendeesData,
-    formData,
-    meetingData.singleMeetingDetails,
-    employeeData
+    meetingData,
+   
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <>
-      <form className="mt-0 p-0 details-form" onSubmit={submitAttendeeDetails}>
-        <CommonModal
+      <form className="m-0 p-0 details-form" onSubmit={submitAttendeeDetails}>
+        <RemoveAttendeesModal
           message={constantMessages.deleteAttendeeMessage}
           title={"Remove"}
           setIsModalOpen={setIsModalOpen}
           isModalOpen={isModalOpen}
           handleSubmit={removeAttendee}
           buttonName={"Remove"}
+          attendee={removeAttendeeData}
         />
         <div className="inner-detail-form">
           <label className="mb-1 people">Attendee(s)</label>
@@ -337,10 +390,10 @@ const AddAttendees = (props) => {
           </div>
 
           <div className="add-people-box show">
-            <div className="pt-3 pb-3 border-bottom">
+            <div className="pt-3 pb-3">
               <label className="mb-2">Select People</label>
 
-              <div className="d-flex w-100">
+              <div className="w-100">
                 <div className="form-check form-check-inline">
                   <input
                     className="form-check-input"
@@ -354,6 +407,7 @@ const AddAttendees = (props) => {
                   <label
                     className="mb-2 form-check-label"
                     for="flexRadioDefault1"
+                     id="flexRadioDefault1"
                   >
                     Select From Previous Meetings
                   </label>
@@ -366,13 +420,14 @@ const AddAttendees = (props) => {
                       type="radio"
                       name="attendyType"
                       value="fromEmployeeList"
-                      id="flexRadioDefault1"
+                      id="flexRadioDefault2"
                       onChange={handleChange}
                       checked={formData.attendyType === "fromEmployeeList"}
                     />
                     <label
                       className=" mb-2 form-check-label"
-                      for="flexRadioDefault1"
+                      for="flexRadioDefault2"
+                       id="flexRadioDefault2"
                     >
                       Select From Employees
                     </label>
@@ -386,14 +441,15 @@ const AddAttendees = (props) => {
                       type="radio"
                       name="attendyType"
                       value="addNewPeople"
-                      id="flexRadioDefault1"
+                      id="flexRadioDefault3"
                       checked={formData.attendyType === "addNewPeople"}
                       // checked={this.state.value === 1}
                       onChange={handleChange}
                     />
                     <label
                       className=" mb-2 form-check-label"
-                      for="flexRadioDefault1"
+                      for="flexRadioDefault3"
+                       id="flexRadioDefault3"
                     >
                       Add New People
                     </label>
@@ -403,7 +459,7 @@ const AddAttendees = (props) => {
             </div>
             {formData.attendyType === "fromPreviousMeeting" ? (
               <select
-                className="mb-2"
+                className=""
                 // name="attendeesData"
                 // onChange={handleAttendeeChange}
                 // value={attendeeId}
@@ -412,14 +468,14 @@ const AddAttendees = (props) => {
                 name="attendeeId"
                 value={formData.attendeeId}
               >
-                <option value="" disabled selected>
+                <option value="" disabled selected={true}>
                   {" "}
                   Name / Email Address
                 </option>
                 {meetingData.attendeesList &&
-                  meetingData.attendeesList.map((attendee) => {
+                  meetingData.attendeesList.map((attendee,index) => {
                     return (
-                      <option value={attendee._id}>
+                      <option key={index} value={attendee._id}>
                         {attendee.name} / {attendee.email}
                       </option>
                     );
@@ -437,9 +493,9 @@ const AddAttendees = (props) => {
                   Name / Employee ID
                 </option>
                 {employeeData.employeeList &&
-                  employeeData.employeeList.map((employee) => {
+                  employeeData.employeeList.map((employee,index) => {
                     return (
-                      <option value={employee._id}>
+                      <option value={employee._id} key={index}>
                         {employee.name} / {employee.empId}
                       </option>
                     );
@@ -484,7 +540,7 @@ const AddAttendees = (props) => {
             {errors.duplicateAttendee && (
               <span className="error-message">{errors.duplicateAttendee}</span>
             )}
-            <div className="form-group d-flex ">
+            <div className="form-group d-flex atd-button">
               {!employeeData.loading ? (
                 <button
                   type="button"
@@ -508,15 +564,7 @@ const AddAttendees = (props) => {
                 <LoaderButton />
               )}
             </div>
-          </div>
-          <div
-            style={{
-              marginTop: 20,
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            {employeeData.isDuplicateUser === true ? (
+            {/* {employeeData.isDuplicateUser === true ? (
               <div className="mb-3 col-padding-none">
                 <div className="row">
                   <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 ">
@@ -524,7 +572,7 @@ const AddAttendees = (props) => {
                       <Alert
                         status={employeeData.isSuccess ? false : true}
                         message={employeeData.message}
-                        timeoutSeconds={5000}
+                        timeoutSeconds={0}
                       />
                     </div>
                   </div>
@@ -539,43 +587,74 @@ const AddAttendees = (props) => {
                       <Alert
                         status={meetingData.isSuccess}
                         message={meetingData.message}
-                        timeoutSeconds={3000}
+                        timeoutSeconds={0}
                       />
                     </div>
                   </div>
                 </div>
               </div>
-            ) : null}
-            {/* <Button
-                variant="primary"
-                onClick={(e) => setStep(1)}
-                style={{ margin: 10 }}
-              >
-                Back
-              </Button> */}
-
-            {!meetingData.loading ? (
-              <Button
-                variant="primary"
+            ) : null} */}
+              {errors.addAttendee && (
+            <span className="error-message">{errors.addAttendee}</span>
+          )}
+          </div>
+          <div className="button-outer">
+            <div className="d-flex people"> 
+          <button
+                    className="create-meeting-button Mom-btn"
+                    onClick={(e) => dispatch(updateStep(0,true))}
+                  >
+                    <p>Back</p>
+                  </button>
+          {!meetingData.loading && stateData.isMeetingDataUpdate  ? (
+            <>
+              {/* <Button
+                
                 type="submit"
-                class="btn-primary"
+                className="create-meeting-button Mom-btn"
                 onClick={(e) => setStep(2)}
               >
                 Next
-              </Button>
-            ) : (
+              </Button> */}
+               
+               <button
+                    className="create-meeting-button Mom-btn"
+                    type="submit"
+                  >
+                    <p>Update</p>
+                  </button>
+             
+            </>
+          ) : meetingData.loading && stateData.isMeetingDataUpdate?(
+            <LoaderButton />
+          ):null}
+           </div>
+          {/* <Button
+            variant="primary"
+            class="btn-primary"
+            onClick={(e) => dispatch(loadCreateMeeting(0))}
+          >
+            Back
+          </Button> */}
+            {!meetingData.loading && stateData.isMeetingDataUpdate  ? (
+          <button
+                    className="create-meeting-button Mom-btn"
+                    onClick={(e) => dispatch(updateStep(2,true))}
+                  >
+                    <p>Next</p>
+                  </button>
+            ):!meetingData.loading && !stateData.isMeetingDataUpdate ? (
+              <button
+              className="create-meeting-button Mom-btn"
+              type="submit"
+            >
+              <p>Next submit</p>
+            </button>
+            ):(
               <LoaderButton />
             )}
-
-            {/* <Button
-              variant="primary"
-              type="submit"
-              class="btn-primary"
-              onClick={(e) => setStep(2)}
-            >
-              Next
-            </Button> */}
-          </div>
+                  
+        </div>
         </div>
       </form>
     </>

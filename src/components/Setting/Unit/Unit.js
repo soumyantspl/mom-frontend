@@ -12,6 +12,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Unit = () => {
+  //Create
   const userData = JSON.parse(localStorage.getItem("userData"));
   const userId = userData._id;
   console.log("userId====", userId);
@@ -20,6 +21,7 @@ const Unit = () => {
   const [unitData, setUnitData] = useState({ name: "", address: "" });
   const [formValues, setFormValues] = useState({ name: "", address: "" });
   const [errors, setErrors] = useState({ name: "", address: "" });
+  //List
   const [units, setUnits] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [searchKey, setSearchKey] = useState("");
@@ -27,7 +29,6 @@ const Unit = () => {
   const [limit, setLimit] = useState(5);
   const [order, setOrder] = useState(-1);
   const [isLoading, setIsLoading] = useState(false);
-
   const [isFetching, setIsFetching] = useState(false);
   const [isGetApiRes, setIsGetApiRes] = useState(false);
   const [apiResData, setApiResData] = useState({
@@ -657,10 +658,14 @@ const Unit = () => {
                 variant="secondary"
                 onClick={() => setShowDeleteModal(false)}
               >
-                Cancel
+                <p>Cancel</p>
               </Button>
-              <Button variant="danger" onClick={handleDeleteConfirm}>
-                Delete
+              <Button
+                variant=""
+                className="reset"
+                onClick={handleDeleteConfirm}
+              >
+                <p>Delete</p>
               </Button>
             </Modal.Footer>
           </Modal>
