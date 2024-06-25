@@ -3,7 +3,7 @@ import Header from "../../Common/Header/Header";
 import Sidebar from "../../Common/Sidebar/Sidebar";
 import MeetingHeader from "../../Common/Header/MeetingHeader";
 import { ToastContainer, toast } from "react-toastify";
-
+import axios from "../../../../node_modules/axios/index";
 // const department = () => {};
 
 const Department = () => {
@@ -50,6 +50,12 @@ const Department = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    if (validate()) {
+      try {
+        const response = await axios.post(``);
+      } catch (error) {}
+    }
   };
   return (
     <div>
