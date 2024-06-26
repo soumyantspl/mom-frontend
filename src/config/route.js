@@ -34,7 +34,7 @@ import { ToastContainer, toast } from "react-toastify";
 import ViewMeetingDetails from "../components/Meeting/ViewMeetingDetails";
 import EditMeetingPage from "../components/Meeting/EditMeetingPage";
 // import MinutesPage from "../components/Minutes/MinutesPage";
-import MinutesPage from "../components/minutes/MinutesPage";
+//import MinutesPage from "../components/minutes/MinutesPage";
 
 const PrivateRoutes = () => {
   let accessToken = localStorage.getItem("accessToken");
