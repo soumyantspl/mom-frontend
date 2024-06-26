@@ -1879,7 +1879,7 @@ th.action-col {
 }
 .atd-button button{
   padding: 6px 13px !important;
-  margin-top: 5px;
+  margin-top: 15px;
 }
 .agenda-background:has(button[aria-expanded="true"]) h2 {
   background-color: #cfe2ff;
@@ -2118,4 +2118,8 @@ input[type="number"] {
   height: 200px;
   left: 0;
   padding: 40px 0;
+}
+.form-group {
+  margin-bottom: 15px;
+  position: relative;
 }
