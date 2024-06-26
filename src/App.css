@@ -2109,3 +2109,8 @@ input[type="number"] {
 .alert{
   width: 100%;
 }
+
+
+.attendees-popup .form-check-input{
+  margin-right: 5px;
+}

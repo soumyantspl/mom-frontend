@@ -53,17 +53,19 @@ const AddMeeting = (props) => {
   console.log(location);
   const stateData = location.state;
   console.log(stateData);
+  console.log(meetingData)
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
-
+    console.log("ffffffffffffffffffffff",stateData);
     console.log(meetingData.checkStep);
     // if (meetingData.checkStep) {
     console.log(meetingData.checkStep);
     if (!meetingData.isNewMeetingPage && !meetingData.isUpdateStep) {
-      console.log("ffffffffffffffffffffff");
+     
       dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
     }
-    if (meetingData.isSuccess || meetingData.isNewMeetingPage) {
+    if (meetingData.isSuccess || meetingData.isNewMeetingPage || stateData.isNewMeeting) {
+      console.log("ffffffffffffffffffffff333333333333",stateData);
       setFormData({
         ...formData,
         title: "",
@@ -114,7 +116,7 @@ const AddMeeting = (props) => {
         dispatch(getMeetingRoomList(payload, accessToken));
       }
     }
-  }, [meetingData.step]);
+  }, [meetingData.step,meetingData.isNewMeetingPage ]);
 
   const submitMeetingDetails = (e) => {
     console.log("submitMeetingDetails------------------------------");
@@ -179,7 +181,7 @@ const AddMeeting = (props) => {
       console.log(`Form submission failed
        due to validation errors.`);
     }
-    dispatch(updateStep(1, true));
+   // dispatch(updateStep(1, true));
   };
 
   console.log(step);

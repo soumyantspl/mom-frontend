@@ -200,7 +200,7 @@ const AddAttendees = (props) => {
       }
       //  addNewPeople();
     } else {
-      if (formData.attendeeId) {
+      if (formData?.attendeeId) {
         console.log(formData.attendeeId);
         if (attendeesData.length > 0) {
           console.log(attendeesData);

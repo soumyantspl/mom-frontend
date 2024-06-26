@@ -37,7 +37,7 @@ const Header = () => {
     setIsModalOpen(false);
    // alert("You will be log out");
   };
-
+  const employeeData = useSelector((state) => state.user);
   useEffect(() => {
     console.log("userData", userData);
     if (userData) {
@@ -47,10 +47,10 @@ const Header = () => {
       navigate("/login");
     }
   }, []);
-
+console.log(employeeData?.userData?.isMeetingOrganiser)
   return (
     <section className="topbar">
-      {!accessToken ? <Navigate to="/login" /> : null}
+      {!accessToken || employeeData?.userData?.isActive===false? <Navigate to="/login" /> : null}
       <div className="topbar-1">
         <div className="topbar1-content">
           <div className="d-flex align-items-center">
@@ -73,14 +73,14 @@ const Header = () => {
           </div>
 
           <div className="top-right-svg">
-            <div className="create-meeting-button">
+           
+          {employeeData?.userData?.isMeetingOrganiser?( <div className="create-meeting-button">
               <Link to="/create-meeting" state={{isNewMeeting:true}}style={{ textDecoration: "none" }}>
                 <button className="Mom-btn" onClick={()=>{dispatch(setCreateNewMeetingPage(true))}}>
                   <p>Create Meeting</p>
                 </button>
               </Link>
-            </div>
-
+            </div>):null}
             <div className="line"></div>
             <Link to="notification">
               <div className="bell">

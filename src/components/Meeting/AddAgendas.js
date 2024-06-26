@@ -67,9 +67,10 @@ const AddAgendas = () => {
     // dispatch(setCreateNewMeetingPage(true))
   }, []);
 
-  const submitAgendasDetails = (isSendNotification) => {
-    //  e.preventDefault();
-    console.log(isSendNotification);
+  const submitAgendasDetails = (e) => {
+  
+     e.preventDefault();
+
     if (agendaData.length === 0) {
       const newErrors = validateForm(formData);
       setErrors(newErrors);
@@ -91,6 +92,10 @@ const AddAgendas = () => {
       });
       const meetingId = meetingData?.singleMeetingDetails?._id;
       const payload = {
+        sendNotification: !stateData.isMeetingDataUpdate &&
+        meetingData.singleMeetingDetails.step === 2
+          ? true
+          : false,
         agendas: newAgendaData,
         organizationId: userData.organizationId,
         step: 3,
@@ -265,7 +270,7 @@ const AddAgendas = () => {
   return (
     <form
       className="mt-2 details-form no-padding-2"
-      // onSubmit={submitAgendasDetails}
+       onSubmit={submitAgendasDetails}
     >
       <div className="inner-detail-form">
         <div className="form-group agenda">
@@ -656,12 +661,20 @@ const AddAgendas = () => {
                   <button
                     className="create-meeting-button Mom-btn"
                     type="submit"
+                   
                   >
-                    <p>Update </p>
+                    <p>Update & Notify </p>
                   </button>
                 ) : (
                   <>
-                    <Dropdown>
+                  <button
+                    className="create-meeting-button Mom-btn"
+                   type="submit"
+                   
+                  >
+                    <p>Save & Notify </p>
+                  </button>
+                    {/* <Dropdown>
                       <Dropdown.Toggle variant="success" id="dropdown-basic">
                         Save
                       </Dropdown.Toggle>
@@ -680,7 +693,7 @@ const AddAgendas = () => {
                           Save and Notification
                         </Dropdown.Item>
                       </Dropdown.Menu>
-                    </Dropdown>
+                    </Dropdown> */}
                   </>
                 )}
               </>

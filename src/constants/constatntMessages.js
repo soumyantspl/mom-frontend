@@ -32,7 +32,7 @@ const invalidTime = "Please enter valid time.";
 const cancelMeeting = "Do you want to cancel this meeting ?";
 const remarksRequired = "Please give remark.";
 const meetingCreated =
-  "Meeting Details Created Successfully, Please Add Attendees.";
+  "Meeting created successfully. Please add attendees.";
 module.exports = {
   meetingCreated,
   remarksRequired,

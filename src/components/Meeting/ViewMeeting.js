@@ -281,7 +281,7 @@ const ViewMeeting = (props) => {
                   }
                 )}
             </div>
-          ) : (
+          ) : meetingData.singleMeetingDetails.attendees.length > 0? (
             <form className="mt-2 details-form details-form-right">
                 <Alert
                       status={"info"}
@@ -294,7 +294,7 @@ const ViewMeeting = (props) => {
                 </div>
               </div>
             </form>
-          )}
+          ):null}
         </form>
       ) : meetingData.isLoading ? (
         <form className="mt-2 details-form details-form-right">

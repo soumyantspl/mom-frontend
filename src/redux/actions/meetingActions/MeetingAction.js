@@ -362,10 +362,10 @@ export const updateMeetingDetails = (
         const resData = result.data;
         const message =
           isFrom  === "addAttendee" && !isUpdate
-            ? "Attendees added successfully, Please Add Agendas"
-            :isFrom  === "addAttendee" && isUpdate?"Attendees updated successfully"
-            : isFrom === "addAgenda"  && !isUpdate? "Agendas added successfully"
-            :  isFrom === "addAgenda"  && isUpdate? "Agendas updated successfully"
+            ? "Attendees added successfully. Please add agenda."
+            :isFrom  === "addAttendee" && isUpdate?"Attendees updated successfully."
+            : isFrom === "addAgenda"  && !isUpdate? "Agenda added successfully."
+            :  isFrom === "addAgenda"  && isUpdate? "Agenda updated successfully."
             : resData.message;
         if (resData.success) {
           toast.success(message, {
