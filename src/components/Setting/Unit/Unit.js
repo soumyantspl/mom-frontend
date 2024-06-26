@@ -95,6 +95,20 @@ const Unit = () => {
     return isValid;
   };
 
+  const fieldValidationCheck = (e) => {
+    e.preventDefault();
+
+    const newErrors = validate(formValues);
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length === 0) {
+      // Form submission logic here
+
+      console.log("Form submitted successfully!");
+    } else {
+      console.log(`Form submission failed
+       due to validation errors.`);
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsGetApiRes(false);
@@ -124,6 +138,7 @@ const Unit = () => {
             theme: "colored",
             // transition: Bounce,
           });
+          fetchUnitData();
         } else {
           toast.error(response.data.message, {
             position: "top-right",
@@ -189,12 +204,6 @@ const Unit = () => {
   };
 
   useEffect(() => {
-    const fetchUnitData = async () => {
-      const bodyData = searchKey
-        ? { searchKey, organizationId }
-        : { organizationId };
-      await fetchUnits(bodyData);
-    };
     fetchUnitData();
   }, [searchKey, page, limit, order]);
 
@@ -202,7 +211,12 @@ const Unit = () => {
     setSearchKey(event.target.value);
     setPage(1);
   };
-
+  const fetchUnitData = async () => {
+    const bodyData = searchKey
+      ? { searchKey, organizationId }
+      : { organizationId };
+    await fetchUnits(bodyData);
+  };
   const formatDateTimeFormat = (date) => {
     const sourceDate = new Date(date).toDateString();
     const sourceTime = new Date(date).toLocaleTimeString();
@@ -382,6 +396,7 @@ const Unit = () => {
                   name="name"
                   autoComplete="off"
                   placeholder="Enter Unit Name"
+                  onBlur={fieldValidationCheck}
                   onChange={handleChange}
                   value={formValues.name}
                 />
@@ -401,6 +416,7 @@ const Unit = () => {
                   placeholder="Enter Unit Address"
                   onChange={handleChange}
                   value={formValues.address}
+                  onBlur={fieldValidationCheck}
                 ></textarea>
                 {errors.address && (
                   <span className="error-message">{errors.address}</span>
@@ -654,6 +670,7 @@ const Unit = () => {
                     value={unitName}
                     autoComplete="off"
                     onChange={(e) => setUnitName(e.target.value)}
+                    onBlur={fieldValidationCheck}
                   />
                 </Form.Group>
                 <Form.Group controlId="unitAddress" className="mt-3">
@@ -664,6 +681,7 @@ const Unit = () => {
                     value={unitAddress}
                     autoComplete="off"
                     onChange={(e) => setUnitAddress(e.target.value)}
+                    onBlur={fieldValidationCheck}
                   />
                 </Form.Group>
               </Form>
