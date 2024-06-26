@@ -17,8 +17,8 @@ import {
 import ViewMinutes from "./ViewMinutes";
 import { useLocation } from "react-router-dom";
 import "./minutes.css";
-import CreateMinutes
- from "./createMinutes";
+import CreateMinutes from "./CreateMinutes";
+
 const MinutesPage = () => {
   const location = useLocation();
   const stateData = location.state;
