@@ -68,9 +68,8 @@ const AddAgendas = () => {
   }, []);
 
   const submitAgendasDetails = (isSendNotification) => {
-   
-  //  e.preventDefault();
-    console.log(isSendNotification)
+    //  e.preventDefault();
+    console.log(isSendNotification);
     if (agendaData.length === 0) {
       const newErrors = validateForm(formData);
       setErrors(newErrors);
@@ -266,7 +265,7 @@ const AddAgendas = () => {
   return (
     <form
       className="mt-2 details-form no-padding-2"
-     // onSubmit={submitAgendasDetails}
+      // onSubmit={submitAgendasDetails}
     >
       <div className="inner-detail-form">
         <div className="form-group agenda">
@@ -663,16 +662,21 @@ const AddAgendas = () => {
                 ) : (
                   <>
                     <Dropdown>
-                      <Dropdown.Toggle
-                        variant="success"
-                        id="dropdown-basic"
-                      >
+                      <Dropdown.Toggle variant="success" id="dropdown-basic">
                         Save
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                        <Dropdown.Item type="submit" onClick={()=>submitAgendasDetails(false)}>Save</Dropdown.Item>
-                        <Dropdown.Item type="submit" onClick={()=>submitAgendasDetails(true)}>
+                        <Dropdown.Item
+                          type="submit"
+                          onClick={() => submitAgendasDetails(false)}
+                        >
+                          Save
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          type="submit"
+                          onClick={() => submitAgendasDetails(true)}
+                        >
                           Save and Notification
                         </Dropdown.Item>
                       </Dropdown.Menu>

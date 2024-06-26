@@ -227,7 +227,8 @@ const MeetingList = () => {
     console.log(timeArray);
     let session = "AM";
     let hour = parseInt(timeArray[0]);
-    let minute = parseInt(timeArray[1]);
+    //let minute = parseInt(timeArray[1]);
+    let minute =timeArray[1];
     console.log(hour, minute);
     if (hour > 12) {
       session = "PM";
@@ -240,7 +241,7 @@ const MeetingList = () => {
 
   console.log("repeat------------------------", searchData, isCancelModalOpen);
   return (
-    <div>
+   <>
       <Header />
       <MeetingHeader />
       <Sidebar />
@@ -338,8 +339,8 @@ const MeetingList = () => {
                       <td data-label="Meeting Date & Time">
                         {formatDateTimeFormat(meeting.date).formattedDate}
                         <p className="detail-date-time">
-                          {/* {formatTimeFormat(meeting.fromTime)} */}
-                          {formatDateTimeFormat(meeting.date).formattedTime}
+                          {formatTimeFormat(meeting.fromTime)}
+                          {/* {formatDateTimeFormat(meeting.date).formattedTime} */}
                         </p>
                       </td>
                       <td data-label="Meeting Title">
@@ -513,10 +514,15 @@ const MeetingList = () => {
             </table>
           ) : !meetingData.loading && meetingData.meetingList?.length === 0 ? (
             <div className="mt-2 table-box no-data-img">
+               <Alert
+                      status={"info"}
+                      message={"No data available."}
+                      timeoutSeconds={0}
+                    />
               {/* <Alert message="No Data Found !" status={false} /> */}
-
+             
               <NoDataFound dataType={"meeting"} />
-              <Button
+              <Button className="mt-2"
                 variant="primary"
                 onClick={(e) => {
             
@@ -652,7 +658,7 @@ const MeetingList = () => {
           )}
         </div>
       </div>
-    </div>
+      </>
   );
 };
 

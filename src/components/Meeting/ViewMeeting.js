@@ -84,6 +84,11 @@ const ViewMeeting = (props) => {
         !meetingData.singleMeetingDetails) ? (
         // {!meetingData.isLoading && meetingData.isNewMeetingPage ? (
         <form className="mt-2 details-form details-form-right">
+           <Alert
+                      status={"info"}
+                      message={"Meeting preview will be available once you enter meeting details."}
+                      timeoutSeconds={0}
+                    />
           <div className="form-group mb-2">
             <div className="row">
               <NoDataFound dataType={"meeting"} />
@@ -200,6 +205,11 @@ const ViewMeeting = (props) => {
             </div>
           ) : (
             <form className="mt-2 details-form details-form-right">
+                <Alert
+                      status={"info"}
+                      message={"No Attendee Added"}
+                      timeoutSeconds={0}
+                    />
               <div className="form-group mb-2">
                 <div className="row">
                   <NoDataFound dataType={"attendee"} />
@@ -273,6 +283,11 @@ const ViewMeeting = (props) => {
             </div>
           ) : (
             <form className="mt-2 details-form details-form-right">
+                <Alert
+                      status={"info"}
+                      message={"No Agenda Added"}
+                      timeoutSeconds={0}
+                    />
               <div className="form-group mb-2">
                 <div className="row">
                   <NoDataFound dataType={"agenda"} />

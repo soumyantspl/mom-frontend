@@ -58,7 +58,7 @@ const AttendeesDetails = (props) => {
               ) : (
                 <>
                   <Alert
-                        status={false}
+                        status={"info"}
                         message={"No Attendee Added"}
                         timeoutSeconds={0}
                       />

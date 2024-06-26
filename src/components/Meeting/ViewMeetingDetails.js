@@ -179,7 +179,7 @@ const ViewMeetingDetails = () => {
                 ) : (
                   <>
                     <Alert
-                      status={false}
+                      status={"info"}
                       message={"No Attendee Added"}
                       timeoutSeconds={0}
                     />
@@ -300,7 +300,7 @@ const ViewMeetingDetails = () => {
                 ) : (
                   <>
                     <Alert
-                      status={false}
+                      status={"info"}
                       message={"No Agenda Added"}
                       timeoutSeconds={0}
                     />

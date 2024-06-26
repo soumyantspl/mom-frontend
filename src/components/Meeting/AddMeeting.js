@@ -744,7 +744,7 @@ const AddMeeting = (props) => {
                     <p>Save & Proceed</p>
                   </button>
                 </>
-              ) : !meetingData.loading && meetingData.isUpdateStep ? (
+              ) : !meetingData.loading && meetingData.isUpdateStep  ? (
                 <button className="create-meeting-button Mom-btn" type="submit">
                   <p>Update</p>
                 </button>
@@ -752,7 +752,7 @@ const AddMeeting = (props) => {
                 // </div>
                 <LoaderButton />
               )}
-              {!meetingData.loading && meetingData.isUpdateStep ? (
+              {!meetingData.loading && meetingData.isUpdateStep  ? (
                 <button
                   className="create-meeting-button Mom-btn"
                   onClick={(e) => dispatch(updateStep(1, true))}
