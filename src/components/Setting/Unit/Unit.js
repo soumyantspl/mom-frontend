@@ -10,8 +10,10 @@ import Loader from "../../Common/Loader";
 import { Modal, Button, Table, Dropdown, Form } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import NoDataFound from "../../Common/NoDataFound";
 
 const Unit = () => {
+  //Create
   const userData = JSON.parse(localStorage.getItem("userData"));
   const userId = userData._id;
   console.log("userId====", userId);
@@ -20,6 +22,7 @@ const Unit = () => {
   const [unitData, setUnitData] = useState({ name: "", address: "" });
   const [formValues, setFormValues] = useState({ name: "", address: "" });
   const [errors, setErrors] = useState({ name: "", address: "" });
+  //List
   const [units, setUnits] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [searchKey, setSearchKey] = useState("");
@@ -27,7 +30,6 @@ const Unit = () => {
   const [limit, setLimit] = useState(5);
   const [order, setOrder] = useState(-1);
   const [isLoading, setIsLoading] = useState(false);
-
   const [isFetching, setIsFetching] = useState(false);
   const [isGetApiRes, setIsGetApiRes] = useState(false);
   const [apiResData, setApiResData] = useState({
@@ -63,25 +65,50 @@ const Unit = () => {
       errors.name = "Unit Name is required";
       isValid = false;
       toast.error(errors.message, {
-        position: "bottom-left",
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: 0,
-        theme: "light",
-        // transition: Slide,
+        progress: undefined,
+        theme: "colored",
+        // transition: Bounce,
       });
     }
     if (!formValues.address.trim()) {
       errors.address = "Address is required";
       isValid = false;
+      toast.error(errors.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        // transition: Bounce,
+      });
     }
     setErrors(errors);
     return isValid;
   };
 
+  const fieldValidationCheck = (e) => {
+    e.preventDefault();
+
+    const newErrors = validate(formValues);
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length === 0) {
+      // Form submission logic here
+
+      console.log("Form submitted successfully!");
+    } else {
+      console.log(`Form submission failed
+       due to validation errors.`);
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsGetApiRes(false);
@@ -101,27 +128,28 @@ const Unit = () => {
         if (response.data.success) {
           setFormValues({ name: "", address: "" });
           toast.success(response.data.message, {
-            position: "bottom-left",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            // transition: Slide,
-          });
-        } else {
-          toast.error(response.data.message, {
-            position: "bottom-left",
+            position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
-            progress: 0,
-            theme: "light",
-            // transition: Slide,
+            progress: undefined,
+            theme: "colored",
+            // transition: Bounce,
+          });
+          fetchUnitData();
+        } else {
+          toast.error(response.data.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            // transition: Bounce,
           });
         }
         setApiResData({
@@ -132,15 +160,15 @@ const Unit = () => {
       } catch (error) {
         console.log("error--->", error);
         toast.error(error.message, {
-          position: "bottom-left",
+          position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: 0,
-          theme: "light",
-          // transition: Slide,
+          progress: undefined,
+          theme: "colored",
+          // transition: Bounce,
         });
         console.error("Error creating unit:", error.response.data.message);
       }
@@ -170,16 +198,12 @@ const Unit = () => {
       setIsFetching(false);
     } catch (error) {
       console.log("Error while Fetching Unit:", error);
+    } finally {
+      setIsFetching(false);
     }
   };
 
   useEffect(() => {
-    const fetchUnitData = async () => {
-      const bodyData = searchKey
-        ? { searchKey, organizationId }
-        : { organizationId };
-      await fetchUnits(bodyData);
-    };
     fetchUnitData();
   }, [searchKey, page, limit, order]);
 
@@ -187,7 +211,12 @@ const Unit = () => {
     setSearchKey(event.target.value);
     setPage(1);
   };
-
+  const fetchUnitData = async () => {
+    const bodyData = searchKey
+      ? { searchKey, organizationId }
+      : { organizationId };
+    await fetchUnits(bodyData);
+  };
   const formatDateTimeFormat = (date) => {
     const sourceDate = new Date(date).toDateString();
     const sourceTime = new Date(date).toLocaleTimeString();
@@ -195,6 +224,8 @@ const Unit = () => {
     const formattedDate = [day, month, year].join(" ");
     const [hour, minute] = sourceTime.split(":");
     const formattedTime = `${hour}:${minute} ${sourceTime.split(" ")[1]}`;
+
+    console.log("formattedTime-->", formattedTime);
     return { formattedTime, formattedDate };
   };
 
@@ -224,27 +255,27 @@ const Unit = () => {
       );
       if (response.data.success) {
         toast.success(response.data.message, {
-          position: "bottom-left",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          // transition: Slide,
-        });
-      } else {
-        toast.error(response.data.message, {
-          position: "bottom-left",
+          position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: 0,
-          theme: "light",
-          // transition: Slide,
+          progress: undefined,
+          theme: "colored",
+          // transition: Bounce,
+        });
+      } else {
+        toast.error(response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          // transition: Bounce,
         });
       }
       setUnits((prevUnits) =>
@@ -255,15 +286,15 @@ const Unit = () => {
       setShowEditModal(false);
     } catch (error) {
       toast.error(error.message, {
-        position: "bottom-left",
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: 0,
-        theme: "light",
-        // transition: Slide,
+        progress: undefined,
+        theme: "colored",
+        // transition: Bounce,
       });
       console.log("Error while updating units:", error);
     }
@@ -276,6 +307,9 @@ const Unit = () => {
   };
   const fromDataCount = units.length === 0 ? 0 : (page - 1) * limit + 1;
   const toDataCount = (page - 1) * limit + units.length;
+  const totalOption = Math.round(totalCount / 5 + 0.5);
+  const totalPage = Math.round(totalCount / limit + 0.5);
+  const totalPageArray = Array(totalPage).fill();
 
   //Delete Unit
   const handleDeleteClick = (unit) => {
@@ -312,29 +346,29 @@ const Unit = () => {
       );
       if (response.data.success) {
         toast.success(response.data.message, {
-          position: "bottom-left",
-          autoClose: 3000,
+          position: "top-right",
+          autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
-          // transition: Slide,
+          theme: "colored",
+          // transition: Bounce,
         });
       }
       return response.data;
     } catch (error) {
       toast.error(error.message, {
-        position: "bottom-left",
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: 0,
-        theme: "light",
-        // transition: Slide,
+        progress: undefined,
+        theme: "colored",
+        // transition: Bounce,
       });
       console.error("Error deleting unit:", error);
       throw error;
@@ -362,6 +396,7 @@ const Unit = () => {
                   name="name"
                   autoComplete="off"
                   placeholder="Enter Unit Name"
+                  onBlur={fieldValidationCheck}
                   onChange={handleChange}
                   value={formValues.name}
                 />
@@ -381,6 +416,7 @@ const Unit = () => {
                   placeholder="Enter Unit Address"
                   onChange={handleChange}
                   value={formValues.address}
+                  onBlur={fieldValidationCheck}
                 ></textarea>
                 {errors.address && (
                   <span className="error-message">{errors.address}</span>
@@ -442,165 +478,182 @@ const Unit = () => {
               </div>
             </div>
 
-            <Table className="mt-4 table table-bordered">
-              <thead>
-                <tr>
-                  <th>Unit Name</th>
-                  <th>Unit Address</th>
-                  <th>Updated At</th>
-                  <th className="action-col">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {isFetching ? (
-                  <div
-                    className="meeting-page "
-                    style={{ textAlign: "center", paddingTop: 20 }}
-                  >
-                    <Loader />
-                  </div>
-                ) : units.length > 0 ? (
-                  units.map((unit, index) => (
-                    <tr key={index}>
-                      <td>{unit.name}</td>
-                      <td>{unit.address}</td>
-                      <td>
-                        {formatDateTimeFormat(unit.updatedAt).formattedDate}
-                        <p className="detail-date-time">
-                          {formatDateTimeFormat(unit.updatedAt).formattedTime}
-                        </p>
-                      </td>
-                      <td data-label="Action">
-                        <Dropdown>
-                          {/* <div className="d-inline-block menu-dropdown custom-dropdown"> */}
-                          <Dropdown.Toggle id="dropdown-basic">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              fill="#000"
-                              className="bi bi-three-dots-vertical"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                            </svg>
-                          </Dropdown.Toggle>
-
-                          <Dropdown.Menu>
-                            <Dropdown.Item
-                              onClick={() => handleEditClick(unit)}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                fill="currentColor"
-                                className="me-2 bi bi-pencil-square"
-                                viewBox="0 0 16 16"
-                              >
-                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                <path
-                                  fillRule="evenodd"
-                                  d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-                                />
-                              </svg>
-                              Edit
-                            </Dropdown.Item>
-                            <Dropdown.Item
-                              onClick={() => handleDeleteClick(unit)}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                fill="currentColor"
-                                className="me-2 bi bi-trash3"
-                                viewBox="0 0 16 16"
-                              >
-                                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
-                              </svg>
-                              Delete
-                            </Dropdown.Item>
-                          </Dropdown.Menu>
-                          {/* </div> */}
-                        </Dropdown>
-                      </td>
+            {isFetching ? (
+              <div className="meeting-page loader-cont">
+                <Loader />
+              </div>
+            ) : units.length > 0 ? (
+              <>
+                <Table className="mt-4 table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Unit Name</th>
+                      <th>Unit Address</th>
+                      <th>Updated At</th>
+                      <th className="action-col">Action</th>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="3">No data available</td>
-                  </tr>
-                )}
-                {/* {units.length > 0 ? (
-                 
-                ) : (
-                  
-                )} */}
-              </tbody>
-            </Table>
+                  </thead>{" "}
+                  <tbody>
+                    {units.map((unit, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>{unit.name}</td>
+                          <td>{unit.address}</td>
+                          <td>
+                            {formatDateTimeFormat(unit.updatedAt).formattedDate}
+                            <p className="detail-date-time">
+                              {
+                                formatDateTimeFormat(unit.updatedAt)
+                                  .formattedTime
+                              }
+                            </p>
+                          </td>
+                          <td data-label="Action">
+                            <Dropdown>
+                              {/* <div className="d-inline-block menu-dropdown custom-dropdown"> */}
+                              <Dropdown.Toggle id="dropdown-basic">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  fill="#000"
+                                  className="bi bi-three-dots-vertical"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                                </svg>
+                              </Dropdown.Toggle>
 
-            <div className="tbl-bottom">
-              <div className="left-tbl-bottom">
-                <button
-                  className="left-arrow"
-                  onClick={() => setPage(page > 1 ? page - 1 : 1)}
-                  disabled={page === 1}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    className="bi bi-chevron-left"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"
-                    />
-                  </svg>
-                </button>
-                <ul>
-                  <li>{page}</li>
-                </ul>
-                <button
-                  className="right-arrow"
-                  onClick={() =>
-                    setPage(page * limit < totalCount ? page + 1 : page)
-                  }
-                  disabled={page * limit >= totalCount}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="#fff"
-                    className="bi bi-chevron-right"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
-                    />
-                  </svg>
-                </button>
-              </div>
+                              <Dropdown.Menu>
+                                <Dropdown.Item
+                                  onClick={() => handleEditClick(unit)}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    fill="currentColor"
+                                    className="me-2 bi bi-pencil-square"
+                                    viewBox="0 0 16 16"
+                                  >
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                                    />
+                                  </svg>
+                                  Edit
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                  onClick={() => handleDeleteClick(unit)}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    fill="currentColor"
+                                    className="me-2 bi bi-trash3"
+                                    viewBox="0 0 16 16"
+                                  >
+                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
+                                  </svg>
+                                  Delete
+                                </Dropdown.Item>
+                              </Dropdown.Menu>
+                              {/* </div> */}
+                            </Dropdown>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
 
-              <div
-                className="right-tbl-bottom"
-                value={limit}
-                onChange={handleRowsPerPageChange}
-              >
-                <p>Rows Per Page</p>
-                <select className="no-opt-box">
-                  <option>5</option>
-                  <option>10</option>
-                  <option>15</option>
-                  <option>20</option>
-                </select>
-              </div>
-            </div>
+                <div className="tbl-bottom">
+                  <div className="left-tbl-bottom">
+                    {page !== 1 ? (
+                      <button
+                        className="left-arrow"
+                        onClick={() => setPage(page > 1 ? page - 1 : 1)}
+                        disabled={page === 1}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="#fff"
+                          className="bi bi-chevron-left"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"
+                          />
+                        </svg>
+                      </button>
+                    ) : null}
+                    <ul>
+                      {totalPageArray.length > 0 &&
+                        totalPageArray.map((_, option) => (
+                          <li
+                            key={option}
+                            className={
+                              option + 1 === page ? "selected-page" : ""
+                            }
+                            onClick={() => setPage(option + 1)}
+                          >
+                            {option + 1}
+                          </li>
+                        ))}
+                    </ul>
+                    {page < totalPage ? (
+                      <button
+                        className="right-arrow"
+                        onClick={() =>
+                          setPage(page * limit < totalCount ? page + 1 : page)
+                        }
+                        disabled={page * limit >= totalCount}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="#fff"
+                          className="bi bi-chevron-right"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                          />
+                        </svg>
+                      </button>
+                    ) : null}
+                  </div>
+                  <div className="right-tbl-bottom">
+                    <p>Rows Per Page</p>
+                    <select
+                      className="no-opt-box"
+                      name="limit"
+                      onChange={handleRowsPerPageChange}
+                      value={limit}
+                    >
+                      {Array(totalOption)
+                        .fill()
+                        .map((_, option) => (
+                          <option key={option} value={(option + 1) * 5}>
+                            {(option + 1) * 5}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <NoDataFound />
+              </>
+            )}
           </div>
 
           <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
@@ -617,6 +670,7 @@ const Unit = () => {
                     value={unitName}
                     autoComplete="off"
                     onChange={(e) => setUnitName(e.target.value)}
+                    onBlur={fieldValidationCheck}
                   />
                 </Form.Group>
                 <Form.Group controlId="unitAddress" className="mt-3">
@@ -627,13 +681,15 @@ const Unit = () => {
                     value={unitAddress}
                     autoComplete="off"
                     onChange={(e) => setUnitAddress(e.target.value)}
+                    onBlur={fieldValidationCheck}
                   />
                 </Form.Group>
               </Form>
             </Modal.Body>
             <Modal.Footer>
               <Button
-                variant="secondary"
+                variant="light"
+                className="btn-light"
                 onClick={() => setShowEditModal(false)}
               >
                 Close
@@ -654,13 +710,14 @@ const Unit = () => {
             <Modal.Body>Are you sure you want to delete this unit?</Modal.Body>
             <Modal.Footer>
               <Button
-                variant="secondary"
+                variant="light"
                 onClick={() => setShowDeleteModal(false)}
+                className="btn-light"
               >
-                Cancel
+                <p>Cancel</p>
               </Button>
-              <Button variant="danger" onClick={handleDeleteConfirm}>
-                Delete
+              <Button variant="primary" onClick={handleDeleteConfirm}>
+                <p>Delete</p>
               </Button>
             </Modal.Footer>
           </Modal>

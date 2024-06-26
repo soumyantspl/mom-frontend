@@ -1512,6 +1512,7 @@ textarea {
 .reset p {
   position: relative;
   z-index: 99;
+  font-size: 16px;
 }
 .Mom-btn:hover .dropdown-toggle::after {
   position: absolute;
@@ -2091,6 +2092,32 @@ input[type="number"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.reset {
+  padding: 5px 11px !important;
+  border: 1px solid #6a76ff !important;
+  color: #6a76ff !important;
+  border-radius: 40px !important;
+  background-color: transparent;
+  font-size: 17px !important;
+  overflow: hidden;
+  position: relative;
+}
+.Mom-btn:hover.Mom-btn:before, .reset:hover.reset:before, .reset:hover.reset p{
+  left: 0;
+  z-index: 0;
+  color: #fff !important;
+}
+.loader-cont{
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  position:absolute;
+  height: 200px;
+  left: 0;
+  padding: 40px 0;
 }
 .form-group {
   margin-bottom: 15px;

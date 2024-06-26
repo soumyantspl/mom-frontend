@@ -16,34 +16,34 @@ import {
 // import CreateMinutes from "./CreateMinutes";
 import ViewMinutes from "./ViewMinutes";
 import { useLocation } from "react-router-dom";
-import "./minutes.css"
-import CreateMinutes from "./CreateMinutes";
+import "./minutes.css";
+import CreateMinutes
+ from "./createMinutes";
 const MinutesPage = () => {
-    const location = useLocation();
-    const stateData = location.state;
-    console.log(stateData);
-    const accessToken = localStorage.getItem("accessToken");
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    const dispatch = useDispatch();
-    const meetingRoomData = useSelector((state) => state.meetingRoom);
-    const meetingData = useSelector((state) => state.meeting);
-    const [isViewMeetingPage, setIsViewMeetingPage] = useState(false);
-    console.log(meetingData);
-    console.log("use effect------------------------------------");
+  const location = useLocation();
+  const stateData = location.state;
+  console.log(stateData);
+  const accessToken = localStorage.getItem("accessToken");
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const dispatch = useDispatch();
+  const meetingRoomData = useSelector((state) => state.meetingRoom);
+  const meetingData = useSelector((state) => state.meeting);
+  const [isViewMeetingPage, setIsViewMeetingPage] = useState(false);
+  console.log(meetingData);
+  console.log("use effect------------------------------------");
 
-    useEffect(() => {
-     
-        console.log("use effect-------------------------------22-----");
-      console.log(stateData);
-      dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
-      // dispatch()
-  
-      return () => {
-        console.log("return useeffect--------------->>>>>>>>>>>>>>");
-  
-        dispatch(unSetSingleMeetingDetails);
-      };
-    }, []);
+  useEffect(() => {
+    console.log("use effect-------------------------------22-----");
+    console.log(stateData);
+    dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
+    // dispatch()
+
+    return () => {
+      console.log("return useeffect--------------->>>>>>>>>>>>>>");
+
+      dispatch(unSetSingleMeetingDetails);
+    };
+  }, []);
   return (
     <>
       <Header />
@@ -52,7 +52,6 @@ const MinutesPage = () => {
       <div className="main-content">
         <div className="row">
           <div className="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 detail-col">
-           
             <CreateMinutes />
           </div>
           <div className="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 detail-col">
