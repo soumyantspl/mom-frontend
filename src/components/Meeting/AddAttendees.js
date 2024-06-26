@@ -131,6 +131,7 @@ const AddAttendees = (props) => {
       const payload = {
         attendees: attendeesData,
         organizationId: userData.organizationId,
+        sendNotification:false,
         isUpdate:
           stateData.isMeetingDataUpdate &&
           meetingData.singleMeetingDetails.step === 3
