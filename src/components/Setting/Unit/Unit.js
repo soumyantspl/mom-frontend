@@ -178,6 +178,7 @@ const Unit = () => {
 
   const fetchUnits = async (bodyData) => {
     try {
+      console.log("bodyData-->", bodyData);
       setIsFetching(true);
       const headerObject = {
         headers: {
@@ -192,7 +193,7 @@ const Unit = () => {
         headerObject
       );
       const data = response.data.data || {};
-      console.log("Unit id->", unitData.id);
+      console.log("Unit id->", data);
       setUnits(data.unitData || []);
       setTotalCount(data.totalCount || 0);
       setIsFetching(false);
@@ -215,6 +216,7 @@ const Unit = () => {
     const bodyData = searchKey
       ? { searchKey, organizationId }
       : { organizationId };
+    console.log("bodyData-->", bodyData);
     await fetchUnits(bodyData);
   };
   const formatDateTimeFormat = (date) => {
@@ -265,6 +267,9 @@ const Unit = () => {
           theme: "colored",
           // transition: Bounce,
         });
+        setSelectedUnit(null);
+        setShowEditModal(false);
+        fetchUnitData();
       } else {
         toast.error(response.data.message, {
           position: "top-right",
@@ -278,11 +283,11 @@ const Unit = () => {
           // transition: Bounce,
         });
       }
-      setUnits((prevUnits) =>
-        prevUnits.map((unit) =>
-          unit._id === selectedUnit._id ? { ...unit, ...updatedUnit } : unit
-        )
-      );
+      // setUnits((prevUnits) =>
+      //   prevUnits.map((unit) =>
+      //     unit._id === selectedUnit._id ? { ...unit, ...updatedUnit } : unit
+      //   )
+      // );
       setShowEditModal(false);
     } catch (error) {
       toast.error(error.message, {
@@ -321,9 +326,9 @@ const Unit = () => {
     try {
       if (unitToDelete) {
         await deleteUnit(unitToDelete._id);
-        setUnits((prevUnits) =>
-          prevUnits.filter((unit) => unit._id !== unitToDelete._id)
-        );
+        // setUnits((prevUnits) =>
+        //   prevUnits.filter((unit) => unit._id !== unitToDelete._id)
+        // );
         setShowDeleteModal(false);
         setUnitToDelete(null);
       }
@@ -357,6 +362,7 @@ const Unit = () => {
           // transition: Bounce,
         });
       }
+      fetchUnitData();
       return response.data;
     } catch (error) {
       toast.error(error.message, {
