@@ -46,7 +46,6 @@ const MeetingList = () => {
   const [optionArray, setOptionArray] = useState(false);
   const [attendeesData, setAttendeesData] = useState([]);
 
-  const [isBack, setIsBack] = useState(false);
   const [searchData, setSearchData] = useState({
     searchKey: "",
     page: 1,
@@ -78,7 +77,7 @@ const MeetingList = () => {
     // setIsUser(isUser)
   };
 
-  //  console.log(filter);
+
   const isLogIn = false;
   useEffect(() => {
     document.title = "Meeting List";
@@ -119,6 +118,7 @@ const MeetingList = () => {
     searchData.filterData,
     meetingData.isRsvpUpdated,
     meetingData.isFetchedMeetingList,
+
   ]);
   console.log(
     "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
@@ -227,7 +227,8 @@ const MeetingList = () => {
     console.log(timeArray);
     let session = "AM";
     let hour = parseInt(timeArray[0]);
-    let minute = parseInt(timeArray[1]);
+    //let minute = parseInt(timeArray[1]);
+    let minute =timeArray[1];
     console.log(hour, minute);
     if (hour > 12) {
       session = "PM";
@@ -240,7 +241,7 @@ const MeetingList = () => {
 
   console.log("repeat------------------------", searchData, isCancelModalOpen);
   return (
-    <div>
+   <>
       <Header />
       <MeetingHeader />
       <Sidebar />
@@ -277,6 +278,7 @@ const MeetingList = () => {
               setfilter={setfilter}
               filterData={filterData}
               initData={searchData.filterData}
+             
             />
           ) : null}
         </div>
@@ -337,8 +339,8 @@ const MeetingList = () => {
                       <td data-label="Meeting Date & Time">
                         {formatDateTimeFormat(meeting.date).formattedDate}
                         <p className="detail-date-time">
-                          {/* {formatTimeFormat(meeting.fromTime)} */}
-                          {formatDateTimeFormat(meeting.date).formattedTime}
+                          {formatTimeFormat(meeting.fromTime)}
+                          {/* {formatDateTimeFormat(meeting.date).formattedTime} */}
                         </p>
                       </td>
                       <td data-label="Meeting Title">
@@ -512,15 +514,22 @@ const MeetingList = () => {
             </table>
           ) : !meetingData.loading && meetingData.meetingList?.length === 0 ? (
             <div className="mt-2 table-box no-data-img">
+               <Alert
+                      status={"info"}
+                      message={"No data available."}
+                      timeoutSeconds={0}
+                    />
               {/* <Alert message="No Data Found !" status={false} /> */}
-
+             
               <NoDataFound dataType={"meeting"} />
-              <Button
+              <Button className="mt-2"
                 variant="primary"
                 onClick={(e) => {
+            
                   setSearchData({
                     ...searchData,
                     searchKey: "",
+                    filterData:{},
                   });
                 }}
               >
@@ -649,7 +658,7 @@ const MeetingList = () => {
           )}
         </div>
       </div>
-    </div>
+      </>
   );
 };
 

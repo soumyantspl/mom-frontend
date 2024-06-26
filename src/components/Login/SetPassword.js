@@ -456,8 +456,15 @@ const SetPassword = (props) => {
                         />
                       </svg>
                       <span
+                        // onClick={() => {
+                        //   dispatch(updateIsSuccess(true));
+                        // }}
+
                         onClick={() => {
-                          dispatch(updateIsSuccess(true));
+                          if(!authData.loading){
+                            dispatch(updateIsSuccess(true));
+                          }
+                         
                         }}
                       >
                         Back to Sign In

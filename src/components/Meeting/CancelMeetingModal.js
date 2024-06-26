@@ -70,7 +70,7 @@ const CancelMeetingModal = (props) => {
           <button
             type="button"
             onClick={(e) => props.setIsModalOpen(false)}
-            className="reset btn btn-secondary bg-white border-primary text-primary"
+            className="reset btn btn-light bg-white border-primary text-primary "
           >
             <p>Close</p>
           </button>

@@ -75,7 +75,7 @@ const AddAttendees = (props) => {
       document.title = "Update Meeting: Meeting Plus";
 
       setAttendeesData(
-        meetingData.singleMeetingDetails.attendees.map(
+        meetingData.singleMeetingDetails?.attendees?.map(
           ({ rsvp, ...keepAttrs }) => keepAttrs
         )
       );
@@ -131,6 +131,7 @@ const AddAttendees = (props) => {
       const payload = {
         attendees: attendeesData,
         organizationId: userData.organizationId,
+        sendNotification:false,
         isUpdate:
           stateData.isMeetingDataUpdate &&
           meetingData.singleMeetingDetails.step === 3
@@ -140,7 +141,7 @@ const AddAttendees = (props) => {
         meetingStatus: meetingData?.singleMeetingDetails?.meetingStatus.status,
       };
       dispatch(
-        updateMeetingDetails(meetingId, payload, accessToken, "addAttendee")
+        updateMeetingDetails(meetingId, payload, accessToken, "addAttendee",stateData.isMeetingDataUpdate)
       );
     }
     //  setStep(3);
@@ -200,7 +201,7 @@ const AddAttendees = (props) => {
       }
       //  addNewPeople();
     } else {
-      if (formData.attendeeId) {
+      if (formData?.attendeeId) {
         console.log(formData.attendeeId);
         if (attendeesData.length > 0) {
           console.log(attendeesData);
@@ -345,7 +346,7 @@ const AddAttendees = (props) => {
         <div className="inner-detail-form">
           <label className="mb-1 people">Attendee(s)</label>
           <div className="d-flex people ">
-            {attendeesData.length > 0 ? (
+            {attendeesData?.length > 0 ? (
               <>
                 {/* <div className="people-circle-add Mom-btn pointer">
                   <svg
@@ -652,7 +653,7 @@ const AddAttendees = (props) => {
               </button>
             ) : !meetingData.loading && !stateData.isMeetingDataUpdate ? (
               <button className="create-meeting-button Mom-btn" type="submit">
-                <p>Next submit</p>
+                <p>Save & Proceed</p>
               </button>
             ) : (
               <LoaderButton />

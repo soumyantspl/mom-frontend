@@ -13,7 +13,7 @@ import ViewMeeting from "./ViewMeeting";
 const EditMeetingPage = () => {
   const location = useLocation();
   const stateData = location.state;
-  console.log(stateData);
+  //console.log(stateData);
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
   const meetingData = useSelector((state) => state.meeting);
@@ -22,7 +22,9 @@ const EditMeetingPage = () => {
   useEffect(() => {
     console.log("use effect------------------------------------");
     console.log(stateData);
-    dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
+    if(stateData?.meetingId){
+    dispatch(getSingleMeetingDetails(stateData?.meetingId, accessToken));
+    }
     // dispatch()
 
     return () => {
@@ -33,6 +35,7 @@ const EditMeetingPage = () => {
   }, []);
   return (
     <>
+     {!stateData?.meetingId ? <Navigate to="/meeting-list" /> : null}
       <Header />
       <MeetingHeader />
       <Sidebar />
@@ -40,7 +43,7 @@ const EditMeetingPage = () => {
         <div className="row">
           <div className="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 detail-col">
             <div className="meeting-header-text">
-              <h4>Meeting Details</h4>
+              <h4>Edit Meeting Details</h4>
             </div>
             <EditMeeting />
           </div>

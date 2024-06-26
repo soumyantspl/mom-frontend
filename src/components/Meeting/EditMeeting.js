@@ -53,11 +53,11 @@ const EditMeeting = (props) => {
   console.log(location);
   const stateData = location.state;
   console.log(meetingData);
-  console.log(stateData);
-  console.log(stateData.isMeetingDataUpdate)
+ // console.log(stateData);
+//  console.log(stateData.isMeetingDataUpdate)
   useEffect(() => {
     console.log(" useeffect--------------->>>>>>>>>>>>>>1");
-    if(stateData.isMeetingDataUpdate){
+    if(stateData?.isMeetingDataUpdate){
       document.title = "Update Meeting: Meeting Plus";
     
     }
@@ -695,7 +695,7 @@ const EditMeeting = (props) => {
                   Next
                 </Button> */}
   <div className="button-outer">
-  {!meetingData.loading && stateData.isMeetingDataUpdate  ? (
+  {!meetingData.loading && stateData?.isMeetingDataUpdate  ? (
               // <div className="create-meeting-button">
               //   <Button
               //     variant="primary"
@@ -738,21 +738,21 @@ const EditMeeting = (props) => {
               <LoaderButton />
             )}
             
-            {!meetingData.loading && stateData.isMeetingDataUpdate  ? (
+            {!meetingData.loading && stateData?.isMeetingDataUpdate  ? (
              <button
                     className="create-meeting-button Mom-btn"
                     onClick={(e) => dispatch(updateStep(1))}
                   >
                     <p>Next</p>
                   </button>
-            ):!meetingData.loading && !stateData.isMeetingDataUpdate  ?(
+            ):!meetingData.loading && !stateData?.isMeetingDataUpdate  ?(
               <button
               className="create-meeting-button Mom-btn"
               type="submit"
             >
               <p>Next</p>
             </button>
-            ):meetingData.loading && !stateData.isMeetingDataUpdate  ?(
+            ):meetingData.loading && !stateData?.isMeetingDataUpdate  ?(
               <LoaderButton />
             ):null
             

@@ -5,7 +5,7 @@ import { fetchAttendeesList } from "../../redux/actions/meetingActions/MeetingAc
 
 // FILTER COMPONENT
 const FilterComponent = (props) => {
-  console.log(props.initData);
+  console.log(props);
   const dispatch = useDispatch();
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -23,6 +23,7 @@ const FilterComponent = (props) => {
       ...props.initData,
     });
     dispatch(fetchAttendeesList(userData.organizationId, accessToken));
+ 
   }, []);
 
   const handleChange = (e) => {

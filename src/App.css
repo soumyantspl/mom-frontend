@@ -1535,6 +1535,11 @@ textarea {
 .SlNo {
   width: 90px;
 }
+
+textarea{
+  display: block;
+}
+
 .copyright {
   /* position: absolute;
   bottom: 35px;
@@ -1577,16 +1582,21 @@ textarea {
   background-color: #ffffff;
   border-radius: 10px;
   z-index: 1;
-  margin-bottom: 40px;
+  /* margin-bottom: 40px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.white-box img{
+  width: 70%;
 }
 
 .table-box.no-data-img {
   box-shadow: none;
 }
 
-.white-box img {
-  width: 100%;
-}
+
 .blue-box::before {
   content: "";
   position: absolute;
@@ -2122,4 +2132,12 @@ input[type="number"] {
 .form-group {
   margin-bottom: 15px;
   position: relative;
+}
+.alert{
+  width: 100%;
+}
+
+
+.attendees-popup .form-check-input{
+  margin-right: 5px;
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import noDataFound from "../../assets/images/No-data-found.svg";
 import noAgendaFound from "../../assets/images/No-agenda-found.svg";
-//import noAttendeeFound from "../../assets/images/No-data-found.svg";
+import noAttendeeFound from "../../assets/images/No-attendee-added.svg";
 const NoDataFound = (props) => {
   return (
     <div className="white-box">
@@ -14,7 +14,7 @@ const NoDataFound = (props) => {
       ) : props.dataType === "attendee" ? (
         <img
           // @ts-ignore
-          src={noDataFound}
+          src={noAttendeeFound}
           alt=""
         ></img>
       ) : (
