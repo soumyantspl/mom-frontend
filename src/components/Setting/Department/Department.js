@@ -44,7 +44,6 @@ const Department = () => {
     let isValid = true;
     let errors = {};
     if (!formValues.name.trim()) {
-      errors.name = "Unit Name is required";
       isValid = false;
       toast.error(errors.name, {
         position: "top-right",
@@ -123,6 +122,18 @@ const Department = () => {
     }
   };
 
+  const fetchDepartment = async () => {
+    try {
+      setIsFetching(true);
+      const headerObject = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: accessToken,
+        },
+        params: { limit, page, order },
+      };
+    } catch (error) {}
+  };
   return (
     <div>
       <Header />
