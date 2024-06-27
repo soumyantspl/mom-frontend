@@ -21,7 +21,7 @@ const Unit = () => {
   const accessToken = localStorage.getItem("accessToken");
   const [unitData, setUnitData] = useState({ name: "", address: "" });
   const [formValues, setFormValues] = useState({ name: "", address: "" });
-  const [errors, setErrors] = useState({ name: "", address: "" });
+  const [errors, setErrors] = useState({});
   //List
   const [units, setUnits] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -42,13 +42,17 @@ const Unit = () => {
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [unitName, setUnitName] = useState("");
   const [unitAddress, setUnitAddress] = useState("");
-
+  const [editformValues, setEditFormValues] = useState({
+    name: "",
+    address: "",
+  });
   //Delete Unit
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [unitToDelete, setUnitToDelete] = useState(null);
   console.log("unitToDelete-->", unitToDelete);
 
   const handleChange = (e) => {
+    setErrors({});
     const { name, value } = e.target;
     setUnitData({
       ...unitData,
@@ -95,20 +99,46 @@ const Unit = () => {
     return isValid;
   };
 
-  const fieldValidationCheck = (e) => {
-    e.preventDefault();
-
-    const newErrors = validate(formValues);
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length === 0) {
-      // Form submission logic here
-
-      console.log("Form submitted successfully!");
-    } else {
-      console.log(`Form submission failed
-       due to validation errors.`);
+  const unitNameValidationCheck = () => {
+    console.log("calling-------------------", formValues);
+    const errors = {};
+    if (!formValues.name.trim()) {
+      errors.name = "Unit Name is required";
     }
+    setErrors(errors);
+    return errors;
   };
+
+  const unitAddressValidationCheck = () => {
+    console.log("calling-------------------", formValues);
+    const errors = {};
+    if (!formValues.address.trim()) {
+      errors.address = "Address is required";
+    }
+    setErrors(errors);
+    return errors;
+  };
+
+  const editNameValidationCheck = () => {
+    console.log("calling-------------------", formValues);
+    const errors = {};
+    if (!unitName.trim()) {
+      errors.editName = "Unit Name is required";
+    }
+    setErrors(errors);
+    return errors;
+  };
+  const editAddressValidationCheck = () => {
+    console.log("calling-------------------", formValues);
+    const errors = {};
+    if (!unitAddress.trim()) {
+      errors.editAddress = "Address is required";
+    }
+    setErrors(errors);
+    return errors;
+  };
+
+  console.log("errors-------------------", errors);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsGetApiRes(false);
@@ -170,7 +200,8 @@ const Unit = () => {
           theme: "colored",
           // transition: Bounce,
         });
-        console.error("Error creating unit:", error.response.data.message);
+        setIsLoading(false);
+        // /console.error("Error creating unit:", error.response.data.message);
       }
     }
     setIsLoading(false);
@@ -240,6 +271,7 @@ const Unit = () => {
 
   const handleEditSave = async () => {
     try {
+      setErrors({});
       const updatedUnit = {
         name: unitName,
         address: unitAddress,
@@ -256,6 +288,7 @@ const Unit = () => {
         }
       );
       if (response.data.success) {
+        setEditFormValues({ name: "", address: "" });
         toast.success(response.data.message, {
           position: "top-right",
           autoClose: 5000,
@@ -289,6 +322,7 @@ const Unit = () => {
       //   )
       // );
       setShowEditModal(false);
+      setErrors({ ...errors, [editformValues.name]: "" });
     } catch (error) {
       toast.error(error.message, {
         position: "top-right",
@@ -402,7 +436,7 @@ const Unit = () => {
                   name="name"
                   autoComplete="off"
                   placeholder="Enter Unit Name"
-                  onBlur={fieldValidationCheck}
+                  onBlur={unitNameValidationCheck}
                   onChange={handleChange}
                   value={formValues.name}
                 />
@@ -422,20 +456,24 @@ const Unit = () => {
                   placeholder="Enter Unit Address"
                   onChange={handleChange}
                   value={formValues.address}
-                  onBlur={fieldValidationCheck}
+                  onBlur={unitAddressValidationCheck}
                 ></textarea>
                 {errors.address && (
                   <span className="error-message">{errors.address}</span>
                 )}
               </div>
 
-              <button
-                className="save Mom-btn"
-                type="submit"
-                disabled={isLoading}
-              >
-                {isLoading ? <LoaderButton /> : <p>Submit</p>}
-              </button>
+              {isLoading ? (
+                <LoaderButton />
+              ) : (
+                <button
+                  className="save Mom-btn"
+                  type="submit"
+                  disabled={isLoading}
+                >
+                  Submit
+                </button>
+              )}
             </form>
             <div>
               {/* {isGetApiRes ? (
@@ -676,9 +714,12 @@ const Unit = () => {
                     value={unitName}
                     autoComplete="off"
                     onChange={(e) => setUnitName(e.target.value)}
-                    onBlur={fieldValidationCheck}
+                    onBlur={editNameValidationCheck}
                   />
                 </Form.Group>
+                {errors.editName && (
+                  <span className="error-message">{errors.editName}</span>
+                )}
                 <Form.Group controlId="unitAddress" className="mt-3">
                   <Form.Label>Unit Address</Form.Label>
                   <Form.Control
@@ -687,9 +728,12 @@ const Unit = () => {
                     value={unitAddress}
                     autoComplete="off"
                     onChange={(e) => setUnitAddress(e.target.value)}
-                    onBlur={fieldValidationCheck}
+                    onBlur={editAddressValidationCheck}
                   />
                 </Form.Group>
+                {errors.editAddress && (
+                  <span className="error-message">{errors.editAddress}</span>
+                )}
               </Form>
             </Modal.Body>
             <Modal.Footer>
