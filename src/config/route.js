@@ -33,8 +33,6 @@ import ViewMeeting from "../components/Meeting/ViewMeeting";
 import { ToastContainer, toast } from "react-toastify";
 import ViewMeetingDetails from "../components/Meeting/ViewMeetingDetails";
 import EditMeetingPage from "../components/Meeting/EditMeetingPage";
-import Header from "../components/Common/Header/Header";
-import MeetingHeader from "../components/Common/Header/MeetingHeader";
 // import MinutesPage from "../components/Minutes/MinutesPage";
 //import MinutesPage from "../components/minutes/MinutesPage";
 
@@ -47,13 +45,13 @@ const AuthRoutes = () => {
   const isRememberMe = localStorage.getItem("rememberMe");
   return !isRememberMe ? <Outlet /> : <Navigate to="/meeting-list" />;
 };
+
 const MainRoute = () => {
   return (
     <div>
       <Router>
         <Routes>
           <Route element={<PrivateRoutes />}>
-           
             <Route exact path="/dashboard" element={<Dashboard />} />
             <Route exact path="/meeting-list" element={<MeetingList />} />
             <Route exact path="/action-list" element={<ActionList />} />

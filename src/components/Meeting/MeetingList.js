@@ -28,6 +28,7 @@ import AttendeesRsvpModal from "./AttendeesRsvpModal";
 import CommonModal from "../Common/CommonModal";
 import { cancelMeeting } from "../../constants/constatntMessages";
 import CancelMeetingModal from "./CancelMeetingModal";
+import { logOut } from "../../redux/actions/authActions/authAction";
 const MeetingList = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const accessToken = localStorage.getItem("accessToken");
@@ -39,12 +40,15 @@ const MeetingList = () => {
 
 
   const employeeData = useSelector((state) => state.user);
-  if (employeeData?.userData === null) {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("userData");
-    localStorage.removeItem("rememberMe");
-    navigate("/login");
-  }
+  console.log(employeeData )
+  // if (employeeData?.userData === null && employeeData.isSuccess) {
+  //   console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("userData");
+  //   localStorage.removeItem("rememberMe");
+  //   dispatch(logOut())
+  //   navigate("/login");
+  // }
   const [filter, setfilter] = useState(false);
   const [meetingId, setMeetingId] = useState(null);
   const [rsvpCount, setRsvpCount] = useState("");

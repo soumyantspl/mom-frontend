@@ -36,12 +36,12 @@ const AddAgendas = () => {
   const employeeData = useSelector((state) => state.user);
   const navigate = useNavigate();
 
-  if (employeeData?.userData === null) {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("userData");
-    localStorage.removeItem("rememberMe");
-    navigate("/login");
-  }
+  // if (employeeData?.userData === null) {
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("userData");
+  //   localStorage.removeItem("rememberMe");
+  //   navigate("/login");
+  // }
   //console.log(meetingRoomData);
   const [numAgenda, setNumAgenda] = useState(1);
   const [attendees, setAttendees] = useState([]);

@@ -44,12 +44,12 @@ const ViewMeeting = (props) => {
   console.log(meetingData);
   const navigate = useNavigate();
   const employeeData = useSelector((state) => state.user);
-  if (employeeData?.userData === null) {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("userData");
-    localStorage.removeItem("rememberMe");
-    navigate("/login");
-  }
+  // if (employeeData?.userData === null) {
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("userData");
+  //   localStorage.removeItem("rememberMe");
+  //   navigate("/login");
+  // }
   useEffect(() => {
     console.log(stateData);
     // if (stateData?.isViewMeetingPage) {

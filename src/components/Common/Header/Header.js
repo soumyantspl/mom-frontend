@@ -37,6 +37,7 @@ const Header = () => {
     setIsModalOpen(false);
     // alert("You will be log out");
   };
+  const authData = useSelector((state) => state.auth);
   const employeeData = useSelector((state) => state.user);
   useEffect(() => {
     console.log("userData", employeeData.userData);
@@ -47,12 +48,12 @@ const Header = () => {
       navigate("/login");
     }
 
-    if (employeeData?.userData === null) {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("userData");
-      localStorage.removeItem("rememberMe");
-      navigate("/login");
-    }
+    // if (employeeData?.userData === null && !authData.isLogInSuccess) {
+    //   localStorage.removeItem("accessToken");
+    //   localStorage.removeItem("userData");
+    //   localStorage.removeItem("rememberMe");
+    //   navigate("/login");
+    // }
   }, []);
   console.log(employeeData);
   return (

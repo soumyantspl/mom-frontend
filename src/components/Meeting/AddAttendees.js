@@ -40,12 +40,12 @@ const AddAttendees = (props) => {
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const meetingData = useSelector((state) => state.meeting);
   const employeeData = useSelector((state) => state.user);
-  if (employeeData?.userData === null) {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("userData");
-    localStorage.removeItem("rememberMe");
-    navigate("/login");
-  }
+  // if (employeeData?.userData === null) {
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("userData");
+  //   localStorage.removeItem("rememberMe");
+  //   navigate("/login");
+  // }
   console.log(meetingRoomData);
   const location = useLocation();
   console.log(location);

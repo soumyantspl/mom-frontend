@@ -27,12 +27,12 @@ import "react-toastify/dist/ReactToastify.css";
 const AddMeeting = (props) => {
   const navigate = useNavigate();
   const employeeData = useSelector((state) => state.user);
-  if (employeeData?.userData === null) {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("userData");
-    localStorage.removeItem("rememberMe");
-    navigate("/login");
-  }
+  // if (employeeData?.userData === null) {
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("userData");
+  //   localStorage.removeItem("rememberMe");
+  //   navigate("/login");
+  // }
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
   const dispatch = useDispatch();

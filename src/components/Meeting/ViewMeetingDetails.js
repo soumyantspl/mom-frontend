@@ -30,12 +30,12 @@ const ViewMeetingDetails = () => {
   const meetingData = useSelector((state) => state.meeting);
   const employeeData = useSelector((state) => state.user);
   const navigate = useNavigate();
-  if (employeeData?.userData === null) {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("userData");
-    localStorage.removeItem("rememberMe");
-    navigate("/login");
-  }
+  // if (employeeData?.userData === null) {
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("userData");
+  //   localStorage.removeItem("rememberMe");
+  //   navigate("/login");
+  // }
   const [isViewMeetingPage, setIsViewMeetingPage] = useState(false);
   console.log(meetingData);
   console.log("use effect------------------------------------");
