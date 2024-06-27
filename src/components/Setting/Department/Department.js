@@ -54,9 +54,9 @@ const Department = () => {
     setErrors({ ...errors, [name]: "" });
   };
 
-  const handleEditClick = (unit) => {
-    setSelectedDepartment(unit);
-    setDepartmentName(unit.name);
+  const handleEditClick = (department) => {
+    setSelectedDepartment(department);
+    setDepartmentName(department.name);
     setShowEditModal(true);
   };
 
@@ -223,8 +223,9 @@ const Department = () => {
   const handleEditDepartment = async () => {
     try {
       setErrors({});
+      console.log("dep id-->", selectedDepartment._id);
       const updatedDepartment = { name: departmentName, organizationId };
-      const response = await axios.put(
+      const response = await axios.post(
         `http://localhost:8000/api/V1/department/editDepartment/${selectedDepartment._id}`,
         updatedDepartment,
         {
@@ -434,7 +435,7 @@ const Department = () => {
                                   Edit
                                 </Dropdown.Item>
                                 <Dropdown.Item
-                                  onClick={() => "handleDeleteClick(unit)"}
+                                  onClick={() => " handleDeleteClick(unit)"}
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -449,6 +450,7 @@ const Department = () => {
                                   Delete
                                 </Dropdown.Item>
                               </Dropdown.Menu>
+
                               {/* </div> */}
                             </Dropdown>
                           </td>
@@ -554,24 +556,20 @@ const Department = () => {
                   <Form.Label>Department Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter Unit Name"
+                    placeholder="Enter Department Name"
                     value={departmentName}
                     autoComplete="off"
                     onChange={(e) => setDepartmentName(e.target.value)}
-                    // onBlur={editNameValidationCheck}?
+                    onBlur={editDepartmentnameValidationCheck}
                   />
                 </Form.Group>
-                {errors.editName && (
-                  <span className="error-message">{errors.editName}</span>
+                {errors.departmentName && (
+                  <span className="error-message">{errors.departmentName}</span>
                 )}
               </Form>
             </Modal.Body>
             <Modal.Footer>
-              <Button
-                variant="light"
-                className="btn-light"
-                onClick={() => setShowEditModal(false)}
-              >
+              <Button variant="light" onClick={() => setShowEditModal(false)}>
                 Close
               </Button>
               <Button variant="primary" onClick={handleEditDepartment}>
