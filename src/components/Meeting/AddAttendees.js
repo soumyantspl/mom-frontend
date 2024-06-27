@@ -6,6 +6,7 @@ import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction.js/mee
 import { useSelector, useDispatch } from "react-redux";
 import CommonStepper from "../Common/CommonStepper";
 import CreateMeeting from "./CreateMeeting";
+
 import {
   createMeetingDetails,
   fetchAttendeesList,
@@ -28,15 +29,23 @@ import { customName } from "../../helpers/commonHelpers";
 import CommonModal from "../Common/CommonModal";
 import Alert from "../Common/Alert";
 import RemoveAttendeesModal from "./RemoveAttendeesModal";
-import { Navigate, Link, useLocation } from "react-router-dom";
+import { Navigate, Link, useLocation,useNavigate } from "react-router-dom";
 
 const AddAttendees = (props) => {
+  const navigate = useNavigate();
+
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
   const dispatch = useDispatch();
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const meetingData = useSelector((state) => state.meeting);
   const employeeData = useSelector((state) => state.user);
+  if (employeeData?.userData === null) {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    navigate("/login");
+  }
   console.log(meetingRoomData);
   const location = useLocation();
   console.log(location);
@@ -203,7 +212,7 @@ const AddAttendees = (props) => {
     } else {
       if (formData?.attendeeId) {
         console.log(formData.attendeeId);
-        if (attendeesData.length > 0) {
+        if (attendeesData?.length > 0) {
           console.log(attendeesData);
           const attendeeFound = attendeesData.find(
             (u) => u._id === formData.attendeeId

@@ -43,6 +43,20 @@ export const viewSingleUser = (userId,accessToken) => {
         if (resData.success) {
           dispatch(fetchSingleUser(resData));
         }
+        else{
+          dispatch(fetchSingleUser(resData));
+          toast.error(resData.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            // transition: Bounce,
+          });
+        }
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
