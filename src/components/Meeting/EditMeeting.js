@@ -166,6 +166,7 @@ const EditMeeting = (props) => {
           title: formData.title,
           link:formData.link,
           step:1,
+          sendNotification:false,
           isUpdate:stateData.isMeetingDataUpdate && meetingData.singleMeetingDetails.step===3?true:false,
         };
         console.log(payload);
