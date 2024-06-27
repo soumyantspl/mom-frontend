@@ -23,19 +23,24 @@ import Alert from "../Common/Alert";
 import AddAgendas from "./AddAgendas";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { logOut } from "../../redux/actions/authActions/authAction";
 
 const AddMeeting = (props) => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const employeeData = useSelector((state) => state.user);
-  // if (employeeData?.userData === null) {
-  //   localStorage.removeItem("accessToken");
-  //   localStorage.removeItem("userData");
-  //   localStorage.removeItem("rememberMe");
-  //   navigate("/login");
-  // }
+  const authData = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  if (authData.isInValidUser) {
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    dispatch(logOut())
+    navigate("/login");
+  }
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
-  const dispatch = useDispatch();
+
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const meetingData = useSelector((state) => state.meeting);
   console.log(meetingRoomData);

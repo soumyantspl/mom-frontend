@@ -22,6 +22,7 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as constantMessages from "../../../constants/constatntMessages";
+import { setInValidUser } from "../authActions/authAction";
 
 const accessToken = localStorage.getItem("accessToken");
 
@@ -72,12 +73,31 @@ export const fetchMeetingList = (payload) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
+        console.log("resData------------------------->>>>>>>", resData);
+        if(resData.data?.isInValidUser){
+          dispatch(setInValidUser(true));
+        }
+        if((!resData.success && resData.data?.totalCount!==0)||resData.data?.isInValidUser)
+          {
+            toast.error(resData.message, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+              // transition: Bounce,
+            });
+          }
+        console.log("resData------------------------->>>>>>>", resData);
         dispatch(getMeetingList(resData));
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
+        toast.error(constantMessages.serverErrorMessage, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -116,12 +136,26 @@ export const fetchAttendeesList = (organizationId, token) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
+        if(resData.data?.isInValidUser){
+          dispatch(setInValidUser(true));
+          toast.error(resData.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            // transition: Bounce,
+          });
+        }
         dispatch(getAttendeesList(resData));
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
+        toast.error(constantMessages.serverErrorMessage, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -169,6 +203,9 @@ export const updateRsvp = (rsvp, meetingId) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
+        if(resData.data?.isInValidUser){
+          dispatch(setInValidUser(true));
+        }
         if (resData.success) {
           toast.success(resData.message, {
             position: "top-right",
@@ -199,7 +236,7 @@ export const updateRsvp = (rsvp, meetingId) => {
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
+        toast.error(constantMessages.serverErrorMessage, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -239,6 +276,9 @@ export const createMeetingDetails = (payload, accessToken) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
+        if(resData.data?.isInValidUser){
+          dispatch(setInValidUser(true));
+        }
         if (resData.success) {
           dispatch(getSingleMeetingDetails(resData.data._id, accessToken));
 
@@ -273,7 +313,7 @@ export const createMeetingDetails = (payload, accessToken) => {
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
+        toast.error(constantMessages.serverErrorMessage, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -313,12 +353,25 @@ export const getCreateMeetingStep = (organizationId, accessToken) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
-
+        if(resData.data?.isInValidUser){
+          dispatch(setInValidUser(true));
+        }
         dispatch(fetchCreateMeetingStep(resData));
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
+        toast.error( constantMessages.serverErrorMessage, {
+          position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -360,6 +413,7 @@ export const updateMeetingDetails = (
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
+       
         const message =
           isFrom  === "addAttendee" && !isUpdate
             ? "Attendees added successfully. Please add agenda."
@@ -383,6 +437,9 @@ export const updateMeetingDetails = (
           dispatch(updateMeetingResponse(resData));
           dispatch(updateStep(bodyPayload.step, true));
         } else {
+          if(resData.data?.isInValidUser){
+            dispatch(setInValidUser(true));
+          }
           toast.error(resData.message, {
             position: "top-right",
             autoClose: 5000,
@@ -400,7 +457,7 @@ export const updateMeetingDetails = (
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
+        toast.error(constantMessages.serverErrorMessage, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -440,13 +497,29 @@ export const getSingleMeetingDetails = (meetingId, accessToken) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
-
+       
+        if(resData.data?.isInValidUser){
+          dispatch(setInValidUser(true));
+        }
+        if(!resData.success && !resData.data?.isInValidUser){
+          toast.error(resData.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            // transition: Bounce,
+          });
+        }
         dispatch(setSingleMeetingDetails({ data: resData.data, meetingId }));
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
+        toast.error(constantMessages.serverErrorMessage, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -522,6 +595,9 @@ export const processCancelMeeting = (meetingId, bodyPayload, accessToken) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
+        if(resData.data?.isInValidUser){
+          dispatch(setInValidUser(true));
+        }
         if (resData.success) {
           toast.success(resData.message, {
             position: "top-right",
@@ -553,7 +629,7 @@ export const processCancelMeeting = (meetingId, bodyPayload, accessToken) => {
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
+        toast.error(constantMessages.serverErrorMessage, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,

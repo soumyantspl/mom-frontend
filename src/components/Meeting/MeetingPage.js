@@ -12,6 +12,7 @@ import { useNavigate, Navigate, Link ,useLocation} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import "./style/meetings-css.css";
 import { getCreateMeetingStep, updateStep } from "../../redux/actions/meetingActions/MeetingAction";
+import { logOut } from "../../redux/actions/authActions/authAction";
 const MeetingPage = () => {
   const location = useLocation();
   const stateData = location.state;
@@ -20,6 +21,16 @@ const MeetingPage = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const meetingData = useSelector((state) => state.meeting);
   const dispatch = useDispatch();
+  const authData = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  if (authData.isInValidUser) {
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    dispatch(logOut())
+    navigate("/login");
+  }
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
     // if (meetingData.checkStep) {

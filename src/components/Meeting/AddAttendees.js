@@ -30,6 +30,7 @@ import CommonModal from "../Common/CommonModal";
 import Alert from "../Common/Alert";
 import RemoveAttendeesModal from "./RemoveAttendeesModal";
 import { Navigate, Link, useLocation,useNavigate } from "react-router-dom";
+import { logOut } from "../../redux/actions/authActions/authAction";
 
 const AddAttendees = (props) => {
   const navigate = useNavigate();
@@ -40,12 +41,15 @@ const AddAttendees = (props) => {
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const meetingData = useSelector((state) => state.meeting);
   const employeeData = useSelector((state) => state.user);
-  // if (employeeData?.userData === null) {
-  //   localStorage.removeItem("accessToken");
-  //   localStorage.removeItem("userData");
-  //   localStorage.removeItem("rememberMe");
-  //   navigate("/login");
-  // }
+  const authData = useSelector((state) => state.auth);
+  if (authData.isInValidUser) {
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    dispatch(logOut())
+    navigate("/login");
+  }
   console.log(meetingRoomData);
   const location = useLocation();
   console.log(location);

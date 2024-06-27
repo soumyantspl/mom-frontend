@@ -25,8 +25,8 @@ const LogInByPassword = (props) => {
   const stateData = location.state;
   console.log(stateData);
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: "soumya.mishra@ntspl.co.in",
+    password: "Demo@123",
   });
   const [errors, setErrors] = useState({});
   const [rememberMe, setRememberMe] = useState(false);

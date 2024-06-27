@@ -9,7 +9,8 @@ import {
   OTP_RESENT,
   SET_PASSWORD,
   LOGIN_PROCESS,
-  OTP_SENT_FOR_LOGIN_BY_OTP,UPDATE_TIMER
+  OTP_SENT_FOR_LOGIN_BY_OTP,UPDATE_TIMER,
+  SET_INVALID_USER
 } from "../actions/authActions/actionTypes";
 
 const initialObject = {
@@ -28,6 +29,7 @@ const initialObject = {
   isSetPassword: false,
   isLogInSuccess: false,
   isTimerOn: true,
+  isInValidUser:false
 };
 
 export const authReducer = (state = initialObject, action) => {
@@ -151,6 +153,12 @@ export const authReducer = (state = initialObject, action) => {
         isOtpProcessed: false,
         userData: action.payload.userData,
       };
+
+      case SET_INVALID_USER:
+        return {
+          ...state,
+          isInValidUser:action.payload
+        };
 
     default:
       return state;

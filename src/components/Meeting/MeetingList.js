@@ -34,21 +34,21 @@ const MeetingList = () => {
   const accessToken = localStorage.getItem("accessToken");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const authData = useSelector((state) => state.auth);
+ const authData = useSelector((state) => state.auth);
   const meetingData = useSelector((state) => state.meeting);
   const loginUserData = useSelector((state) => state.user);
 
 
   const employeeData = useSelector((state) => state.user);
-  console.log(employeeData )
-  // if (employeeData?.userData === null && employeeData.isSuccess) {
-  //   console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
-  //   localStorage.removeItem("accessToken");
-  //   localStorage.removeItem("userData");
-  //   localStorage.removeItem("rememberMe");
-  //   dispatch(logOut())
-  //   navigate("/login");
-  // }
+  console.log(authData )
+  if (authData.isInValidUser) {
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    dispatch(logOut())
+    navigate("/login");
+  }
   const [filter, setfilter] = useState(false);
   const [meetingId, setMeetingId] = useState(null);
   const [rsvpCount, setRsvpCount] = useState("");
@@ -122,8 +122,9 @@ const MeetingList = () => {
         payload.page = 1;
       }
       // console.log("payload in meetinglist----------34-------", payload);
-
+      if (!authData.isInValidUser) {
       dispatch(fetchMeetingList(payload));
+      }
     }
   }, [
     searchData.searchKey,
@@ -253,7 +254,7 @@ const MeetingList = () => {
     return result;
   };
 
-  console.log("repeat------------------------", searchData, isCancelModalOpen);
+  console.log("repeat------------------------", meetingData);
   return (
     <>
       <Header />

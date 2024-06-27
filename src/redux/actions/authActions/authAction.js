@@ -11,17 +11,19 @@ import {
   SET_PASSWORD,
   LOGIN_PROCESS,
   OTP_SENT_FOR_LOGIN_BY_OTP,
-  UPDATE_TIMER,
+  UPDATE_TIMER,SET_INVALID_USER
 } from "./actionTypes";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import * as constantMessages from "../../../constants/constatntMessages";
 
 export const makeRequest = () => {
   return {
     type: MAKE_REQUEST,
   };
 };
+
 export const failRequest = (err) => {
   return {
     type: FAIL_REQUEST,
@@ -99,7 +101,7 @@ export const sendOtp = (email, isSetPassword) => {
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
+        toast.error(constantMessages.serverErrorMessage, {
           position: "top-right",
           autoClose: 10000,
           hideProgressBar: false,
@@ -186,7 +188,7 @@ export const verifyOtp = (payload) => {
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
+        toast.error(constantMessages.serverErrorMessage, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -265,7 +267,7 @@ export const reSendOtp = (email) => {
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
+        toast.error(constantMessages.serverErrorMessage, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -335,7 +337,7 @@ export const setPassword = (payload) => {
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
+        toast.error(constantMessages.serverErrorMessage, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -367,6 +369,7 @@ export const logInByPassword = (payload, rememberMe) => {
         const resData = res.data;
         let data;
         if (resData.success) {
+          dispatch(setInValidUser(false));
           const { token, userData } = resData.data;
           localStorage.setItem("accessToken", token);
           localStorage.setItem("userData", JSON.stringify(userData));
@@ -412,7 +415,7 @@ export const logInByPassword = (payload, rememberMe) => {
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
+        toast.error(constantMessages.serverErrorMessage, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -430,6 +433,13 @@ export const logInByPassword = (payload, rememberMe) => {
 export const isLogInProcess = (data) => {
   return {
     type: LOGIN_PROCESS,
+    payload: data,
+  };
+};
+
+export const setInValidUser = (data) => {
+  return {
+    type: SET_INVALID_USER,
     payload: data,
   };
 };

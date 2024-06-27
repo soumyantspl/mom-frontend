@@ -18,18 +18,30 @@ import AttendeesDetails from "./AttendeesDetails";
 import NoDataFound from "../Common/NoDataFound";
 import Loader from "../Common/Loader";
 import Alert from "../Common/Alert";
+import { logOut } from "../../redux/actions/authActions/authAction";
 
 const ViewMeetingDetails = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const authData = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  if (authData.isInValidUser) {
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    dispatch(logOut())
+    navigate("/login");
+  }
   const stateData = location.state;
   console.log(stateData);
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
-  const dispatch = useDispatch();
+
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const meetingData = useSelector((state) => state.meeting);
   const employeeData = useSelector((state) => state.user);
-  const navigate = useNavigate();
+
   // if (employeeData?.userData === null) {
   //   localStorage.removeItem("accessToken");
   //   localStorage.removeItem("userData");
@@ -202,6 +214,7 @@ const ViewMeetingDetails = () => {
             <div className="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 detail-col">
               <div className="meeting-header-text">
                 <h4>Agenda Details</h4>
+                {meetingData.singleMeetingDetails?.meetingStatus?.status!=="draft"?(
                 <Link
                  className="btn rounded-pill add-btn Mom-btn d-flex align-items-center justify-content-center"
                 id="open-form-btn"
@@ -234,6 +247,7 @@ const ViewMeetingDetails = () => {
               </svg>
               {/* </button> */}
               </Link>
+                ):null}
               </div>
 
               <form className="mt-2 details-form details-form-right">

@@ -26,6 +26,7 @@ import Alert from "../Common/Alert";
 import AgendaComponent from "./AddAgendaComp";
 import AddAgendaComp from "./AddAgendaComp";
 import NewAgenda from "./NewAgenda";
+import { logOut } from "../../redux/actions/authActions/authAction";
 
 const AddAgendas = () => {
   const accessToken = localStorage.getItem("accessToken");
@@ -34,14 +35,16 @@ const AddAgendas = () => {
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const meetingData = useSelector((state) => state.meeting);
   const employeeData = useSelector((state) => state.user);
+  const authData = useSelector((state) => state.auth);
   const navigate = useNavigate();
-
-  // if (employeeData?.userData === null) {
-  //   localStorage.removeItem("accessToken");
-  //   localStorage.removeItem("userData");
-  //   localStorage.removeItem("rememberMe");
-  //   navigate("/login");
-  // }
+  if (authData.isInValidUser) {
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    dispatch(logOut())
+    navigate("/login");
+  }
   //console.log(meetingRoomData);
   const [numAgenda, setNumAgenda] = useState(1);
   const [attendees, setAttendees] = useState([]);

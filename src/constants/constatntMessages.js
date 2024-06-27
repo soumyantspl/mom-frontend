@@ -33,7 +33,9 @@ const cancelMeeting = "Do you want to cancel this meeting ?";
 const remarksRequired = "Please give remark.";
 const meetingCreated =
   "Meeting created successfully. Please add attendees.";
+  const serverErrorMessage='Sorry, something went wrong. Please try again later.';
 module.exports = {
+  serverErrorMessage,
   meetingCreated,
   remarksRequired,
   cancelMeeting,
