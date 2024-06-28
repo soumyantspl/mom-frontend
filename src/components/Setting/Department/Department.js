@@ -23,7 +23,7 @@ const Department = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   //List Department
-  const [department, setDepartment] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [searchKey, setSearchKey] = useState("");
   const [page, setPage] = useState(1);
@@ -42,6 +42,9 @@ const Department = () => {
   const [editformValues, setEditFormValues] = useState({
     name: "",
   });
+  //DELETE DEPARTMENT
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [departmentToDelete, setDepartmenToDelete] = useState(null);
 
   const handleChange = (e) => {
     setErrors({});
@@ -56,6 +59,7 @@ const Department = () => {
 
   const handleEditClick = (department) => {
     setSelectedDepartment(department);
+    console.log("Department ----->>>", department);
     setDepartmentName(department.name);
     setShowEditModal(true);
   };
@@ -173,7 +177,7 @@ const Department = () => {
       );
       const data = response.data.data || {};
       console.log("Department List->", data.departmentList);
-      setDepartment(data.departmentList || []);
+      setDepartments(data.departmentList || []);
       setTotalCount(data.totalCount || 0);
       setIsFetching(false);
     } catch (error) {
@@ -213,8 +217,8 @@ const Department = () => {
     setLimit(parseInt(e.target.value, 10));
     setPage(1);
   };
-  const fromDataCount = department.length === 0 ? 0 : (page - 1) * limit + 1;
-  const toDataCount = (page - 1) * limit + department.length;
+  const fromDataCount = departments.length === 0 ? 0 : (page - 1) * limit + 1;
+  const toDataCount = (page - 1) * limit + departments.length;
   const totalOption = Math.round(totalCount / 5 + 0.5);
   const totalPage = Math.round(totalCount / limit + 0.5);
   const totalPageArray = Array(totalPage).fill();
@@ -278,7 +282,7 @@ const Department = () => {
         theme: "colored",
         // transition: Bounce,
       });
-      console.log("Error while updating units:", error);
+      console.log("Error while updating Department:", error);
     }
   };
   const editDepartmentnameValidationCheck = () => {
@@ -290,6 +294,67 @@ const Department = () => {
     setErrors(errors);
     return errors;
   };
+
+  //DELETE DEPARTMENT
+  const handleDeleteClick = (department) => {
+    setDepartmenToDelete(department);
+    setShowDeleteModal(true);
+  };
+  const handleDeleteConfirm = async () => {
+    try {
+      if (departmentToDelete) {
+        await deleteDepartment(departmentToDelete._id);
+        setShowDeleteModal(false);
+        setDepartmenToDelete(null);
+      }
+    } catch (error) {
+      console.error("Error while deleting unit:", error);
+    }
+  };
+
+  const deleteDepartment = async (departmentId) => {
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/V1/unit/deleteUnit/${departmentId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: accessToken,
+          },
+        }
+      );
+      if (response.data.success) {
+        toast.success(response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          // transition: Bounce,
+        });
+      }
+      fetchDepartmentData();
+      return response.data;
+    } catch (error) {
+      toast.error(error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        // transition: Bounce,
+      });
+      console.error("Error deleting unit:", error);
+      throw error;
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -350,7 +415,7 @@ const Department = () => {
                 <input
                   type="search"
                   autoComplete="off"
-                  placeholder="Search By Unit Name"
+                  placeholder="Search By Department Name"
                   value={searchKey}
                   onChange={handleSearch}
                 />
@@ -371,7 +436,7 @@ const Department = () => {
               <div className="meeting-page loader-cont">
                 <Loader />
               </div>
-            ) : department.length > 0 ? (
+            ) : departments.length > 0 ? (
               <>
                 <Table className="mt-4 table table-bordered">
                   <thead>
@@ -382,18 +447,18 @@ const Department = () => {
                     </tr>
                   </thead>{" "}
                   <tbody>
-                    {department.map((departments, index) => {
+                    {departments.map((department, index) => {
                       return (
                         <tr key={index}>
-                          <td>{departments.name}</td>
+                          <td>{department.name}</td>
                           <td>
                             {
-                              formatDateTimeFormat(departments.updatedAt)
+                              formatDateTimeFormat(department.updatedAt)
                                 .formattedDate
                             }
                             <p className="detail-date-time">
                               {
-                                formatDateTimeFormat(departments.updatedAt)
+                                formatDateTimeFormat(department.updatedAt)
                                   .formattedTime
                               }
                             </p>
@@ -435,7 +500,9 @@ const Department = () => {
                                   Edit
                                 </Dropdown.Item>
                                 <Dropdown.Item
-                                  onClick={() => " handleDeleteClick(unit)"}
+                                  onClick={() =>
+                                    " handleDeleteClick(department)"
+                                  }
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -576,6 +643,30 @@ const Department = () => {
                 Save Changes
               </Button>
             </Modal.Footer>
+            <Modal
+              show={showDeleteModal}
+              onHide={() => setShowDeleteModal(false)}
+              centered
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>Confirm Delete</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                Are you sure you want to delete this Department?
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  variant="light"
+                  onClick={() => setShowDeleteModal(false)}
+                  className="btn-light"
+                >
+                  <p>Cancel</p>
+                </Button>
+                <Button variant="primary" onClick={handleDeleteConfirm}>
+                  <p>Delete</p>
+                </Button>
+              </Modal.Footer>
+            </Modal>
           </Modal>
         </div>
       </div>
