@@ -303,6 +303,7 @@ const Department = () => {
   const handleDeleteConfirm = async () => {
     try {
       if (departmentToDelete) {
+        console.log("which Id--->>>>>", departmentToDelete._id);
         await deleteDepartment(departmentToDelete._id);
         setShowDeleteModal(false);
         setDepartmenToDelete(null);
@@ -314,6 +315,7 @@ const Department = () => {
 
   const deleteDepartment = async (departmentId) => {
     try {
+      console.log("department idddddddddddddd", departmentId);
       const response = await axios.delete(
         `${process.env.REACT_APP_API_URL}/api/V1/unit/deleteUnit/${departmentId}`,
         {
@@ -500,9 +502,7 @@ const Department = () => {
                                   Edit
                                 </Dropdown.Item>
                                 <Dropdown.Item
-                                  onClick={() =>
-                                    " handleDeleteClick(department)"
-                                  }
+                                  onClick={() => handleDeleteClick(department)}
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -643,30 +643,30 @@ const Department = () => {
                 Save Changes
               </Button>
             </Modal.Footer>
-            <Modal
-              show={showDeleteModal}
-              onHide={() => setShowDeleteModal(false)}
-              centered
-            >
-              <Modal.Header closeButton>
-                <Modal.Title>Confirm Delete</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                Are you sure you want to delete this Department?
-              </Modal.Body>
-              <Modal.Footer>
-                <Button
-                  variant="light"
-                  onClick={() => setShowDeleteModal(false)}
-                  className="btn-light"
-                >
-                  <p>Cancel</p>
-                </Button>
-                <Button variant="primary" onClick={handleDeleteConfirm}>
-                  <p>Delete</p>
-                </Button>
-              </Modal.Footer>
-            </Modal>
+          </Modal>
+          <Modal
+            show={showDeleteModal}
+            onHide={() => setShowDeleteModal(false)}
+            centered
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Confirm Delete</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              Are you sure you want to delete this Department?
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant="light"
+                onClick={() => setShowDeleteModal(false)}
+                className="btn-light"
+              >
+                <p>Cancel</p>
+              </Button>
+              <Button variant="primary" onClick={handleDeleteConfirm}>
+                <p>Delete</p>
+              </Button>
+            </Modal.Footer>
           </Modal>
         </div>
       </div>
