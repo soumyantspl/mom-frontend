@@ -34,7 +34,11 @@ const remarksRequired = "Please give remark.";
 const meetingCreated =
   "Meeting created successfully. Please add attendees.";
   const serverErrorMessage='Sorry, something went wrong. Please try again later.';
+  const responsiblePersonRequired="Please add responsible person."
+  const priorityRequired="Please add priority."
 module.exports = {
+  priorityRequired,
+  responsiblePersonRequired,
   serverErrorMessage,
   meetingCreated,
   remarksRequired,

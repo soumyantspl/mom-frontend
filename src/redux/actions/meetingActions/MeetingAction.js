@@ -18,6 +18,7 @@ import {
   UNSET_SINGLE_MEETING_DETAILS,
   UPDATE_STEP,
   UPDATE_FETCH_MEETING_LIST_STATUS,
+  SET_AGENDA_AND_MINUTES_DETAILS
 } from "./actionTypes";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -651,3 +652,80 @@ export const updateFetchMeetingListStatus = (data) => {
     payload: data,
   };
 };
+
+export const getAgendaWithMinutesDetails = (meetingId, accessToken) => {
+  return (dispatch) => {
+    dispatch(makeRequest());
+    const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/viewMeetingAgendaWithMinutes/${meetingId}`;
+    const headerObject = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: accessToken,
+      },
+    };
+    console.log("webApiUrl----------------", webApiUrl);
+    console.log("accessToken------------>>>>>", accessToken);
+    console.log("headerObject------------>>>>>", headerObject);
+
+    axios
+      .get(webApiUrl, headerObject)
+      .then((result) => {
+        console.log("result------------------------->>>>>>>", result);
+        const resData = result.data;
+        if(resData.data?.isInValidUser){
+          dispatch(setInValidUser(true));
+        }
+        if (resData.success) {
+          // toast.success(resData.message, {
+          //   position: "top-right",
+          //   autoClose: 5000,
+          //   hideProgressBar: false,
+          //   closeOnClick: true,
+          //   pauseOnHover: true,
+          //   draggable: true,
+          //   progress: undefined,
+          //   theme: "colored",
+          //   // transition: Bounce,
+          // });
+          dispatch(setAgendaWithMinutesDetails(resData.data));
+        } else {
+          toast.error(resData.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            // transition: Bounce,
+          });
+         // dispatch(getAgendaWithMinutesDetails(false));
+        }
+      })
+      .catch((err) => {
+        console.log("err------------------------->>>>>>>", err);
+        dispatch(failRequest(err.message));
+        toast.error(constantMessages.serverErrorMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          // transition: Bounce,
+        });
+        // dispatch(updateFetchMeetingListStatus(false));
+      });
+  };
+};
+
+export const setAgendaWithMinutesDetails = (data) => {
+  return {
+    type: SET_AGENDA_AND_MINUTES_DETAILS,
+    payload: data,
+  };
+};
+

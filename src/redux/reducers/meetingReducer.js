@@ -16,7 +16,8 @@ import {
   SET_CREATE_NEW_MEETING_PAGE,
   UNSET_SINGLE_MEETING_DETAILS,
   UPDATE_STEP,
-  UPDATE_FETCH_MEETING_LIST_STATUS
+  UPDATE_FETCH_MEETING_LIST_STATUS,
+  SET_AGENDA_AND_MINUTES_DETAILS,
 } from "../actions/meetingActions/actionTypes";
 
 const initialObject = {
@@ -25,19 +26,21 @@ const initialObject = {
   message: "",
   totalCount: 0,
   isSuccess: false,
-  statusData: ["closed", "scheduled", "rescheduled", "cancelled","draft"],
+  statusData: ["closed", "scheduled", "rescheduled", "cancelled", "draft"],
   attendeesList: [],
   isRsvpUpdated: false,
   singleMeetingDetails: null,
   step: 0,
   isCreateMeetingProcessed: false,
   apiProcessed: false,
-  checkStep:null,
-  meetingId:null,
-  isViewMeetingPage:false,
-  isNewMeetingPage:false,
-  isUpdateStep:false,
-  isFetchedMeetingList:false
+  checkStep: null,
+  meetingId: null,
+  isViewMeetingPage: false,
+  isNewMeetingPage: false,
+  isUpdateStep: false,
+  isFetchedMeetingList: false,
+  agendaDetails: [],
+  meetingDetails: null,
 };
 
 export const meetingReducer = (state = initialObject, action) => {
@@ -66,7 +69,7 @@ export const meetingReducer = (state = initialObject, action) => {
         meetingList: action.payload.data?.meetingData,
         totalCount: action.payload.data?.totalCount,
         isSuccess: action.payload.success,
-        isFetchedMeetingList:false
+        isFetchedMeetingList: false,
       };
     case GET_ATTENDEES_LIST:
       return {
@@ -100,7 +103,7 @@ export const meetingReducer = (state = initialObject, action) => {
         isSuccess: action.payload.success,
         isCreateMeetingProcessed: true,
         step: action.payload.success ? 1 : 0,
-        isNewMeetingPage:false
+        isNewMeetingPage: false,
       };
 
     case GET_CREATE_MEETING_STEPS:
@@ -111,7 +114,7 @@ export const meetingReducer = (state = initialObject, action) => {
         isSuccess: action.payload.success,
         singleMeetingDetails: action.payload.data,
         step: action.payload.data ? action.payload.data.step : 0,
-        meetingId: action.payload.data._id
+        meetingId: action.payload.data._id,
       };
 
     case UPDATE_ISCREATE_MEETING_PROCESSED:
@@ -136,66 +139,76 @@ export const meetingReducer = (state = initialObject, action) => {
         loading: false,
         message: action.payload.message,
         isSuccess: action.payload.success,
-        step:action.payload.success && !state.isUpdateStep ? state.step+1 : state.step,
+        step:
+          action.payload.success && !state.isUpdateStep
+            ? state.step + 1
+            : state.step,
         isCreateMeetingProcessed: true,
-        checkStep:false,
-        isNewMeetingPage:false,
-        isUpdateStep:state.step===3?false:true
-        
+        checkStep: false,
+        isNewMeetingPage: false,
+        isUpdateStep: state.step === 3 ? false : true,
       };
     case LOAD_PREVIOUS_STEP:
       return {
         ...state,
         step: action.payload,
-        checkStep:false
+        checkStep: false,
       };
-      case SET_SINGLE_MEETING_DETAILS:
-        return {
-          ...state,
-          loading: false,
-          message: action.payload.message,
-          isSuccess: action.payload.success,
-          singleMeetingDetails: action.payload.data,
-          meetingId:action.payload.meetingId,
-          step: state.isUpdateStep?state.step:action.payload.data.step
-        };
-        case SET_MEETING_VIEW_PAGE:
-          return {
-            ...state,
-            meetingId:action.payload.meetingId,
-            isViewMeetingPage:true
-          };
-          case SET_CREATE_NEW_MEETING_PAGE:
-            return {
-              ...state,
-             // meetingId:action.payload.meetingId,
-              isNewMeetingPage:action.payload,
-              singleMeetingDetails:null,
-              isCreateMeetingProcessed:false,
-              isUpdateStep:false
-            };
-            case UNSET_SINGLE_MEETING_DETAILS:
-              return {
-                ...state,
-                loading: false,
-                // message: action.payload.message,
-                // isSuccess: action.payload.success,
-                singleMeetingDetails: null,
-                meetingId:null,
-              };
-              case UPDATE_STEP:
-                return {
-                ...state,
-                step:action.payload.step,
-                isUpdateStep:action.payload.isUpdateStep
-              }
+    case SET_SINGLE_MEETING_DETAILS:
+      return {
+        ...state,
+        loading: false,
+        message: action.payload.message,
+        isSuccess: action.payload.success,
+        singleMeetingDetails: action.payload.data,
+        meetingId: action.payload.meetingId,
+        step: state.isUpdateStep ? state.step : action.payload.data.step,
+      };
+    case SET_MEETING_VIEW_PAGE:
+      return {
+        ...state,
+        meetingId: action.payload.meetingId,
+        isViewMeetingPage: true,
+      };
+    case SET_CREATE_NEW_MEETING_PAGE:
+      return {
+        ...state,
+        // meetingId:action.payload.meetingId,
+        isNewMeetingPage: action.payload,
+        singleMeetingDetails: null,
+        isCreateMeetingProcessed: false,
+        isUpdateStep: false,
+      };
+    case UNSET_SINGLE_MEETING_DETAILS:
+      return {
+        ...state,
+        loading: false,
+        // message: action.payload.message,
+        // isSuccess: action.payload.success,
+        singleMeetingDetails: null,
+        meetingId: null,
+      };
+    case UPDATE_STEP:
+      return {
+        ...state,
+        step: action.payload.step,
+        isUpdateStep: action.payload.isUpdateStep,
+      };
 
-              
-              case UPDATE_FETCH_MEETING_LIST_STATUS:
-                return {
-                ...state,
-                isFetchedMeetingList:action.payload
-              }
+    case UPDATE_FETCH_MEETING_LIST_STATUS:
+      return {
+        ...state,
+        isFetchedMeetingList: action.payload,
+      };
+    case SET_AGENDA_AND_MINUTES_DETAILS:
+      return {
+        ...state,
+        loading: false,
+        agendaDetails: action.payload.agendaDetails,
+        meetingDetails: action.payload.meetingDetail,
+        message: action.payload.message,
+        isSuccess: action.payload.success,
+      };
     default:
       return state;
   }

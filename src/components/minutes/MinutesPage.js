@@ -8,6 +8,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import { useNavigate, Navigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  getAgendaWithMinutesDetails,
   getCreateMeetingStep,
   getSingleMeetingDetails,
   unSetSingleMeetingDetails,
@@ -18,14 +19,26 @@ import ViewMinutes from "./ViewMinutes";
 import { useLocation } from "react-router-dom";
 import "./minutes.css";
 import CreateMinutes from "./CreateMinutes";
+import { logOut } from "../../redux/actions/authActions/authAction";
 
 const MinutesPage = () => {
+  const dispatch = useDispatch();
+  const employeeData = useSelector((state) => state.user);
+  const authData = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  if (authData.isInValidUser) {
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    dispatch(logOut());
+    navigate("/login");
+  }
   const location = useLocation();
   const stateData = location.state;
   console.log(stateData);
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
-  const dispatch = useDispatch();
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const meetingData = useSelector((state) => state.meeting);
   const [isViewMeetingPage, setIsViewMeetingPage] = useState(false);
@@ -35,13 +48,11 @@ const MinutesPage = () => {
   useEffect(() => {
     console.log("use effect-------------------------------22-----");
     console.log(stateData);
-    dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
+    dispatch(getAgendaWithMinutesDetails(stateData.meetingId, accessToken));
     // dispatch()
-
     return () => {
       console.log("return useeffect--------------->>>>>>>>>>>>>>");
-
-      dispatch(unSetSingleMeetingDetails);
+     // dispatch(unSetSingleMeetingDetails);
     };
   }, []);
   return (
