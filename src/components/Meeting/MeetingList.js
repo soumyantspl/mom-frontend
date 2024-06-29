@@ -28,14 +28,27 @@ import AttendeesRsvpModal from "./AttendeesRsvpModal";
 import CommonModal from "../Common/CommonModal";
 import { cancelMeeting } from "../../constants/constatntMessages";
 import CancelMeetingModal from "./CancelMeetingModal";
+import { logOut } from "../../redux/actions/authActions/authAction";
 const MeetingList = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const accessToken = localStorage.getItem("accessToken");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const authData = useSelector((state) => state.auth);
+ const authData = useSelector((state) => state.auth);
   const meetingData = useSelector((state) => state.meeting);
   const loginUserData = useSelector((state) => state.user);
+
+
+  const employeeData = useSelector((state) => state.user);
+  console.log(authData )
+  if (authData.isInValidUser) {
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    dispatch(logOut())
+    navigate("/login");
+  }
   const [filter, setfilter] = useState(false);
   const [meetingId, setMeetingId] = useState(null);
   const [rsvpCount, setRsvpCount] = useState("");
@@ -77,11 +90,13 @@ const MeetingList = () => {
     // setIsUser(isUser)
   };
 
-
   const isLogIn = false;
   useEffect(() => {
     document.title = "Meeting List";
     console.log("userData------------", userData);
+    if (!accessToken) {
+      navigate("/login");
+    }
     if (!userData) {
       navigate("/login");
     } else {
@@ -107,8 +122,9 @@ const MeetingList = () => {
         payload.page = 1;
       }
       // console.log("payload in meetinglist----------34-------", payload);
-
+      if (!authData.isInValidUser) {
       dispatch(fetchMeetingList(payload));
+      }
     }
   }, [
     searchData.searchKey,
@@ -118,7 +134,6 @@ const MeetingList = () => {
     searchData.filterData,
     meetingData.isRsvpUpdated,
     meetingData.isFetchedMeetingList,
-
   ]);
   console.log(
     "meetingData---------------------->>>>>>>>>>>>>>>>>>>>>>>",
@@ -161,8 +176,8 @@ const MeetingList = () => {
     "->>>>>>>66666666666666666----------------isModalOpen",
     isModalOpen
   );
-  const totalOption = Math.round(meetingData.totalCount / 5 + 0.5);
-  const totalPage = Math.round(meetingData.totalCount / searchData.limit + 0.5);
+  const totalOption = meetingData.totalCount?Math.round(meetingData.totalCount / 5 + 0.5):0;
+  const totalPage = meetingData.totalCount?Math.round(meetingData.totalCount / searchData.limit + 0.5):0;
   const totalPageArray = Array(totalPage).fill();
   console.log(totalPageArray);
   // console.log(
@@ -228,7 +243,7 @@ const MeetingList = () => {
     let session = "AM";
     let hour = parseInt(timeArray[0]);
     //let minute = parseInt(timeArray[1]);
-    let minute =timeArray[1];
+    let minute = timeArray[1];
     console.log(hour, minute);
     if (hour > 12) {
       session = "PM";
@@ -239,9 +254,9 @@ const MeetingList = () => {
     return result;
   };
 
-  console.log("repeat------------------------", searchData, isCancelModalOpen);
+  console.log("repeat------------------------", meetingData);
   return (
-   <>
+    <>
       <Header />
       <MeetingHeader />
       <Sidebar />
@@ -278,7 +293,6 @@ const MeetingList = () => {
               setfilter={setfilter}
               filterData={filterData}
               initData={searchData.filterData}
-             
             />
           ) : null}
         </div>
@@ -345,8 +359,8 @@ const MeetingList = () => {
                       </td>
                       <td data-label="Meeting Title">
                         {meeting.title}
-                        {meeting.attendees.length !== 0 &&
-                        !userData.isMeetingOrganiser ? (
+                        {meeting.attendees?.length !== 0 &&
+                        !userData?.isMeetingOrganiser ? (
                           <div className="respond-button">
                             {meeting.rsvp === "YES" ? (
                               <button disabled className="respond-action">
@@ -514,22 +528,22 @@ const MeetingList = () => {
             </table>
           ) : !meetingData.loading && meetingData.meetingList?.length === 0 ? (
             <div className="mt-2 table-box no-data-img">
-               <Alert
-                      status={"info"}
-                      message={"No data available."}
-                      timeoutSeconds={0}
-                    />
+              <Alert
+                status={"info"}
+                message={"No data available."}
+                timeoutSeconds={0}
+              />
               {/* <Alert message="No Data Found !" status={false} /> */}
-             
+
               <NoDataFound dataType={"meeting"} />
-              <Button className="mt-2"
+              <Button
+                className="mt-2"
                 variant="primary"
                 onClick={(e) => {
-            
                   setSearchData({
                     ...searchData,
                     searchKey: "",
-                    filterData:{},
+                    filterData: {},
                   });
                 }}
               >
@@ -658,7 +672,7 @@ const MeetingList = () => {
           )}
         </div>
       </div>
-      </>
+    </>
   );
 };
 

@@ -11,7 +11,7 @@ const initialObject = {
   message: "",
   totalCount: 0,
   isSuccess: false,
-  userData: null,
+  userData: {},
   employeeList: [],
   isDuplicateUser: "null",
 };

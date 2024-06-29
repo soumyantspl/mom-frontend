@@ -5,7 +5,7 @@ import Collapse from "react-bootstrap/Collapse";
 import { Margin } from "../../../node_modules/@mui/icons-material/index";
 import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction.js/meetingRoomAction";
 import { useSelector, useDispatch } from "react-redux";
-import { Navigate, Link, useLocation } from "react-router-dom";
+import { Navigate, Link, useLocation, useNavigate } from "react-router-dom";
 import CommonStepper from "../Common/CommonStepper";
 import CreateMeeting from "./CreateMeeting";
 import {
@@ -26,6 +26,7 @@ import Alert from "../Common/Alert";
 import AgendaComponent from "./AddAgendaComp";
 import AddAgendaComp from "./AddAgendaComp";
 import NewAgenda from "./NewAgenda";
+import { logOut } from "../../redux/actions/authActions/authAction";
 
 const AddAgendas = () => {
   const accessToken = localStorage.getItem("accessToken");
@@ -34,6 +35,16 @@ const AddAgendas = () => {
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const meetingData = useSelector((state) => state.meeting);
   const employeeData = useSelector((state) => state.user);
+  const authData = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  if (authData.isInValidUser) {
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    dispatch(logOut())
+    navigate("/login");
+  }
   //console.log(meetingRoomData);
   const [numAgenda, setNumAgenda] = useState(1);
   const [attendees, setAttendees] = useState([]);
@@ -68,8 +79,7 @@ const AddAgendas = () => {
   }, []);
 
   const submitAgendasDetails = (e) => {
-  
-     e.preventDefault();
+    e.preventDefault();
 
     if (agendaData.length === 0) {
       const newErrors = validateForm(formData);
@@ -92,10 +102,11 @@ const AddAgendas = () => {
       });
       const meetingId = meetingData?.singleMeetingDetails?._id;
       const payload = {
-        sendNotification: !stateData.isMeetingDataUpdate &&
-        meetingData.singleMeetingDetails.step === 2
-          ? true
-          : false,
+        sendNotification:
+          !stateData.isMeetingDataUpdate &&
+          meetingData.singleMeetingDetails.step === 2
+            ? true
+            : false,
         agendas: newAgendaData,
         organizationId: userData.organizationId,
         step: 3,
@@ -270,7 +281,7 @@ const AddAgendas = () => {
   return (
     <form
       className="mt-2 details-form no-padding-2"
-       onSubmit={submitAgendasDetails}
+      onSubmit={submitAgendasDetails}
     >
       <div className="inner-detail-form">
         <div className="form-group agenda">
@@ -661,19 +672,17 @@ const AddAgendas = () => {
                   <button
                     className="create-meeting-button Mom-btn"
                     type="submit"
-                   
                   >
                     <p>Update & Notify </p>
                   </button>
                 ) : (
                   <>
-                  <button
-                    className="create-meeting-button Mom-btn"
-                   type="submit"
-                   
-                  >
-                    <p>Save & Notify </p>
-                  </button>
+                    <button
+                      className="create-meeting-button Mom-btn"
+                      type="submit"
+                    >
+                      <p>Save & Notify </p>
+                    </button>
                     {/* <Dropdown>
                       <Dropdown.Toggle variant="success" id="dropdown-basic">
                         Save

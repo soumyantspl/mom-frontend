@@ -1,9 +1,12 @@
+import { setInValidUser } from "../authActions/authAction";
 import {
   FAIL_REQUEST,
   MAKE_REQUEST,
   GET_MEETING_ROOM_LIST,
 } from "./actionTypes";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import * as constantMessages from "../../../constants/constatntMessages";
 
 export const makeRequest = () => {
   return {
@@ -51,10 +54,35 @@ export const getMeetingRoomList = (payload, accessToken) => {
       .then((res) => {
         const resData = res.data;
         console.log("resData-------------------------------->", resData);
+        if(resData.data?.isInValidUser){
+          dispatch(setInValidUser(true));
+          toast.error(resData.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            // transition: Bounce,
+          });
+        }
         dispatch(fetchMeetingRoomList(resData));
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
+        toast.error( constantMessages.serverErrorMessage, {
+          position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          // transition: Bounce,
+        });
       });
   };
 };

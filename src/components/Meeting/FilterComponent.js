@@ -144,7 +144,7 @@ const FilterComponent = (props) => {
           value={searchData.attendeeId}
         >
           <option>Select Attendee(s)</option>
-          {meetingData.attendeesList &&
+          {meetingData.attendeesList?.length>0 &&
             meetingData.attendeesList.map((attendee) => {
               return <option value={attendee._id}>{attendee.name}</option>;
             })}

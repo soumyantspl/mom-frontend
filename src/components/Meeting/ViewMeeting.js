@@ -30,19 +30,36 @@ import Header from "../Common/Header/Header";
 import MeetingHeader from "../Common/Header/MeetingHeader";
 import Sidebar from "../Common/Sidebar/Sidebar";
 import { Navigate, Link, useLocation, useNavigate } from "react-router-dom";
+import { logOut } from "../../redux/actions/authActions/authAction";
 
 const ViewMeeting = (props) => {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const authData = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  if (authData.isInValidUser) {
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    dispatch(logOut())
+    navigate("/login");
+  }
   const stateData = location.state;
   console.log(stateData);
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
-  const dispatch = useDispatch();
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const meetingData = useSelector((state) => state.meeting);
   const [isViewMeetingPage, setIsViewMeetingPage] = useState(false);
   console.log(meetingData);
-  const navigate = useNavigate();
+  const employeeData = useSelector((state) => state.user);
+  // if (employeeData?.userData === null) {
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("userData");
+  //   localStorage.removeItem("rememberMe");
+  //   navigate("/login");
+  // }
   useEffect(() => {
     console.log(stateData);
     // if (stateData?.isViewMeetingPage) {

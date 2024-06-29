@@ -2,6 +2,8 @@ import { FETCH_SINGLE_USER, FAIL_REQUEST, MAKE_REQUEST, SET_EMPLOYEE_LIST, SET_D
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
+import { setInValidUser } from "../authActions/authAction";
+import * as constantMessages from "../../../constants/constatntMessages";
 
 export const makeRequest = () => {
   return {
@@ -40,12 +42,51 @@ export const viewSingleUser = (userId,accessToken) => {
         const resData = res.data;
         console.log("resData-------------------------------->",resData)
         let data;
+        if(resData.data?.isInValidUser){
+          dispatch(setInValidUser(true));
+          // toast.error(resData.message, {
+          //   position: "top-right",
+          //   autoClose: 5000,
+          //   hideProgressBar: false,
+          //   closeOnClick: true,
+          //   pauseOnHover: true,
+          //   draggable: true,
+          //   progress: undefined,
+          //   theme: "colored",
+          //   // transition: Bounce,
+          // });
+        }
         if (resData.success) {
           dispatch(fetchSingleUser(resData));
+        }
+        else{
+          dispatch(fetchSingleUser(resData));
+          toast.error(resData.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            // transition: Bounce,
+          });
         }
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
+        toast.error( constantMessages.serverErrorMessage, {
+          position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -71,12 +112,36 @@ export const getEmployeeList = (
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
-
+        if(resData.data?.isInValidUser){
+          dispatch(setInValidUser(true));
+          toast.error(resData.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            // transition: Bounce,
+          });
+        }
         dispatch(setEmployeeList(resData));
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
+        toast.error( constantMessages.serverErrorMessage, {
+          position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -106,16 +171,30 @@ export const checkDuplicateUser = (payload,accessToken) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
-        if (resData.success) {
+        if(resData.data?.isInValidUser){
+          dispatch(setInValidUser(true));
           toast.error(resData.message, {
-            position: "bottom-left",
-            autoClose: 3000,
+            position: "top-right",
+            autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
+            // transition: Bounce,
+          });
+        }
+        if (resData.success) {
+          toast.error(resData.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
             // transition: Bounce,
           });
           
@@ -137,8 +216,19 @@ export const checkDuplicateUser = (payload,accessToken) => {
        
       })
       .catch((err) => {
+       
         console.log("err------------------------->>>>>>>", err);
-       // dispatch(failRequest(err.message));
+        toast.error( constantMessages.serverErrorMessage, {
+          position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          // transition: Bounce,
+        });
       });
   };
 };
