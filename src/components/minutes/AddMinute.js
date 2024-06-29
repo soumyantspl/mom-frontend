@@ -14,6 +14,8 @@ const AddMinute = (props) => {
   console.log(props);
   const meetingData = useSelector((state) => state.meeting);
   const employeeData = useSelector((state) => state.user);
+  const minutesDetails = useSelector((state) => state.minute);
+  console.log(minutesDetails);
   const userData = JSON.parse(localStorage.getItem("userData"));
   const accessToken = localStorage.getItem("accessToken");
   const dispatch = useDispatch();
@@ -43,7 +45,7 @@ const AddMinute = (props) => {
     if (formData.attendyType === "fromPreviousMeeting") {
       dispatch(fetchAttendeesList(userData.organizationId, accessToken));
     }
-    console.log(employeeData);
+  
     if (employeeData.isDuplicateUser === false) {
       const newMinute = {
         description: formData.description,
@@ -696,8 +698,8 @@ console.log(meetingData.meetingDetails)
       </form>
 
       {props.isMinuteShow &&
-        minuteData.length !== 0 &&
-        minuteData.map((minute) => {
+        minutesDetails?.finalMinutesData?.length !== 0 &&
+        minutesDetails?.finalMinutesData?.map((minute) => {
           return (
             <form className="addminutesboxfrom">
               <div

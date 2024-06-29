@@ -7,6 +7,7 @@ import {
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import * as constantMessages from "../../../constants/constatntMessages";
+import { getAgendaWithMinutesDetails } from "../meetingActions/MeetingAction";
 
 export const makeRequest = () => {
   return {
@@ -20,7 +21,7 @@ export const failRequest = (err) => {
   };
 };
 
-export const createMinutes = (payload, accessToken) => {
+export const createMinutes = (payload,meetingId, accessToken) => {
   console.log(payload, accessToken);
   return (dispatch) => {
     dispatch(makeRequest());
@@ -62,7 +63,20 @@ export const createMinutes = (payload, accessToken) => {
             // transition: Bounce,
           });
         }
-       
+       if(resData.success){
+        dispatch(getAgendaWithMinutesDetails(meetingId, accessToken));
+        toast.success(resData.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          // transition: Bounce,
+        });
+       }
           dispatch(createMinuteResponse(resData));
         
       })

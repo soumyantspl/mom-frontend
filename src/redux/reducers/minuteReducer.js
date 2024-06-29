@@ -36,7 +36,7 @@ export const minuteReducer = (state = initialObject, action) => {
         message: action.payload.message,
         isMinutesCreated: action.payload.success,
         isSuccess: action.payload.success,
-      //  finalMinutesData:action.payload.success?[]:state.finalMinutesData
+       finalMinutesData:action.payload.success?[]:state.finalMinutesData
       };
       case SET_FINAL_MINUTES_DATA:
         return {
