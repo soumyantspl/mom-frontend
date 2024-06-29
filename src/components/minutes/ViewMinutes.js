@@ -20,7 +20,7 @@ import Loader from "../Common/Loader";
 import Alert from "../Common/Alert";
 
 
-const ViewMinutes = () => {
+const ViewMinutes = (props) => {
     const location = useLocation();
     const stateData = location.state;
     console.log(stateData);
@@ -56,11 +56,11 @@ const ViewMinutes = () => {
           <div className="row">
             <div className="col">
               <div className="d-inline-block">
-                <button
-                  type="button"
-                  className="btn Mom-btn"
-                  id="dropdownBasic1"
-                >
+              <button 
+                      className="Mom-btn"
+                     onClick={()=>props.onsubmit1()}
+                    >
+                     
                   <p>Save Meeting</p>
                 </button>
                 {/* <div aria-labelledby="dropdownBasic1">

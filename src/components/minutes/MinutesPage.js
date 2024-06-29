@@ -42,6 +42,7 @@ const MinutesPage = () => {
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const meetingData = useSelector((state) => state.meeting);
   const [isViewMeetingPage, setIsViewMeetingPage] = useState(false);
+  const [trigger, setTrigger] = useState(false);
   console.log(meetingData);
   console.log("use effect------------------------------------");
 
@@ -55,6 +56,12 @@ const MinutesPage = () => {
      // dispatch(unSetSingleMeetingDetails);
     };
   }, []);
+
+const onsubmit2=(e)=>{
+  setTrigger(!trigger)
+  console.log('checked')
+}
+
   return (
     <>
       <Header />
@@ -63,10 +70,10 @@ const MinutesPage = () => {
       <div className="main-content">
         <div className="row">
           <div className="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 detail-col">
-            <CreateMinutes />
+            <CreateMinutes trigger={trigger}/>
           </div>
           <div className="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 detail-col">
-            <ViewMinutes />
+            <ViewMinutes onsubmit1={onsubmit2}/>
           </div>
         </div>
       </div>

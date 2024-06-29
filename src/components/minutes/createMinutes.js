@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Header from "../Common/Header/Header";
 import Sidebar from "../Common/Sidebar/Sidebar";
 import MeetingHeader from "../Common/Header/MeetingHeader";
@@ -8,7 +8,7 @@ import { useNavigate, Navigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import AddMinute from "./AddMinute";
 
-const CreateMinutes = () => {
+const CreateMinutes = (props) => {
   const dispatch = useDispatch();
   const employeeData = useSelector((state) => state.user);
   const authData = useSelector((state) => state.auth);
@@ -24,6 +24,11 @@ const CreateMinutes = () => {
     dispatch(logOut());
     navigate("/login");
   }
+  useEffect(() => {
+   console.log("submit called")
+   submitAgendasDetails()
+  }, [props.trigger]);
+  const [trigger, setTrigger] = useState(false);
   const [isMinuteShow, setIsMinuteShow] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState([false, false]);
   const toggleDropdown = (index) => {
@@ -32,45 +37,47 @@ const CreateMinutes = () => {
     );
   };
 
-  // const submitAgendasDetails = (e) => {
-  //   e.preventDefault();
+//console.log(props.submit3())
+  const submitAgendasDetails = () => {
+    //e.preventDefault();
+console.log("jjjjjjjjjjjjjjjjjjjjj")
+setTrigger(trigger => !trigger);
+    // if (minuteData.length === 0) {
+    //   const newErrors = validateForm(formData);
+    //   setErrors(newErrors);
 
-  //   if (minuteData.length === 0) {
-  //     const newErrors = validateForm(formData);
-  //     setErrors(newErrors);
-
-  //     if (Object.keys(newErrors).length === 0) {
-  //       console.log("uuuuuuuuuuu");
-  //       const errors = {};
-  //       errors.addAgenda = constantMessages.addAgenda;
-  //       //  errors.index = formData.index;
-  //       setErrors(errors);
-  //     }
-  //   } else {
-  //     const newMinuteData = minuteData.map((item) => {
-  //       return {
+    //   if (Object.keys(newErrors).length === 0) {
+    //     console.log("uuuuuuuuuuu");
+    //     const errors = {};
+    //     errors.addAgenda = constantMessages.addAgenda;
+    //     //  errors.index = formData.index;
+    //     setErrors(errors);
+    //   }
+    // } else {
+    //   const newMinuteData = minuteData.map((item) => {
+    //     return {
          
-  //         title: item.title
-  //       };
-  //     });
-  //     const meetingId = meetingData?.meetingDetail?._id;
-  //     const payload = {
-  //       sendNotification:true,
-  //       minutes: newMinuteData,
-  //       organizationId: userData.organizationId,
-  //       //isUpdate:false
-  //     };
-  //     console.log(payload);
-  //     // dispatch(
-  //     //   createNewMinutes(
-  //     //     meetingId,
-  //     //     payload,
-  //     //     accessToken
-  //     //   )
-  //     // );
-  //     //setStep(3);
-  //   }
-  // };
+    //       title: item.title
+    //     };
+    //   });
+    //   const meetingId = meetingData?.meetingDetail?._id;
+    //   const payload = {
+    //     sendNotification:true,
+    //     minutes: newMinuteData,
+    //     organizationId: userData.organizationId,
+    //     //isUpdate:false
+    //   };
+    //   console.log(payload);
+    //   // dispatch(
+    //   //   createNewMinutes(
+    //   //     meetingId,
+    //   //     payload,
+    //   //     accessToken
+    //   //   )
+    //   // );
+    //   //setStep(3);
+    // }
+  };
 
 
 
@@ -163,10 +170,8 @@ console.log(meetingData)
                   </div>
                 </div>
               </div>
-              {isMinuteShow?( <AddMinute />):null}
+              <AddMinute trigger={trigger} isMinuteShow={isMinuteShow}/>
             </div>
-           
-           
           </div>
          )
           })}
