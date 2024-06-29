@@ -19,6 +19,7 @@ import {
   UPDATE_FETCH_MEETING_LIST_STATUS,
   SET_AGENDA_AND_MINUTES_DETAILS,
 } from "../actions/meetingActions/actionTypes";
+import { CREATE_MINUTE_RESPONSE } from "../actions/minuteActions/actionTypes";
 
 const initialObject = {
   loading: false,
@@ -209,6 +210,8 @@ export const meetingReducer = (state = initialObject, action) => {
         message: action.payload.message,
         isSuccess: action.payload.success,
       };
+
+ 
     default:
       return state;
   }

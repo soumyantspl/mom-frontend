@@ -170,7 +170,7 @@ console.log(meetingData)
                   </div>
                 </div>
               </div>
-              <AddMinute trigger={trigger} isMinuteShow={isMinuteShow}/>
+              <AddMinute trigger={trigger} isMinuteShow={isMinuteShow} agenda={agenda}/>
             </div>
           </div>
          )

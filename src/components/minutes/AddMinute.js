@@ -8,9 +8,10 @@ import {
 } from "../../redux/actions/userAction/userAction";
 import LoaderButton from "../Common/LoaderButton";
 import { ToastContainer, toast } from "react-toastify";
+import { setFinalMinuteData } from "../../redux/actions/minuteActions/MinuteAction";
 
 const AddMinute = (props) => {
-  console.log(props)
+  console.log(props);
   const meetingData = useSelector((state) => state.meeting);
   const employeeData = useSelector((state) => state.user);
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -18,7 +19,7 @@ const AddMinute = (props) => {
   const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
-    title: "",
+    description: "",
     date: "",
     priority: "",
     attendyType: "fromPreviousMeeting",
@@ -28,11 +29,11 @@ const AddMinute = (props) => {
     name: "",
     email: "",
   });
-  const [attendeesData, setAttendeesData] = useState({});
+  const [attendeesData, setAttendeesData] = useState([]);
   const [minuteData, setMinuteData] = useState([]);
   useEffect(() => {
     console.log("rrrrrrrrrrrrrrrrrrrrrrrrr");
-  //  submitMinuteData();
+    //  submitMinuteData();
     //   setAttendeesData(
     //     meetingData.singleMeetingDetails?.attendees?.map(
     //       ({ rsvp, ...keepAttrs }) => keepAttrs
@@ -45,7 +46,7 @@ const AddMinute = (props) => {
     console.log(employeeData);
     if (employeeData.isDuplicateUser === false) {
       const newMinute = {
-        title: formData.title,
+        description: formData.description,
       };
       const newMinuteData = [...minuteData, newMinute];
       setAttendeesData(newMinuteData);
@@ -63,10 +64,20 @@ const AddMinute = (props) => {
     // setStep(meetingData.step + 1);
 
     // setAttendeesData(meetingData?.singleMeetingDetails?attendees)
+console.log(meetingData.meetingDetails)
+    let attendees = meetingData.meetingDetails?.attendees.map((attendee) => {
+      attendee.id = attendee._id;
+      attendee.status = "PENDING";
+      delete attendee._id;
+      delete attendee.rsvp;
+      return attendee;
+    });
+    setAttendeesData(attendees);
+    console.log(attendees)
   }, [employeeData.isDuplicateUser, props.trigger]);
-
+  console.log(minuteData, meetingData, formData);
   const submitMinuteData = () => {
-    console.log("call api",minuteData);
+    console.log("call api", minuteData);
     if (minuteData.length !== 0) {
       console.log("tttttttttttttt");
       const newErrors = validateForm(formData);
@@ -107,6 +118,8 @@ const AddMinute = (props) => {
 
       console.log(modifiedMinutes);
       setMinuteData(modifiedMinutes);
+
+      dispatch(setFinalMinuteData(modifiedMinutes));
     } else {
       setFormData({
         ...formData,
@@ -128,6 +141,8 @@ const AddMinute = (props) => {
       });
 
       console.log(modifiedMinutes);
+
+      dispatch(setFinalMinuteData(modifiedMinutes));
       setMinuteData(modifiedMinutes);
     } else {
       setFormData({
@@ -165,9 +180,9 @@ const AddMinute = (props) => {
   const validateMinuteTitle = () => {
     console.log(formData);
     const errors = {};
-    if (!formData?.title.trim()) {
+    if (!formData?.description.trim()) {
       console.log(formData);
-      errors.title = constantMessages.titleRequired;
+      errors.description = constantMessages.titleRequired;
       // errors.index = formData.index;
     }
     setErrors(errors);
@@ -245,9 +260,9 @@ const AddMinute = (props) => {
       }
     }
 
-    if (!formData?.title.trim()) {
+    if (!formData?.description.trim()) {
       console.log(formData);
-      errors.title = constantMessages.titleRequired;
+      errors.description = constantMessages.titleRequired;
       // errors.index = formData.index;
     }
 
@@ -286,10 +301,13 @@ const AddMinute = (props) => {
       //     index: formData.index + 1,
       //   });
       const uid = Math.floor(100000 + Math.random() * 900000);
-      setMinuteData([
+      const newMinuteData = [
         ...minuteData,
         {
-          title: formData.title,
+          organizationId: userData.organizationId,
+          agendaId: props.agenda._id,
+          attendees: attendeesData,
+          description: formData.description,
           date: formData.date,
           priority: formData.priority,
           attendyType: formData.attendyType,
@@ -300,10 +318,14 @@ const AddMinute = (props) => {
           email: formData.email,
           uid,
         },
-      ]);
+      ];
+      setMinuteData(newMinuteData);
+
+      dispatch(setFinalMinuteData(newMinuteData));
+
       setFormData({
         ...formData,
-        title: " ",
+        description: " ",
         date: "",
         priority: "",
         attendyType: "fromPreviousMeeting",
@@ -327,6 +349,7 @@ const AddMinute = (props) => {
     const filteredMinute = minuteData.filter((item) => item.uid !== uid);
     console.log(filteredMinute);
     setMinuteData(filteredMinute);
+    dispatch(setFinalMinuteData(filteredMinute));
     // setAttendeesData(filteredAttendees);
     // setIsModalOpen(false);
     //   console.log(agendas);
@@ -338,7 +361,7 @@ const AddMinute = (props) => {
     // }
   };
 
-  console.log(minuteData, meetingData, formData);
+
 
   return (
     <>
@@ -347,7 +370,7 @@ const AddMinute = (props) => {
           className={
             props.isMinuteShow ? "mt-4 minutes-box show" : "mt-4 minutes-box"
           }
-         // className="mt-4 minutes-box show"
+          // className="mt-4 minutes-box show"
         >
           <div className="form-group">
             <div className=" mt-1 mb-1 d-flex justify-content-between align-items-center">
@@ -378,16 +401,16 @@ const AddMinute = (props) => {
                 <div>
                   <input
                     type="text"
-                    placeholder="Enter agenda title here"
-                    name="title"
-                    value={formData.title}
+                    placeholder="Enter minute description here"
+                    name="description"
+                    value={formData.description}
                     onChange={handleChange}
                     onBlur={validateMinuteTitle}
                     autoComplete="off"
                   />
 
-                  {errors.title ? (
-                    <span className="error-message">{errors.title}</span>
+                  {errors.description ? (
+                    <span className="error-message">{errors.description}</span>
                   ) : null}
                 </div>
               </div>
@@ -669,7 +692,8 @@ const AddMinute = (props) => {
         </div>
       </form>
 
-      { props.isMinuteShow && minuteData.length !== 0 &&
+      {props.isMinuteShow &&
+        minuteData.length !== 0 &&
         minuteData.map((minute) => {
           return (
             <form className="addminutesboxfrom">
@@ -707,9 +731,9 @@ const AddMinute = (props) => {
                       <div>
                         <input
                           type="text"
-                          placeholder="Enter agenda title here"
-                          name="title"
-                          value={minute.title}
+                          placeholder="Enter minute description here"
+                          name="description"
+                          value={minute.description}
                           onChange={(e) => handleChange(e, minute.uid)}
                           onBlur={validateMinuteTitle}
                           autoComplete="off"
