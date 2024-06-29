@@ -389,13 +389,17 @@ const Department = () => {
                   </div>
                 </div>
               </div>
-              <button
-                className="save Mom-btn"
-                type="submit"
-                disabled={isLoading}
-              >
-                {isLoading ? <LoaderButton /> : <p>Submit</p>}
-              </button>
+              {isLoading ? (
+                <LoaderButton />
+              ) : (
+                <button
+                  className="save Mom-btn"
+                  type="submit"
+                  disabled={isLoading}
+                >
+                  Submit
+                </button>
+              )}
             </form>
           </div>
 
