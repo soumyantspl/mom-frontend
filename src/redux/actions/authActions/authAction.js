@@ -11,17 +11,19 @@ import {
   SET_PASSWORD,
   LOGIN_PROCESS,
   OTP_SENT_FOR_LOGIN_BY_OTP,
-  UPDATE_TIMER,
+  UPDATE_TIMER,SET_INVALID_USER
 } from "./actionTypes";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import * as constantMessages from "../../../constants/constatntMessages";
 
 export const makeRequest = () => {
   return {
     type: MAKE_REQUEST,
   };
 };
+
 export const failRequest = (err) => {
   return {
     type: FAIL_REQUEST,
@@ -52,42 +54,6 @@ export const sendOtp = (email, isSetPassword) => {
       .then((res) => {
         const resData = res.data;
         let data;
-
-        // if (resData.success) {
-        //   toast.success(message, {
-        //     position: "bottom-left",
-        //     autoClose: 3000,
-        //     hideProgressBar: false,
-        //     closeOnClick: true,
-        //     pauseOnHover: true,
-        //     draggable: true,
-        //     progress: undefined,
-        //     theme: "light",
-        //     // transition: Bounce,
-        //   });
-        //   dispatch(updateMeetingResponse(resData));
-        // } else {
-        //   toast.error(resData.message, {
-        //     position: "bottom-left",
-        //     autoClose: 3000,
-        //     hideProgressBar: false,
-        //     closeOnClick: true,
-        //     pauseOnHover: true,
-        //     draggable: true,
-        //     progress: undefined,
-        //     theme: "light",
-        //     // transition: Bounce,
-        //   });
-        //   dispatch(failRequest(resData.message));
-        // }
-
-
-
-
-
-
-
-
         if (resData.success) {
           data = {
             ...resData,
@@ -96,15 +62,15 @@ export const sendOtp = (email, isSetPassword) => {
             email,
             isSetPassword: true,
           };
-          toast.success( resData.message, {
-            position: "bottom-left",
-            autoClose: 3000,
+          toast.success(resData.message, {
+            position: "top-right",
+            autoClose: 10000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
         } else {
@@ -115,15 +81,15 @@ export const sendOtp = (email, isSetPassword) => {
             email,
             isSetPassword: false,
           };
-          toast.error( resData.message, {
-            position: "bottom-left",
-            autoClose: 3000,
+          toast.error(resData.message, {
+            position: "top-right",
+            autoClose: 10000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
         }
@@ -135,15 +101,15 @@ export const sendOtp = (email, isSetPassword) => {
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
-        toast.error( err.message, {
-          position: "bottom-left",
-          autoClose: 3000,
+        toast.error(constantMessages.serverErrorMessage, {
+          position: "top-right",
+          autoClose: 10000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "colored",
           // transition: Bounce,
         });
       });
@@ -186,18 +152,18 @@ export const verifyOtp = (payload) => {
             message: resData.message,
           };
           const { token, userData } = resData.data;
-          console.log('------------------------>>>>>>>>>>>',token)
+          console.log("------------------------>>>>>>>>>>>", token);
           localStorage.setItem("accessToken", token);
           localStorage.setItem("userData", JSON.stringify(userData));
-          toast.success( resData.message, {
-            position: "bottom-left",
+          toast.success(resData.message, {
+            position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
         } else {
@@ -206,15 +172,15 @@ export const verifyOtp = (payload) => {
             variant: "danger",
             message: resData.message,
           };
-          toast.error( resData.message, {
-            position: "bottom-left",
+          toast.error(resData.message, {
+            position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
         }
@@ -222,15 +188,15 @@ export const verifyOtp = (payload) => {
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
-        toast.error( err.message, {
-          position: "bottom-left",
+        toast.error(constantMessages.serverErrorMessage, {
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "colored",
           // transition: Bounce,
         });
       });
@@ -267,15 +233,15 @@ export const reSendOtp = (email) => {
             message: resData.message,
             email,
           };
-          toast.success( resData.message, {
-            position: "bottom-left",
+          toast.success(resData.message, {
+            position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
         } else {
@@ -285,15 +251,15 @@ export const reSendOtp = (email) => {
             message: resData.message,
             email,
           };
-          toast.error( resData.message, {
-            position: "bottom-left",
+          toast.error(resData.message, {
+            position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
         }
@@ -301,15 +267,15 @@ export const reSendOtp = (email) => {
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
-        toast.error( err.message, {
-          position: "bottom-left",
+        toast.error(constantMessages.serverErrorMessage, {
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "colored",
           // transition: Bounce,
         });
       });
@@ -338,15 +304,15 @@ export const setPassword = (payload) => {
             variant: "success",
             message: resData.message,
           };
-          toast.success( resData.message, {
-            position: "bottom-left",
+          toast.success(resData.message, {
+            position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
         } else {
@@ -355,15 +321,15 @@ export const setPassword = (payload) => {
             variant: "danger",
             message: resData.message,
           };
-          toast.error( resData.message, {
-            position: "bottom-left",
+          toast.error(resData.message, {
+            position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
         }
@@ -371,15 +337,15 @@ export const setPassword = (payload) => {
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
-        toast.error( err.message, {
-          position: "bottom-left",
+        toast.error(constantMessages.serverErrorMessage, {
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "colored",
           // transition: Bounce,
         });
       });
@@ -393,7 +359,7 @@ export const isPasswordSet = (data) => {
   };
 };
 
-export const logInByPassword = (payload,rememberMe) => {
+export const logInByPassword = (payload, rememberMe) => {
   return (dispatch) => {
     dispatch(makeRequest());
     const url = `${process.env.REACT_APP_API_URL}/api/V1/auth/signInByPassword`;
@@ -403,27 +369,28 @@ export const logInByPassword = (payload,rememberMe) => {
         const resData = res.data;
         let data;
         if (resData.success) {
+          dispatch(setInValidUser(false));
           const { token, userData } = resData.data;
           localStorage.setItem("accessToken", token);
           localStorage.setItem("userData", JSON.stringify(userData));
-          if(rememberMe){
+          if (rememberMe) {
             localStorage.setItem("rememberMe", true);
           }
           data = {
             ...resData,
             variant: "success",
             message: resData.message,
-            userData
+            userData,
           };
-          toast.success( resData.message, {
-            position: "bottom-left",
+          toast.success(resData.message, {
+            position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
         } else {
@@ -432,15 +399,15 @@ export const logInByPassword = (payload,rememberMe) => {
             variant: "danger",
             message: resData.message,
           };
-          toast.error( resData.message, {
-            position: "bottom-left",
+          toast.error(resData.message, {
+            position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
         }
@@ -448,15 +415,15 @@ export const logInByPassword = (payload,rememberMe) => {
       })
       .catch((err) => {
         dispatch(failRequest(err.message));
-        toast.error( err.message, {
-          position: "bottom-left",
+        toast.error(constantMessages.serverErrorMessage, {
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "colored",
           // transition: Bounce,
         });
       });
@@ -470,4 +437,9 @@ export const isLogInProcess = (data) => {
   };
 };
 
-
+export const setInValidUser = (data) => {
+  return {
+    type: SET_INVALID_USER,
+    payload: data,
+  };
+};

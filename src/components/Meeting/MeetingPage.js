@@ -8,15 +8,29 @@ import React, { useState ,useEffect} from "react";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import { useNavigate, Navigate, Link } from "react-router-dom";
+import { useNavigate, Navigate, Link ,useLocation} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import "./style/meetings-css.css";
 import { getCreateMeetingStep, updateStep } from "../../redux/actions/meetingActions/MeetingAction";
+import { logOut } from "../../redux/actions/authActions/authAction";
 const MeetingPage = () => {
+  const location = useLocation();
+  const stateData = location.state;
+  console.log(stateData)
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
   const meetingData = useSelector((state) => state.meeting);
   const dispatch = useDispatch();
+  const authData = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  if (authData.isInValidUser) {
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    dispatch(logOut())
+    navigate("/login");
+  }
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
     // if (meetingData.checkStep) {
@@ -30,6 +44,7 @@ const MeetingPage = () => {
   }, []);
   return (
     <>
+      {!stateData?.isNewMeeting ? <Navigate to="/meeting-list" /> : null}
       <Header />
       <MeetingHeader />
       <Sidebar />
@@ -37,7 +52,7 @@ const MeetingPage = () => {
         <div className="row">
           <div className="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 detail-col">
             <div className="meeting-header-text">
-              <h4>Meeting Details</h4>
+              <h4>Add Meeting Details</h4>
             </div>
             <AddMeeting />
           </div>

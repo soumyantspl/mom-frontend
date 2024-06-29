@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
 import { Margin } from "../../../node_modules/@mui/icons-material/index";
-import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction.js/meetingRoomAction";
+import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction/meetingRoomAction";
 import { useSelector, useDispatch } from "react-redux";
 import CommonStepper from "../Common/CommonStepper";
 import CreateMeeting from "./CreateMeeting";
@@ -30,19 +30,36 @@ import Header from "../Common/Header/Header";
 import MeetingHeader from "../Common/Header/MeetingHeader";
 import Sidebar from "../Common/Sidebar/Sidebar";
 import { Navigate, Link, useLocation, useNavigate } from "react-router-dom";
+import { logOut } from "../../redux/actions/authActions/authAction";
 
 const ViewMeeting = (props) => {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const authData = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  if (authData.isInValidUser) {
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    dispatch(logOut())
+    navigate("/login");
+  }
   const stateData = location.state;
   console.log(stateData);
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
-  const dispatch = useDispatch();
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const meetingData = useSelector((state) => state.meeting);
   const [isViewMeetingPage, setIsViewMeetingPage] = useState(false);
   console.log(meetingData);
-  const navigate = useNavigate();
+  const employeeData = useSelector((state) => state.user);
+  // if (employeeData?.userData === null) {
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("userData");
+  //   localStorage.removeItem("rememberMe");
+  //   navigate("/login");
+  // }
   useEffect(() => {
     console.log(stateData);
     // if (stateData?.isViewMeetingPage) {
@@ -79,18 +96,23 @@ const ViewMeeting = (props) => {
       {/* <Header />
           <MeetingHeader />
           <Sidebar /> */}
-      {(meetingData.step + 1 === 1 && !meetingData.singleMeetingDetails) || (meetingData.isNewMeetingPage === true && !meetingData.singleMeetingDetails)  ? (
+      {(meetingData.step + 1 === 1 && !meetingData.singleMeetingDetails) ||
+      (meetingData.isNewMeetingPage === true &&
+        !meetingData.singleMeetingDetails) ? (
         // {!meetingData.isLoading && meetingData.isNewMeetingPage ? (
         <form className="mt-2 details-form details-form-right">
+           <Alert
+                      status={"info"}
+                      message={"Meeting preview will be available once you enter meeting details."}
+                      timeoutSeconds={0}
+                    />
           <div className="form-group mb-2">
             <div className="row">
-            <NoDataFound dataType={"meeting"}/>
+              <NoDataFound dataType={"meeting"} />
             </div>
           </div>
         </form>
-      ) : !meetingData.loading &&
-        meetingData.singleMeetingDetails 
-         ? (
+      ) : !meetingData.loading && meetingData.singleMeetingDetails ? (
         <form className="mt-2 details-form details-form-right">
           <div className="form-group mb-2">
             <div className="row">
@@ -198,7 +220,20 @@ const ViewMeeting = (props) => {
                 </div>
               </div>
             </div>
-          ) : null}
+          ) : (
+            <form className="mt-2 details-form details-form-right">
+                <Alert
+                      status={"info"}
+                      message={"No Attendee Added"}
+                      timeoutSeconds={0}
+                    />
+              <div className="form-group mb-2">
+                <div className="row">
+                  <NoDataFound dataType={"attendee"} />
+                </div>
+              </div>
+            </form>
+          )}
           {meetingData.singleMeetingDetails.agendasDetail.length !== 0 ? (
             <div className="form-group agenda">
               <label className="mt-3 mb-3">
@@ -263,7 +298,20 @@ const ViewMeeting = (props) => {
                   }
                 )}
             </div>
-          ) : null}
+          ) : meetingData.singleMeetingDetails.attendees.length > 0? (
+            <form className="mt-2 details-form details-form-right">
+                <Alert
+                      status={"info"}
+                      message={"No Agenda Added"}
+                      timeoutSeconds={0}
+                    />
+              <div className="form-group mb-2">
+                <div className="row">
+                  <NoDataFound dataType={"agenda"} />
+                </div>
+              </div>
+            </form>
+          ):null}
         </form>
       ) : meetingData.isLoading ? (
         <form className="mt-2 details-form details-form-right">

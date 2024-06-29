@@ -25,13 +25,22 @@ const invalidFromHour = "Invali From Hour.";
 const invalidToHour = "Invali To Hour.";
 const invalidFromMinute = "Invali From Minute.";
 const invalidToMinute = "Invali To Minute.";
-const invalidDate="Invalid Date."
-const addAgenda="Please add agenda."
-const addAttendee="Please add attendee."
-const invalidTime="Please enter valid time."
-const cancelMeeting="Do you want to cancel this meeting ?"
-const remarksRequired="Please give remark."
+const invalidDate = "Invalid Date.";
+const addAgenda = "Please add agenda.";
+const addAttendee = "Please add attendee.";
+const invalidTime = "Please enter valid time.";
+const cancelMeeting = "Do you want to cancel this meeting ?";
+const remarksRequired = "Please give remark.";
+const meetingCreated =
+  "Meeting created successfully. Please add attendees.";
+  const serverErrorMessage='Sorry, something went wrong. Please try again later.';
+  const responsiblePersonRequired="Please add responsible person."
+  const priorityRequired="Please add priority."
 module.exports = {
+  priorityRequired,
+  responsiblePersonRequired,
+  serverErrorMessage,
+  meetingCreated,
   remarksRequired,
   cancelMeeting,
   addAttendee,

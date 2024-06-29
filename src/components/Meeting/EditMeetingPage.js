@@ -10,19 +10,33 @@ import EditMeeting from "./EditMeeting";
 import ViewEditMeeting from "./ViewEditMeeting";
 import { getSingleMeetingDetails, unSetSingleMeetingDetails } from "../../redux/actions/meetingActions/MeetingAction";
 import ViewMeeting from "./ViewMeeting";
+import { logOut } from "../../redux/actions/authActions/authAction";
 const EditMeetingPage = () => {
   const location = useLocation();
   const stateData = location.state;
-  console.log(stateData);
+  //console.log(stateData);
+  const dispatch = useDispatch();
+  const authData = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  if (authData.isInValidUser) {
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    dispatch(logOut())
+    navigate("/login");
+  }
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
   const meetingData = useSelector((state) => state.meeting);
-  const dispatch = useDispatch();
+ 
   console.log("before use effect------------------------------------");
   useEffect(() => {
     console.log("use effect------------------------------------");
     console.log(stateData);
-    dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
+    if(stateData?.meetingId){
+    dispatch(getSingleMeetingDetails(stateData?.meetingId, accessToken));
+    }
     // dispatch()
 
     return () => {
@@ -33,6 +47,7 @@ const EditMeetingPage = () => {
   }, []);
   return (
     <>
+     {!stateData?.meetingId ? <Navigate to="/meeting-list" /> : null}
       <Header />
       <MeetingHeader />
       <Sidebar />
@@ -40,7 +55,7 @@ const EditMeetingPage = () => {
         <div className="row">
           <div className="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12 detail-col">
             <div className="meeting-header-text">
-              <h4>Meeting Details</h4>
+              <h4>Edit Meeting Details</h4>
             </div>
             <EditMeeting />
           </div>

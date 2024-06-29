@@ -18,10 +18,12 @@ import {
   UNSET_SINGLE_MEETING_DETAILS,
   UPDATE_STEP,
   UPDATE_FETCH_MEETING_LIST_STATUS,
-  UPDATE_FETCH_MEETING_WITH_AGENDA_STATUS
+  SET_AGENDA_AND_MINUTES_DETAILS,
 } from "./actionTypes";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import * as constantMessages from "../../../constants/constatntMessages";
+import { setInValidUser } from "../authActions/authAction";
 
 const accessToken = localStorage.getItem("accessToken");
 
@@ -72,20 +74,41 @@ export const fetchMeetingList = (payload) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
+        console.log("resData------------------------->>>>>>>", resData);
+        if (resData.data?.isInValidUser) {
+          dispatch(setInValidUser(true));
+        }
+        if (
+          (!resData.success && resData.data?.totalCount !== 0) ||
+          resData.data?.isInValidUser
+        ) {
+          toast.error(resData.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            // transition: Bounce,
+          });
+        }
+        console.log("resData------------------------->>>>>>>", resData);
         dispatch(getMeetingList(resData));
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
-          position: "bottom-left",
-          autoClose: 3000,
+        toast.error(constantMessages.serverErrorMessage, {
+          position: "top-right",
+          autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "colored",
           // transition: Bounce,
         });
       });
@@ -116,20 +139,34 @@ export const fetchAttendeesList = (organizationId, token) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
+        if (resData.data?.isInValidUser) {
+          dispatch(setInValidUser(true));
+          toast.error(resData.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            // transition: Bounce,
+          });
+        }
         dispatch(getAttendeesList(resData));
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
-          position: "bottom-left",
-          autoClose: 3000,
+        toast.error(constantMessages.serverErrorMessage, {
+          position: "top-right",
+          autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "colored",
           // transition: Bounce,
         });
       });
@@ -169,28 +206,31 @@ export const updateRsvp = (rsvp, meetingId) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
+        if (resData.data?.isInValidUser) {
+          dispatch(setInValidUser(true));
+        }
         if (resData.success) {
           toast.success(resData.message, {
-            position: "bottom-left",
-            autoClose: 3000,
+            position: "top-right",
+            autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
         } else {
           toast.error(resData.message, {
-            position: "bottom-left",
-            autoClose: 3000,
+            position: "top-right",
+            autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
         }
@@ -199,15 +239,15 @@ export const updateRsvp = (rsvp, meetingId) => {
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
-          position: "bottom-left",
-          autoClose: 3000,
+        toast.error(constantMessages.serverErrorMessage, {
+          position: "top-right",
+          autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "colored",
           // transition: Bounce,
         });
       });
@@ -239,18 +279,21 @@ export const createMeetingDetails = (payload, accessToken) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
+        if (resData.data?.isInValidUser) {
+          dispatch(setInValidUser(true));
+        }
         if (resData.success) {
           dispatch(getSingleMeetingDetails(resData.data._id, accessToken));
 
-          toast.success(resData.message, {
-            position: "bottom-left",
-            autoClose: 3000,
+          toast.success(constantMessages.meetingCreated, {
+            position: "top-right",
+            autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
           dispatch(createMeetingResponse(resData));
@@ -258,14 +301,14 @@ export const createMeetingDetails = (payload, accessToken) => {
         } else {
           dispatch(failRequest(resData.message));
           toast.error(resData.message, {
-            position: "bottom-left",
-            autoClose: 3000,
+            position: "top-right",
+            autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
         }
@@ -273,15 +316,15 @@ export const createMeetingDetails = (payload, accessToken) => {
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
-          position: "bottom-left",
-          autoClose: 3000,
+        toast.error(constantMessages.serverErrorMessage, {
+          position: "top-right",
+          autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "colored",
           // transition: Bounce,
         });
       });
@@ -313,12 +356,25 @@ export const getCreateMeetingStep = (organizationId, accessToken) => {
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
-
+        if (resData.data?.isInValidUser) {
+          dispatch(setInValidUser(true));
+        }
         dispatch(fetchCreateMeetingStep(resData));
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
+        toast.error(constantMessages.serverErrorMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          // transition: Bounce,
+        });
       });
   };
 };
@@ -341,7 +397,8 @@ export const updateMeetingDetails = (
   meetingId,
   bodyPayload,
   accessToken,
-  isFrom
+  isFrom,
+  isUpdate
 ) => {
   return (dispatch) => {
     dispatch(makeRequest());
@@ -359,37 +416,45 @@ export const updateMeetingDetails = (
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
+
         const message =
-          isFrom === "addAttendee"
-            ? "Attendees added successfully"
-            : isFrom === "addAgenda"
-            ? "Agendas added successfully"
+          isFrom === "addAttendee" && !isUpdate
+            ? "Attendees added successfully. Please add agenda."
+            : isFrom === "addAttendee" && isUpdate
+            ? "Attendees updated successfully."
+            : isFrom === "addAgenda" && !isUpdate
+            ? "Agenda added successfully."
+            : isFrom === "addAgenda" && isUpdate
+            ? "Agenda updated successfully."
             : resData.message;
         if (resData.success) {
           toast.success(message, {
-            position: "bottom-left",
-            autoClose: 3000,
+            position: "top-right",
+            autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
           dispatch(getSingleMeetingDetails(meetingId, accessToken));
           dispatch(updateMeetingResponse(resData));
           dispatch(updateStep(bodyPayload.step, true));
         } else {
+          if (resData.data?.isInValidUser) {
+            dispatch(setInValidUser(true));
+          }
           toast.error(resData.message, {
-            position: "bottom-left",
-            autoClose: 3000,
+            position: "top-right",
+            autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
           dispatch(failRequest(resData.message));
@@ -398,15 +463,15 @@ export const updateMeetingDetails = (
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
-          position: "bottom-left",
-          autoClose: 3000,
+        toast.error(constantMessages.serverErrorMessage, {
+          position: "top-right",
+          autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "colored",
           // transition: Bounce,
         });
       });
@@ -439,20 +504,36 @@ export const getSingleMeetingDetails = (meetingId, accessToken) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
 
+        if (resData.data?.isInValidUser) {
+          dispatch(setInValidUser(true));
+        }
+        if (!resData.success && !resData.data?.isInValidUser) {
+          toast.error(resData.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            // transition: Bounce,
+          });
+        }
         dispatch(setSingleMeetingDetails({ data: resData.data, meetingId }));
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
-          position: "bottom-left",
-          autoClose: 3000,
+        toast.error(constantMessages.serverErrorMessage, {
+          position: "top-right",
+          autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "colored",
           // transition: Bounce,
         });
       });
@@ -501,7 +582,7 @@ export const setCreateNewMeetingPage = (data) => {
 
 export const processCancelMeeting = (meetingId, bodyPayload, accessToken) => {
   return (dispatch) => {
-   // dispatch(makeRequest());
+    // dispatch(makeRequest());
     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/cancelMeeting/${meetingId}`;
     //const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/viewMeeting/${meetingId}`;
     const headerObject = {
@@ -514,35 +595,38 @@ export const processCancelMeeting = (meetingId, bodyPayload, accessToken) => {
     console.log("accessToken------------>>>>>", accessToken);
     console.log("bodyPayload------------>>>>>", bodyPayload);
     console.log("headerObject------------>>>>>", headerObject);
-    
+
     axios
       .put(webApiUrl, bodyPayload, headerObject)
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
+        if (resData.data?.isInValidUser) {
+          dispatch(setInValidUser(true));
+        }
         if (resData.success) {
           toast.success(resData.message, {
-            position: "bottom-left",
-            autoClose: 3000,
+            position: "top-right",
+            autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
-           dispatch(updateFetchMeetingListStatus(true))
+          dispatch(updateFetchMeetingListStatus(true));
         } else {
           toast.error(resData.message, {
-            position: "bottom-left",
-            autoClose: 3000,
+            position: "top-right",
+            autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: "light",
+            theme: "colored",
             // transition: Bounce,
           });
           dispatch(updateFetchMeetingListStatus(false));
@@ -551,15 +635,15 @@ export const processCancelMeeting = (meetingId, bodyPayload, accessToken) => {
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
-          position: "bottom-left",
-          autoClose: 3000,
+        toast.error(constantMessages.serverErrorMessage, {
+          position: "top-right",
+          autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "colored",
           // transition: Bounce,
         });
         dispatch(updateFetchMeetingListStatus(false));
@@ -574,8 +658,7 @@ export const updateFetchMeetingListStatus = (data) => {
   };
 };
 
-
-export const getSingleMeetingAgendaFullDetails = (meetingId, accessToken) => {
+export const getAgendaWithMinutesDetails = (meetingId, accessToken) => {
   return (dispatch) => {
     dispatch(makeRequest());
     const webApiUrl = `${process.env.REACT_APP_API_URL}/api/V1/meeting/viewMeetingAgendaWithMinutes/${meetingId}`;
@@ -587,38 +670,66 @@ export const getSingleMeetingAgendaFullDetails = (meetingId, accessToken) => {
     };
     console.log("webApiUrl----------------", webApiUrl);
     console.log("accessToken------------>>>>>", accessToken);
+    console.log("headerObject------------>>>>>", headerObject);
 
     axios
       .get(webApiUrl, headerObject)
       .then((result) => {
         console.log("result------------------------->>>>>>>", result);
         const resData = result.data;
-
-        dispatch(setSingleMeetingAgendaFullDetails({ data: resData.data, meetingId }));
+        if (resData.data?.isInValidUser) {
+          dispatch(setInValidUser(true));
+        }
+        if (resData.success) {
+          // toast.success(resData.message, {
+          //   position: "top-right",
+          //   autoClose: 5000,
+          //   hideProgressBar: false,
+          //   closeOnClick: true,
+          //   pauseOnHover: true,
+          //   draggable: true,
+          //   progress: undefined,
+          //   theme: "colored",
+          //   // transition: Bounce,
+          // });
+          dispatch(setAgendaWithMinutesDetails(resData.data));
+        } else {
+          toast.error(resData.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            // transition: Bounce,
+          });
+          // dispatch(getAgendaWithMinutesDetails(false));
+        }
       })
       .catch((err) => {
         console.log("err------------------------->>>>>>>", err);
         dispatch(failRequest(err.message));
-        toast.error(err.message, {
-          position: "bottom-left",
-          autoClose: 3000,
+        toast.error(constantMessages.serverErrorMessage, {
+          position: "top-right",
+          autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "colored",
           // transition: Bounce,
         });
-      
+        // dispatch(updateFetchMeetingListStatus(false));
       });
   };
 };
 
-
-export const setSingleMeetingAgendaFullDetails = (data) => {
+export const setAgendaWithMinutesDetails = (data) => {
   return {
-    type: UPDATE_FETCH_MEETING_WITH_AGENDA_STATUS,
+    type: SET_AGENDA_AND_MINUTES_DETAILS,
     payload: data,
   };
 };

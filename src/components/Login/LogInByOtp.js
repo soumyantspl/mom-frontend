@@ -145,6 +145,7 @@ const LoginByOtp = () => {
                 </div>
                 {!authData.loading ? (
                   <button
+                    disabled={authData.loading}
                     className="signin-btn1"
                     type="submit"
                     onClick={() => setIsSetPassword(false)}
@@ -159,6 +160,7 @@ const LoginByOtp = () => {
 
                 <Link to="/login-by-password" state={formData}>
                   <button
+                    disabled={authData.loading}
                     className="signin-btn2"
                     onClick={() => {
                       dispatch(updateIsSuccess(true));
@@ -173,6 +175,7 @@ const LoginByOtp = () => {
                     type="submit"
                     className="signin-btn2"
                     onClick={() => setIsSetPassword(true)}
+                    disabled={authData.loading}
                   >
                     Set Password
                   </button>

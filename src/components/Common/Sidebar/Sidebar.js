@@ -79,7 +79,7 @@ const Sidebar = () => {
             </li>
           </Link>
 
-          <Link to="" className="link">
+          <Link to="" className="link" onClick={ (event) => event.preventDefault()}>
             <li
               className={currentPath == "manage" ? "active-menu" : ""}
               onClick={() => {

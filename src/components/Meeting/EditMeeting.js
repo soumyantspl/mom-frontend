@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
 import { Margin } from "../../../node_modules/@mui/icons-material/index";
-import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction.js/meetingRoomAction";
+import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction/meetingRoomAction";
 import { useSelector, useDispatch } from "react-redux";
 import CommonStepper from "../Common/CommonStepper";
 import CreateMeeting from "./CreateMeeting";
-import { Navigate, Link, useLocation } from "react-router-dom";
+import { Navigate, Link, useLocation,useNavigate } from "react-router-dom";
 import {
   createMeetingDetails,
   getCreateMeetingStep,
@@ -23,11 +23,23 @@ import Alert from "../Common/Alert";
 import AddAgendas from "./AddAgendas";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { logOut } from "../../redux/actions/authActions/authAction";
 
 const EditMeeting = (props) => {
+  const dispatch = useDispatch();
+  const authData = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  if (authData.isInValidUser) {
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    dispatch(logOut())
+    navigate("/login");
+  }
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
-  const dispatch = useDispatch();
+ 
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const meetingData = useSelector((state) => state.meeting);
   console.log(meetingRoomData);
@@ -53,11 +65,11 @@ const EditMeeting = (props) => {
   console.log(location);
   const stateData = location.state;
   console.log(meetingData);
-  console.log(stateData);
-  console.log(stateData.isMeetingDataUpdate)
+ // console.log(stateData);
+//  console.log(stateData.isMeetingDataUpdate)
   useEffect(() => {
     console.log(" useeffect--------------->>>>>>>>>>>>>>1");
-    if(stateData.isMeetingDataUpdate){
+    if(stateData?.isMeetingDataUpdate){
       document.title = "Update Meeting: Meeting Plus";
     
     }
@@ -113,7 +125,7 @@ const EditMeeting = (props) => {
           limit: 1000,
           page: 1,
           order: 1,
-          organizationId: userData.organizationId,
+          organizationId: userData?.organizationId,
         };
 
         dispatch(getMeetingRoomList(payload, accessToken));
@@ -166,6 +178,7 @@ const EditMeeting = (props) => {
           title: formData.title,
           link:formData.link,
           step:1,
+          sendNotification:false,
           isUpdate:stateData.isMeetingDataUpdate && meetingData.singleMeetingDetails.step===3?true:false,
         };
         console.log(payload);
@@ -695,7 +708,7 @@ const EditMeeting = (props) => {
                   Next
                 </Button> */}
   <div className="button-outer">
-  {!meetingData.loading && stateData.isMeetingDataUpdate  ? (
+  {!meetingData.loading && stateData?.isMeetingDataUpdate  ? (
               // <div className="create-meeting-button">
               //   <Button
               //     variant="primary"
@@ -738,21 +751,21 @@ const EditMeeting = (props) => {
               <LoaderButton />
             )}
             
-            {!meetingData.loading && stateData.isMeetingDataUpdate  ? (
+            {!meetingData.loading && stateData?.isMeetingDataUpdate  ? (
              <button
                     className="create-meeting-button Mom-btn"
                     onClick={(e) => dispatch(updateStep(1))}
                   >
                     <p>Next</p>
                   </button>
-            ):!meetingData.loading && !stateData.isMeetingDataUpdate  ?(
+            ):!meetingData.loading && !stateData?.isMeetingDataUpdate  ?(
               <button
               className="create-meeting-button Mom-btn"
               type="submit"
             >
               <p>Next</p>
             </button>
-            ):meetingData.loading && !stateData.isMeetingDataUpdate  ?(
+            ):meetingData.loading && !stateData?.isMeetingDataUpdate  ?(
               <LoaderButton />
             ):null
             

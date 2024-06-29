@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
 import { Margin } from "../../../node_modules/@mui/icons-material/index";
-import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction.js/meetingRoomAction";
+import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction/meetingRoomAction";
 import { useSelector, useDispatch } from "react-redux";
 import CommonStepper from "../Common/CommonStepper";
 import CreateMeeting from "./CreateMeeting";
-import { Navigate, Link, useLocation } from "react-router-dom";
+import { Navigate, Link, useLocation,useNavigate } from "react-router-dom";
 import {
   createMeetingDetails,
   getCreateMeetingStep,
@@ -23,11 +23,24 @@ import Alert from "../Common/Alert";
 import AddAgendas from "./AddAgendas";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { logOut } from "../../redux/actions/authActions/authAction";
 
 const AddMeeting = (props) => {
+  const dispatch = useDispatch();
+  const employeeData = useSelector((state) => state.user);
+  const authData = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  if (authData.isInValidUser) {
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("rememberMe");
+    dispatch(logOut())
+    navigate("/login");
+  }
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
-  const dispatch = useDispatch();
+
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const meetingData = useSelector((state) => state.meeting);
   console.log(meetingRoomData);
@@ -53,30 +66,32 @@ const AddMeeting = (props) => {
   console.log(location);
   const stateData = location.state;
   console.log(stateData);
+  console.log(meetingData)
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
-
+    console.log("ffffffffffffffffffffff",stateData);
     console.log(meetingData.checkStep);
     // if (meetingData.checkStep) {
     console.log(meetingData.checkStep);
     if (!meetingData.isNewMeetingPage && !meetingData.isUpdateStep) {
-      console.log('ffffffffffffffffffffff')
+     
       dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
     }
-if(meetingData.isSuccess || meetingData.isNewMeetingPage){
-  setFormData({
-    ...formData,
-    title: "",
-    mode: "physical",
-    location: "manual",
-    date: "",
-    link: "",
-    fromTime: "",
-    toTime: "",
-    roomId: "",
-    locationData: ""
-  });
-}
+    if (meetingData.isSuccess || meetingData.isNewMeetingPage || stateData.isNewMeeting) {
+      console.log("ffffffffffffffffffffff333333333333",stateData);
+      setFormData({
+        ...formData,
+        title: "",
+        mode: "physical",
+        location: "manual",
+        date: "",
+        link: "",
+        fromTime: "",
+        toTime: "",
+        roomId: "",
+        locationData: "",
+      });
+    }
     // }
 
     // console.log(meetingData.step);
@@ -114,7 +129,7 @@ if(meetingData.isSuccess || meetingData.isNewMeetingPage){
         dispatch(getMeetingRoomList(payload, accessToken));
       }
     }
-  }, [meetingData.step]);
+  }, [meetingData.step,meetingData.isNewMeetingPage ]);
 
   const submitMeetingDetails = (e) => {
     console.log("submitMeetingDetails------------------------------");
@@ -142,12 +157,13 @@ if(meetingData.isSuccess || meetingData.isNewMeetingPage){
           fromTime: formData.fromTime,
           toTime: formData.toTime,
           title: formData.title,
-          link:formData.link,
+          link: formData.link,
           step: 1,
-          isUpdate:stateData.isMeetingDataUpdate?true:false,
+          isUpdate: stateData.isMeetingDataUpdate ? true : false,
+          sendNotification:false
         };
         console.log(payload);
-      
+
         dispatch(
           updateMeetingDetails(meetingId, payload, accessToken, "updateMeeting")
         );
@@ -160,35 +176,32 @@ if(meetingData.isSuccess || meetingData.isNewMeetingPage){
           fromTime: formData.fromTime,
           toTime: formData.toTime,
           title: formData.title,
-          link:formData.link
+          link: formData.link,
         };
         console.log(payload);
         dispatch(createMeetingDetails(payload, accessToken));
-       
       }
 
       // if (meetingData.isSuccess) {
       //   setStep(2);
       // }
 
-      if(meetingData.isUpdateStep){
-      //  dispatch(updateStep(1,false))
+      if (meetingData.isUpdateStep) {
+        //  dispatch(updateStep(1,false))
       }
-
 
       console.log("Form submitted successfully!");
     } else {
       console.log(`Form submission failed
        due to validation errors.`);
     }
-    dispatch(updateStep(1,true))
-  
+   // dispatch(updateStep(1, true));
   };
 
   console.log(step);
-const updateState=(step)=>{
-setStep(step)
-}
+  const updateState = (step) => {
+    setStep(step);
+  };
   const handleChange = (e) => {
     dispatch(updateIsCreateMeetingProcessed(false));
     setErrors({});
@@ -214,7 +227,7 @@ setStep(step)
   };
 
   const validateForm = (data) => {
-    console.error(data)
+    console.error(data);
     const errors = {};
     if (!data.title.trim()) {
       errors.title = constantMessages.titleRequired;
@@ -442,7 +455,9 @@ setStep(step)
       {meetingData.step === 3 && !meetingData.isNewMeetingPage ? (
         <Navigate to="/meeting-list" />
       ) : null}
-      <CommonStepper step={meetingData.isNewMeetingPage?1:meetingData.step} />
+      <CommonStepper
+        step={meetingData.isNewMeetingPage ? 1 : meetingData.step}
+      />
       <br></br>
       {/* {!meetingData.loading ? (
         <> */}
@@ -472,6 +487,7 @@ setStep(step)
               <div className="d-flex w-100">
                 <div className="form-check form-check-inline">
                   <input
+                    id="flexRadioDefault1"
                     className="form-check-input"
                     type="radio"
                     name="mode"
@@ -480,8 +496,9 @@ setStep(step)
                     checked={formData.mode === "virtual"}
                   />
                   <label
+                    for="flexRadioDefault1"
+                    id="flexRadioDefault1"
                     className="form-check-label"
-                    htmlFor="flexRadioDefault1"
                   >
                     Virtual Meeting
                   </label>
@@ -490,6 +507,7 @@ setStep(step)
                   <div className="form-check">
                     <input
                       className="form-check-input"
+                      id="flexRadioDefault2"
                       type="radio"
                       name="mode"
                       value="physical"
@@ -498,7 +516,8 @@ setStep(step)
                     />
                     <label
                       className="form-check-label"
-                      htmlFor="flexRadioDefault1"
+                      for="flexRadioDefault2"
+                      id="flexRadioDefault2"
                     >
                       Physical Meeting
                     </label>
@@ -516,7 +535,7 @@ setStep(step)
                 <div className="form-check form-check-inline">
                   {}
                   <input
-                    id="flexRadioDefault1"
+                    id="locationtype1"
                     className="form-check-input"
                     type="radio"
                     name="location"
@@ -524,14 +543,19 @@ setStep(step)
                     onChange={handleChange}
                     checked={formData.location === "manual"}
                   />
-                  <label className="form-check-label" for="locationtype">
+                  <label className="form-check-label" 
+                  //for="locationtype
+                  
+                    for="locationtype1"
+                      id="locationtype1"
+                  >
                     Enter Manually
                   </label>
                 </div>
                 <div className="form-check form-check-inline">
                   <div className="form-check">
                     <input
-                      id="flexRadioDefault1"
+                      id="locationtype2"
                       className="form-check-input"
                       type="radio"
                       name="location"
@@ -540,7 +564,11 @@ setStep(step)
                       checked={formData.location === "meetingroom"}
                       onBlur={meetinRoomFieldValidationCheck}
                     />
-                    <label className="form-check-label" for="locationtype">
+                    <label className="form-check-label" 
+                    // for="locationtype"
+                     for="locationtype2"
+                      id="locationtype2"
+                    >
                       Select A Meeting Room
                     </label>
                   </div>
@@ -548,20 +576,20 @@ setStep(step)
               </div>
               {formData.location !== "meetingroom" ? (
                 <>
-                <textarea
-                  className="mt-1"
-                  placeholder="Enter Location"
-                  id=""
-                  cols="56"
-                  rows="3"
-                  onChange={handleChange}
-                  name="locationData"
-                  value={formData.locationData}
-                  onBlur={locationDetailsFieldValidationCheck}
-                ></textarea>
-                {errors.locationData && (
-                  <span className="error-message">{errors.locationData}</span>
-                )}
+                  <textarea
+                    className="mt-1"
+                    placeholder="Enter Location"
+                    id=""
+                    cols="56"
+                    rows="3"
+                    onChange={handleChange}
+                    name="locationData"
+                    value={formData.locationData}
+                    onBlur={locationDetailsFieldValidationCheck}
+                  ></textarea>
+                  {errors.locationData && (
+                    <span className="error-message">{errors.locationData}</span>
+                  )}
                 </>
               ) : (
                 <select
@@ -584,7 +612,6 @@ setStep(step)
               {errors.roomId && (
                 <span className="error-message">{errors.roomId}</span>
               )}
-             
             </div>
 
             <div className="mb-3">
@@ -695,20 +722,20 @@ setStep(step)
                 >
                   Next
                 </Button> */}
- <div className="button-outer">
-            {!meetingData.loading && !meetingData.isUpdateStep ? (
-              // <div className="create-meeting-button">
-              //   <Button
-              //     variant="primary"
-              //     type="submit"
-              //     className="Mom-btn"
-              //     //  onClick={() => setIsSetPassword(false)}
-              //   >
-              //     Next
-              //   </Button>
-              <>
-                <></>
-               
+            <div className="button-outer">
+              {!meetingData.loading && !meetingData.isUpdateStep ? (
+                // <div className="create-meeting-button">
+                //   <Button
+                //     variant="primary"
+                //     type="submit"
+                //     className="Mom-btn"
+                //     //  onClick={() => setIsSetPassword(false)}
+                //   >
+                //     Next
+                //   </Button>
+                <>
+                  <></>
+
                   {/* {meetingData.isCreateMeetingProcessed &&
                   meetingData.step === 1 ? (
                     <div className="mb-3">
@@ -730,35 +757,29 @@ setStep(step)
                     className="create-meeting-button Mom-btn"
                     type="submit"
                   >
-                    <p>Next</p>
+                    <p>Save & Proceed</p>
                   </button>
-               
-              </>
-            ) : !meetingData.loading && meetingData.isUpdateStep ? (
-              <button
-              className="create-meeting-button Mom-btn"
-              type="submit"
-            >
-              <p>Update</p>
-            </button>
-            )
-            :(
-              // </div>
-              <LoaderButton />
-            )}
-{!meetingData.loading && meetingData.isUpdateStep ? (
-              <button
-              className="create-meeting-button Mom-btn"
-              onClick={(e) => dispatch(updateStep(1,true))}
-            >
-              <p>Next</p>
-            </button>
-            ):null}
-
+                </>
+              ) : !meetingData.loading && meetingData.isUpdateStep  ? (
+                <button className="create-meeting-button Mom-btn" type="submit">
+                  <p>Update</p>
+                </button>
+              ) : (
+                // </div>
+                <LoaderButton />
+              )}
+              {!meetingData.loading && meetingData.isUpdateStep  ? (
+                <button
+                  className="create-meeting-button Mom-btn"
+                  onClick={(e) => dispatch(updateStep(1, true))}
+                >
+                  <p>Next</p>
+                </button>
+              ) : null}
             </div>
           </div>
         </form>
-      ) : meetingData.step + 1 === 2 && !meetingData.isNewMeetingPage  ? (
+      ) : meetingData.step + 1 === 2 && !meetingData.isNewMeetingPage ? (
         <>
           <AddAttendees />
         </>

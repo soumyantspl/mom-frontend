@@ -3,7 +3,7 @@ import {
     GET_MEETING_ROOM_LIST,
     MAKE_REQUEST
    
-  } from "../actions/meetingRoomAction.js/actionTypes";
+  } from "../actions/meetingRoomAction/actionTypes";
   
   const initialObject = {
     loading: false,

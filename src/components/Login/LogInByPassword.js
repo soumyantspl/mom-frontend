@@ -25,8 +25,8 @@ const LogInByPassword = (props) => {
   const stateData = location.state;
   console.log(stateData);
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: "soumya.mishra@ntspl.co.in",
+    password: "Demo@123",
   });
   const [errors, setErrors] = useState({});
   const [rememberMe, setRememberMe] = useState(false);
@@ -120,28 +120,11 @@ const LogInByPassword = (props) => {
       x.type = "password";
     }
   };
-  // const fieldValidationCheck = (e) => {
-  //   e.preventDefault();
-
-  //   const newErrors = validateForm(formData);
-  //   setErrors(newErrors);
-  //   if (Object.keys(newErrors).length === 0) {
-  //     // Form submission logic here
-
-  //     console.log("Form submitted successfully!");
-  //   } else {
-  //     console.log(`Form submission failed
-  //      due to validation errors.`);
-  //   }
-  // };
 
 
   const passwordFieldValidationCheck = (e) => {
     const errors = {};
-    // if (!formData.password) {
-    //   errors.roomId = constantMessages.roomRequired;
-    //   setErrors(errors);
-    // }
+   
     if (!isSetPassword) {
       const regularExpression =
         /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
@@ -157,11 +140,7 @@ const LogInByPassword = (props) => {
   
   const emailFieldValidationCheck = (e) => {
     const errors = {};
-    // if (!formData.password) {
-    //   errors.roomId = constantMessages.roomRequired;
-    //   setErrors(errors);
-    // }
-    // if (!formData.password) {
+  
       if (!formData.email.trim()) {
         errors.email = constantMessages.emailRequired;
       } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -278,6 +257,7 @@ const LogInByPassword = (props) => {
                   <div className="set-pwd">
                     {/* <Link to="/set-password" > Forgot Password ?</Link> */}
                     <button
+                      disabled={authData.loading}
                       type="submit"
                       className="signin-btn2"
                       onClick={() => setIsSetPassword(true)}
@@ -305,6 +285,7 @@ const LogInByPassword = (props) => {
                 </a> */}
                 {!authData.loading ? (
                   <button
+                  disabled={authData.loading}
                     className="signin-btn1"
                     type="submit"
                     onClick={() => setIsSetPassword(false)}
@@ -317,8 +298,8 @@ const LogInByPassword = (props) => {
 
                 <div className="account">Don't have an account ?</div>
 
-                <Link to="/sign-up">
-                  <button className="signup-btn">Sign Up</button>
+                <Link to={!authData.loading?"/sign-up":"#"}>
+                  <button   disabled={true} className="signup-btn">Sign Up</button>
                 </Link>
 
                 <Link to="/login">
@@ -338,7 +319,9 @@ const LogInByPassword = (props) => {
                     </svg>
                     <span
                       onClick={() => {
-                        dispatch(updateIsSuccess(false));
+                        if(!authData.loading){
+                          dispatch(updateIsSuccess(false));
+                        }
                       }}
                     >
                       Back to Sign In
