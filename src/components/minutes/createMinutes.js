@@ -11,6 +11,7 @@ import AddMinute from "./AddMinute";
 const CreateMinutes = (props) => {
   const dispatch = useDispatch();
   const employeeData = useSelector((state) => state.user);
+  const minuteData = useSelector((state) => state.minute);
   const authData = useSelector((state) => state.auth);
   const meetingData = useSelector((state) => state.meeting);
   const userData = JSON.parse(localStorage.getItem("userData"));
@@ -26,7 +27,7 @@ const CreateMinutes = (props) => {
   }
   useEffect(() => {
    console.log("submit called")
-   submitAgendasDetails()
+  // submitAgendasDetails()
   }, [props.trigger]);
   const [trigger, setTrigger] = useState(false);
   const [isMinuteShow, setIsMinuteShow] = useState(false);
@@ -36,12 +37,12 @@ const CreateMinutes = (props) => {
       prevState.map((isOpen, i) => (i === index ? !isOpen : isOpen))
     );
   };
-
+  console.log(minuteData)
 //console.log(props.submit3())
   const submitAgendasDetails = () => {
     //e.preventDefault();
-console.log("jjjjjjjjjjjjjjjjjjjjj")
-setTrigger(trigger => !trigger);
+console.log(minuteData)
+//setTrigger(trigger => !trigger);
     // if (minuteData.length === 0) {
     //   const newErrors = validateForm(formData);
     //   setErrors(newErrors);

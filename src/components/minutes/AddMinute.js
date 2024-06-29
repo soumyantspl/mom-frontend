@@ -73,8 +73,9 @@ console.log(meetingData.meetingDetails)
       return attendee;
     });
     setAttendeesData(attendees);
-    console.log(attendees)
+   
   }, [employeeData.isDuplicateUser, props.trigger]);
+  console.log(attendeesData)
   console.log(minuteData, meetingData, formData);
   const submitMinuteData = () => {
     console.log("call api", minuteData);
@@ -190,9 +191,7 @@ console.log(meetingData.meetingDetails)
 
   const dateFieldValidationCheck = (e) => {
     const errors = {};
-    if (!formData.date.trim()) {
-      errors.date = constantMessages.dateRequired;
-    } else if (formData.date.trim()) {
+   if (formData.date.trim()) {
       const currentDate = new Date();
       const inputDate = new Date(formData.date);
       let differenceInTime = inputDate.getTime() - currentDate.getTime();
@@ -252,13 +251,14 @@ console.log(meetingData.meetingDetails)
       } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
         errors.email = constantMessages.invalidEmail;
       }
-    } else {
-      console.log("innnn", !formData.responsiblePersonId.trim());
-      if (!formData.responsiblePersonId.trim()) {
-        console.log("innnn2222222", !formData.responsiblePersonId.trim());
-        errors.responsiblePersonId = constantMessages.responsiblePersonRequired;
-      }
-    }
+    } 
+    // else {
+    //   console.log("innnn", !formData.responsiblePersonId.trim());
+    //   if (!formData.responsiblePersonId.trim()) {
+    //     console.log("innnn2222222", !formData.responsiblePersonId.trim());
+    //     errors.responsiblePersonId = constantMessages.responsiblePersonRequired;
+    //   }
+    // }
 
     if (!formData?.description.trim()) {
       console.log(formData);
@@ -266,9 +266,8 @@ console.log(meetingData.meetingDetails)
       // errors.index = formData.index;
     }
 
-    if (!formData.date.trim()) {
-      errors.date = constantMessages.dateRequired;
-    } else if (formData.date.trim()) {
+   
+    if (formData.date.trim()) {
       const currentDate = new Date();
       const inputDate = new Date(formData.date);
       let differenceInTime = inputDate.getTime() - currentDate.getTime();
@@ -277,11 +276,11 @@ console.log(meetingData.meetingDetails)
         errors.date = constantMessages.invalidDate;
       }
     }
-    if (!formData?.priority.trim()) {
-      console.log(formData);
-      errors.priority = constantMessages.priorityRequired;
-      // errors.index = formData.index;
-    }
+    // if (!formData?.priority.trim()) {
+    //   console.log(formData);
+    //   errors.priority = constantMessages.priorityRequired;
+    //   // errors.index = formData.index;
+    // }
 
     console.log("errors----------------", errors);
 
@@ -301,17 +300,21 @@ console.log(meetingData.meetingDetails)
       //     index: formData.index + 1,
       //   });
       const uid = Math.floor(100000 + Math.random() * 900000);
+      const responsiblePersonId= formData.responsiblePersonId === "" && formData.name===""&& formData.email==="" ?userData._id:formData.responsiblePersonId;
       const newMinuteData = [
         ...minuteData,
         {
+          createdById:userData._id,
           organizationId: userData.organizationId,
           agendaId: props.agenda._id,
+          meetingId: meetingData?.singleMeetingDetails?._id?.toString(),
           attendees: attendeesData,
           description: formData.description,
-          date: formData.date,
-          priority: formData.priority,
+          dueDate:  formData.date===""?new Date( meetingData?.singleMeetingDetails?.date):formData.date,
+          priority: formData.priority===""?"LOW":formData.priority,
+          isNewUser:formData.name!==""&& formData.email!=="" ?true:false,
           attendyType: formData.attendyType,
-          responsiblePersonId: formData.responsiblePersonId,
+         assignedUserId:responsiblePersonId,
           isAction: formData.isAction,
           //attendeesData: null,
           name: formData.name,
@@ -637,11 +640,11 @@ console.log(meetingData.meetingDetails)
                   </div>
                 </div>
               ) : null}
-              {errors.responsiblePersonId && (
+              {/* {errors.responsiblePersonId && (
                 <span className="error-message">
                   {errors.responsiblePersonId}
                 </span>
-              )}
+              )} */}
             </div>
 
             {/* <div className="form-group m-0 d-flex ">
@@ -711,11 +714,11 @@ console.log(meetingData.meetingDetails)
                       <input
                         className="form-check-input"
                         type="checkbox"
-                        value="isAction"
+                       // value="isAction"
                         id="flexCheckDefault"
                         name="isAction"
                         onChange={(e) => checkHandler(e, minute.uid)}
-                        //  checked={formData.isAction}
+                          checked={formData.isAction}
                       />
                       <label
                         className="form-check-label"
@@ -904,12 +907,17 @@ console.log(meetingData.meetingDetails)
                         name="responsiblePersonId"
                         value={minute.responsiblePersonId}
                       >
-                        <option value="" selected={true}>
-                          {" "}
-                          Name / Email Address
-                        </option>
+                           {meetingData.attendeesList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?
+                        <option selected value={minute.assignedUserId}>{meetingData.attendeesList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?.name} / {meetingData.attendeesList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?.email}</option>
+                       : <option value="" selected>
+                       {" "}
+                       Name / Email Address
+                     </option>}
+                        {/* <option selected value={minute.assignedUserId}>{ meetingData.attendeesList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?.name} / { meetingData.attendeesList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?.email}</option> */}
                         {meetingData.attendeesList &&
                           meetingData.attendeesList.map((attendee, index) => {
+                            <option>{minute.responsiblePersonId}</option>
+                           
                             return (
                               <option key={index} value={attendee._id}>
                                 {attendee.name} / {attendee.email}
@@ -924,13 +932,17 @@ console.log(meetingData.meetingDetails)
                         name="responsiblePersonId"
                         value={minute.responsiblePersonId}
                       >
-                        <option value="" selected>
-                          {" "}
-                          Name / Employee ID
-                        </option>
+                       {employeeData.employeeList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?
+                        <option selected value={minute.assignedUserId}>{employeeData.employeeList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?.name} / {employeeData.employeeList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?.empId}</option>
+                       : <option value="" selected>
+                       {" "}
+                       Name / Employee ID
+                     </option>}
                         {employeeData.employeeList &&
                           employeeData.employeeList.map((employee, index) => {
-                            return (
+                           
+                            
+                             return (
                               <option value={employee._id} key={index}>
                                 {employee.name} / {employee.empId}
                               </option>
