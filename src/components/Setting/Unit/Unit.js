@@ -264,6 +264,7 @@ const Unit = () => {
 
   const handleEditClick = (unit) => {
     setSelectedUnit(unit);
+    console.log("unit---", unit);
     setUnitName(unit.name);
     setUnitAddress(unit.address);
     setShowEditModal(true);
