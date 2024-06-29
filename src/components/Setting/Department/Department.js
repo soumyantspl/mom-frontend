@@ -9,7 +9,6 @@ import Loader from "../../Common/Loader";
 import { Modal, Button, Table, Dropdown, Form } from "react-bootstrap";
 import NoDataFound from "../../Common/NoDataFound";
 import "react-toastify/dist/ReactToastify.css";
-// const department = () => {};
 
 const Department = () => {
   //Create Department
@@ -288,8 +287,8 @@ const Department = () => {
   const editDepartmentnameValidationCheck = () => {
     console.log("calling-------------------", formValues);
     const errors = {};
-    if (!departmentName.trim()) {
-      errors.departmentName = "Address is required";
+    if (!formValues.name.trim()) {
+      errors.departmentName = "Name is required";
     }
     setErrors(errors);
     return errors;
@@ -317,7 +316,7 @@ const Department = () => {
     try {
       console.log("department idddddddddddddd", departmentId);
       const response = await axios.delete(
-        `${process.env.REACT_APP_API_URL}/api/V1/unit/deleteUnit/${departmentId}`,
+        `${process.env.REACT_APP_API_URL}/api/V1/department/deleteDepartment/${departmentId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -390,13 +389,17 @@ const Department = () => {
                   </div>
                 </div>
               </div>
-              <button
-                className="save Mom-btn"
-                type="submit"
-                disabled={isLoading}
-              >
-                {isLoading ? <LoaderButton /> : <p>Submit</p>}
-              </button>
+              {isLoading ? (
+                <LoaderButton />
+              ) : (
+                <button
+                  className="save Mom-btn"
+                  type="submit"
+                  disabled={isLoading}
+                >
+                  Submit
+                </button>
+              )}
             </form>
           </div>
 
