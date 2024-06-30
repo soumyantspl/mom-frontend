@@ -31,8 +31,9 @@ const AddMinute = (props) => {
     name: "",
     email: "",
   });
-  const [attendeesData, setAttendeesData] = useState([]);
+ // const [attendeesData, setAttendeesData] = useState([]);
   const [minuteData, setMinuteData] = useState([]);
+  console.log(meetingData)
   useEffect(() => {
     console.log("rrrrrrrrrrrrrrrrrrrrrrrrr");
     //  submitMinuteData();
@@ -41,23 +42,26 @@ const AddMinute = (props) => {
     //       ({ rsvp, ...keepAttrs }) => keepAttrs
     //     )
     //   );
-
-    if (formData.attendyType === "fromPreviousMeeting") {
+if( minutesDetails?.finalMinutesData?.length!==0 && minuteData.length===0){
+  setMinuteData(minutesDetails.finalMinutesData)
+}
+console.log( meetingData.attendeesList)
+    if (formData.attendyType === "fromPreviousMeeting" && meetingData.attendeesList.length===0) {
       dispatch(fetchAttendeesList(userData.organizationId, accessToken));
     }
   
-    if (employeeData.isDuplicateUser === false) {
-      const newMinute = {
-        description: formData.description,
-      };
-      const newMinuteData = [...minuteData, newMinute];
-      setAttendeesData(newMinuteData);
-      //   setFormData({
-      //     ...formData,
-      //     name: "",
-      //     email: "",
-      //   });
-    }
+    // if (employeeData.isDuplicateUser === false) {
+    //   const newMinute = {
+    //     description: formData.description,
+    //   };
+    //   const newMinuteData = [...minuteData, newMinute];
+    //   setAttendeesData(newMinuteData);
+    //   //   setFormData({
+    //   //     ...formData,
+    //   //     name: "",
+    //   //     email: "",
+    //   //   });
+    // }
     // if(!employeeData.isDuplicateUser){
     //   dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
     // }
@@ -66,19 +70,21 @@ const AddMinute = (props) => {
     // setStep(meetingData.step + 1);
 
     // setAttendeesData(meetingData?.singleMeetingDetails?attendees)
-console.log(meetingData.meetingDetails)
-    let attendees = meetingData.meetingDetails?.attendees.map((attendee) => {
-      attendee.id = attendee._id;
-      attendee.status = "PENDING";
-      delete attendee._id;
-      delete attendee.rsvp;
-      return attendee;
-    });
-    setAttendeesData(attendees);
+
+    
+   // setAttendeesData(attendees);
    
-  }, [employeeData.isDuplicateUser, props.trigger]);
-  console.log(attendeesData)
-  console.log(minuteData, meetingData, formData);
+  }, []);
+
+  let attendeesData = meetingData.meetingDetails.attendees.map((attendee) => {
+    console.log("ttttttttt",attendee)
+    return {
+      id : attendee._id,
+      status : "PENDING"
+    };
+  });
+ console.log(attendeesData)
+  console.log(meetingData.meetingDetails);
   const submitMinuteData = () => {
     console.log("call api", minuteData);
     if (minuteData.length !== 0) {
@@ -112,7 +118,7 @@ console.log(meetingData.meetingDetails)
     console.log(uid);
     console.log(checked);
     if (uid) {
-      const modifiedMinutes = minuteData.map((obj) => {
+      const modifiedMinutes = minutesDetails.finalMinutesData.map((obj) => {
         if (obj.uid === uid) {
           return { ...obj, isAction: checked };
         }
@@ -120,7 +126,7 @@ console.log(meetingData.meetingDetails)
       });
 
       console.log(modifiedMinutes);
-      setMinuteData(modifiedMinutes);
+     // setMinuteData(modifiedMinutes);
 
       dispatch(setFinalMinuteData(modifiedMinutes));
     } else {
@@ -136,7 +142,7 @@ console.log(meetingData.meetingDetails)
     const { name, value } = e.target;
     console.log(name, value);
     if (uid) {
-      const modifiedMinutes = minuteData.map((obj) => {
+      const modifiedMinutes = minutesDetails.finalMinutesData.map((obj) => {
         if (obj.uid === uid) {
           return { ...obj, [name]: value };
         }
@@ -146,7 +152,7 @@ console.log(meetingData.meetingDetails)
       console.log(modifiedMinutes);
 
       dispatch(setFinalMinuteData(modifiedMinutes));
-      setMinuteData(modifiedMinutes);
+     // setMinuteData(modifiedMinutes);
     } else {
       setFormData({
         ...formData,
@@ -162,22 +168,6 @@ console.log(meetingData.meetingDetails)
 
       dispatch(getEmployeeList(payload, accessToken));
     }
-
-    //     if (value === "addNewPeople") {
-    //         setFormData({
-    //             ...formData,
-    // responsiblePersonId:null
-    //         })
-
-    //       }
-
-    // const responsiblePerson = {
-    //    personId:
-    //     isEmployee: false,
-    //     // organizationId: userData.organizationId,
-    //   };
-    // //   const newAttendeeData = [...attendeesData, newAttendee];
-    //   setAttendeesData(newAttendee);
   };
 
   const validateMinuteTitle = () => {
@@ -303,16 +293,17 @@ console.log(meetingData.meetingDetails)
       //   });
       const uid = Math.floor(100000 + Math.random() * 900000);
       const responsiblePersonId= formData.responsiblePersonId === "" && formData.name===""&& formData.email==="" ?userData._id:formData.responsiblePersonId;
-      const newMinuteData = [
-        ...minuteData,
+     console.log(meetingData?.meetingDetails,formData)
+      const newMinuteData = 
+      
         {
           createdById:userData._id,
           organizationId: userData.organizationId,
           agendaId: props.agenda._id,
-          meetingId: meetingData?.singleMeetingDetails?._id?.toString(),
+          meetingId: meetingData?.meetingDetails?._id?.toString(),
           attendees: attendeesData,
           description: formData.description,
-          dueDate:  formData.date===""?new Date( meetingData?.singleMeetingDetails?.date):formData.date,
+          dueDate:  formData.date===""?new Date( meetingData?.meetingDetails?.date):formData.date,
           priority: formData.priority===""?"LOW":formData.priority,
           isNewUser:formData.name!==""&& formData.email!=="" ?true:false,
           attendyType: formData.attendyType,
@@ -322,11 +313,12 @@ console.log(meetingData.meetingDetails)
           name: formData.name,
           email: formData.email,
           uid,
-        },
-      ];
-      setMinuteData(newMinuteData);
-
-      dispatch(setFinalMinuteData(newMinuteData));
+        };
+      
+    console.log(newMinuteData)
+     // setMinuteData(newMinuteData);
+      dispatch(setFinalMinuteData([...minutesDetails.finalMinutesData,newMinuteData]));
+      //dispatch(setFinalMinuteData(newMinuteData));
 
       setFormData({
         ...formData,
@@ -366,14 +358,16 @@ console.log(meetingData.meetingDetails)
     // }
   };
 
-
+console.log(minutesDetails.finalMinutesData)
 
   return (
     <>
       <form className="addminutesboxfrom">
         <div
           className={
-            props.isMinuteShow ? "mt-4 minutes-box show" : "mt-4 minutes-box"
+            props.isMinuteShow && props.index===props.currentIndex ? "mt-4 minutes-box show" 
+            :!props.isMinuteShow && props.index===props.currentIndex ? "mt-4 minutes-box":
+            "mt-4 minutes-box"
           }
           // className="mt-4 minutes-box show"
         >
@@ -699,7 +693,7 @@ console.log(meetingData.meetingDetails)
 
       {props.isMinuteShow &&
         minutesDetails?.finalMinutesData?.length !== 0 &&
-        minutesDetails?.finalMinutesData?.map((minute) => {
+        minutesDetails?.finalMinutesData?.filter((data)=>data.agendaId===props.agenda._id.toString()).map((minute) => {
           return (
             <form className="addminutesboxfrom">
               <div

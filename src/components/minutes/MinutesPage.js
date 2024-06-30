@@ -51,6 +51,7 @@ const MinutesPage = () => {
     console.log("use effect-------------------------------22-----");
     console.log(stateData);
     dispatch(getAgendaWithMinutesDetails(stateData.meetingId, accessToken));
+    
     // dispatch()
     return () => {
       console.log("return useeffect--------------->>>>>>>>>>>>>>");

@@ -29,7 +29,7 @@ const CreateMinutes = (props) => {
    console.log("submit called")
   // submitAgendasDetails()
   }, [props.trigger]);
-  const [trigger, setTrigger] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(null);
   const [isMinuteShow, setIsMinuteShow] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState([false, false]);
   const toggleDropdown = (index) => {
@@ -83,7 +83,12 @@ console.log(minuteData)
 
 
 
-
+  const openMinutesForm=(index)=>{
+  console.log(index)
+  setCurrentIndex(index)
+  setIsMinuteShow(!isMinuteShow)
+  }
+  
 
 
 
@@ -131,7 +136,7 @@ console.log(meetingData)
                 <div>
                   <button
                     className="add-minutes Mom-btn"
-                    onClick={() => setIsMinuteShow(!isMinuteShow)}
+                    onClick={() => openMinutesForm(index)}
                   >
                     <p>Add Minutes</p>
                   </button>
@@ -171,7 +176,7 @@ console.log(meetingData)
                   </div>
                 </div>
               </div>
-              <AddMinute trigger={trigger} isMinuteShow={isMinuteShow} agenda={agenda}/>
+              <AddMinute  isMinuteShow={isMinuteShow} agenda={agenda} currentIndex={currentIndex} index={index}/>
             </div>
           </div>
          )

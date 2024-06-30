@@ -30,12 +30,12 @@ const ViewMinutes = (props) => {
   const minuteData = useSelector((state) => state.minute);
   const meetingData = useSelector((state) => state.meeting);
   const [isViewMeetingPage, setIsViewMeetingPage] = useState(false);
-  console.log(meetingData);
+  console.log(minuteData.finalMinutesData);
   console.log("use effect------------------------------------");
   useEffect(() => {
     console.log("use effect------------------------------------");
     console.log(stateData);
-    dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
+   // dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
     // dispatch()
 
     return () => {
@@ -44,7 +44,7 @@ const ViewMinutes = (props) => {
       dispatch(unSetSingleMeetingDetails);
     };
   }, []);
-  console.log(meetingData.singleMeetingDetails);
+  console.log(meetingData);
   const submitAgendaDetails = () => {
     console.log(meetingData);
     dispatch(
@@ -83,7 +83,7 @@ const ViewMinutes = (props) => {
           </div>
         </div>
       </div>
-      {meetingData.singleMeetingDetails ? (
+      {meetingData.meetingDetails ? (
         <form className="mt-2 details-form details-form-right">
           <div className="form-group mb-2">
             <div className="row">
@@ -91,7 +91,7 @@ const ViewMinutes = (props) => {
                 <label className="mb-1">Title</label>
               </div>
               <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                <p>{meetingData.singleMeetingDetails?.title}</p>
+                <p>{meetingData.meetingDetails?.title}</p>
               </div>
             </div>
           </div>
@@ -102,7 +102,7 @@ const ViewMinutes = (props) => {
                 <label className="mb-1">Meeting Mode</label>
               </div>
               <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                <p>{meetingData.singleMeetingDetails?.mode}</p>
+                <p>{meetingData.meetingDetails?.mode}</p>
               </div>
             </div>
           </div>
@@ -114,10 +114,10 @@ const ViewMinutes = (props) => {
               </div>
               <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
                 <p>
-                  {meetingData.singleMeetingDetails?.locationDetails
+                  {meetingData.meetingDetails?.locationDetails
                     .isMeetingRoom === true
-                    ? meetingData.singleMeetingDetails?.roomDetail[0].location
-                    : meetingData.singleMeetingDetails?.locationDetails
+                    ? meetingData.meetingDetails?.roomDetail[0].location
+                    : meetingData.meetingDetails?.locationDetails
                         .location}
                 </p>
               </div>
@@ -131,8 +131,8 @@ const ViewMinutes = (props) => {
               </div>
               <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
                 <p>
-                  {meetingData.singleMeetingDetails?.link
-                    ? meetingData.singleMeetingDetails?.link
+                  {meetingData.meetingDetails?.link
+                    ? meetingData.meetingDetails?.link
                     : "NA"}
                 </p>
               </div>
@@ -147,26 +147,26 @@ const ViewMinutes = (props) => {
               <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
                 <p>
                   {
-                    formatDateTimeFormat(meetingData.singleMeetingDetails?.date)
+                    formatDateTimeFormat(meetingData.meetingDetails?.date)
                       .formattedDate
                   }{" "}
-                  ,{meetingData.singleMeetingDetails?.fromTime}{" "}
-                  {getTimeSession(meetingData.singleMeetingDetails?.fromTime)}{" "}
-                  to {meetingData.singleMeetingDetails?.toTime}{" "}
-                  {getTimeSession(meetingData.singleMeetingDetails.toTime)}
+                  ,{meetingData.meetingDetails?.fromTime}{" "}
+                  {getTimeSession(meetingData.meetingDetails?.fromTime)}{" "}
+                  to {meetingData.meetingDetails?.toTime}{" "}
+                  {getTimeSession(meetingData.meetingDetails.toTime)}
                 </p>
               </div>
             </div>
           </div>
 
-          {meetingData.singleMeetingDetails.attendees.length !== 0 ? (
+          {meetingData.meetingDetails.attendees.length !== 0 ? (
             <div className="row align-items-center">
               <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
                 <label className="pb-1"> Attendee(s) </label>
               </div>
               <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
                 <div className="attendees">
-                  {meetingData.singleMeetingDetails?.attendees.map(
+                  {meetingData.meetingDetails?.attendees.map(
                     (attendee) => {
                       return (
                         // <div > {customName(attendee.name)}</div>
@@ -181,9 +181,9 @@ const ViewMinutes = (props) => {
                   )}
                   {/* <p className="m-0">+5 More</p> */}
                   <p className="m-0">
-                    {meetingData.singleMeetingDetails?.attendees.length > 5
+                    {meetingData.meetingDetails?.attendees.length > 5
                       ? `+${
-                          meetingData.singleMeetingDetails?.attendees.length - 5
+                          meetingData.meetingDetails?.attendees.length - 5
                         } More`
                       : null}
                   </p>
@@ -192,7 +192,7 @@ const ViewMinutes = (props) => {
             </div>
           ) : null}
           <div className="minutes-border"></div>
-          {meetingData.singleMeetingDetails.agendasDetail.length !== 0 ? (
+          {meetingData?.agendasDetail?.length !== 0 ? (
             <div className="form-group agenda">
               <label className="mt-3 mb-3 add-agenda">
                 <h4>Agenda(s)</h4>
