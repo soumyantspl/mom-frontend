@@ -34,6 +34,13 @@ const Designation = () => {
     isSuccess: false,
     message: "",
   });
+  //EDIT Designation
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedDesignation, setSelectedDesignation] = useState(null);
+  const [designationName, setDesignationName] = useState("");
+  const [editformValues, setEditFormValues] = useState({
+    name: "",
+  });
 
   //DELETE Designation
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -211,6 +218,77 @@ const Designation = () => {
   const totalOption = Math.round(totalCount / 5 + 0.5);
   const totalPage = Math.round(totalCount / limit + 0.5);
   const totalPageArray = Array(totalPage).fill();
+  //Edit Designation
+  const handlEditDesignation = async () => {
+    try {
+      setErrors({});
+      const updatedDesignation = { name: designationName, organizationId };
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}api/V1/designation/editDesignation/${selectedDesignation._id}`,
+        updatedDesignation,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: accessToken,
+          },
+        }
+      );
+      if (response.data.success) {
+        setEditFormValues({ name: "" });
+        toast.success(response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          // transition: Bounce,
+        });
+        setSelectedDesignation(null);
+        setShowEditModal(false);
+        fetchDesignationData();
+      } else {
+        toast.error(response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          // transition: Bounce,
+        });
+      }
+      setShowEditModal(false);
+      setErrors({ ...errors, [editformValues.name]: "" });
+    } catch (error) {
+      toast.error(error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        // transition: Bounce,
+      });
+      console.log("Error while updating Designation:", error);
+    }
+  };
+
+  const editDepartmentnameValidationCheck = () => {
+    const errors = {};
+    if (!formValues.name.trim()) {
+      errors.designationName = "Name is required";
+    }
+
+    setErrors(errors);
+    return errors;
+  };
 
   //DELETE DESIGNATION
   const handleDeleteClick = (designation) => {
@@ -531,6 +609,39 @@ const Designation = () => {
               </>
             )}
           </div>
+          <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Edit Department</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group controlId="departmentName">
+                  <Form.Label>Department Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter Department Name"
+                    value={designationName}
+                    autoComplete="off"
+                    onChange={(e) => setDesignationName(e.target.value)}
+                    onBlur={editDepartmentnameValidationCheck}
+                  />
+                </Form.Group>
+                {errors.designationName && (
+                  <span className="error-message">
+                    {errors.designationName}
+                  </span>
+                )}
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="light" onClick={() => setShowEditModal(false)}>
+                Close
+              </Button>
+              <Button variant="primary" onClick={handlEditDesignation}>
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
           <Modal
             show={showDeleteModal}
             onHide={() => setShowDeleteModal(false)}
