@@ -232,7 +232,6 @@ const Designation = () => {
 
   const deleteDesignation = async (designationId) => {
     try {
-      console.log("department idddddddddddddd", designationId);
       const response = await axios.delete(
         `${process.env.REACT_APP_API_URL}/api/V1/designation/deleteDesignation/${designationId}`,
         {
@@ -281,7 +280,7 @@ const Designation = () => {
       <div className="main-content">
         <div className="Action-list-page">
           <div className="meeting-header-text">
-            <h4>Add Designations</h4>
+            <h4>Add Designation</h4>
           </div>
           <div className="mt-2 table-box">
             <form onSubmit={handleSubmit}>
