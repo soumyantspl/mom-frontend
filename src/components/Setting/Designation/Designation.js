@@ -87,7 +87,7 @@ const Designation = () => {
     if (validate()) {
       try {
         const response = await axios.post(
-          "http://localhost:8000/api/V1/designation/createDesignation",
+          `${process.env.REACT_APP_API_URL}/api/V1/designation/createDesignation`,
           { ...formValues, organizationId },
           {
             headers: {
@@ -159,7 +159,7 @@ const Designation = () => {
         params: { limit, page, order },
       };
       const response = await axios.post(
-        `http://localhost:8000/api/V1/designation/listDesignation`,
+        `${process.env.REACT_APP_API_URL}/api/V1/designation/listDesignation`,
         bodyData,
         headerObject
       );

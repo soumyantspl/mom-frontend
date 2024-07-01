@@ -10,6 +10,7 @@ import Header from "../Common/Header/Header";
 import MeetingHeader from "../Common/Header/MeetingHeader";
 import Sidebar from "../Common/Sidebar/Sidebar";
 import {
+  convertFirstLetterOfFullNameToCapital,
   customName,
   formatDateTimeFormat,
   getTimeSession,
@@ -26,6 +27,7 @@ const ViewMinutes = (props) => {
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
   const dispatch = useDispatch();
+  const employeeData = useSelector((state) => state.user);
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const minuteData = useSelector((state) => state.minute);
   const meetingData = useSelector((state) => state.meeting);
@@ -35,7 +37,7 @@ const ViewMinutes = (props) => {
   useEffect(() => {
     console.log("use effect------------------------------------");
     console.log(stateData);
-   // dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
+    // dispatch(getSingleMeetingDetails(stateData.meetingId, accessToken));
     // dispatch()
 
     return () => {
@@ -59,7 +61,7 @@ const ViewMinutes = (props) => {
       )
     );
   };
-  console.log(minuteData);
+  console.log(meetingData.meetingDetails);
   return (
     <>
       <div className="save-meet-head">
@@ -114,11 +116,10 @@ const ViewMinutes = (props) => {
               </div>
               <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
                 <p>
-                  {meetingData.meetingDetails?.locationDetails
-                    .isMeetingRoom === true
-                    ? meetingData.meetingDetails?.roomDetail[0].location
-                    : meetingData.meetingDetails?.locationDetails
-                        .location}
+                  {meetingData.meetingDetails?.locationDetails.isMeetingRoom ===
+                  true
+                    ? meetingData.meetingDetails?.roomDetail[0]?.location
+                    : meetingData.meetingDetails?.locationDetails.location}
                 </p>
               </div>
             </div>
@@ -151,8 +152,8 @@ const ViewMinutes = (props) => {
                       .formattedDate
                   }{" "}
                   ,{meetingData.meetingDetails?.fromTime}{" "}
-                  {getTimeSession(meetingData.meetingDetails?.fromTime)}{" "}
-                  to {meetingData.meetingDetails?.toTime}{" "}
+                  {getTimeSession(meetingData.meetingDetails?.fromTime)} to{" "}
+                  {meetingData.meetingDetails?.toTime}{" "}
                   {getTimeSession(meetingData.meetingDetails.toTime)}
                 </p>
               </div>
@@ -166,19 +167,17 @@ const ViewMinutes = (props) => {
               </div>
               <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
                 <div className="attendees">
-                  {meetingData.meetingDetails?.attendees.map(
-                    (attendee) => {
-                      return (
-                        // <div > {customName(attendee.name)}</div>
-                        <>
-                          {/* <div>{customName(attendee)}</div> */}
-                          <div className="attendee-list">
-                            {customName(attendee.name)}
-                          </div>
-                        </>
-                      );
-                    }
-                  )}
+                  {meetingData.meetingDetails?.attendees.map((attendee) => {
+                    return (
+                      // <div > {customName(attendee.name)}</div>
+                      <>
+                        {/* <div>{customName(attendee)}</div> */}
+                        <div className="attendee-list">
+                          {customName(attendee.name)}
+                        </div>
+                      </>
+                    );
+                  })}
                   {/* <p className="m-0">+5 More</p> */}
                   <p className="m-0">
                     {meetingData.meetingDetails?.attendees.length > 5
@@ -300,78 +299,149 @@ const ViewMinutes = (props) => {
                                         </label>
                                       </div>
                                       <div className="col-md-8">
-                                        <p>Prabhas Khamari</p>
+                                        <p>{convertFirstLetterOfFullNameToCapital(minute?.assignedUserDetails?.name)}</p>
                                       </div>
                                     </div>
                                   </div>
-
-                                  <div className=" form-group">
-                                    <div className="row">
-                                      <div className="col-md-4">
-                                        <label className="mt-1 mb-1">
-                                          Reassigned To
-                                        </label>
-                                      </div>
-                                      <div className="col-md-8 detail ">
-                                        {/* <p routerLink="/action-detail">Rakesh Baral</p> */}
-                                        <p>Rakesh Baral</p>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="form-group mt-4">
-                                    <div className="row">
-                                      <div className="col-md-4">
-                                        <label className="mt-2 topic">
-                                          Accepted By
-                                        </label>
-                                      </div>
-                                      <div className="col-md-8">
-                                        <div className="attendees mb-2">
-                                          <div className="attendee-list">
-                                            SL
-                                          </div>
-                                          <div className="attendee-list">
-                                            PK
-                                          </div>
-                                          <div className="attendee-list">
-                                            RB
-                                          </div>
-                                          <div className="attendee-list">
-                                            YH
-                                          </div>
-                                          <div className="attendee-list">
-                                            DB
-                                          </div>
-                                          <p className="plus-more-text m-0">
-                                            +1 More
-                                          </p>
+                                  {minute.reassignDetails ? (
+                                    <div className=" form-group">
+                                      <div className="row">
+                                        <div className="col-md-4">
+                                          <label className="mt-1 mb-1">
+                                            Reassigned To
+                                          </label>
                                         </div>
-                                        <p>Accepted by 6/10 attendants</p>
+                                        <div className="col-md-8 detail ">
+                                          {/* <p routerLink="/action-detail">Rakesh Baral</p> */}
+                                          <p>Rakesh Baral</p>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
+                                  ) : null}
 
-                                  <div className="form-group mt-4">
-                                    <div className="row">
-                                      <div className="col-md-4">
-                                        <label className="mt-2 topic">
-                                          Rejected By
-                                        </label>
-                                      </div>
-                                      <div className="col-md-8">
-                                        <div className="attendees mb-2">
-                                          <div className="attendee-list">
-                                            SL
+                                  {minute?.attendees?.length !== 0 ? (
+                                    <>
+                                      <div className="form-group mt-4">
+                                        <div className="row">
+                                          <div className="col-md-4">
+                                            <label className="mt-2 topic">
+                                              Accepted By
+                                            </label>
                                           </div>
-                                          <div className="attendee-list">
-                                            PK
+                                          <div className="col-md-8">
+                                            <div className="attendees mb-2">
+                                              {minute?.attendees?.filter(
+                                                (attendee) =>
+                                                  attendee.status === "ACCEPTED"
+                                              ).length !== 0 &&
+                                                minute?.attendees
+                                                  ?.filter(
+                                                    (attendee) =>
+                                                      attendee.status ===
+                                                      "ACCEPTED"
+                                                  )
+                                                  .map((attendee) => {
+                                                    return (
+                                                      <>
+                                                        <div className="attendee-list">
+                                                          {customName(
+                                                            attendee.name
+                                                          )}
+                                                        </div>
+                                                        {}
+                                                        {/* <p className="plus-more-text m-0">
+                                                        +1 More
+                                                      </p> */}
+                                                        <p className="plus-more-text m-0">
+                                                          {minute.attendees
+                                                            .length > 5
+                                                            ? `+${
+                                                                minute.attendees
+                                                                  .length - 5
+                                                              } More`
+                                                            : null}
+                                                        </p>
+                                                      </>
+                                                    );
+                                                  })}
+                                            </div>
+                                            <p>
+                                              Accepted by{" "}
+                                              {
+                                                minute?.attendees?.filter(
+                                                  (attendee) =>
+                                                    attendee.status ===
+                                                    "ACCEPTED"
+                                                ).length
+                                              }
+                                              /{minute.attendees.length}{" "}
+                                              attendants
+                                            </p>
                                           </div>
                                         </div>
-                                        <p>Rejected by 2/10 attendants</p>
                                       </div>
-                                    </div>
-                                  </div>
+
+                                      <div className="form-group mt-4">
+                                        <div className="row">
+                                          <div className="col-md-4">
+                                            <label className="mt-2 topic">
+                                              Rejected By
+                                            </label>
+                                          </div>
+                                          <div className="col-md-8">
+                                            <div className="attendees mb-2">
+                                              {minute?.attendees?.filter(
+                                                (attendee) =>
+                                                  attendee.status === "REJECTED"
+                                              ).length !== 0 &&
+                                                minute?.attendees
+                                                  ?.filter(
+                                                    (attendee) =>
+                                                      attendee.status ===
+                                                      "REJECTED"
+                                                  )
+                                                  .map((attendee) => {
+                                                    return (
+                                                      <>
+                                                        <div className="attendee-list">
+                                                          {customName(
+                                                            attendee.name
+                                                          )}
+                                                        </div>
+                                                        {}
+                                                        {/* <p className="plus-more-text m-0">
+                                                        +1 More
+                                                      </p> */}
+                                                        <p className="plus-more-text m-0">
+                                                          {minute.attendees
+                                                            .length > 5
+                                                            ? `+${
+                                                                minute.attendees
+                                                                  .length - 5
+                                                              } More`
+                                                            : null}
+                                                        </p>
+                                                      </>
+                                                    );
+                                                  })}
+                                            </div>
+                                            <p>
+                                              Rejected by{" "}
+                                              {
+                                                minute?.attendees?.filter(
+                                                  (attendee) =>
+                                                    attendee.status ===
+                                                    "REJECTED"
+                                                ).length
+                                              }
+                                              /{minute.attendees.length}{" "}
+                                              attendants
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </>
+                                  ) : null}
                                   <div className="add-buttons">
                                     <div>
                                       <button className="add-minutes Mom-btn me-3">
@@ -392,6 +462,8 @@ const ViewMinutes = (props) => {
 
                                     <div className=" minutes-border"></div>
                                   </div>
+                                
+                                      {employeeData?.userData?.isMeetingOrganiser ? (
                                   <div className="added-by">
                                     <div className="add-agenda">
                                       <p className="add-text">
@@ -419,6 +491,7 @@ const ViewMinutes = (props) => {
                                       </div>
                                     </div>
                                   </div>
+                                  ):null}
                                 </>
                               );
                             })}

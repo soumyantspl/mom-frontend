@@ -170,7 +170,7 @@ const Department = () => {
         params: { limit, page, order },
       };
       const response = await axios.post(
-        `http://localhost:8000/api/V1/department/listDepartment`,
+        `${process.env.REACT_APP_API_URL}/api/V1/department/listDepartment`,
         bodyData,
         headerObject
       );
@@ -229,7 +229,7 @@ const Department = () => {
       console.log("dep id-->", selectedDepartment._id);
       const updatedDepartment = { name: departmentName, organizationId };
       const response = await axios.post(
-        `http://localhost:8000/api/V1/department/editDepartment/${selectedDepartment._id}`,
+        `${process.env.REACT_APP_API_URL}/api/V1/department/editDepartment/${selectedDepartment._id}`,
         updatedDepartment,
         {
           headers: {
