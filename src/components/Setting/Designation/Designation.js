@@ -224,7 +224,7 @@ const Designation = () => {
       setErrors({});
       const updatedDesignation = { name: designationName, organizationId };
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}api/V1/designation/editDesignation/${selectedDesignation._id}`,
+        `${process.env.REACT_APP_API_URL}/api/V1/designation/editDesignation/${selectedDesignation._id}`,
         updatedDesignation,
         {
           headers: {
@@ -280,7 +280,7 @@ const Designation = () => {
     }
   };
 
-  const editDepartmentnameValidationCheck = () => {
+  const editDesignationValidationCheck = () => {
     const errors = {};
     if (!formValues.name.trim()) {
       errors.designationName = "Name is required";
@@ -289,7 +289,12 @@ const Designation = () => {
     setErrors(errors);
     return errors;
   };
-
+  const handleEditClick = (designation) => {
+    setSelectedDesignation(designation);
+    console.log("Department ----->>>", designation);
+    setDesignationName(designation.name);
+    setShowEditModal(true);
+  };
   //DELETE DESIGNATION
   const handleDeleteClick = (designation) => {
     setDesignationToDelete(designation);
@@ -479,7 +484,7 @@ const Designation = () => {
 
                               <Dropdown.Menu>
                                 <Dropdown.Item
-                                  onClick={() => "handleEditClick(department)"}
+                                  onClick={() => handleEditClick(designation)}
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -611,19 +616,19 @@ const Designation = () => {
           </div>
           <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
             <Modal.Header closeButton>
-              <Modal.Title>Edit Department</Modal.Title>
+              <Modal.Title>Edit Designation</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form>
-                <Form.Group controlId="departmentName">
-                  <Form.Label>Department Name</Form.Label>
+                <Form.Group controlId="designationName">
+                  <Form.Label>Designation Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter Department Name"
+                    placeholder="Enter Designation Name"
                     value={designationName}
                     autoComplete="off"
                     onChange={(e) => setDesignationName(e.target.value)}
-                    onBlur={editDepartmentnameValidationCheck}
+                    onBlur={editDesignationValidationCheck}
                   />
                 </Form.Group>
                 {errors.designationName && (

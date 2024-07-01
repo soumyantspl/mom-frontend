@@ -229,7 +229,7 @@ const Department = () => {
       console.log("dep id-->", selectedDepartment._id);
       const updatedDepartment = { name: departmentName, organizationId };
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}api/V1/department/editDepartment/${selectedDepartment._id}`,
+        `${process.env.REACT_APP_API_URL}/api/V1/department/editDepartment/${selectedDepartment._id}`,
         updatedDepartment,
         {
           headers: {
@@ -281,7 +281,7 @@ const Department = () => {
         theme: "colored",
         // transition: Bounce,
       });
-      console.log("Error while updating Department:", error);
+      console.log("Error while updating Department:", error.message);
     }
   };
   const editDepartmentnameValidationCheck = () => {
