@@ -1,6 +1,11 @@
 import React from "react";
 import NoDataFound from "../Common/NoDataFound";
-import { checkRsvpCount, convertFirstLetterOfFullNameToCapital, convertFirstLetterToCapital, customName } from "../../helpers/commonHelpers";
+import {
+  checkRsvpCount,
+  convertFirstLetterOfFullNameToCapital,
+  convertFirstLetterToCapital,
+  customName,
+} from "../../helpers/commonHelpers";
 import Alert from "../Common/Alert";
 
 const AttendeesDetails = (props) => {
@@ -14,10 +19,18 @@ const AttendeesDetails = (props) => {
           <div className="status-detail">
             <p className="rsvpStatus">Summary</p>
             <div className="respond-button">
-              <button className="respond-action" disabled>{ checkRsvpCount(attendees).yesCount} Yes</button>
-              <button className="respond-action" disabled>{ checkRsvpCount(attendees).noCount} No</button>
-              <button className="respond-action" disabled>{ checkRsvpCount(attendees).mayBeCount} May Be</button>
-              <button className="respond-action" disabled>{ checkRsvpCount(attendees).pendingCount} Awaiting</button>
+              <button className="respond-action" disabled>
+                {checkRsvpCount(attendees).yesCount} Yes
+              </button>
+              <button className="respond-action" disabled>
+                {checkRsvpCount(attendees).noCount} No
+              </button>
+              <button className="respond-action" disabled>
+                {checkRsvpCount(attendees).mayBeCount} May Be
+              </button>
+              <button className="respond-action" disabled>
+                {checkRsvpCount(attendees).pendingCount} Awaiting
+              </button>
               {/* <p>{attendees.length} Attendees</p>
                         <p className="detail-date-time">
                           {checkRsvpCount(attendees)}
@@ -35,40 +48,42 @@ const AttendeesDetails = (props) => {
             </thead>
             <tbody>
               {attendees.length !== 0 ? (
-              <>
-              {attendees.map((attendee,index)=>{
-                return (
-                  <tr key={index}>
-                  <th scope="row">{index+1}</th>
-                  <td data-label="Attendees">
-                    <div className="attendees">
-                      <div className="attendee-list"> {customName(attendee.name)}</div>
-                      <span className="ms-2">{convertFirstLetterOfFullNameToCapital(attendee.name)}</span>
-                    </div>
-                  </td>
-                  <td data-label="RSVP">{convertFirstLetterToCapital(attendee.rsvp)}</td>
-                </tr>
-                )
-              })}
-              </>         
-             
-             
-             
-
+                <>
+                  {attendees.map((attendee, index) => {
+                    return (
+                      <tr key={index}>
+                        <th scope="row">{index + 1}</th>
+                        <td data-label="Attendees">
+                          <div className="attendees">
+                            <div className="attendee-list">
+                              {" "}
+                              {customName(attendee.name)}
+                            </div>
+                            <span className="ms-2">
+                              {convertFirstLetterOfFullNameToCapital(
+                                attendee.name
+                              )}
+                            </span>
+                          </div>
+                        </td>
+                        <td data-label="RSVP">
+                          {convertFirstLetterToCapital(attendee.rsvp)}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </>
               ) : (
                 <>
                   <Alert
-                        status={"info"}
-                        message={"No Attendee Added"}
-                        timeoutSeconds={0}
-                      />
-                 <div className="mt-3 agenda-box-border">
-                 
-                
-                  <NoDataFound dataType={"attendee"}/>
-                </div>
+                    status={"info"}
+                    message={"No Attendee Added"}
+                    timeoutSeconds={0}
+                  />
+                  <div className="mt-3 agenda-box-border">
+                    <NoDataFound dataType={"attendee"} />
+                  </div>
                 </>
-               
               )}
             </tbody>
           </table>

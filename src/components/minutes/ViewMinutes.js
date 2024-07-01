@@ -19,6 +19,7 @@ import NoDataFound from "../Common/NoDataFound";
 import Loader from "../Common/Loader";
 import Alert from "../Common/Alert";
 import { createMinutes } from "../../redux/actions/minuteActions/MinuteAction";
+import MinutesRsvpStatusModal from "./MinutesRsvpStatusModal";
 
 const ViewMinutes = (props) => {
   const location = useLocation();
@@ -31,7 +32,11 @@ const ViewMinutes = (props) => {
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const minuteData = useSelector((state) => state.minute);
   const meetingData = useSelector((state) => state.meeting);
-  const [isViewMeetingPage, setIsViewMeetingPage] = useState(false);
+  const [isMinutesRsvpStatusModal, setIsMinutesRsvpStatusModal] = useState(false);
+  const [attendeesData, setAttendeesData] = useState([]);
+  
+  const [status, setStatus] = useState(null);
+  
   console.log(minuteData.finalMinutesData);
   console.log("use effect------------------------------------");
   useEffect(() => {
@@ -53,7 +58,7 @@ const ViewMinutes = (props) => {
       createMinutes(
         {
           minutes: minuteData.finalMinutesData.map(
-            ({ uid, attendyType, ...keepAttrs }) => keepAttrs
+            ({ uid, attendyType,responsiblePersonId, ...keepAttrs }) => keepAttrs
           ),
         },
         meetingData.meetingDetails._id,
@@ -62,6 +67,17 @@ const ViewMinutes = (props) => {
     );
   };
   console.log(meetingData.meetingDetails);
+
+const updateIsMinutesRsvpStatusModal=(status,attendees)=>{
+  console.log(status,attendees)
+  if(attendees.length!==0){
+  setStatus(status)
+  setAttendeesData(attendees)
+  setIsMinutesRsvpStatusModal(!isMinutesRsvpStatusModal)
+  }
+}
+console.log(isMinutesRsvpStatusModal)
+
   return (
     <>
       <div className="save-meet-head">
@@ -74,7 +90,7 @@ const ViewMinutes = (props) => {
             <div className="col">
               <div className="d-inline-block">
                 <button className="Mom-btn" onClick={submitAgendaDetails}>
-                  <p>Save Meeting</p>
+                  <p>Save Minutes</p>
                 </button>
                 {/* <div aria-labelledby="dropdownBasic1">
                   <button>Save Meeting</button>
@@ -227,7 +243,8 @@ const ViewMinutes = (props) => {
                             </div>
                           </div>
                         </div>
-
+                        {agenda.topic!==""?(
+  <>
                         <div className=" pb-3 form-group">
                           <div className="row">
                             <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
@@ -240,7 +257,9 @@ const ViewMinutes = (props) => {
                             </div>
                           </div>
                         </div>
-
+                        </>
+)
+:null}
                         <div className=" form-group">
                           <div className="row">
                             <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
@@ -328,8 +347,11 @@ const ViewMinutes = (props) => {
                                               Accepted By
                                             </label>
                                           </div>
-                                          <div className="col-md-8">
-                                            <div className="attendees mb-2">
+                                          <div className="col-md-8" onClick={()=>updateIsMinutesRsvpStatusModal("Accepted",minute?.attendees?.filter(
+                                                (attendee) =>
+                                                  attendee.status === "ACCEPTED"
+                                              ))}>
+                                          
                                               {minute?.attendees?.filter(
                                                 (attendee) =>
                                                   attendee.status === "ACCEPTED"
@@ -343,6 +365,7 @@ const ViewMinutes = (props) => {
                                                   .map((attendee) => {
                                                     return (
                                                       <>
+                                                        <div className="attendees mb-2">
                                                         <div className="attendee-list">
                                                           {customName(
                                                             attendee.name
@@ -361,10 +384,11 @@ const ViewMinutes = (props) => {
                                                               } More`
                                                             : null}
                                                         </p>
+                                                        </div>
                                                       </>
                                                     );
                                                   })}
-                                            </div>
+                                           
                                             <p>
                                               Accepted by{" "}
                                               {
@@ -388,8 +412,11 @@ const ViewMinutes = (props) => {
                                               Rejected By
                                             </label>
                                           </div>
-                                          <div className="col-md-8">
-                                            <div className="attendees mb-2">
+                                          <div className="col-md-8"  onClick={()=>updateIsMinutesRsvpStatusModal("Rejected",minute?.attendees?.filter(
+                                                (attendee) =>
+                                                  attendee.status === "REJECTED"
+                                              ))}>
+                                           
                                               {minute?.attendees?.filter(
                                                 (attendee) =>
                                                   attendee.status === "REJECTED"
@@ -403,6 +430,7 @@ const ViewMinutes = (props) => {
                                                   .map((attendee) => {
                                                     return (
                                                       <>
+                                                       <div className="attendees mb-2">
                                                         <div className="attendee-list">
                                                           {customName(
                                                             attendee.name
@@ -421,10 +449,11 @@ const ViewMinutes = (props) => {
                                                               } More`
                                                             : null}
                                                         </p>
+                                                        </div>
                                                       </>
                                                     );
                                                   })}
-                                            </div>
+                                           
                                             <p>
                                               Rejected by{" "}
                                               {
@@ -442,7 +471,7 @@ const ViewMinutes = (props) => {
                                       </div>
                                     </>
                                   ) : null}
-                                  <div className="add-buttons">
+                                  {/* <div className="add-buttons">
                                     <div>
                                       <button className="add-minutes Mom-btn me-3">
                                         <p>Accept</p>
@@ -461,9 +490,10 @@ const ViewMinutes = (props) => {
                                     </div>
 
                                     <div className=" minutes-border"></div>
-                                  </div>
-                                
-                                      {employeeData?.userData?.isMeetingOrganiser ? (
+                                  </div> */}
+                                  <div className=" minutes-border"></div>
+                                  
+                                      {/* {employeeData?.userData?.isMeetingOrganiser ? (
                                   <div className="added-by">
                                     <div className="add-agenda">
                                       <p className="add-text">
@@ -490,8 +520,10 @@ const ViewMinutes = (props) => {
                                         </button>
                                       </div>
                                     </div>
+                                    
                                   </div>
-                                  ):null}
+                                  ):null} */}
+                                  
                                 </>
                               );
                             })}
@@ -505,6 +537,16 @@ const ViewMinutes = (props) => {
           ) : null}
         </form>
       ) : null}
+      <MinutesRsvpStatusModal 
+       IsMinutesRsvpStatusModal={isMinutesRsvpStatusModal}
+       attendees={attendeesData}
+       setIsMinutesRsvpStatusModal={setIsMinutesRsvpStatusModal}
+       status={status}
+      //  loginUserData={loginUserData}
+      //  rsvpCount={rsvpCount}
+       // attendeeData={meeting.attendees}
+    
+      />
     </>
   );
 };

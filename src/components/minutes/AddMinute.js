@@ -31,9 +31,9 @@ const AddMinute = (props) => {
     name: "",
     email: "",
   });
- // const [attendeesData, setAttendeesData] = useState([]);
+  // const [attendeesData, setAttendeesData] = useState([]);
   const [minuteData, setMinuteData] = useState([]);
-  console.log(meetingData)
+  console.log(meetingData);
   useEffect(() => {
     console.log("rrrrrrrrrrrrrrrrrrrrrrrrr");
     //  submitMinuteData();
@@ -42,14 +42,20 @@ const AddMinute = (props) => {
     //       ({ rsvp, ...keepAttrs }) => keepAttrs
     //     )
     //   );
-if( minutesDetails?.finalMinutesData?.length!==0 && minuteData.length===0){
-  setMinuteData(minutesDetails.finalMinutesData)
-}
-console.log( meetingData.attendeesList)
-    if (formData.attendyType === "fromPreviousMeeting" && meetingData.attendeesList.length===0) {
+    if (
+      minutesDetails?.finalMinutesData?.length !== 0 &&
+      minuteData.length === 0
+    ) {
+      setMinuteData(minutesDetails.finalMinutesData);
+    }
+    console.log(meetingData.attendeesList);
+    if (
+      formData.attendyType === "fromPreviousMeeting" &&
+      meetingData.attendeesList.length === 0
+    ) {
       dispatch(fetchAttendeesList(userData.organizationId, accessToken));
     }
-  
+
     // if (employeeData.isDuplicateUser === false) {
     //   const newMinute = {
     //     description: formData.description,
@@ -71,19 +77,17 @@ console.log( meetingData.attendeesList)
 
     // setAttendeesData(meetingData?.singleMeetingDetails?attendees)
 
-    
-   // setAttendeesData(attendees);
-   
+    // setAttendeesData(attendees);
   }, []);
 
   let attendeesData = meetingData.meetingDetails.attendees.map((attendee) => {
-    console.log("ttttttttt",attendee)
+    console.log("ttttttttt", attendee);
     return {
-      id : attendee._id,
-      status : "PENDING"
+      id: attendee._id,
+      status: "PENDING",
     };
   });
- console.log(attendeesData)
+  console.log(attendeesData);
   console.log(meetingData.meetingDetails);
   const submitMinuteData = () => {
     console.log("call api", minuteData);
@@ -126,9 +130,10 @@ console.log( meetingData.attendeesList)
       });
 
       console.log(modifiedMinutes);
-     // setMinuteData(modifiedMinutes);
+      // setMinuteData(modifiedMinutes);
 
       dispatch(setFinalMinuteData(modifiedMinutes));
+     
     } else {
       setFormData({
         ...formData,
@@ -152,7 +157,7 @@ console.log( meetingData.attendeesList)
       console.log(modifiedMinutes);
 
       dispatch(setFinalMinuteData(modifiedMinutes));
-     // setMinuteData(modifiedMinutes);
+      // setMinuteData(modifiedMinutes);
     } else {
       setFormData({
         ...formData,
@@ -183,7 +188,7 @@ console.log( meetingData.attendeesList)
 
   const dateFieldValidationCheck = (e) => {
     const errors = {};
-   if (formData.date.trim()) {
+    if (formData.date.trim()) {
       const currentDate = new Date();
       const inputDate = new Date(formData.date);
       let differenceInTime = inputDate.getTime() - currentDate.getTime();
@@ -243,7 +248,7 @@ console.log( meetingData.attendeesList)
       } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
         errors.email = constantMessages.invalidEmail;
       }
-    } 
+    }
     // else {
     //   console.log("innnn", !formData.responsiblePersonId.trim());
     //   if (!formData.responsiblePersonId.trim()) {
@@ -258,7 +263,6 @@ console.log( meetingData.attendeesList)
       // errors.index = formData.index;
     }
 
-   
     if (formData.date.trim()) {
       const currentDate = new Date();
       const inputDate = new Date(formData.date);
@@ -292,32 +296,40 @@ console.log( meetingData.attendeesList)
       //     index: formData.index + 1,
       //   });
       const uid = Math.floor(100000 + Math.random() * 900000);
-      const responsiblePersonId= formData.responsiblePersonId === "" && formData.name===""&& formData.email==="" ?userData._id:formData.responsiblePersonId;
-     console.log(meetingData?.meetingDetails,formData)
-      const newMinuteData = 
-      
-        {
-          createdById:userData._id,
-          organizationId: userData.organizationId,
-          agendaId: props.agenda._id,
-          meetingId: meetingData?.meetingDetails?._id?.toString(),
-          attendees: attendeesData,
-          description: formData.description,
-          dueDate:  formData.date===""?new Date( meetingData?.meetingDetails?.date):formData.date,
-          priority: formData.priority===""?"LOW":formData.priority,
-          isNewUser:formData.name!==""&& formData.email!=="" ?true:false,
-          attendyType: formData.attendyType,
-         assignedUserId:responsiblePersonId,
-          isAction: formData.isAction,
-          //attendeesData: null,
-          name: formData.name,
-          email: formData.email,
-          uid,
-        };
-      
-    console.log(newMinuteData)
-     // setMinuteData(newMinuteData);
-      dispatch(setFinalMinuteData([...minutesDetails.finalMinutesData,newMinuteData]));
+      const responsiblePersonId =
+        formData.responsiblePersonId === "" &&
+        formData.name === "" &&
+        formData.email === ""
+          ? userData._id
+          : formData.responsiblePersonId;
+      console.log(meetingData?.meetingDetails, formData);
+      const newMinuteData = {
+        createdById: userData._id,
+        organizationId: userData.organizationId,
+        agendaId: props.agenda._id,
+        meetingId: meetingData?.meetingDetails?._id?.toString(),
+        attendees: attendeesData,
+        description: formData.description,
+        dueDate:
+          formData.date === ""
+            ? new Date(meetingData?.meetingDetails?.date)
+            : formData.date,
+        priority: formData.priority === "" ? "LOW" : formData.priority,
+        isNewUser: formData.name !== "" && formData.email !== "" ? true : false,
+        attendyType: formData.attendyType,
+        assignedUserId: responsiblePersonId,
+        isAction: formData.isAction,
+        //attendeesData: null,
+        name: formData.name,
+        email: formData.email,
+        uid,
+      };
+
+      console.log(newMinuteData);
+      // setMinuteData(newMinuteData);
+      dispatch(
+        setFinalMinuteData([...minutesDetails.finalMinutesData, newMinuteData])
+      );
       //dispatch(setFinalMinuteData(newMinuteData));
 
       setFormData({
@@ -332,6 +344,17 @@ console.log( meetingData.attendeesList)
         name: "",
         email: "",
       });
+      toast.info("One minute added.", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        // transition: Bounce,
+      });
     } else {
       console.log("inside form submit errror");
 
@@ -345,8 +368,19 @@ console.log( meetingData.attendeesList)
     console.log(minuteData);
     const filteredMinute = minuteData.filter((item) => item.uid !== uid);
     console.log(filteredMinute);
-    setMinuteData(filteredMinute);
+   // setMinuteData(filteredMinute);
     dispatch(setFinalMinuteData(filteredMinute));
+    toast.warning("One minute removed.", {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+      // transition: Bounce,
+    });
     // setAttendeesData(filteredAttendees);
     // setIsModalOpen(false);
     //   console.log(agendas);
@@ -358,24 +392,26 @@ console.log( meetingData.attendeesList)
     // }
   };
 
-console.log(minutesDetails.finalMinutesData)
+  console.log(minutesDetails.finalMinutesData);
 
   return (
     <>
       <form className="addminutesboxfrom">
         <div
           className={
-            props.isMinuteShow && props.index===props.currentIndex ? "mt-4 minutes-box show" 
-            :!props.isMinuteShow && props.index===props.currentIndex ? "mt-4 minutes-box":
-            "mt-4 minutes-box"
+            props.isMinuteShow && props.index === props.currentIndex
+              ? "mt-4 minutes-box show"
+              : !props.isMinuteShow && props.index === props.currentIndex
+              ? "mt-4 minutes-box"
+              : "mt-4 minutes-box"
           }
           // className="mt-4 minutes-box show"
         >
           <div className="form-group">
-            <div className=" mt-1 mb-1 d-flex justify-content-between align-items-center">
+            <div className=" mt-1 mb-1 d-flex justify-content-between align-items-center ">
               <label>Minutes</label>
 
-              <div className="form-check">
+              <div className="form-check check-action">
                 <input
                   className="form-check-input"
                   type="checkbox"
@@ -387,13 +423,14 @@ console.log(minutesDetails.finalMinutesData)
                   checked={formData.isAction}
                 />
                 <label
-                  className="form-check-label"
+                  className="form-check-label "
                   id="flexCheckDefault"
                   for="flexCheckDefault"
                 >
                   Add Action
                 </label>
               </div>
+              
             </div>
             <div className="row">
               <div className="col-12">
@@ -460,7 +497,7 @@ console.log(minutesDetails.finalMinutesData)
                 <span className="error-message">{errors.priority}</span>
               ) : null}
             </div>
-
+{formData.isAction?(
             <div className="form-group pb-3 border-bottom">
               <label className="pb-2">Select Responsible Person</label>
 
@@ -642,7 +679,7 @@ console.log(minutesDetails.finalMinutesData)
                 </span>
               )} */}
             </div>
-
+):null}
             {/* <div className="form-group m-0 d-flex ">
             <button
               type="button"
@@ -693,113 +730,134 @@ console.log(minutesDetails.finalMinutesData)
 
       {props.isMinuteShow &&
         minutesDetails?.finalMinutesData?.length !== 0 &&
-        minutesDetails?.finalMinutesData?.filter((data)=>data.agendaId===props.agenda._id.toString()).map((minute) => {
-          return (
-            <form className="addminutesboxfrom">
-              <div
-                // className={
-                //   isMinuteShow ? "mt-4 minutes-box show" : "mt-4 minutes-box"
-                // }
-                className="mt-4 minutes-box show"
-              >
-                <div className="form-group">
-                  <div className=" mt-1 mb-1 d-flex justify-content-between align-items-center">
-                    <label>Minutes</label>
+        minutesDetails?.finalMinutesData
+          ?.filter((data) => data.agendaId === props.agenda._id.toString())
+          .map((minute) => {
+            return (
+              <form className="addminutesboxfrom">
+                <div
+                  // className={
+                  //   isMinuteShow ? "mt-4 minutes-box show" : "mt-4 minutes-box"
+                  // }
+                  className="mt-4 minutes-box show"
+                >
+                  <div className="form-group">
+                    <div className=" mt-1 mb-1 d-flex justify-content-between align-items-center">
+                      <label>Minutes</label>
 
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                       // value="isAction"
-                        id="flexCheckDefault"
-                        name="isAction"
-                        onChange={(e) => checkHandler(e, minute.uid)}
-                          checked={formData.isAction}
-                      />
-                      <label
-                        className="form-check-label"
-                        id="flexCheckDefault"
-                        for="flexCheckDefault"
-                      >
-                        Add Action
-                      </label>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-12">
-                      <div>
+                      <div className="form-check check-action" >
                         <input
-                          type="text"
-                          placeholder="Enter minute description here"
-                          name="description"
-                          value={minute.description}
-                          onChange={(e) => handleChange(e, minute.uid)}
-                          onBlur={validateMinuteTitle}
-                          autoComplete="off"
+                          className="form-check-input"
+                          type="checkbox"
+                          // value="isAction"
+                          id="flexCheckDefault"
+                          name="isAction"
+                          onChange={(e) => checkHandler(e, minute.uid)}
+                          checked={minute.isAction}
                         />
+                        <label
+                          className="form-check-label"
+                          id="flexCheckDefault"
+                          for="flexCheckDefault"
+                        >
+                          Add Action
+                         
+                        </label>
+                        <button
+                              type="button"
+                              onClick={() => onRemoveMinute(minute.uid)}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="23"
+                                height="23"
+                                fill="#0564f3"
+                                className="bi-minus-circle bi bi-dash-circle"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
+                              </svg>
+       
+                            </button>
+                      </div>
+                      
+                    </div>
+                    <div className="row">
+                      <div className="col-12">
+                        <div>
+                          <input
+                            type="text"
+                            placeholder="Enter minute description here"
+                            name="description"
+                            value={minute.description}
+                            onChange={(e) => handleChange(e, minute.uid)}
+                            onBlur={validateMinuteTitle}
+                            autoComplete="off"
+                          />
 
-                        {/* {errors.title ? (
+                          {/* {errors.title ? (
                           <span className="error-message">{errors.title}</span>
                         ) : null} */}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="add-action">
-                  <div className="form-group">
-                    <div className="position-relative">
-                      <label className="pb-2 input-date"> Due Date</label>
-                      <input
-                        type="date"
-                        name="date"
-                        value={minute.date}
-                        onChange={(e) => handleChange(e, minute.uid)}
-                        onBlur={dateFieldValidationCheck}
-                      />
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="#fff"
-                        className="bi bi-calendar3 calender"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z" />
-                        <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
-                      </svg>
-                    </div>
-                    {/* {errors.date && (
+                  <div className="add-action">
+                    <div className="form-group">
+                      <div className="position-relative">
+                        <label className="pb-2 input-date"> Due Date</label>
+                        <input
+                          type="date"
+                          name="date"
+                          value={minute.date}
+                          onChange={(e) => handleChange(e, minute.uid)}
+                          onBlur={dateFieldValidationCheck}
+                        />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="#fff"
+                          className="bi bi-calendar3 calender"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z" />
+                          <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+                        </svg>
+                      </div>
+                      {/* {errors.date && (
                       <span className="error-message">{errors.date}</span>
                     )} */}
-                  </div>
-
-                  <div className="form-group">
-                    <div className="position-relative">
-                      <label className="pb-2 input-date">Priority</label>
-                      <div>
-                        <select
-                          name="priority"
-                          id="priority"
-                          onChange={(e) => handleChange(e, minute.uid)}
-                          value={minute.priority}
-                        >
-                          <option value="">Select Priority</option>
-                          <option value="HIGH">High</option>
-                          <option value="NORMAL">Normal</option>
-                          <option value="LOW">Low</option>
-                        </select>
-                      </div>
                     </div>
-                    {/* {errors.priority ? (
+
+                    <div className="form-group">
+                      <div className="position-relative">
+                        <label className="pb-2 input-date">Priority</label>
+                        <div>
+                          <select
+                            name="priority"
+                            id="priority"
+                            onChange={(e) => handleChange(e, minute.uid)}
+                            value={minute.priority}
+                          >
+                            <option value="">Select Priority</option>
+                            <option value="HIGH">High</option>
+                            <option value="NORMAL">Normal</option>
+                            <option value="LOW">Low</option>
+                          </select>
+                        </div>
+                      </div>
+                      {/* {errors.priority ? (
                       <span className="error-message">{errors.priority}</span>
                     ) : null} */}
-                  </div>
+                    </div>
+                    {minute.isAction?(
+                    <div className="form-group">
+                      <label className="pb-2">Select Responsible Person</label>
 
-                  <div className="form-group pb-3 border-bottom">
-                    <label className="pb-2">Select Responsible Person</label>
-
-                    {/* <div className="pb-2 d-flex w-100">
+                      {/* <div className="pb-2 d-flex w-100">
               <div className="form-check form-check-inline">
                 <input
                   className="form-check-input"
@@ -828,170 +886,217 @@ console.log(minutesDetails.finalMinutesData)
               </div>
             </div> */}
 
-                    <div className="w-100">
-                      <div className="form-check form-check-inline">
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          name="attendyType"
-                          value="fromPreviousMeeting"
-                          id="flexRadioDefault1"
-                          onChange={(e) => handleChange(e, minute.uid)}
-                          checked={minute.attendyType === "fromPreviousMeeting"}
-                        />
-                        <label
-                          className="mb-2 form-check-label"
-                          for="flexRadioDefault1"
-                          id="flexRadioDefault1"
-                        >
-                          Select From Previous Meetings
-                        </label>
-                      </div>
-
-                      <div className="form-check-inline">
-                        <div className="form-check">
+                      <div className="w-100">
+                        <div className="form-check form-check-inline">
                           <input
                             className="form-check-input"
                             type="radio"
                             name="attendyType"
-                            value="fromEmployeeList"
-                            id="flexRadioDefault2"
+                            value="fromPreviousMeeting"
+                            id="flexRadioDefault1"
                             onChange={(e) => handleChange(e, minute.uid)}
-                            checked={minute.attendyType === "fromEmployeeList"}
+                            checked={
+                              minute.attendyType === "fromPreviousMeeting"
+                            }
                           />
                           <label
-                            className=" mb-2 form-check-label"
-                            for="flexRadioDefault2"
-                            id="flexRadioDefault2"
+                            className="mb-2 form-check-label"
+                            for="flexRadioDefault1"
+                            id="flexRadioDefault1"
                           >
-                            Select From Employees
+                            Select From Previous Meetings
                           </label>
                         </div>
-                      </div>
 
-                      <div className="form-check-inline">
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name="attendyType"
-                            value="addNewPeople"
-                            id="flexRadioDefault3"
-                            checked={minute.attendyType === "addNewPeople"}
-                            // checked={this.state.value === 1}
-                            onChange={(e) => handleChange(e, minute.uid)}
-                          />
-                          <label
-                            className=" mb-2 form-check-label"
-                            for="flexRadioDefault3"
-                            id="flexRadioDefault3"
-                          >
-                            Add New People
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-
-                    {minute.attendyType === "fromPreviousMeeting" ? (
-                      <select
-                        className=""
-                        // name="attendeesData"
-                        // onChange={handleAttendeeChange}
-                        // value={attendeeId}
-
-                        onChange={(e) => handleChange(e, minute.uid)}
-                        name="responsiblePersonId"
-                        value={minute.responsiblePersonId}
-                      >
-                           {meetingData.attendeesList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?
-                        <option selected value={minute.assignedUserId}>{meetingData.attendeesList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?.name} / {meetingData.attendeesList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?.email}</option>
-                       : <option value="" selected>
-                       {" "}
-                       Name / Email Address
-                     </option>}
-                        {/* <option selected value={minute.assignedUserId}>{ meetingData.attendeesList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?.name} / { meetingData.attendeesList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?.email}</option> */}
-                        {meetingData.attendeesList &&
-                          meetingData.attendeesList.map((attendee, index) => {
-                            <option>{minute.responsiblePersonId}</option>
-                           
-                            return (
-                              <option key={index} value={attendee._id}>
-                                {attendee.name} / {attendee.email}
-                              </option>
-                            );
-                          })}
-                      </select>
-                    ) : minute.attendyType === "fromEmployeeList" ? (
-                      <select
-                        className="mb-2"
-                        onChange={(e) => handleChange(e, minute.uid)}
-                        name="responsiblePersonId"
-                        value={minute.responsiblePersonId}
-                      >
-                       {employeeData.employeeList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?
-                        <option selected value={minute.assignedUserId}>{employeeData.employeeList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?.name} / {employeeData.employeeList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?.empId}</option>
-                       : <option value="" selected>
-                       {" "}
-                       Name / Employee ID
-                     </option>}
-                        {employeeData.employeeList &&
-                          employeeData.employeeList.map((employee, index) => {
-                           
-                            
-                             return (
-                              <option value={employee._id} key={index}>
-                                {employee.name} / {employee.empId}
-                              </option>
-                            );
-                          })}
-                      </select>
-                    ) : minute.attendyType === "addNewPeople" ? (
-                      <div>
-                        <label className="mb-1">Add New People</label>
-                        <div className="row">
-                          <div className="col-xl-6 col-md-6">
+                        <div className="form-check-inline">
+                          <div className="form-check">
                             <input
-                              type="text"
-                              autoComplete="off"
-                              placeholder="Name"
-                              name="name"
-                              value={minute.name}
+                              className="form-check-input"
+                              type="radio"
+                              name="attendyType"
+                              value="fromEmployeeList"
+                              id="flexRadioDefault2"
                               onChange={(e) => handleChange(e, minute.uid)}
-                              onBlur={nameFieldValidationCheck}
+                              checked={
+                                minute.attendyType === "fromEmployeeList"
+                              }
                             />
-                            {/* {errors.name && (
+                            <label
+                              className=" mb-2 form-check-label"
+                              for="flexRadioDefault2"
+                              id="flexRadioDefault2"
+                            >
+                              Select From Employees
+                            </label>
+                          </div>
+                        </div>
+
+                        <div className="form-check-inline">
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="attendyType"
+                              value="addNewPeople"
+                              id="flexRadioDefault3"
+                              checked={minute.attendyType === "addNewPeople"}
+                              // checked={this.state.value === 1}
+                              onChange={(e) => handleChange(e, minute.uid)}
+                            />
+                            <label
+                              className=" mb-2 form-check-label"
+                              for="flexRadioDefault3"
+                              id="flexRadioDefault3"
+                            >
+                              Add New People
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+                      {minute.attendyType === "fromPreviousMeeting" ? (
+                        <select
+                          className=""
+                          // name="attendeesData"
+                          // onChange={handleAttendeeChange}
+                          // value={attendeeId}
+
+                          onChange={(e) => handleChange(e, minute.uid)}
+                          name="responsiblePersonId"
+                          value={minute.responsiblePersonId}
+                        >
+                          {meetingData.attendeesList.find(
+                            (employeeData) =>
+                              employeeData._id.toString() ===
+                              minute.assignedUserId
+                          ) ? (
+                            <option selected value={minute.assignedUserId}>
+                              {
+                                meetingData.attendeesList.find(
+                                  (employeeData) =>
+                                    employeeData._id.toString() ===
+                                    minute.assignedUserId
+                                )?.name
+                              }{" "}
+                              /{" "}
+                              {
+                                meetingData.attendeesList.find(
+                                  (employeeData) =>
+                                    employeeData._id.toString() ===
+                                    minute.assignedUserId
+                                )?.email
+                              }
+                            </option>
+                          ) : (
+                            <option value="" selected>
+                              {" "}
+                              Name / Email Address
+                            </option>
+                          )}
+                          {/* <option selected value={minute.assignedUserId}>{ meetingData.attendeesList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?.name} / { meetingData.attendeesList.find((employeeData)=>employeeData._id.toString()===minute.assignedUserId)?.email}</option> */}
+                          {meetingData.attendeesList &&
+                            meetingData.attendeesList.map((attendee, index) => {
+                              <option>{minute.responsiblePersonId}</option>;
+
+                              return (
+                                <option key={index} value={attendee._id}>
+                                  {attendee.name} / {attendee.email}
+                                </option>
+                              );
+                            })}
+                        </select>
+                      ) : minute.attendyType === "fromEmployeeList" ? (
+                        <select
+                          className="mb-2"
+                          onChange={(e) => handleChange(e, minute.uid)}
+                          name="responsiblePersonId"
+                          value={minute.responsiblePersonId}
+                        >
+                          {employeeData.employeeList.find(
+                            (employeeData) =>
+                              employeeData._id.toString() ===
+                              minute.assignedUserId
+                          ) ? (
+                            <option selected value={minute.assignedUserId}>
+                              {
+                                employeeData.employeeList.find(
+                                  (employeeData) =>
+                                    employeeData._id.toString() ===
+                                    minute.assignedUserId
+                                )?.name
+                              }{" "}
+                              /{" "}
+                              {
+                                employeeData.employeeList.find(
+                                  (employeeData) =>
+                                    employeeData._id.toString() ===
+                                    minute.assignedUserId
+                                )?.empId
+                              }
+                            </option>
+                          ) : (
+                            <option value="" selected>
+                              {" "}
+                              Name / Employee ID
+                            </option>
+                          )}
+                          {employeeData.employeeList &&
+                            employeeData.employeeList.map((employee, index) => {
+                              return (
+                                <option value={employee._id} key={index}>
+                                  {employee.name} / {employee.empId}
+                                </option>
+                              );
+                            })}
+                        </select>
+                      ) : minute.attendyType === "addNewPeople" ? (
+                        <div>
+                          <label className="mb-1">Add New People</label>
+                          <div className="row">
+                            <div className="col-xl-6 col-md-6">
+                              <input
+                                type="text"
+                                autoComplete="off"
+                                placeholder="Name"
+                                name="name"
+                                value={minute.name}
+                                onChange={(e) => handleChange(e, minute.uid)}
+                                onBlur={nameFieldValidationCheck}
+                              />
+                              {/* {errors.name && (
                               <span className="error-message">
                                 {errors.name}
                               </span>
                             )} */}
-                          </div>
-                          <div className="col-xl-6 col-md-6 ">
-                            <input
-                              type="text"
-                              placeholder="Email"
-                              autoComplete="off"
-                              name="email"
-                              value={minute.email}
-                              onBlur={emailFieldValidationCheck}
-                              onChange={(e) => handleChange(e, minute.uid)}
-                            />
-                            {/* {errors.email && (
+                            </div>
+                            <div className="col-xl-6 col-md-6 ">
+                              <input
+                                type="text"
+                                placeholder="Email"
+                                autoComplete="off"
+                                name="email"
+                                value={minute.email}
+                                onBlur={emailFieldValidationCheck}
+                                onChange={(e) => handleChange(e, minute.uid)}
+                              />
+                              {/* {errors.email && (
                               <span className="error-message">
                                 {errors.email}
                               </span>
                             )} */}
+                            </div>
                           </div>
+                       
                         </div>
-                      </div>
-                    ) : null}
-                    {/* {errors.responsiblePersonId && (
+                      ) : null}
+                      {/* {errors.responsiblePersonId && (
                       <span className="error-message">
                         {errors.responsiblePersonId}
                       </span>
                     )} */}
-                  </div>
-
-                  {/* <div className="form-group m-0 d-flex ">
+                    </div>
+ ):null}
+                    {/* <div className="form-group m-0 d-flex ">
             <button
               type="button"
               className="btn rounded-pill add-btn Mom-btn d-flex align-items-center justify-content-center"
@@ -1011,7 +1116,7 @@ console.log(minutesDetails.finalMinutesData)
             </button>
           </div> */}
 
-                  {/* <div className="form-group m-0 d-flex ">
+                    {/* <div className="form-group m-0 d-flex ">
                     {!employeeData.loading ? (
                       <button
                         type="button"
@@ -1035,11 +1140,11 @@ console.log(minutesDetails.finalMinutesData)
                       <LoaderButton />
                     )}
                   </div> */}
+                  </div>
                 </div>
-              </div>
-            </form>
-          );
-        })}
+              </form>
+            );
+          })}
     </>
   );
 };

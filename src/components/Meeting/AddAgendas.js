@@ -6,6 +6,7 @@ import { Margin } from "../../../node_modules/@mui/icons-material/index";
 import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction/meetingRoomAction";
 import { useSelector, useDispatch } from "react-redux";
 import { Navigate, Link, useLocation, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 import CommonStepper from "../Common/CommonStepper";
 import CreateMeeting from "./CreateMeeting";
 import {
@@ -38,11 +39,11 @@ const AddAgendas = () => {
   const authData = useSelector((state) => state.auth);
   const navigate = useNavigate();
   if (authData.isInValidUser) {
-    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("userData");
     localStorage.removeItem("rememberMe");
-    dispatch(logOut())
+    dispatch(logOut());
     navigate("/login");
   }
   //console.log(meetingRoomData);
@@ -162,6 +163,17 @@ const AddAgendas = () => {
       });
 
       setNumAgenda(numAgenda + 1);
+      toast.success("One agenda added.", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            // transition: Bounce,
+          });
     } else {
       console.log("inside form submit errror");
 

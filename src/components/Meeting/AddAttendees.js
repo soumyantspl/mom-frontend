@@ -29,7 +29,7 @@ import { customName } from "../../helpers/commonHelpers";
 import CommonModal from "../Common/CommonModal";
 import Alert from "../Common/Alert";
 import RemoveAttendeesModal from "./RemoveAttendeesModal";
-import { Navigate, Link, useLocation,useNavigate } from "react-router-dom";
+import { Navigate, Link, useLocation, useNavigate } from "react-router-dom";
 import { logOut } from "../../redux/actions/authActions/authAction";
 
 const AddAttendees = (props) => {
@@ -43,11 +43,11 @@ const AddAttendees = (props) => {
   const employeeData = useSelector((state) => state.user);
   const authData = useSelector((state) => state.auth);
   if (authData.isInValidUser) {
-    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("userData");
     localStorage.removeItem("rememberMe");
-    dispatch(logOut())
+    dispatch(logOut());
     navigate("/login");
   }
   console.log(meetingRoomData);
@@ -144,7 +144,7 @@ const AddAttendees = (props) => {
       const payload = {
         attendees: attendeesData,
         organizationId: userData.organizationId,
-        sendNotification:false,
+        sendNotification: false,
         isUpdate:
           stateData.isMeetingDataUpdate &&
           meetingData.singleMeetingDetails.step === 3
@@ -154,7 +154,13 @@ const AddAttendees = (props) => {
         meetingStatus: meetingData?.singleMeetingDetails?.meetingStatus.status,
       };
       dispatch(
-        updateMeetingDetails(meetingId, payload, accessToken, "addAttendee",stateData.isMeetingDataUpdate)
+        updateMeetingDetails(
+          meetingId,
+          payload,
+          accessToken,
+          "addAttendee",
+          stateData.isMeetingDataUpdate
+        )
       );
     }
     //  setStep(3);
@@ -524,13 +530,12 @@ const AddAttendees = (props) => {
                   })}
               </select>
             ) : formData.attendyType === "addNewPeople" ? (
-              <div >
+              <div>
                 <label className="mb-1">Add New People</label>
                 <div className="row">
                   <div className="col-xl-6 col-md-6">
                     <input
                       type="text"
-                      
                       autoComplete="off"
                       placeholder="Name"
                       name="name"

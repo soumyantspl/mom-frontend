@@ -113,6 +113,7 @@ console.log(meetingData)
                   </div>
                 </div>
               </div>
+              {agenda.topic!==""?(
               <div className="  form-group">
                 <div className="row">
                   <div className="col-md-4">
@@ -125,6 +126,7 @@ console.log(meetingData)
                   </div>
                 </div>
               </div>
+              ):null}
               <div className=" form-group m-0">
                 <div className="row">
                   <div className="col-md-4">

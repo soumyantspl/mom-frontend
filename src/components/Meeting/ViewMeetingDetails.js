@@ -287,7 +287,7 @@ const ViewMeetingDetails = () => {
                                     </div>
                                   </div>
                                 </div>
-
+                                {agenda.topic!==""?(
                                 <div className=" pb-3 form-group">
                                   <div className="row">
                                     <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
@@ -300,7 +300,7 @@ const ViewMeetingDetails = () => {
                                     </div>
                                   </div>
                                 </div>
-
+                                ):null}
                                 <div className=" form-group">
                                   <div className="row">
                                     <div className="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">

@@ -527,7 +527,7 @@ const MeetingList = () => {
               </tbody>
             </table>
           ) : !meetingData.loading && meetingData.meetingList?.length === 0 ? (
-            <div className="mt-2 table-box no-data-img">
+            <div className="no-data-img">
               <Alert
                 status={"info"}
                 message={"No data available."}

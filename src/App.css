@@ -752,6 +752,7 @@ button.btn.btn-light {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 20px;
 }
 
 .left-tbl-bottom {
@@ -2140,4 +2141,12 @@ input[type="number"] {
 
 .attendees-popup .form-check-input{
   margin-right: 5px;
+}
+
+.table.table-bordered {
+  margin-bottom: 0px;
+}
+
+.check-action {
+  width: 115px;
 }

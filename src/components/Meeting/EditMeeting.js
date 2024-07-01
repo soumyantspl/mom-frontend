@@ -6,7 +6,7 @@ import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction/meetin
 import { useSelector, useDispatch } from "react-redux";
 import CommonStepper from "../Common/CommonStepper";
 import CreateMeeting from "./CreateMeeting";
-import { Navigate, Link, useLocation,useNavigate } from "react-router-dom";
+import { Navigate, Link, useLocation, useNavigate } from "react-router-dom";
 import {
   createMeetingDetails,
   getCreateMeetingStep,
@@ -30,16 +30,16 @@ const EditMeeting = (props) => {
   const authData = useSelector((state) => state.auth);
   const navigate = useNavigate();
   if (authData.isInValidUser) {
-    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("userData");
     localStorage.removeItem("rememberMe");
-    dispatch(logOut())
+    dispatch(logOut());
     navigate("/login");
   }
   const accessToken = localStorage.getItem("accessToken");
   const userData = JSON.parse(localStorage.getItem("userData"));
- 
+
   const meetingRoomData = useSelector((state) => state.meetingRoom);
   const meetingData = useSelector((state) => state.meeting);
   console.log(meetingRoomData);
@@ -65,13 +65,12 @@ const EditMeeting = (props) => {
   console.log(location);
   const stateData = location.state;
   console.log(meetingData);
- // console.log(stateData);
-//  console.log(stateData.isMeetingDataUpdate)
+  // console.log(stateData);
+  //  console.log(stateData.isMeetingDataUpdate)
   useEffect(() => {
     console.log(" useeffect--------------->>>>>>>>>>>>>>1");
-    if(stateData?.isMeetingDataUpdate){
+    if (stateData?.isMeetingDataUpdate) {
       document.title = "Update Meeting: Meeting Plus";
-    
     }
 
     console.log(meetingData.checkStep);
@@ -80,20 +79,20 @@ const EditMeeting = (props) => {
     // if (!meetingData.isNewMeetingPage && !stateData.isMeetingDataUpdate) {
     //   dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
     // }
-// if(meetingData.isSuccess){
-//   setFormData({
-//     ...formData,
-//     title: "",
-//     mode: "physical",
-//     location: "manual",
-//     date: "",
-//     link: "",
-//     fromTime: "",
-//     toTime: "",
-//     roomId: "",
-//     locationData: ""
-//   });
-// }
+    // if(meetingData.isSuccess){
+    //   setFormData({
+    //     ...formData,
+    //     title: "",
+    //     mode: "physical",
+    //     location: "manual",
+    //     date: "",
+    //     link: "",
+    //     fromTime: "",
+    //     toTime: "",
+    //     roomId: "",
+    //     locationData: ""
+    //   });
+    // }
     // }
 
     // console.log(meetingData.step);
@@ -120,7 +119,11 @@ const EditMeeting = (props) => {
           ? meetingData.singleMeetingDetails.locationDetails.location
           : "",
       });
-      if (meetingData.singleMeetingDetails.locationDetails.isMeetingRoom && meetingData.step===1||3) {
+      if (
+        (meetingData.singleMeetingDetails.locationDetails.isMeetingRoom &&
+          meetingData.step === 1) ||
+        3
+      ) {
         const payload = {
           limit: 1000,
           page: 1,
@@ -134,21 +137,24 @@ const EditMeeting = (props) => {
     return () => {
       console.log("return useeffect--------------->>>>>>>>>>>>>>");
 
-    
-    setFormData({
-      ...formData,
-      title: "",
-      mode: "physical",
-      location: "manual",
-      date: "",
-      link: "",
-      fromTime: "",
-      toTime: "",
-      roomId: "",
-      locationData: ""
-    });
-  }
-  }, [meetingData.step,meetingData.singleMeetingDetails,meetingData.isSuccess]);
+      setFormData({
+        ...formData,
+        title: "",
+        mode: "physical",
+        location: "manual",
+        date: "",
+        link: "",
+        fromTime: "",
+        toTime: "",
+        roomId: "",
+        locationData: "",
+      });
+    };
+  }, [
+    meetingData.step,
+    meetingData.singleMeetingDetails,
+    meetingData.isSuccess,
+  ]);
 
   const submitMeetingDetails = (e) => {
     console.log("submitMeetingDetails------------------------------");
@@ -176,16 +182,20 @@ const EditMeeting = (props) => {
           fromTime: formData.fromTime,
           toTime: formData.toTime,
           title: formData.title,
-          link:formData.link,
-          step:1,
-          sendNotification:false,
-          isUpdate:stateData.isMeetingDataUpdate && meetingData.singleMeetingDetails.step===3?true:false,
+          link: formData.link,
+          step: 1,
+          sendNotification: false,
+          isUpdate:
+            stateData.isMeetingDataUpdate &&
+            meetingData.singleMeetingDetails.step === 3
+              ? true
+              : false,
         };
         console.log(payload);
         dispatch(
           updateMeetingDetails(meetingId, payload, accessToken, "updateMeeting")
         );
-      } 
+      }
 
       if (meetingData.isSuccess) {
         setStep(2);
@@ -197,11 +207,11 @@ const EditMeeting = (props) => {
     }
   };
 
- // console.log(step);
+  // console.log(step);
 
   const handleChange = (e) => {
     dispatch(updateIsCreateMeetingProcessed(false));
-   // dispatch(updateStep(1))
+    // dispatch(updateStep(1))
     setErrors({});
     //  dispatch(updateOtpProcessed(false));
     //  console.log("9999999999999999999999999999999999999", authData);
@@ -225,7 +235,7 @@ const EditMeeting = (props) => {
   };
 
   const validateForm = (data) => {
-    console.error(data)
+    console.error(data);
     const errors = {};
     if (!data.title.trim()) {
       errors.title = constantMessages.titleRequired;
@@ -453,11 +463,15 @@ const EditMeeting = (props) => {
       {/* {meetingData.step === 3 && !meetingData.isNewMeetingPage && !meetingData.isMeetingDataUpdate ? (
         <Navigate to="/meeting-list" />
       ) : null} */}
-      <CommonStepper step={meetingData.isNewMeetingPage?1:meetingData.step} />
+      <CommonStepper
+        step={meetingData.isNewMeetingPage ? 1 : meetingData.step}
+      />
       <br></br>
       {/* {!meetingData.loading ? (
         <> */}
-      {meetingData.step + 1 == 1 || meetingData.isNewMeetingPage === true  || (stateData.isMeetingDataUpdate && meetingData.step === 3 )? (
+      {meetingData.step + 1 == 1 ||
+      meetingData.isNewMeetingPage === true ||
+      (stateData.isMeetingDataUpdate && meetingData.step === 3) ? (
         <form className="mt-0 p-0 details-form" onSubmit={submitMeetingDetails}>
           <div className="inner-detail-form">
             <div className="mb-3">
@@ -559,20 +573,20 @@ const EditMeeting = (props) => {
               </div>
               {formData.location !== "meetingroom" ? (
                 <>
-                <textarea
-                  className="mt-1"
-                  placeholder="Enter Location"
-                  id=""
-                  cols="56"
-                  rows="3"
-                  onChange={handleChange}
-                  name="locationData"
-                  value={formData.locationData}
-                  onBlur={locationDetailsFieldValidationCheck}
-                ></textarea>
-                {errors.locationData && (
-                  <span className="error-message">{errors.locationData}</span>
-                )}
+                  <textarea
+                    className="mt-1"
+                    placeholder="Enter Location"
+                    id=""
+                    cols="56"
+                    rows="3"
+                    onChange={handleChange}
+                    name="locationData"
+                    value={formData.locationData}
+                    onBlur={locationDetailsFieldValidationCheck}
+                  ></textarea>
+                  {errors.locationData && (
+                    <span className="error-message">{errors.locationData}</span>
+                  )}
                 </>
               ) : (
                 <select
@@ -595,7 +609,6 @@ const EditMeeting = (props) => {
               {errors.roomId && (
                 <span className="error-message">{errors.roomId}</span>
               )}
-             
             </div>
 
             <div className="mb-3">
@@ -698,7 +711,7 @@ const EditMeeting = (props) => {
                 </div>
               </div>
             </div>
-          
+
             {/* <Button
                   variant="primary"
                   type="submit"
@@ -707,20 +720,20 @@ const EditMeeting = (props) => {
                 >
                   Next
                 </Button> */}
-  <div className="button-outer">
-  {!meetingData.loading && stateData?.isMeetingDataUpdate  ? (
-              // <div className="create-meeting-button">
-              //   <Button
-              //     variant="primary"
-              //     type="submit"
-              //     className="Mom-btn"
-              //     //  onClick={() => setIsSetPassword(false)}
-              //   >
-              //     Next
-              //   </Button>
-              <>
-                <></>
-              
+            <div className="button-outer">
+              {!meetingData.loading && stateData?.isMeetingDataUpdate ? (
+                // <div className="create-meeting-button">
+                //   <Button
+                //     variant="primary"
+                //     type="submit"
+                //     className="Mom-btn"
+                //     //  onClick={() => setIsSetPassword(false)}
+                //   >
+                //     Next
+                //   </Button>
+                <>
+                  <></>
+
                   {/* {meetingData.isCreateMeetingProcessed &&
                   meetingData.step === 1 ? (
                     <div className="mb-3">
@@ -737,41 +750,37 @@ const EditMeeting = (props) => {
                       </div>
                     </div>
                   ) : null} */}
- 
+
                   <button
                     className="create-meeting-button Mom-btn"
                     type="submit"
                   >
                     <p>Update</p>
                   </button>
-               
-              </>
-            ) :  (
-              // </div>
-              <LoaderButton />
-            )}
-            
-            {!meetingData.loading && stateData?.isMeetingDataUpdate  ? (
-             <button
-                    className="create-meeting-button Mom-btn"
-                    onClick={(e) => dispatch(updateStep(1))}
-                  >
-                    <p>Next</p>
-                  </button>
-            ):!meetingData.loading && !stateData?.isMeetingDataUpdate  ?(
-              <button
-              className="create-meeting-button Mom-btn"
-              type="submit"
-            >
-              <p>Next</p>
-            </button>
-            ):meetingData.loading && !stateData?.isMeetingDataUpdate  ?(
-              <LoaderButton />
-            ):null
-            
-            
-            }
-                  </div>
+                </>
+              ) : (
+                // </div>
+                <LoaderButton />
+              )}
+
+              {!meetingData.loading && stateData?.isMeetingDataUpdate ? (
+                <button
+                  className="create-meeting-button Mom-btn"
+                  onClick={(e) => dispatch(updateStep(1))}
+                >
+                  <p>Next</p>
+                </button>
+              ) : !meetingData.loading && !stateData?.isMeetingDataUpdate ? (
+                <button
+                  className="create-meeting-button Mom-btn"
+                  // type="submit"
+                >
+                  <p>Next</p>
+                </button>
+              ) : meetingData.loading && !stateData?.isMeetingDataUpdate ? (
+                <LoaderButton />
+              ) : null}
+            </div>
           </div>
         </form>
       ) : meetingData.step + 1 === 2 && !meetingData.isNewMeetingPage ? (

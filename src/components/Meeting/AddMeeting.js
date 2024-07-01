@@ -6,7 +6,7 @@ import { getMeetingRoomList } from "../../redux/actions/meetingRoomAction/meetin
 import { useSelector, useDispatch } from "react-redux";
 import CommonStepper from "../Common/CommonStepper";
 import CreateMeeting from "./CreateMeeting";
-import { Navigate, Link, useLocation,useNavigate } from "react-router-dom";
+import { Navigate, Link, useLocation, useNavigate } from "react-router-dom";
 import {
   createMeetingDetails,
   getCreateMeetingStep,
@@ -31,11 +31,11 @@ const AddMeeting = (props) => {
   const authData = useSelector((state) => state.auth);
   const navigate = useNavigate();
   if (authData.isInValidUser) {
-    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn")
+    console.log("innnnnnnnnnnnnnnnnnnnnnnnnnnn");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("userData");
     localStorage.removeItem("rememberMe");
-    dispatch(logOut())
+    dispatch(logOut());
     navigate("/login");
   }
   const accessToken = localStorage.getItem("accessToken");
@@ -66,19 +66,22 @@ const AddMeeting = (props) => {
   console.log(location);
   const stateData = location.state;
   console.log(stateData);
-  console.log(meetingData)
+  console.log(meetingData);
   useEffect(() => {
     document.title = "Create Meeting: Meeting Plus";
-    console.log("ffffffffffffffffffffff",stateData);
+    console.log("ffffffffffffffffffffff", stateData);
     console.log(meetingData.checkStep);
     // if (meetingData.checkStep) {
     console.log(meetingData.checkStep);
     if (!meetingData.isNewMeetingPage && !meetingData.isUpdateStep) {
-     
       dispatch(getCreateMeetingStep(userData.organizationId, accessToken));
     }
-    if (meetingData.isSuccess || meetingData.isNewMeetingPage || stateData.isNewMeeting) {
-      console.log("ffffffffffffffffffffff333333333333",stateData);
+    if (
+      meetingData?.isSuccess ||
+      meetingData?.isNewMeetingPage ||
+      stateData?.isNewMeeting
+    ) {
+      console.log("ffffffffffffffffffffff333333333333", stateData);
       setFormData({
         ...formData,
         title: "",
@@ -129,7 +132,7 @@ const AddMeeting = (props) => {
         dispatch(getMeetingRoomList(payload, accessToken));
       }
     }
-  }, [meetingData.step,meetingData.isNewMeetingPage ]);
+  }, [meetingData.step, meetingData.isNewMeetingPage]);
 
   const submitMeetingDetails = (e) => {
     console.log("submitMeetingDetails------------------------------");
@@ -160,7 +163,7 @@ const AddMeeting = (props) => {
           link: formData.link,
           step: 1,
           isUpdate: stateData.isMeetingDataUpdate ? true : false,
-          sendNotification:false
+          sendNotification: false,
         };
         console.log(payload);
 
@@ -195,7 +198,7 @@ const AddMeeting = (props) => {
       console.log(`Form submission failed
        due to validation errors.`);
     }
-   // dispatch(updateStep(1, true));
+    // dispatch(updateStep(1, true));
   };
 
   console.log(step);
@@ -456,7 +459,7 @@ const AddMeeting = (props) => {
         <Navigate to="/meeting-list" />
       ) : null}
       <CommonStepper
-        step={meetingData.isNewMeetingPage ? 1 : meetingData.step}
+        step={meetingData.isNewMeetingPage ? 0 : meetingData.step}
       />
       <br></br>
       {/* {!meetingData.loading ? (
@@ -543,11 +546,12 @@ const AddMeeting = (props) => {
                     onChange={handleChange}
                     checked={formData.location === "manual"}
                   />
-                  <label className="form-check-label" 
-                  //for="locationtype
-                  
+                  <label
+                    className="form-check-label"
+                    //for="locationtype
+
                     for="locationtype1"
-                      id="locationtype1"
+                    id="locationtype1"
                   >
                     Enter Manually
                   </label>
@@ -564,9 +568,10 @@ const AddMeeting = (props) => {
                       checked={formData.location === "meetingroom"}
                       onBlur={meetinRoomFieldValidationCheck}
                     />
-                    <label className="form-check-label" 
-                    // for="locationtype"
-                     for="locationtype2"
+                    <label
+                      className="form-check-label"
+                      // for="locationtype"
+                      for="locationtype2"
                       id="locationtype2"
                     >
                       Select A Meeting Room
@@ -760,7 +765,7 @@ const AddMeeting = (props) => {
                     <p>Save & Proceed</p>
                   </button>
                 </>
-              ) : !meetingData.loading && meetingData.isUpdateStep  ? (
+              ) : !meetingData.loading && meetingData.isUpdateStep ? (
                 <button className="create-meeting-button Mom-btn" type="submit">
                   <p>Update</p>
                 </button>
@@ -768,7 +773,7 @@ const AddMeeting = (props) => {
                 // </div>
                 <LoaderButton />
               )}
-              {!meetingData.loading && meetingData.isUpdateStep  ? (
+              {!meetingData.loading && meetingData.isUpdateStep ? (
                 <button
                   className="create-meeting-button Mom-btn"
                   onClick={(e) => dispatch(updateStep(1, true))}

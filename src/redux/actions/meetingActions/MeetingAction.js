@@ -423,7 +423,7 @@ export const updateMeetingDetails = (
             : isFrom === "addAttendee" && isUpdate
             ? "Attendees updated successfully."
             : isFrom === "addAgenda" && !isUpdate
-            ? "Agenda added successfully."
+            ? "Agenda added and notification of meeting has been sent to all attendees successfully."
             : isFrom === "addAgenda" && isUpdate
             ? "Agenda updated successfully."
             : resData.message;
